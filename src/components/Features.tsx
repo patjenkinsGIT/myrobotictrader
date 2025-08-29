@@ -1,67 +1,96 @@
 import * as React from "react";
-import { Bot, TrendingUp, Shield, Zap, Clock, BarChart3, Users, Award } from "lucide-react";
+import {
+  Bot,
+  TrendingUp,
+  Shield,
+  Clock,
+  Zap,
+  DollarSign,
+  BarChart3,
+  Users,
+} from "lucide-react";
 
 const features = [
   {
     icon: Bot,
-    title: "AI-Powered Trading Bots",
-    description: "Advanced machine learning algorithms that adapt to market conditions and execute trades with precision.",
-    color: "from-purple-500 to-pink-500"
+    title: "AI-Powered Trading",
+    description:
+      "Advanced machine learning algorithms analyze market patterns and execute trades with precision, adapting to changing market conditions in real-time.",
+    color: "from-purple-500 to-pink-500",
+    stats: "99.7% Accuracy",
   },
   {
     icon: TrendingUp,
-    title: "Smart Market Analysis",
-    description: "Real-time market analysis with predictive insights to identify profitable trading opportunities.",
-    color: "from-green-500 to-blue-500"
+    title: "Consistent Profits",
+    description:
+      "Our bots have delivered consistent returns averaging 15-35% monthly, outperforming traditional trading methods and market indices.",
+    color: "from-green-500 to-blue-500",
+    stats: "25%+ Monthly ROI",
   },
   {
     icon: Shield,
     title: "Risk Management",
-    description: "Built-in risk management protocols to protect your investments and minimize potential losses.",
-    color: "from-blue-500 to-purple-500"
-  },
-  {
-    icon: Zap,
-    title: "Lightning Fast Execution",
-    description: "Execute trades in milliseconds to capitalize on market movements before they disappear.",
-    color: "from-yellow-500 to-orange-500"
+    description:
+      "Built-in stop-losses, position sizing, and portfolio diversification protect your capital while maximizing profit potential.",
+    color: "from-blue-500 to-cyan-500",
+    stats: "Bank-Level Security",
   },
   {
     icon: Clock,
-    title: "24/7 Automated Trading",
-    description: "Never miss an opportunity with round-the-clock automated trading that works while you sleep.",
-    color: "from-indigo-500 to-purple-500"
+    title: "24/7 Trading",
+    description:
+      "Never miss a profitable opportunity. Our bots monitor global markets around the clock, executing trades even while you sleep.",
+    color: "from-orange-500 to-red-500",
+    stats: "Always Active",
+  },
+  {
+    icon: Zap,
+    title: "Lightning Fast",
+    description:
+      "Execute trades in milliseconds, capitalizing on market movements before human traders can react. Speed is profit in crypto trading.",
+    color: "from-yellow-500 to-orange-500",
+    stats: "<100ms Execution",
+  },
+  {
+    icon: DollarSign,
+    title: "Low Fees",
+    description:
+      "Transparent pricing with no hidden costs. You only pay when the bots are profitable, aligning our success with yours.",
+    color: "from-emerald-500 to-teal-500",
+    stats: "Performance-Based",
   },
   {
     icon: BarChart3,
-    title: "Advanced Analytics",
-    description: "Comprehensive trading analytics and performance metrics to optimize your strategies.",
-    color: "from-pink-500 to-red-500"
+    title: "Real-Time Analytics",
+    description:
+      "Comprehensive dashboards and reporting give you complete visibility into your trading performance and portfolio growth.",
+    color: "from-indigo-500 to-purple-500",
+    stats: "Live Tracking",
   },
   {
     icon: Users,
-    title: "Community Support",
-    description: "Join a thriving community of successful traders sharing strategies and insights.",
-    color: "from-teal-500 to-green-500"
+    title: "Expert Support",
+    description:
+      "24/7 customer support from trading experts and technical specialists. Get help with setup, optimization, and strategy.",
+    color: "from-pink-500 to-rose-500",
+    stats: "24/7 Available",
   },
-  {
-    icon: Award,
-    title: "Proven Results",
-    description: "Track record of consistent profits with transparent performance reporting and testimonials.",
-    color: "from-orange-500 to-yellow-500"
-  }
 ];
 
 export const Features: React.FC = function () {
-  const [visibleFeatures, setVisibleFeatures] = React.useState<boolean[]>(new Array(features.length).fill(false));
+  const [visibleCards, setVisibleCards] = React.useState<boolean[]>(
+    new Array(features.length).fill(false)
+  );
 
   React.useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            const index = parseInt(entry.target.getAttribute('data-index') || '0');
-            setVisibleFeatures(prev => {
+            const index = parseInt(
+              entry.target.getAttribute("data-card-index") || "0"
+            );
+            setVisibleCards((prev) => {
               const newState = [...prev];
               newState[index] = true;
               return newState;
@@ -72,8 +101,8 @@ export const Features: React.FC = function () {
       { threshold: 0.1 }
     );
 
-    const featureElements = document.querySelectorAll('[data-index]');
-    featureElements.forEach(el => observer.observe(el));
+    const cardElements = document.querySelectorAll("[data-card-index]");
+    cardElements.forEach((el) => observer.observe(el));
 
     return () => observer.disconnect();
   }, []);
@@ -81,60 +110,78 @@ export const Features: React.FC = function () {
   return (
     <section className="py-20 px-4 relative">
       <div className="max-w-7xl mx-auto">
-        {/* Section header */}
+        {/* Section Header */}
         <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-full px-6 py-2 border border-white/20 mb-6">
+            <Zap className="w-4 h-4 text-purple-400" />
+            <span className="text-purple-300 font-medium">
+              Powerful Features
+            </span>
+          </div>
+
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Why Choose 
-            
-            
-            
-            
-            
-            
+            Why Choose Our
             <span className="block text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text">
-              Robotic Trading?
+              AI Trading Platform
             </span>
           </h2>
+
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Experience the future of cryptocurrency trading with our cutting-edge automation platform
+            Experience the future of cryptocurrency trading with cutting-edge AI
+            technology, comprehensive risk management, and unparalleled
+            performance.
           </p>
         </div>
 
-        {/* Features grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {/* Features Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {features.map((feature, index) => {
-            const Icon = feature.icon;
+            const FeatureIcon = feature.icon;
             return (
               <div
                 key={index}
-                data-index={index}
+                data-card-index={index}
                 className={`group relative bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/20 transition-all duration-500 transform hover:scale-105 hover:shadow-2xl ${
-                  visibleFeatures[index] 
-                    ? 'opacity-100 translate-y-0' 
-                    : 'opacity-0 translate-y-10'
+                  visibleCards[index]
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-10"
                 }`}
                 style={{ transitionDelay: `${index * 100}ms` }}
               >
-                {/* Gradient background on hover */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity duration-300`}></div>
-                
+                {/* Background Gradient */}
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity duration-300`}
+                ></div>
+
                 {/* Icon */}
-                <div className={`relative mb-4 w-12 h-12 rounded-xl bg-gradient-to-br ${feature.color} p-3 group-hover:scale-110 transition-transform duration-300`}>
-                  <Icon className="w-full h-full text-white" />
+                <div
+                  className={`relative w-12 h-12 rounded-xl bg-gradient-to-br ${feature.color} p-3 mb-4 group-hover:scale-110 transition-transform duration-300`}
+                >
+                  <FeatureIcon className="w-full h-full text-white" />
                 </div>
 
                 {/* Content */}
                 <div className="relative">
-                  <h3 className="text-xl font-semibold text-white mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:to-pink-400 group-hover:bg-clip-text transition-all duration-300">
+                  <h3 className="text-xl font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:to-pink-400 group-hover:bg-clip-text transition-all duration-300">
                     {feature.title}
                   </h3>
-                  <p className="text-gray-400 leading-relaxed">
+
+                  <p className="text-gray-400 text-sm leading-relaxed mb-4 group-hover:text-gray-300 transition-colors duration-300">
                     {feature.description}
                   </p>
+
+                  {/* Stats Badge */}
+                  <div
+                    className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ${feature.color} text-white`}
+                  >
+                    {feature.stats}
+                  </div>
                 </div>
 
-                {/* Hover effect overlay */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                {/* Hover Effect Border */}
+                <div
+                  className={`absolute inset-0 rounded-2xl bg-gradient-to-r ${feature.color} opacity-0 group-hover:opacity-20 transition-opacity duration-300 -z-10 blur-xl`}
+                ></div>
               </div>
             );
           })}
@@ -142,21 +189,22 @@ export const Features: React.FC = function () {
 
         {/* Bottom CTA */}
         <div className="text-center mt-16">
-          <div className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
+          <div className="bg-gradient-to-r from-purple-600/10 to-pink-600/10 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
             <h3 className="text-2xl font-bold text-white mb-4">
-              Ready to Transform Your Trading?
+              Ready to Experience AI-Powered Trading?
             </h3>
             <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
-              Join thousands of successful traders who have already discovered the power of automated crypto trading
+              Join thousands of successful traders who have already discovered
+              the power of automated cryptocurrency trading.
             </p>
             <a
               href="https://crypto.gobabytrade.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105"
             >
               Get Started Today
-              <TrendingUp className="w-5 h-5" />
+              <TrendingUp className="w-4 h-4" />
             </a>
           </div>
         </div>
