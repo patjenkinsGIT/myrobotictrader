@@ -100,7 +100,7 @@ const faqData = [
 ];
 
 export const FAQ: React.FC = function () {
-  const [openItems, setOpenItems] = React.useStateReact.useState<Record<string, boolean>>({});
+  const [visibleSections, setVisibleSections] = React.useState<boolean[]>
   const [visibleSections, setVisibleSections] = React.useState<boolean[]>(new Array(faqData.length).fill(false));
 
   const toggleItem = (categoryIndex: number, questionIndex: number) => {
