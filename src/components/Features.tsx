@@ -13,9 +13,9 @@ import {
 const features = [
   {
     icon: Bot,
-    title: "AI-Powered Trading",
+    title: "Autonomous Trading",
     description:
-      "Advanced machine learning algorithms analyze market patterns and execute trades with precision, adapting to changing market conditions in real-time.",
+      "Advanced robotic traders analyze market patterns and execute trades with precision, adapting to changing market conditions in real-time without human intervention.",
     color: "from-purple-500 to-pink-500",
     stats: "99.7% Accuracy",
   },
@@ -23,23 +23,23 @@ const features = [
     icon: TrendingUp,
     title: "Consistent Profits",
     description:
-      "Our bots have delivered consistent returns averaging 15-35% monthly, outperforming traditional trading methods and market indices.",
+      "Our robotic traders have delivered consistent returns averaging 15-35% monthly, outperforming traditional trading methods and market indices.",
     color: "from-green-500 to-blue-500",
     stats: "25%+ Monthly ROI",
   },
   {
     icon: Shield,
-    title: "Risk Management",
+    title: "Secure Custody",
     description:
-      "Built-in stop-losses, position sizing, and portfolio diversification protect your capital while maximizing profit potential.",
+      "Your cryptocurrencies remain safely in your own Coinbase or Kraken accounts. We never hold your funds - only execute trades on your behalf.",
     color: "from-blue-500 to-cyan-500",
-    stats: "Bank-Level Security",
+    stats: "Your Keys, Your Crypto",
   },
   {
     icon: Clock,
-    title: "24/7 Trading",
+    title: "Set It & Forget It",
     description:
-      "Never miss a profitable opportunity. Our bots monitor global markets around the clock, executing trades even while you sleep.",
+      "Never miss a profitable opportunity. Our autonomous traders monitor global markets around the clock, executing trades even while you sleep.",
     color: "from-orange-500 to-red-500",
     stats: "Always Active",
   },
@@ -53,17 +53,17 @@ const features = [
   },
   {
     icon: DollarSign,
-    title: "Low Fees",
+    title: "Performance-Based",
     description:
-      "Transparent pricing with no hidden costs. You only pay when the bots are profitable, aligning our success with yours.",
+      "Transparent pricing with no hidden costs. The robotic trader automatically calculates your exchange fees ensuring you remain profitable.",
     color: "from-emerald-500 to-teal-500",
-    stats: "Performance-Based",
+    stats: "Pay Only on Profits",
   },
   {
     icon: BarChart3,
     title: "Real-Time Analytics",
     description:
-      "Comprehensive dashboards and reporting give you complete visibility into your trading performance and portfolio growth.",
+      "Comprehensive dashboards and reporting give you complete visibility into your trading performance and portfolio growth across all exchanges.",
     color: "from-indigo-500 to-purple-500",
     stats: "Live Tracking",
   },
@@ -71,7 +71,7 @@ const features = [
     icon: Users,
     title: "Expert Support",
     description:
-      "24/7 customer support from trading experts and technical specialists. Get help with setup, optimization, and strategy.",
+      "24/7 customer support from trading experts and technical specialists. Get help with setup, optimization, and strategy development.",
     color: "from-pink-500 to-rose-500",
     stats: "24/7 Available",
   },
@@ -122,14 +122,14 @@ export const Features: React.FC = function () {
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
             Why Choose Our
             <span className="block text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text">
-              AI Trading Platform
+              Autonomous Trading Platform
             </span>
           </h2>
 
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Experience the future of cryptocurrency trading with cutting-edge AI
-            technology, comprehensive risk management, and unparalleled
-            performance.
+            Experience the future of cryptocurrency trading with cutting-edge
+            autonomous technology, comprehensive risk management, and
+            unparalleled performance on trusted exchanges.
           </p>
         </div>
 
@@ -191,11 +191,11 @@ export const Features: React.FC = function () {
         <div className="text-center mt-16">
           <div className="bg-gradient-to-r from-purple-600/10 to-pink-600/10 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
             <h3 className="text-2xl font-bold text-white mb-4">
-              Ready to Experience AI-Powered Trading?
+              Ready to Experience Autonomous Trading?
             </h3>
             <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
               Join thousands of successful traders who have already discovered
-              the power of automated cryptocurrency trading.
+              the power of set-it-and-forget-it cryptocurrency trading.
             </p>
             <a
               href="https://financialintelligence4u.com/masterclass?am_id=patrick1567"

@@ -1,7 +1,6 @@
 import * as React from "react";
 import { ArrowRight, CheckCircle, Rocket, TrendingUp } from "lucide-react";
 
-
 export const CallToAction: React.FC = function () {
   return (
     <section className="py-20 px-4 relative overflow-hidden">
@@ -21,22 +20,23 @@ export const CallToAction: React.FC = function () {
           </span>
         </h2>
 
-      <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-        Experience autonomous trading that protects your capital while maximizing profits. 
-        Start with paper trading to see the results risk-free.
-      </p>
+        <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+          Experience autonomous trading that protects your capital while
+          maximizing profits. Start with paper trading to see the results
+          risk-free.
+        </p>
 
         {/* Benefits */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="flex items-center gap-3">
             <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
-            <span className="text-gray-300">
-              Never trades at a loss
-            </span>
+            <span className="text-gray-300">Never trades at a loss</span>
           </div>
           <div className="flex items-center gap-3">
             <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
-            <span className="text-gray-300">Your funds stay on Coinbase/Kraken</span>
+            <span className="text-gray-300">
+              Your funds stay on Coinbase/Kraken
+            </span>
           </div>
           <div className="flex items-center gap-3">
             <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
@@ -45,7 +45,7 @@ export const CallToAction: React.FC = function () {
         </div>
 
         {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
           <a
             href="https://financialintelligence4u.com/masterclass?am_id=patrick1567"
             target="_blank"
@@ -67,10 +67,11 @@ export const CallToAction: React.FC = function () {
         </div>
 
         {/* Guarantee */}
-        <div className="flex items-center justify-center gap-3 text-green-400 mb-8">
+        <div className="flex items-center justify-center gap-3 text-green-400">
           <TrendingUp className="w-6 h-6" />
-          <span className="text-lg font-semibold">Start with Paper Trading - No Risk</span>
-        </div>
+          <span className="text-lg font-semibold">
+            Start with Paper Trading - No Risk
+          </span>
         </div>
       </div>
     </section>
