@@ -20,14 +20,14 @@ export const Hero: React.FC = function () {
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
             Turn Your Crypto Dreams Into
             <span className="block text-transparent bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 bg-clip-text">
-              Automated Profits
+              Total Autonomous Profits
             </span>
           </h1>
 
           <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-4xl mx-auto">
-            Our advanced AI trading bots work 24/7 to maximize your
-            cryptocurrency returns. No experience needed - just set it and watch
-            your portfolio grow.
+            Our autonomous robotic traders work 24/7 to maximize your
+            cryptocurrency returns on Coinbase and Kraken. No experience needed
+            - just set it and forget it while your portfolio grows.
           </p>
         </div>
 
@@ -56,8 +56,8 @@ export const Hero: React.FC = function () {
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
           <div className="text-center">
-            <div className="text-3xl font-bold text-green-400 mb-2">25%+</div>
-            <div className="text-gray-400">Average Monthly Returns</div>
+            <div className="text-3xl font-bold text-green-400 mb-2">100%</div>
+            <div className="text-gray-400">Worry Free Unattended Trading</div>
           </div>
           <div className="text-center">
             <div className="text-3xl font-bold text-blue-400 mb-2">24/7</div>

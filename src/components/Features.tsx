@@ -13,67 +13,67 @@ import {
 const features = [
   {
     icon: Bot,
-    title: "Autonomous Trading",
+    title: "Autonomous Robotic Trading",
     description:
-      "Advanced robotic traders analyze market patterns and execute trades with precision, adapting to changing market conditions in real-time without human intervention.",
+      "Advanced robotic traders analyze market patterns and execute trades with precision, adapting to changing market conditions in real-time without human intervention.  Never worry about when to buy or sell",
     color: "from-purple-500 to-pink-500",
-    stats: "99.7% Accuracy",
+    stats: "100% Accurate",
   },
   {
     icon: TrendingUp,
-    title: "Consistent Profits",
+    title: "Takes What the Market Gives",
     description:
-      "Our robotic traders have delivered consistent returns averaging 15-35% monthly, outperforming traditional trading methods and market indices.",
+      "Our robotic traders capitalize on market opportunities as they arise, taking profits when conditions are favorable and waiting patiently when they're not.  Charts are a thing of the past.",
     color: "from-green-500 to-blue-500",
-    stats: "25%+ Monthly ROI",
+    stats: "Market-Driven Results",
   },
   {
     icon: Shield,
-    title: "Secure Custody",
+    title: "Never Trades at a Loss",
     description:
-      "Your cryptocurrencies remain safely in your own Coinbase or Kraken accounts. We never hold your funds - only execute trades on your behalf.",
+      "Revolutionary protection system ensures our robotic traders never execute losing trades. They wait for profitable opportunities or don't trade at all, safeguarding your capital. Stop Loss is a thing of the past.",
     color: "from-blue-500 to-cyan-500",
-    stats: "Your Keys, Your Crypto",
+    stats: "0% Loss Trades",
   },
   {
     icon: Clock,
     title: "Set It & Forget It",
     description:
-      "Never miss a profitable opportunity. Our autonomous traders monitor global markets around the clock, executing trades even while you sleep.",
+      "Never miss a profitable opportunity. Our autonomous robotic traders monitor global markets around the clock, executing trades even while you sleep.  The days of staring at charts are over.",
     color: "from-orange-500 to-red-500",
     stats: "Always Active",
   },
   {
     icon: Zap,
-    title: "Lightning Fast",
+    title: "Lightning Fast Execution",
     description:
-      "Execute trades in milliseconds, capitalizing on market movements before human traders can react. Speed is profit in crypto trading.",
+      "Execute trades in milliseconds, capitalizing on market movements before human traders can react. Speed is crucial in cryptocurrency trading.",
     color: "from-yellow-500 to-orange-500",
     stats: "<100ms Execution",
   },
   {
     icon: DollarSign,
-    title: "Performance-Based",
+    title: "Your Funds Stay Safe",
     description:
-      "Transparent pricing with no hidden costs. The robotic trader automatically calculates your exchange fees ensuring you remain profitable.",
+      "Your cryptocurrencies remain safely in your own Coinbase or Kraken accounts. We never hold your funds - only execute trades on your behalf through secure API connections.",
     color: "from-emerald-500 to-teal-500",
-    stats: "Pay Only on Profits",
+    stats: "Your Keys, Your Crypto",
   },
   {
     icon: BarChart3,
     title: "Real-Time Analytics",
     description:
-      "Comprehensive dashboards and reporting give you complete visibility into your trading performance and portfolio growth across all exchanges.",
+      "Position and simple profit reporting give you visibility into your robotic trader performance and how much you profit you save across Coinbase and Kraken.",
     color: "from-indigo-500 to-purple-500",
     stats: "Live Tracking",
   },
   {
     icon: Users,
-    title: "Expert Support",
+    title: "Start with Paper Trading",
     description:
-      "24/7 customer support from trading experts and technical specialists. Get help with setup, optimization, and strategy development.",
+      "Test the robotic traders risk-free with paper trading before going live. See how they perform and build confidence in the autonomous trading system.",
     color: "from-pink-500 to-rose-500",
-    stats: "24/7 Available",
+    stats: "Risk-Free Testing",
   },
 ];
 
