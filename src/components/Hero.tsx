@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ArrowRight, Bot, TrendingUp, Shield, Zap } from "lucide-react";
+import { ArrowRight, Bot } from "lucide-react";
 
 export const Hero: React.FC = function () {
   return (
