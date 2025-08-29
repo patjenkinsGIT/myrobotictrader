@@ -117,7 +117,7 @@ export const FAQ: React.FC = function () {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const index = parseInt(entry.target.getAttribute('data-section-index') || '0');
-            setVisibleSections(prev => {
+            setVisibleSections((prev: boolean[]) => {
               const newState = [...prev];
               newState[index] = true;
               return newState;
@@ -214,8 +214,8 @@ export const FAQ: React.FC = function () {
                             isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
                           }`}
                         >
-                                                                  <div className="px-6 pb-4 border-t border-white/10">
-                            <p className="text-gray-300 leading-relaxed pt-4">
+                          <div className="px-6 pb-4 border-t border-white/10">
+                                                                <p className="text-gray-300 leading-relaxed pt-4">
                               {item.answer}
                             </p>
                           </div>

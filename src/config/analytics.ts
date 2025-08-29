@@ -5,12 +5,12 @@ export const ANALYTICS_CONFIG = {
   // Google Analytics 4 Measurement ID
   // Get this from: https://analytics.google.com/
   // Format: G-XXXXXXXXXX
-  GOOGLE_ANALYTICS_ID: process.env.REACT_APP_GA_ID || "GA_MEASUREMENT_ID",
+  GOOGLE_ANALYTICS_ID: "GA_MEASUREMENT_ID", // Replace with your actual ID
   
   // Facebook Pixel ID
   // Get this from: https://business.facebook.com/
   // Format: numeric ID
-  FACEBOOK_PIXEL_ID: process.env.REACT_APP_FB_PIXEL_ID || "FB_PIXEL_ID",
+  FACEBOOK_PIXEL_ID: "FB_PIXEL_ID", // Replace with your actual ID
   
   // Site Configuration
   SITE_NAME: "MyRoboticTrader.com",
@@ -23,5 +23,5 @@ export const ANALYTICS_CONFIG = {
 };
 
 // Environment check
-export const isDevelopment = process.env.NODE_ENV === 'development';
-export const isProduction = process.env.NODE_ENV === 'production';
+export const isDevelopment = false;
+export const isProduction = true;
