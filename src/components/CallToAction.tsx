@@ -1,5 +1,6 @@
 import * as React from "react";
-import { ArrowRight, CheckCircle, Rocket } from "lucide-react";
+import { ArrowRight, CheckCircle, Rocket, TrendingUp } from "lucide-react";
+
 
 export const CallToAction: React.FC = function () {
   return (
@@ -20,26 +21,26 @@ export const CallToAction: React.FC = function () {
           </span>
         </h2>
 
-        <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-          Don't let another profitable opportunity slip away. Join the
-          revolution of automated crypto trading today.
-        </p>
+      <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+        Experience autonomous trading that protects your capital while maximizing profits. 
+        Start with paper trading to see the results risk-free.
+      </p>
 
         {/* Benefits */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="flex items-center gap-3">
             <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
             <span className="text-gray-300">
-              No trading experience required
+              Never trades at a loss
             </span>
           </div>
           <div className="flex items-center gap-3">
             <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
-            <span className="text-gray-300">Start with as little as $100</span>
+            <span className="text-gray-300">Your funds stay on Coinbase/Kraken</span>
           </div>
           <div className="flex items-center gap-3">
             <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
-            <span className="text-gray-300">24/7 customer support</span>
+            <span className="text-gray-300">Set it and forget it trading</span>
           </div>
         </div>
 
@@ -66,13 +67,10 @@ export const CallToAction: React.FC = function () {
         </div>
 
         {/* Guarantee */}
-        <div className="mt-8">
-          <div className="inline-flex items-center gap-2 bg-green-600/20 backdrop-blur-sm rounded-full px-6 py-3 border border-green-500/30">
-            <CheckCircle className="w-5 h-5 text-green-400" />
-            <span className="text-green-300 font-medium">
-              30-Day Money-Back Guarantee
-            </span>
-          </div>
+        <div className="flex items-center justify-center gap-3 text-green-400 mb-8">
+          <TrendingUp className="w-6 h-6" />
+          <span className="text-lg font-semibold">Start with Paper Trading - No Risk</span>
+        </div>
         </div>
       </div>
     </section>

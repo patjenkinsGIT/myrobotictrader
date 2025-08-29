@@ -39,7 +39,7 @@ export const Footer: React.FC = function () {
 
         <div className="border-t border-white/10 pt-8">
           <div className="text-gray-400 text-sm mb-4">
-            © 2024 MyRoboticTrader.com. All rights reserved.
+            © 2025 MyRoboticTrader.com. All rights reserved.
           </div>
 
           <div className="text-xs text-gray-500 max-w-4xl mx-auto">
