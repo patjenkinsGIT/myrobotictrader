@@ -33,6 +33,7 @@ Comprehensive tracking includes:
 ```bash
 # Install dependencies
 npm install
+committ test
 
 # Start development server
 npm run dev
