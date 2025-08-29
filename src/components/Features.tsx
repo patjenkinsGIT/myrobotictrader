@@ -198,12 +198,12 @@ export const Features: React.FC = function () {
               the power of automated cryptocurrency trading.
             </p>
             <a
-              href="https://crypto.gobabytrade.com"
+              href="https://financialintelligence4u.com/masterclass?am_id=patrick1567"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105"
             >
-              Get Started Today
+              Join Free Masterclass
               <TrendingUp className="w-4 h-4" />
             </a>
           </div>

@@ -46,22 +46,22 @@ export const CallToAction: React.FC = function () {
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <a
-            href="https://crypto.gobabytrade.com"
+            href="https://financialintelligence4u.com/masterclass?am_id=patrick1567"
             target="_blank"
             rel="noopener noreferrer"
             className="group bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center justify-center gap-2"
           >
-            Start Trading Now
+            Join Free Masterclass
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </a>
 
           <a
-            href="https://financialintelligence4u.com"
+            href="https://gobabytrade.com/fi4u"
             target="_blank"
             rel="noopener noreferrer"
             className="group border-2 border-white/30 hover:border-white/50 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 backdrop-blur-sm hover:bg-white/10 flex items-center justify-center gap-2"
           >
-            Learn More About Our Company
+            Start Trading Now
           </a>
         </div>
 
