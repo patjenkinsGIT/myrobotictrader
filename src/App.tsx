@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Hero } from "./components/Hero";
 import { Features } from "./components/Features";
-// import { FAQ } from "./components/FAQ";
 import { CallToAction } from "./components/CallToAction";
 import { Footer } from "./components/Footer";
 import { GoogleAnalytics, FacebookPixel } from "./components/Analytics";
@@ -16,9 +15,9 @@ const App: React.FC = function () {
       <GoogleAnalytics measurementId={ANALYTICS_CONFIG.GOOGLE_ANALYTICS_ID} />
       <FacebookPixel pixelId={ANALYTICS_CONFIG.FACEBOOK_PIXEL_ID} />
       
+      
       <Hero />
       <Features />
-      {/* <FAQ /> */}
       <CallToAction />
       <Footer />
     </div>
