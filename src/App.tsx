@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Hero } from "./components/Hero";
 import { Features } from "./components/Features";
-import { FAQ } from "./components/FAQ";
+//import { FAQ } from "./components/FAQ";
 import { CallToAction } from "./components/CallToAction";
 import { Footer } from "./components/Footer";
 import { GoogleAnalytics, FacebookPixel } from "./components/Analytics";
@@ -21,7 +21,6 @@ const App: React.FC = function () {
       {/* Main Content */}
       <Hero />
       <Features />
-      <FAQ />
       <CallToAction />
       <Footer />
     </div>
