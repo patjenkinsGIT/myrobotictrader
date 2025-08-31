@@ -14,56 +14,64 @@ const features = [
   {
     icon: Bot,
     title: "Autonomous Robotic Trading",
-    description: "Advanced Robotic Trader analyzes market patterns and executes trades with precision, adapting to changing market conditions in real-time without human intervention. Never worry about when to buy or sell",
+    description:
+      "Advanced Robotic Trader analyzes market patterns and executes trades with precision, adapting to changing market conditions in real-time without human intervention. Never worry about when to buy or sell",
     color: "from-purple-500 to-pink-500",
     stats: "100% Accurate",
   },
   {
     icon: TrendingUp,
     title: "Takes What the Market Gives",
-    description: "Our Robotic Trader capitalizes on market opportunities as they arise, taking profits when conditions are favorable and waiting patiently when they're not. Charts are a thing of the past.",
+    description:
+      "Our Robotic Trader capitalizes on market opportunities as they arise, taking profits when conditions are favorable and waiting patiently when they're not. Charts are a thing of the past.",
     color: "from-green-500 to-blue-500",
     stats: "Market-Driven Results",
   },
   {
     icon: Shield,
     title: "Never Trades at a Loss",
-    description: "Revolutionary protection system ensures our Robotic Trader never executes losing trades. It waits for profitable opportunities or doesn't trade at all, safeguarding your capital. Stop Loss is a thing of the past.",
+    description:
+      "Revolutionary protection system ensures our Robotic Trader never executes losing trades. It waits for profitable opportunities or doesn't trade at all, safeguarding your capital. Stop Loss is a thing of the past.",
     color: "from-blue-500 to-cyan-500",
     stats: "0% Loss Trades",
   },
   {
     icon: Clock,
     title: "Set It & Forget It",
-    description: "Never miss a profitable opportunity. Our autonomous Robotic Trader monitors global markets around the clock, executing trades even while you sleep. The days of staring at charts are over.",
+    description:
+      "Never miss a profitable opportunity. Our autonomous Robotic Trader monitors global markets around the clock, executing trades even while you sleep. The days of staring at charts are over.",
     color: "from-orange-500 to-red-500",
     stats: "Always Active",
   },
   {
     icon: Zap,
     title: "Lightning Fast Execution",
-    description: "Execute trades in milliseconds, capitalizing on market movements before human traders can react. Speed is crucial in cryptocurrency trading.",
+    description:
+      "Execute trades in milliseconds, capitalizing on market movements before human traders can react. Speed is crucial in cryptocurrency trading.",
     color: "from-yellow-500 to-orange-500",
-    stats: """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""<100ms Execution",
+    stats: "100ms Execution",
   },
   {
     icon: DollarSign,
     title: "Your Funds Stay Safe",
-    description: "Your cryptocurrencies remain safely in your own Coinbase or Kraken accounts. We never hold your funds - only execute trades on your behalf through secure API connections.",
+    description:
+      "Your cryptocurrencies remain safely in your own Coinbase or Kraken accounts. We never hold your funds - only execute trades on your behalf through secure API connections.",
     color: "from-emerald-500 to-teal-500",
     stats: "Your Keys, Your Crypto",
   },
   {
     icon: BarChart3,
     title: "Real-Time Analytics",
-    description: "Position and simple profit reporting give you visibility into your Robotic Trader performance and how much profit you save across Coinbase and Kraken.",
+    description:
+      "Position and simple profit reporting give you visibility into your Robotic Trader performance and how much profit you save across Coinbase and Kraken.",
     color: "from-indigo-500 to-purple-500",
     stats: "Live Tracking",
   },
   {
     icon: Users,
     title: "Start with Paper Trading",
-    description: "Test the Robotic Trader risk-free with paper trading before going live. See how it performs and build confidence in the autonomous trading system.",
+    description:
+      "Test the Robotic Trader risk-free with paper trading before going live. See how it performs and build confidence in the autonomous trading system.",
     color: "from-pink-500 to-rose-500",
     stats: "Risk-Free Testing",
   },
