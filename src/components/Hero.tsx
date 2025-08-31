@@ -12,7 +12,24 @@ export const Hero: React.FC = function () {
       {/* Floating Icons - only in hero section */}
       <FloatingIcons />
 
-      <div className="relative max-w-6xl mx-auto text-center z-10">
+      {/* Logo at top */}
+      <div className="absolute top-8 left-1/2 transform -translate-x-1/2 z-20">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 p-2.5">
+            <Bot className="w-full h-full text-white" />
+          </div>
+          <div className="text-2xl font-bold">
+            <span className="text-white">My</span>
+            <span className="text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text">
+              Robotic
+            </span>
+            <span className="text-white">Trader</span>
+            <span className="text-purple-400 text-sm ml-1">.com</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="relative max-w-6xl mx-auto text-center z-10 mt-16">
         <div className="mb-8">
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20 mb-6 mt-4">
             <Bot className="w-4 h-4 text-purple-400" />
@@ -35,6 +52,7 @@ export const Hero: React.FC = function () {
           </p>
         </div>
 
+        {/* Rest of your existing Hero content... */}
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
           <a
