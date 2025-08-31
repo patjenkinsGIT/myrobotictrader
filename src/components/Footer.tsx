@@ -5,13 +5,21 @@ export const Footer: React.FC = function () {
   return (
     <footer className="relative py-16 px-4 border-t border-white/10">
       <div className="max-w-6xl mx-auto">
-        {/* Main Footer Content */}
+        {/* Main Footer Content with Logo */}
         <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-2 mb-6">
-            <Bot className="w-8 h-8 text-purple-400" />
-            <h3 className="text-2xl font-bold text-white">
-              MyRoboticTrader.com
-            </h3>
+          {/* Footer Logo - Slightly Different Style */}
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 p-2">
+              <Bot className="w-full h-full text-white" />
+            </div>
+            <div className="text-xl font-bold">
+              <span className="text-gray-300">My</span>
+              <span className="text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text">
+                Robotic
+              </span>
+              <span className="text-gray-300">Trader</span>
+              <span className="text-purple-400 text-sm ml-1">.com</span>
+            </div>
           </div>
 
           <p className="text-gray-400 mb-8 max-w-2xl mx-auto">
@@ -113,10 +121,19 @@ export const Footer: React.FC = function () {
           </div>
         </div>
 
-        {/* Copyright */}
+        {/* Copyright with Mini Logo */}
         <div className="border-t border-white/10 pt-8 text-center">
-          <div className="text-gray-400 text-sm mb-2">
-            © 2025 MyRoboticTrader.com. All rights reserved.
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <div className="w-5 h-5 rounded bg-gradient-to-br from-purple-500 to-pink-500 p-1">
+              <Bot className="w-full h-full text-white" />
+            </div>
+            <span className="text-gray-400 text-sm">
+              © 2025{" "}
+              <span className="text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text font-semibold">
+                MyRoboticTrader
+              </span>
+              .com
+            </span>
           </div>
           <div className="text-xs text-gray-500">
             Independent affiliate marketing website. Not affiliated with any
