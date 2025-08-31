@@ -104,47 +104,46 @@ const faqData = [
   },
 ];
 
-export const FAQ: React.FC = function () {
-  const [openItems, setOpenItems] = React.useStateReact.useState<
-    Record<string, boolean>
-  >({});
-  const [visibleSections, setVisibleSections] = React.useState<boolean[]>(
-    new Array(faqData.length).fill(false)
+interface FAQItemProps {
+  question: string;
+  answer: string;
+}
+
+const FAQItem: React.FC<FAQItemProps> = ({ question, answer }) => {
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  return (
+    <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 overflow-hidden hover:border-white/20 transition-all duration-300">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-white/5 transition-colors duration-200"
+      >
+        <span className="text-lg font-semibold text-white pr-4">
+          {question}
+        </span>
+        <div className="flex-shrink-0">
+          {isOpen ? (
+            <ChevronUp className="w-5 h-5 text-purple-400 transition-transform duration-200" />
+          ) : (
+            <ChevronDown className="w-5 h-5 text-purple-400 transition-transform duration-200" />
+          )}
+        </div>
+      </button>
+
+      <div
+        className={`overflow-hidden transition-all duration-300 ease-in-out ${
+          isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="px-6 pb-4 border-t border-white/10">
+          <p className="text-gray-300 leading-relaxed pt-4">{answer}</p>
+        </div>
+      </div>
+    </div>
   );
+};
 
-  const toggleItem = (categoryIndex: number, questionIndex: number) => {
-    const key = `${categoryIndex}-${questionIndex}`;
-    setOpenItems((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
-  };
-
-  React.useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const index = parseInt(
-              entry.target.getAttribute("data-section-index") || "0"
-            );
-            setVisibleSections((prev: boolean[]) => {
-              const newState = [...prev];
-              newState[index] = true;
-              return newState;
-            });
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    const sectionElements = document.querySelectorAll("[data-section-index]");
-    sectionElements.forEach((el) => observer.observe(el));
-
-    return () => observer.disconnect();
-  }, []);
-
+export const FAQ: React.FC = function () {
   return (
     <section className="py-10 px-4 relative">
       <div className="max-w-6xl mx-auto">
@@ -173,16 +172,7 @@ export const FAQ: React.FC = function () {
           {faqData.map((category, categoryIndex) => {
             const CategoryIcon = category.icon;
             return (
-              <div
-                key={categoryIndex}
-                data-section-index={categoryIndex}
-                className={`transition-all duration-700 ${
-                  visibleSections[categoryIndex]
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-10"
-                }`}
-                style={{ transitionDelay: `${categoryIndex * 200}ms` }}
-              >
+              <div key={categoryIndex}>
                 <div className="flex items-center gap-3 mb-6">
                   <div
                     className={`w-10 h-10 rounded-xl bg-gradient-to-br ${category.color} p-2.5`}
@@ -195,49 +185,13 @@ export const FAQ: React.FC = function () {
                 </div>
 
                 <div className="space-y-4">
-                  {category.questions.map((item, questionIndex) => {
-                    const key = `${categoryIndex}-${questionIndex}`;
-                    const isOpen = openItems[key];
-
-                    return (
-                      <div
-                        key={questionIndex}
-                        className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 overflow-hidden hover:border-white/20 transition-all duration-300"
-                      >
-                        <button
-                          onClick={() =>
-                            toggleItem(categoryIndex, questionIndex)
-                          }
-                          className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-white/5 transition-colors duration-200"
-                        >
-                          <span className="text-lg font-semibold text-white pr-4">
-                            {item.question}
-                          </span>
-                          <div className="flex-shrink-0">
-                            {isOpen ? (
-                              <ChevronUp className="w-5 h-5 text-purple-400 transition-transform duration-200" />
-                            ) : (
-                              <ChevronDown className="w-5 h-5 text-purple-400 transition-transform duration-200" />
-                            )}
-                          </div>
-                        </button>
-
-                        <div
-                          className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                            isOpen
-                              ? "max-h-96 opacity-100"
-                              : "max-h-0 opacity-0"
-                          }`}
-                        >
-                          <div className="px-6 pb-4 border-t border-white/10">
-                            <p className="text-gray-300 leading-relaxed pt-4">
-                              {item.answer}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
+                  {category.questions.map((item, questionIndex) => (
+                    <FAQItem
+                      key={questionIndex}
+                      question={item.question}
+                      answer={item.answer}
+                    />
+                  ))}
                 </div>
               </div>
             );
