@@ -4,12 +4,11 @@ import { ArrowRight, CheckCircle, Rocket, TrendingUp } from "lucide-react";
 export const CallToAction: React.FC = function () {
   return (
     <section className="py-10 px-4 relative overflow-hidden">
-      {" "}
       {/* Background effects */}
       <div className="absolute inset-0 bg-gradient-to-r from-purple-900/50 to-pink-900/50"></div>
+
       <div className="relative max-w-4xl mx-auto text-center">
         <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20 mb-6 mt-4">
-          {" "}
           <Rocket className="w-4 h-4 text-purple-400" />
           <span className="text-purple-300 font-medium">Ready to Start?</span>
         </div>
@@ -29,15 +28,15 @@ export const CallToAction: React.FC = function () {
 
         {/* Benefits */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center gap-3">
             <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
             <span className="text-gray-300">Never trades at a loss</span>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center gap-3">
             <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
-            <span className="text-gray-300">Your funds stay secure</span>{" "}
+            <span className="text-gray-300">Funds stay on Coinbase/Kraken</span>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center gap-3">
             <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
             <span className="text-gray-300">Set it and forget it</span>
           </div>

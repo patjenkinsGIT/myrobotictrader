@@ -5,16 +5,16 @@ import { FloatingIcons } from "./FloatingIcons";
 export const Hero: React.FC = function () {
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden pb-10 pt-10">
-      {" "}
       {/* Background effects */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900"></div>
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-transparent via-purple-500/10 to-transparent"></div>
+
       {/* Floating Icons - only in hero section */}
       <FloatingIcons />
+
       <div className="relative max-w-6xl mx-auto text-center z-10">
         <div className="mb-8">
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20 mb-6 mt-4">
-            {" "}
             <Bot className="w-4 h-4 text-purple-400" />
             <span className="text-purple-300 font-medium">
               AI-Powered Trading Revolution
@@ -29,7 +29,7 @@ export const Hero: React.FC = function () {
           </h1>
 
           <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-4xl mx-auto">
-            Our autonomous robotic traders work 24/7 to maximize your
+            Our autonomous Robotic Trader works 24/7 to maximize your
             cryptocurrency returns on Coinbase and Kraken. No experience needed
             - just set it and forget it while your portfolio grows.
           </p>

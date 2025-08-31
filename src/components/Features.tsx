@@ -15,7 +15,7 @@ const features = [
     icon: Bot,
     title: "Autonomous Robotic Trading",
     description:
-      "Advanced robotic traders analyze market patterns and execute trades with precision, adapting to changing market conditions in real-time without human intervention.  Never worry about when to buy or sell",
+      "Advanced Robotic Trader analyzes market patterns and executes trades with precision, adapting to changing market conditions in real-time without human intervention. Never worry about when to buy or sell",
     color: "from-purple-500 to-pink-500",
     stats: "100% Accurate",
   },
@@ -23,7 +23,7 @@ const features = [
     icon: TrendingUp,
     title: "Takes What the Market Gives",
     description:
-      "Our robotic traders capitalize on market opportunities as they arise, taking profits when conditions are favorable and waiting patiently when they're not.  Charts are a thing of the past.",
+      "Our Robotic Trader capitalizes on market opportunities as they arise, taking profits when conditions are favorable and waiting patiently when they're not. Charts are a thing of the past.",
     color: "from-green-500 to-blue-500",
     stats: "Market-Driven Results",
   },
@@ -31,7 +31,7 @@ const features = [
     icon: Shield,
     title: "Never Trades at a Loss",
     description:
-      "Revolutionary protection system ensures our robotic traders never execute losing trades. They wait for profitable opportunities or don't trade at all, safeguarding your capital. Stop Loss is a thing of the past.",
+      "Revolutionary protection system ensures our Robotic Trader never executes losing trades. It waits for profitable opportunities or doesn't trade at all, safeguarding your capital. Stop Loss is a thing of the past.",
     color: "from-blue-500 to-cyan-500",
     stats: "0% Loss Trades",
   },
@@ -39,7 +39,7 @@ const features = [
     icon: Clock,
     title: "Set It & Forget It",
     description:
-      "Never miss a profitable opportunity. Our autonomous robotic traders monitor global markets around the clock, executing trades even while you sleep.  The days of staring at charts are over.",
+      "Never miss a profitable opportunity. Our autonomous Robotic Trader monitors global markets around the clock, executing trades even while you sleep. The days of staring at charts are over.",
     color: "from-orange-500 to-red-500",
     stats: "Always Active",
   },
@@ -49,7 +49,7 @@ const features = [
     description:
       "Execute trades in milliseconds, capitalizing on market movements before human traders can react. Speed is crucial in cryptocurrency trading.",
     color: "from-yellow-500 to-orange-500",
-    stats: "<100ms Execution",
+    stats: """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""<100ms Execution",
   },
   {
     icon: DollarSign,
@@ -63,7 +63,7 @@ const features = [
     icon: BarChart3,
     title: "Real-Time Analytics",
     description:
-      "Position and simple profit reporting give you visibility into your robotic trader performance and how much you profit you save across Coinbase and Kraken.",
+      "Position and simple profit reporting give you visibility into your Robotic Trader performance and how much profit you save across Coinbase and Kraken.",
     color: "from-indigo-500 to-purple-500",
     stats: "Live Tracking",
   },
@@ -71,7 +71,7 @@ const features = [
     icon: Users,
     title: "Start with Paper Trading",
     description:
-      "Test the robotic traders risk-free with paper trading before going live. See how they perform and build confidence in the autonomous trading system.",
+      "Test the Robotic Trader risk-free with paper trading before going live. See how it performs and build confidence in the autonomous trading system.",
     color: "from-pink-500 to-rose-500",
     stats: "Risk-Free Testing",
   },
@@ -113,7 +113,6 @@ export const Features: React.FC = function () {
         {/* Section Header */}
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20 mb-6 mt-4">
-            {" "}
             <Zap className="w-4 h-4 text-purple-400" />
             <span className="text-purple-300 font-medium">
               Powerful Features
