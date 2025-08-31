@@ -128,7 +128,7 @@ export const FAQ: React.FC = function () {
             const index = parseInt(
               entry.target.getAttribute("data-section-index") || "0"
             );
-            setVisibleSections((prev) => {
+            setVisibleSections((prev: boolean[]) => {
               const newState = [...prev];
               newState[index] = true;
               return newState;
