@@ -108,7 +108,7 @@ export const Features: React.FC = function () {
   }, []);
 
   return (
-    <section className="py-20 px-4 relative">
+    <section className="py-32 px-4 relative">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16">
