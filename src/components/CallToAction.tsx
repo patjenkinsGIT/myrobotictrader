@@ -35,13 +35,11 @@ export const CallToAction: React.FC = function () {
           </div>
           <div className="flex items-center gap-3">
             <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
-            <span className="text-gray-300">
-              Your funds stay on Coinbase/Kraken
-            </span>
+            <span className="text-gray-300">Your funds stay secure</span>{" "}
           </div>
           <div className="flex items-center gap-3">
             <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
-            <span className="text-gray-300">Set it and forget it trading</span>
+            <span className="text-gray-300">Set it and forget it</span>
           </div>
         </div>
 
