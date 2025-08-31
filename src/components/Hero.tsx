@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ArrowRight, Bot } from "lucide-react";
+import { ArrowRight, Bot, Shield, Clock, Users } from "lucide-react";
 import { FloatingIcons } from "./FloatingIcons";
 
 export const Hero: React.FC = function () {
@@ -36,7 +36,7 @@ export const Hero: React.FC = function () {
         </div>
 
         {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
           <a
             href="https://financialintelligence4u.com/masterclass?am_id=patrick1567"
             target="_blank"
@@ -57,19 +57,78 @@ export const Hero: React.FC = function () {
           </a>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-          <div className="text-center">
-            <div className="text-3xl font-bold text-green-400 mb-2">100%</div>
-            <div className="text-gray-400">Worry Free Unattended Trading</div>
+        {/* Enhanced Stats - Now like feature boxes */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+          {/* 100% Worry Free */}
+          <div className="group relative bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/20 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
+            {/* Background Gradient */}
+            <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-500 opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity duration-300"></div>
+
+            {/* Icon */}
+            <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300">
+              <Shield className="w-full h-full text-white" />
+            </div>
+
+            {/* Content */}
+            <div className="relative text-center">
+              <div className="text-4xl font-bold text-green-400 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-green-400 group-hover:to-emerald-400 group-hover:bg-clip-text transition-all duration-300">
+                100%
+              </div>
+              <div className="text-gray-300 font-medium group-hover:text-white transition-colors duration-300">
+                Worry Free Unattended Trading
+              </div>
+            </div>
+
+            {/* Hover Effect Border */}
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
-          <div className="text-center">
-            <div className="text-3xl font-bold text-blue-400 mb-2">24/7</div>
-            <div className="text-gray-400">Automated Trading</div>
+
+          {/* 24/7 Automated */}
+          <div className="group relative bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/20 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
+            {/* Background Gradient */}
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity duration-300"></div>
+
+            {/* Icon */}
+            <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300">
+              <Clock className="w-full h-full text-white" />
+            </div>
+
+            {/* Content */}
+            <div className="relative text-center">
+              <div className="text-4xl font-bold text-blue-400 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-400 group-hover:to-cyan-400 group-hover:bg-clip-text transition-all duration-300">
+                24/7
+              </div>
+              <div className="text-gray-300 font-medium group-hover:text-white transition-colors duration-300">
+                Automated Trading
+              </div>
+            </div>
+
+            {/* Hover Effect Border */}
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
-          <div className="text-center">
-            <div className="text-3xl font-bold text-purple-400 mb-2">10K+</div>
-            <div className="text-gray-400">Satisfied Traders</div>
+
+          {/* 10K+ Satisfied */}
+          <div className="group relative bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/20 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
+            {/* Background Gradient */}
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-500 opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity duration-300"></div>
+
+            {/* Icon */}
+            <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300">
+              <Users className="w-full h-full text-white" />
+            </div>
+
+            {/* Content */}
+            <div className="relative text-center">
+              <div className="text-4xl font-bold text-purple-400 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:to-pink-400 group-hover:bg-clip-text transition-all duration-300">
+                10K+
+              </div>
+              <div className="text-gray-300 font-medium group-hover:text-white transition-colors duration-300">
+                Satisfied Traders
+              </div>
+            </div>
+
+            {/* Hover Effect Border */}
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
         </div>
       </div>
