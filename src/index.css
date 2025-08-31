@@ -14,10 +14,71 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #0f172a;
+  color: white;
 }
 
 html,
 body,
 #root {
   height: 100%;
+}
+
+/* Ensure dark background for the app */
+.App {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+}
+
+/* Minimal animations for floating icons only */
+@keyframes floatSubtle {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  25% {
+    transform: translateY(-8px) translateX(3px);
+  }
+  50% {
+    transform: translateY(-5px) translateX(-2px);
+  }
+  75% {
+    transform: translateY(-12px) translateX(1px);
+  }
+}
+
+.animate-float-subtle {
+  animation: floatSubtle 6s ease-in-out infinite;
+}
+
+/* Ensure proper text colors */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: white;
+}
+
+p {
+  color: #cbd5e1;
+}
+
+/* Ensure gradients work properly */
+.bg-gradient-to-br {
+  background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
+}
+
+.bg-gradient-to-r {
+  background-image: linear-gradient(to right, var(--tw-gradient-stops));
+}
+
+/* Force proper opacity classes */
+.opacity-15 {
+  opacity: 0.15;
+}
+
+.opacity-8 {
+  opacity: 0.08;
 }
