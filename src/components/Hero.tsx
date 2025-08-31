@@ -4,7 +4,7 @@ import { FloatingIcons } from "./FloatingIcons";
 
 export const Hero: React.FC = function () {
   return (
-    <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden pb-20">
+    <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden pb-10">
       {/* Background effects */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900"></div>
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-transparent via-purple-500/10 to-transparent"></div>
@@ -58,7 +58,7 @@ export const Hero: React.FC = function () {
         </div>
 
         {/* Enhanced Stats - Now like feature boxes */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-10">
           {/* 100% Worry Free */}
           <div className="group relative bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/20 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
             {/* Background Gradient */}
