@@ -108,11 +108,12 @@ export const Features: React.FC = function () {
   }, []);
 
   return (
-    <section className="py-32 px-4 relative">
+    <section className="py-10 px-4 relative">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-full px-6 py-2 border border-white/20 mb-6">
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20 mb-6 mt-4">
+            {" "}
             <Zap className="w-4 h-4 text-purple-400" />
             <span className="text-purple-300 font-medium">
               Powerful Features
