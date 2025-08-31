@@ -30,6 +30,11 @@ const faqData = [
           "You can start with as little as $100. We recommend starting small to familiarize yourself with the platform before scaling up your investment. Our flexible system allows you to increase your trading capital as you become more comfortable with automated trading.",
       },
       {
+        question: "Can I use this platform if I live outside the USA?",
+        answer:
+          "Yes! Our Robotic Trading platform is available to users worldwide, as long as you are eligible to trade on Coinbase or Kraken. These exchanges support users from many countries globally. Simply verify that you can create and fund an account with either Coinbase or Kraken in your region, and you'll be able to use our automated trading system.",
+      },
+      {
         question: "How do I find out more information?",
         answer:
           "The best way to learn more about our Robotic Trader Platform is to join our free masterclass where we demonstrate the system live and answer all your questions. You can register at: https://financialintelligence4u.com/masterclass?am_id=patrick1567",
@@ -72,6 +77,11 @@ const faqData = [
         question: "How often does the Robotic Trader trade?",
         answer:
           "Our Robotic Trader operates 24/7 and only executes trades when profitable opportunities arise. The frequency varies based on market conditions - it may trade multiple times per day during favorable conditions, or wait patiently when conditions aren't optimal.",
+      },
+      {
+        question: "What about ROI (Return on Investment)?",
+        answer:
+          "ROI calculations can be misleading in automated trading because they typically assume a single, fixed investment. Most successful traders grow their capital over time by adding funds and reinvesting profits. Our platform's performance is completely market-driven and depends on your individual investment choices, allocation amounts, and how you manage your capital growth. Rather than focusing on ROI percentages, we recommend tracking your overall portfolio growth and the consistency of profitable trades.",
       },
       {
         question: "Do you guarantee profits?",
