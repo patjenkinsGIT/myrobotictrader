@@ -42,6 +42,68 @@ export const CallToAction: React.FC = function () {
           </div>
         </div>
 
+        {/* Masterclass Bullet List */}
+        <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 backdrop-blur-sm rounded-2xl border border-white/20 p-8 mb-8 max-w-3xl mx-auto">
+          <h3 className="text-2xl md:text-3xl font-bold text-white mb-6">
+            Inside the Free Masterclass, You'll Discover:
+          </h3>
+
+          <ul className="text-left space-y-4 mb-6">
+            <li className="flex items-start text-gray-300">
+              <span className="text-purple-400 mr-3 text-xl">•</span>
+              <span className="text-lg">
+                How our robotic trader avoids realized losses—even during wild
+                market swings
+              </span>
+            </li>
+            <li className="flex items-start text-gray-300">
+              <span className="text-purple-400 mr-3 text-xl">•</span>
+              <span className="text-lg">
+                The simple, set-and-forget strategy that lets you trade
+                profitably without being glued to your screen
+              </span>
+            </li>
+            <li className="flex items-start text-gray-300">
+              <span className="text-purple-400 mr-3 text-xl">•</span>
+              <span className="text-lg">
+                Real examples: What happens when the crypto market drops
+              </span>
+            </li>
+            <li className="flex items-start text-gray-300">
+              <span className="text-purple-400 mr-3 text-xl">•</span>
+              <span className="text-lg">
+                The truth about "never trading at a loss" (and how we actually
+                do it)
+              </span>
+            </li>
+            <li className="flex items-start text-gray-300">
+              <span className="text-purple-400 mr-3 text-xl">•</span>
+              <span className="text-lg">
+                Why you never have to worry about selling early or missing out
+                on recoveries
+              </span>
+            </li>
+            <li className="flex items-start text-gray-300">
+              <span className="text-purple-400 mr-3 text-xl">•</span>
+              <span className="text-lg">
+                How you stay in control—override automation any time you want
+              </span>
+            </li>
+            <li className="flex items-start text-gray-300">
+              <span className="text-purple-400 mr-3 text-xl">•</span>
+              <span className="text-lg">
+                Answers to common crypto trading questions (myths, risks, and
+                more)
+              </span>
+            </li>
+          </ul>
+
+          <p className="text-lg text-purple-200 font-medium">
+            No signup, no payment required. Just real strategies and actionable
+            insights!
+          </p>
+        </div>
+
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
           <a
