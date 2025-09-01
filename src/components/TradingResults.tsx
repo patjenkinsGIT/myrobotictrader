@@ -15,7 +15,7 @@ export const TradingResults: React.FC = () => {
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-600/20 to-blue-600/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20 mb-6">
             <BarChart3 className="w-4 h-4 text-green-400" />
-            <span className="text-green-300 font-medium">Live Results</span>
+            <span className="text-green-300 font-medium">Real Results</span>
           </div>
 
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
@@ -27,7 +27,7 @@ export const TradingResults: React.FC = () => {
               {" "}
               Started January 8, 2025
             </span>{" "}
-            - consistent results for 8 months!
+            - updated regularly!
           </p>
         </div>
 
@@ -45,14 +45,14 @@ export const TradingResults: React.FC = () => {
             </div>
           </div>
 
-          {/* 30-Day Profits */}
+          {/* Monthly Average */}
           <div className="bg-gradient-to-br from-blue-900/30 to-blue-800/30 backdrop-blur-sm rounded-2xl border border-blue-500/20 p-6 text-center">
             <Calendar className="w-8 h-8 text-blue-400 mx-auto mb-3" />
-            <div className="text-3xl font-bold text-blue-400 mb-2">
-              ${tradingData.thirtyDayProfit.toLocaleString()}
+            <div className="text-3xl font-bold text-blue-400 mb-2">$441.54</div>
+            <div className="text-gray-300 text-sm">Monthly Average</div>
+            <div className="text-xs text-gray-400 mt-1">
+              Consistent Performance
             </div>
-            <div className="text-gray-300 text-sm">30-Day Profits</div>
-            <div className="text-xs text-gray-400 mt-1">Recent Performance</div>
           </div>
 
           {/* Daily Average */}
@@ -62,51 +62,66 @@ export const TradingResults: React.FC = () => {
               ${dailyAvg}
             </div>
             <div className="text-gray-300 text-sm">Daily Average</div>
-            <div className="text-xs text-gray-400 mt-1">Consistent Growth</div>
+            <div className="text-xs text-gray-400 mt-1">Steady Growth</div>
           </div>
 
-          {/* Today's Profit */}
+          {/* Best Month */}
           <div className="bg-gradient-to-br from-pink-900/30 to-pink-800/30 backdrop-blur-sm rounded-2xl border border-pink-500/20 p-6 text-center">
             <Zap className="w-8 h-8 text-pink-400 mx-auto mb-3" />
-            <div className="text-3xl font-bold text-pink-400 mb-2">
-              ${tradingData.todayProfit}
-            </div>
-            <div className="text-gray-300 text-sm">Today's Profit</div>
-            <div className="text-xs text-gray-400 mt-1">Live Update</div>
+            <div className="text-3xl font-bold text-pink-400 mb-2">$817.31</div>
+            <div className="text-gray-300 text-sm">Best Month</div>
+            <div className="text-xs text-gray-400 mt-1">July 2025</div>
           </div>
         </div>
 
         {/* Monthly Chart */}
         <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-8">
           <h3 className="text-2xl font-bold text-white mb-6 text-center">
-            Monthly Performance Trend
+            Monthly Performance (2025)
           </h3>
 
-          <div className="flex items-end justify-center gap-4 h-48">
+          <div className="flex items-end justify-center gap-3 h-48 overflow-x-auto">
             {[
-              { month: "Aug 2025", profit: 408 },
-              { month: "Jul 2025", profit: 520 },
-              { month: "Jun 2025", profit: 480 },
-              { month: "May 2025", profit: 450 },
-              { month: "Apr 2025", profit: 380 },
-              { month: "Mar 2025", profit: 420 },
+              { month: "Jan", profit: 477.17 },
+              { month: "Feb", profit: 686.72 },
+              { month: "Mar", profit: 261.93 },
+              { month: "Apr", profit: 552.58 },
+              { month: "May", profit: 376.29 },
+              { month: "Jun", profit: 382.98 },
+              { month: "Jul", profit: 817.31 },
+              { month: "Aug", profit: 413.54 },
             ].map((month) => {
-              const height = (month.profit / 520) * 100;
+              const height = (month.profit / 817.31) * 100; // Scale to highest month
+              const isHighest = month.profit === 817.31;
               return (
                 <div key={month.month} className="flex flex-col items-center">
-                  <div className="text-sm text-gray-300 mb-2">
-                    ${month.profit}
+                  <div
+                    className={`text-sm mb-2 font-semibold ${
+                      isHighest ? "text-yellow-400" : "text-gray-300"
+                    }`}
+                  >
+                    ${month.profit.toFixed(0)}
                   </div>
                   <div
-                    className="w-12 bg-gradient-to-t from-green-600 to-green-400 rounded-t-lg transition-all duration-1000 ease-out"
+                    className={`w-10 rounded-t-lg transition-all duration-1000 ease-out ${
+                      isHighest
+                        ? "bg-gradient-to-t from-yellow-600 to-yellow-400 shadow-lg shadow-yellow-500/30"
+                        : "bg-gradient-to-t from-green-600 to-green-400"
+                    }`}
                     style={{ height: `${height}%` }}
                   ></div>
-                  <div className="text-xs text-gray-400 mt-2 transform -rotate-45 origin-left">
+                  <div className="text-xs text-gray-400 mt-2 font-medium">
                     {month.month}
                   </div>
                 </div>
               );
             })}
+          </div>
+
+          <div className="text-center mt-6">
+            <p className="text-green-400 font-semibold">
+              📈 $441.54 average per month • Best month: $817.31 (July)
+            </p>
           </div>
         </div>
 
