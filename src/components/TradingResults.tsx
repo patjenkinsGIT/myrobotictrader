@@ -22,7 +22,8 @@ export const TradingResults: React.FC = () => {
             Patrick's Trading Results
           </h2>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            These are my actual profits from using MyRoboticTrader.
+            These are my actual profits from using my personal robotic trader
+            account.
             <span className="text-green-400 font-semibold">
               {" "}
               Started January 8, 2025
@@ -149,7 +150,7 @@ export const TradingResults: React.FC = () => {
         <div className="text-center mt-8">
           <p className="text-sm text-gray-400 max-w-2xl mx-auto">
             * These are Patrick's actual trading results from his personal
-            MyRoboticTrader account. Started January 8, 2025. Results updated
+            Robotic Trader account. Started January 8, 2025. Results updated
             regularly. Past performance does not guarantee future results. Last
             updated: September 1, 2025
           </p>
