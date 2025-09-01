@@ -1,17 +1,9 @@
 import * as React from "react";
 import { TrendingUp, DollarSign, Calendar, BarChart3, Zap } from "lucide-react";
-import {
-  tradingData,
-  calculateDailyAverage,
-  calculateWeeklyAverage,
-  getRecentWeeks,
-} from "../data/tradingResults";
+import { tradingData, calculateDailyAverage } from "../data/tradingResults";
 
 export const TradingResults: React.FC = () => {
-  const recentWeeks = getRecentWeeks(3);
   const dailyAvg = calculateDailyAverage();
-  const weeklyAvg = calculateWeeklyAverage();
-  const tradingDays = Math.max(tradingData.accountInfo.tradingDays, 1);
 
   return (
     <section className="py-16 px-4 relative overflow-hidden">
@@ -98,8 +90,8 @@ export const TradingResults: React.FC = () => {
               { month: "May 2025", profit: 450 },
               { month: "Apr 2025", profit: 380 },
               { month: "Mar 2025", profit: 420 },
-            ].map((month, index) => {
-              const height = (month.profit / 520) * 100; // Max value for scaling
+            ].map((month) => {
+              const height = (month.profit / 520) * 100;
               return (
                 <div key={month.month} className="flex flex-col items-center">
                   <div className="text-sm text-gray-300 mb-2">
