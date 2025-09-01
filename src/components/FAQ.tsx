@@ -17,27 +17,27 @@ const faqData = [
       {
         question: "What is robotic crypto trading and how does it work?",
         answer:
-          "Robotic crypto trading uses advanced AI algorithms to automatically buy and sell cryptocurrencies based on market analysis, technical indicators, and predefined strategies. Our Robotic Trader monitors the market 24/7, executes trades in milliseconds, and adapts to changing market conditions without human intervention.",
+          "Robotic crypto trading uses advanced AI algorithms to automatically buy and sell cryptocurrencies based on market analysis, technical indicators, and predefined strategies. The Robotic Trader monitors the market 24/7, executes trades in milliseconds, and adapts to changing market conditions without human intervention.",
       },
       {
         question: "Do I need trading experience to use your platform?",
         answer:
-          "No trading experience is required! Our AI-powered system handles all the complex analysis and decision-making. You simply set your risk preferences and investment amount, and our Robotic Trader does the rest. We also provide educational resources and 24/7 support to help you understand the process.",
+          "No trading experience is required! The AI-powered system handles all the complex analysis and decision-making. You simply set your risk preferences and investment amount, and the platform does the rest. We also provide educational resources and 24/7 support to help you understand the process.",
       },
       {
         question: "How much money do I need to start?",
         answer:
-          "You can start with as little as $100. We recommend starting small to familiarize yourself with the platform before scaling up your investment. Our flexible system allows you to increase your trading capital as you become more comfortable with automated trading.",
+          "You can start with as little as $100. We recommend starting small to familiarize yourself with the platform before scaling up your investment. The flexible system allows you to increase your trading capital as you become more comfortable with automated trading.",
       },
       {
         question: "Can I use this platform if I live outside the USA?",
         answer:
-          "Yes! Our Robotic Trading platform is available to users worldwide, as long as you are eligible to trade on Coinbase or Kraken. These exchanges support users from many countries globally. Simply verify that you can create and fund an account with either Coinbase or Kraken in your region, and you'll be able to use our automated trading system.",
+          "Yes! The Robotic Trading platform is available to users worldwide, as long as you are eligible to trade on Coinbase or Kraken. These exchanges support users from many countries globally. Simply verify that you can create and fund an account with either Coinbase or Kraken in your region, and you'll be able to use the automated trading system.",
       },
       {
         question: "How do I find out more information?",
         answer:
-          "The best way to learn more about our Robotic Trader Platform is to join our free masterclass where we demonstrate the system live and answer all your questions. You can register at: https://financialintelligence4u.com/masterclass?am_id=patrick1567",
+          "The best way to learn more about the trading is to join the free masterclass where we demonstrate the system live and answer all your questions. You can register at: https://financialintelligence4u.com/masterclass?am_id=patrick1567",
       },
     ],
   },
@@ -49,13 +49,13 @@ const faqData = [
       {
         question: "Is my money safe with robotic trading?",
         answer:
-          "Yes, your funds remain secure in your own exchange accounts (Kraken or Coinbase). Our robotic trader only connects via API with trading permissions - we never have access to withdraw or transfer your funds. All asset protection is handled directly by your chosen exchange (Kraken/Coinbase).",
+          "Yes, your funds remain secure in your own exchange accounts (Kraken or Coinbase). The robotic trader only connects via API with trading permissions - we never have access to withdraw or transfer your funds. All asset protection is handled directly by your chosen exchange (Kraken/Coinbase).",
       },
 
       {
         question: "What happens if the Robotic Trader makes losing trades?",
         answer:
-          "Our revolutionary protection system ensures our Robotic Trader never executes losing trades. It waits for profitable opportunities or doesn't trade at all, safeguarding your capital. This is what sets us apart from traditional trading systems.",
+          "This revolutionary protection system ensures the trader never executes losing trades. It waits for profitable opportunities or doesn't trade at all, safeguarding your capital. This is what sets us apart from traditional trading systems.",
       },
       {
         question: "Can I stop the Robotic Trader or withdraw my money anytime?",
@@ -72,27 +72,27 @@ const faqData = [
       {
         question: "What kind of returns can I expect?",
         answer:
-          "While past performance doesn't guarantee future results, our Robotic Trader Platform has historically achieved consistent profitable results by only taking trades when market conditions are favorable. Results vary based on market conditions, risk settings, and investment amount.",
+          "While past performance doesn't guarantee future results, the trading platform has historically achieved consistent profitable results by only taking trades when market conditions are favorable. Results vary based on market conditions, risk settings, and investment amount.",
       },
       {
         question: "How often does the Robotic Trader trade?",
         answer:
-          "Our Robotic Trader operates 24/7 and only executes trades when profitable opportunities arise. The frequency varies based on market conditions - it may trade multiple times per day during favorable conditions, or wait patiently when conditions aren't optimal.",
+          "The Robotic Trader operates 24/7 and only executes trades when profitable opportunities arise. The frequency varies based on market conditions - it may trade multiple times per day during favorable conditions, or wait patiently when conditions aren't optimal.",
       },
       {
         question: "What about ROI (Return on Investment)?",
         answer:
-          "ROI calculations can be misleading in automated trading because they typically assume a single, fixed investment. Most successful traders grow their capital over time by adding funds and reinvesting profits. Our platform's performance is completely market-driven and depends on your individual investment choices, allocation amounts, and how you manage your capital growth. Rather than focusing on ROI percentages, we recommend tracking your overall portfolio growth and the consistency of profitable trades.",
+          "ROI calculations can be misleading in automated trading because they typically assume a single, fixed investment. Most successful traders grow their capital over time by adding funds and reinvesting profits. The platform's performance is completely market-driven and depends on your individual investment choices, allocation amounts, and how you manage your capital growth. Rather than focusing on ROI percentages, we recommend tracking your overall portfolio growth and the consistency of profitable trades.",
       },
       {
         question: "Does the robotic trader ever sell my position(s) at a loss?",
         answer:
-          "Our platform is designed so that positions are only sold when they become profitable, unless you manually choose otherwise. Even if you have open (unrealized) losses during market dips, the robotic trader patiently waits for opportunities to sell for a gain. Losses are only realized if you instruct our platform to close positions before they return to profit. This approach allows you to avoid locking in losses and gives your trades the best chance to succeed over time.",
+          "The platform is designed so that positions are only sold when they become profitable, unless you manually choose otherwise. Even if you have open (unrealized) losses during market dips, the robotic trader patiently waits for opportunities to sell for a gain. Losses are only realized if you instruct the trader to close positions before they return to profit. This approach allows you to avoid locking in losses and gives your trades the best chance to succeed over time.",
       },
       {
         question: "Do you guarantee profits?",
         answer:
-          "While we cannot guarantee profits (no legitimate trading system can), our unique approach of never trading at a loss significantly improves your probability of success. Our Robotic Trader is designed to be patient and only take high-probability trades.",
+          "While we cannot guarantee profits (no legitimate trading system can), this unique approach of never trading at a loss significantly improves your probability of success. The Robotic Trader is designed to be patient and only take high-probability trades.",
       },
     ],
   },
@@ -104,17 +104,17 @@ const faqData = [
       {
         question: "What exchanges do you support?",
         answer:
-          "We support Coinbase and Kraken exclusively. Our Robotic Trader Platform integrates seamlessly with these two trusted exchanges through secure API connections, allowing the Robotic Trader to trade on your behalf while keeping your funds safe in your own accounts.",
+          "We support Coinbase and Kraken exclusively. The Robotic Trader Platform integrates seamlessly with these two trusted exchanges through secure API connections, allowing the Robotic Trader to trade on your behalf while keeping your funds safe in your own accounts.",
       },
       {
         question: "Do I need to keep my computer running?",
         answer:
-          "No! Our Robotic Trader runs on cloud servers, so it operates 24/7 even when your computer is off. You can monitor your trades and adjust settings from any device through our web platform. The Robotic Trader never sleeps, ensuring you never miss profitable opportunities.",
+          "No! The Robotic Trader runs on cloud servers, so it operates 24/7 even when your computer is off. You can monitor your trades and adjust settings from any device through the Web-Based trading platform. The Robotic Trader never sleeps, ensuring you never miss profitable opportunities.",
       },
       {
         question: "What kind of support do you provide?",
         answer:
-          "We offer comprehensive technical support to help you get started and configure the platform. Our team can assist with setup, platform configuration, and technical questions. Please note that we provide technical and educational support only - we do not offer financial advice or investment recommendations.",
+          "We offer comprehensive technical support to help you get started and configure the platform. The Support team can assist with setup, platform configuration, and technical questions. Please note that we provide technical and educational support only - we do not offer financial advice or investment recommendations.",
       },
     ],
   },
@@ -220,7 +220,7 @@ export const FAQ: React.FC = function () {
               Still Have Questions?
             </h3>
             <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
-              Our expert support team is available to help you get started with
+              The Product Support team is available to help you get started with
               automated crypto trading
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
