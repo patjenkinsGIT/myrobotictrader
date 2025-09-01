@@ -55,7 +55,7 @@ const features = [
     icon: DollarSign,
     title: "Your Funds Stay Safe",
     description:
-      "Your funds stay secure in your own Kracken/Coinbase exchange accounts. The robotic trader connects via API with trading-only access—we can never withdraw or transfer funds. For maximum safety, use MFA, hardware security keys, and API allow lists on your exchange.",
+      "Your funds stay secure in your own Kracken/Coinbase exchange accounts. The robotic trader connects via API with trading-only access—we can never withdraw or transfer funds. For maximum safety, use MFA, hardware security keys, and allow lists on your exchange.",
     color: "from-emerald-500 to-teal-500",
     stats: "Your Keys, Your Crypto",
   },
