@@ -31,7 +31,7 @@ const features = [
     icon: Shield,
     title: "Never Trades at a Loss",
     description:
-      "Our robotic trader stands apart by waiting for each position to turn profitable before selling—never closing trades at a loss unless you choose to do so. This advanced approach helps you avoid realized losses and makes the most of market volatility, providing unique protection for your investments.",
+      "Our robotic trader only sells when your position is profitable—never at a loss unless you choose otherwise. This smart approach protects your investments and takes advantage of market swings.",
     color: "from-blue-500 to-cyan-500",
     stats: "0% Loss Trades",
   },
