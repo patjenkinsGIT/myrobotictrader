@@ -85,6 +85,11 @@ const faqData = [
           "ROI calculations can be misleading in automated trading because they typically assume a single, fixed investment. Most successful traders grow their capital over time by adding funds and reinvesting profits. Our platform's performance is completely market-driven and depends on your individual investment choices, allocation amounts, and how you manage your capital growth. Rather than focusing on ROI percentages, we recommend tracking your overall portfolio growth and the consistency of profitable trades.",
       },
       {
+        question: "Does the robotic trader ever sell my position(s) at a loss?",
+        answer:
+          "Our platform is designed so that positions are only sold when they become profitable, unless you manually choose otherwise. Even if you have open (unrealized) losses during market dips, the robotic trader patiently waits for opportunities to sell for a gain. Losses are only realized if you instruct our platform to close positions before they return to profit. This approach allows you to avoid locking in losses and gives your trades the best chance to succeed over time.",
+      },
+      {
         question: "Do you guarantee profits?",
         answer:
           "While we cannot guarantee profits (no legitimate trading system can), our unique approach of never trading at a loss significantly improves your probability of success. Our Robotic Trader is designed to be patient and only take high-probability trades.",
