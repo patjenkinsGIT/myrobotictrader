@@ -74,70 +74,72 @@ export const TradingResults: React.FC = () => {
           </div>
         </div>
 
-        {/* Monthly Chart - FIXED VERSION */}
-        <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-8">
-          <h3 className="text-2xl font-bold text-white mb-6 text-center">
+        {/* Monthly Chart - MOBILE RESPONSIVE VERSION */}
+        <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8">
+          <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6 text-center">
             Monthly Performance (2025)
           </h3>
 
-          {/* Fixed chart container with explicit height */}
-          <div
-            className="flex items-end justify-center gap-4 mb-6"
-            style={{ height: "280px" }}
-          >
-            {[
-              { month: "Jan", profit: 477.17 },
-              { month: "Feb", profit: 686.72 },
-              { month: "Mar", profit: 261.93 },
-              { month: "Apr", profit: 552.58 },
-              { month: "May", profit: 376.29 },
-              { month: "Jun", profit: 382.98 },
-              { month: "Jul", profit: 817.31 },
-              { month: "Aug", profit: 413.54 },
-            ].map((month) => {
-              // Calculate height in pixels, not percentage
-              const maxBarHeight = 220; // Leave room for labels
-              const height = Math.max(
-                (month.profit / 817.31) * maxBarHeight,
-                15
-              ); // Minimum 15px
-              const isHighest = month.profit === 817.31;
+          {/* Responsive chart container */}
+          <div className="w-full overflow-x-auto">
+            <div
+              className="flex items-end justify-center gap-2 md:gap-4 mb-4 md:mb-6 min-w-max mx-auto"
+              style={{ height: "200px" }} // Smaller height for mobile
+            >
+              {[
+                { month: "Jan", profit: 477.17 },
+                { month: "Feb", profit: 686.72 },
+                { month: "Mar", profit: 261.93 },
+                { month: "Apr", profit: 552.58 },
+                { month: "May", profit: 376.29 },
+                { month: "Jun", profit: 382.98 },
+                { month: "Jul", profit: 817.31 },
+                { month: "Aug", profit: 413.54 },
+              ].map((month) => {
+                // Responsive bar height
+                const maxBarHeight = 140; // Smaller for mobile
+                const height = Math.max(
+                  (month.profit / 817.31) * maxBarHeight,
+                  12
+                );
+                const isHighest = month.profit === 817.31;
 
-              return (
-                <div key={month.month} className="flex flex-col items-center">
-                  {/* Profit amount above bar */}
-                  <div
-                    className={`text-sm mb-2 font-semibold ${
-                      isHighest ? "text-yellow-400" : "text-gray-300"
-                    }`}
-                  >
-                    ${Math.round(month.profit)}
+                return (
+                  <div key={month.month} className="flex flex-col items-center">
+                    {/* Profit amount above bar - responsive text */}
+                    <div
+                      className={`text-xs md:text-sm mb-1 md:mb-2 font-semibold ${
+                        isHighest ? "text-yellow-400" : "text-gray-300"
+                      }`}
+                    >
+                      ${Math.round(month.profit)}
+                    </div>
+
+                    {/* Bar with responsive width */}
+                    <div
+                      className={`w-8 md:w-12 rounded-t-lg transition-all duration-1000 ease-out ${
+                        isHighest
+                          ? "bg-gradient-to-t from-yellow-600 to-yellow-400 shadow-lg shadow-yellow-500/30"
+                          : "bg-gradient-to-t from-green-600 to-green-400 shadow-lg shadow-green-500/20"
+                      }`}
+                      style={{
+                        height: `${height}px`,
+                        minHeight: "12px",
+                      }}
+                    ></div>
+
+                    {/* Month label below bar - responsive text */}
+                    <div className="text-xs md:text-sm text-gray-300 mt-2 md:mt-3 font-medium">
+                      {month.month}
+                    </div>
                   </div>
-
-                  {/* Bar with fixed pixel height */}
-                  <div
-                    className={`w-12 rounded-t-lg transition-all duration-1000 ease-out ${
-                      isHighest
-                        ? "bg-gradient-to-t from-yellow-600 to-yellow-400 shadow-lg shadow-yellow-500/30"
-                        : "bg-gradient-to-t from-green-600 to-green-400 shadow-lg shadow-green-500/20"
-                    }`}
-                    style={{
-                      height: `${height}px`,
-                      minHeight: "15px", // Ensure minimum visibility
-                    }}
-                  ></div>
-
-                  {/* Month label below bar */}
-                  <div className="text-sm text-gray-300 mt-3 font-medium">
-                    {month.month}
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
 
           <div className="text-center">
-            <p className="text-green-400 font-semibold text-lg">
+            <p className="text-green-400 font-semibold text-sm md:text-lg">
               📈 $441.54 average per month • Best month: $817.31 (July)
             </p>
           </div>
