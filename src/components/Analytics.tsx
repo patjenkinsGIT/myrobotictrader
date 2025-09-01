@@ -65,15 +65,14 @@ export const FacebookPixel: React.FC<{ pixelId: string }> = ({ pixelId }) => {
 };
 
 // Event tracking functions
-export const trackEvent = (eventName: string, parameters?: Record<string, any>) => {
-  // Google Analytics event tracking
+export const trackPageView = (pageName: string, measurementId: string) => {
   if (typeof window !== 'undefined' && (window as any).gtag) {
-    (window as any).gtag('event', eventName, {
-      event_category: 'engagement',
-      event_label: 'MyRoboticTrader',
-      ...parameters
+    (window as any).gtag('config', measurementId, {
+      page_title: pageName,
+      page_location: window.location.href
     });
   }
+};
 
   // Facebook Pixel event tracking
   if (typeof window !== 'undefined' && (window as any).fbq) {

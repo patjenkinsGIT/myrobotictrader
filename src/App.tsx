@@ -18,8 +18,8 @@ function App() {
   return (
     <div className="App min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       {/* Analytics Components */}
-      <GoogleAnalytics measurementId="GA_MEASUREMENT_ID" />
-      <FacebookPixel pixelId="FACEBOOK_PIXEL_ID" />
+      <GoogleAnalytics measurementId={import.meta.env.VITE_GA_MEASUREMENT_ID} />
+      <FacebookPixel pixelId={import.meta.env.VITE_FACEBOOK_PIXEL_ID} />
 
       {/* Main Content */}
       <Hero />
