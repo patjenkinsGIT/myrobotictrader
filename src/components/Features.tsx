@@ -55,7 +55,7 @@ const features = [
     icon: DollarSign,
     title: "Your Funds Stay Safe",
     description:
-      "Your cryptocurrencies remain safely in your own Coinbase or Kraken accounts. We never hold your funds - only execute trades on your behalf through secure API connections.",
+      "Your funds remain secure in your own exchange accounts (Kraken or Coinbase). Our robotic trader connects via API with trading permissions only—we never have access to withdraw or transfer your funds. All asset protection and security features are managed directly by your chosen exchange. We strongly encourage users to enable multi-factor authentication (MFA), use hardware security keys, and set up address allow lists to further safeguard your assets.",
     color: "from-emerald-500 to-teal-500",
     stats: "Your Keys, Your Crypto",
   },
