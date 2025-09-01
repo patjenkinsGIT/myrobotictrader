@@ -1,7 +1,7 @@
 import * as React from "react";
 
 // Google Analytics component
-export const GoogleAnalytics: React.FC<{ measurementId: string }> = ({ measurementId }) => {
+export const GoogleAnalytics: React.FCReact.FCReact.FCReact.FC<{ measurementId: string }> = ({ measurementId }) => {
   React.useEffect(() => {
     // Load Google Analytics script
     const script1 = document.createElement('script');
@@ -33,7 +33,7 @@ export const GoogleAnalytics: React.FC<{ measurementId: string }> = ({ measureme
 };
 
 // Facebook Pixel component
-export const FacebookPixel: React.FC<{ pixelId: string }> = ({ pixelId }) => {
+export const FacebookPixel: React.FCReact.FCReact.FCReact.FC<{ pixelId: string }> = ({ pixelId }) => {
   React.useEffect(() => {
     const script = document.createElement('script');
     script.innerHTML = `
@@ -52,7 +52,7 @@ export const FacebookPixel: React.FC<{ pixelId: string }> = ({ pixelId }) => {
 
     // Add noscript fallback
     const noscript = document.createElement('noscript');
-    noscript.innerHTML = `<img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=${pixelId}&ev=PageView&noscript=1" />`;
+    noscript.innerHTML = ``````<img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=${pixelId}&ev=PageView&noscript=1" />`;
     document.body.appendChild(noscript);
 
     return () => {
@@ -65,14 +65,15 @@ export const FacebookPixel: React.FC<{ pixelId: string }> = ({ pixelId }) => {
 };
 
 // Event tracking functions
-export const trackPageView = (pageName: string, measurementId: string) => {
+export const trackEvent = (eventName: string, parameters?: RecordRecord<string, any>) => {
+  // Google Analytics event tracking
   if (typeof window !== 'undefined' && (window as any).gtag) {
-    (window as any).gtag('config', measurementId, {
-      page_title: pageName,
-      page_location: window.location.href
+    (window as any).gtag('event', eventName, {
+      event_category: 'engagement',
+      event_label: 'MyRoboticTrader',
+      ...parameters
     });
   }
-};
 
   // Facebook Pixel event tracking
   if (typeof window !== 'undefined' && (window as any).fbq) {
@@ -103,9 +104,9 @@ export const trackConversion = (conversionType: string, value?: number) => {
 };
 
 // Page view tracking
-export const trackPageView = (pageName: string) => {
+export const trackPageView = (pageName: string, measurementId: string) => {
   if (typeof window !== 'undefined' && (window as any).gtag) {
-    (window as any).gtag('config', 'GA_MEASUREMENT_ID', {
+    (window as any).gtag('config', measurementId, {
       page_title: pageName,
       page_location: window.location.href
     });
