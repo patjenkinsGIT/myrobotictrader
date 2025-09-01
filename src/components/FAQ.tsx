@@ -46,11 +46,11 @@ const faqData = [
     icon: Shield,
     color: "from-green-500 to-blue-500",
     questions: [
-      {
-        question: "Is my money safe with robotic trading?",
-        answer:
-          "Yes, your funds are protected through multiple security layers. We use bank-level encryption, cold storage for cryptocurrencies, and never store your exchange API keys with withdrawal permissions. Additionally, our risk management protocols include stop-losses and position sizing to protect your capital.",
-      },
+{
+  question: "Is my money safe with robotic trading?",
+  answer: "Yes, your funds remain secure in your own exchange accounts (Kraken or Coinbase). Our robotic trader only connects via API with trading permissions - we never have access to withdraw or transfer your funds. All asset protection is handled directly by your chosen exchange (Kraken/Coinbase)."
+}
+
       {
         question: "What happens if the Robotic Trader makes losing trades?",
         answer:
