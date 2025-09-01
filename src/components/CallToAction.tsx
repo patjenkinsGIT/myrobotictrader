@@ -49,48 +49,48 @@ export const CallToAction: React.FC = function () {
           </h3>
 
           <ul className="text-left space-y-4 mb-6">
-            <li className="flex items-start text-gray-300">
-              <span className="text-purple-400 mr-3 text-xl">•</span>
+            <li className="flex items-start text-gray-300 group hover:text-white transition-all duration-300 hover:translate-x-2">
+              <ArrowRight className="w-5 h-5 text-purple-400 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-400 transition-colors" />
               <span className="text-lg">
                 How our robotic trader avoids realized losses—even during wild
                 market swings
               </span>
             </li>
-            <li className="flex items-start text-gray-300">
-              <span className="text-purple-400 mr-3 text-xl">•</span>
+            <li className="flex items-start text-gray-300 group hover:text-white transition-all duration-300 hover:translate-x-2">
+              <ArrowRight className="w-5 h-5 text-purple-400 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-400 transition-colors" />
               <span className="text-lg">
                 The simple, set-and-forget strategy that lets you trade
                 profitably without being glued to your screen
               </span>
             </li>
-            <li className="flex items-start text-gray-300">
-              <span className="text-purple-400 mr-3 text-xl">•</span>
+            <li className="flex items-start text-gray-300 group hover:text-white transition-all duration-300 hover:translate-x-2">
+              <ArrowRight className="w-5 h-5 text-purple-400 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-400 transition-colors" />
               <span className="text-lg">
                 Real examples: What happens when the crypto market drops
               </span>
             </li>
-            <li className="flex items-start text-gray-300">
-              <span className="text-purple-400 mr-3 text-xl">•</span>
+            <li className="flex items-start text-gray-300 group hover:text-white transition-all duration-300 hover:translate-x-2">
+              <ArrowRight className="w-5 h-5 text-purple-400 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-400 transition-colors" />
               <span className="text-lg">
                 The truth about "never trading at a loss" (and how we actually
                 do it)
               </span>
             </li>
-            <li className="flex items-start text-gray-300">
-              <span className="text-purple-400 mr-3 text-xl">•</span>
+            <li className="flex items-start text-gray-300 group hover:text-white transition-all duration-300 hover:translate-x-2">
+              <ArrowRight className="w-5 h-5 text-purple-400 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-400 transition-colors" />
               <span className="text-lg">
                 Why you never have to worry about selling early or missing out
                 on recoveries
               </span>
             </li>
-            <li className="flex items-start text-gray-300">
-              <span className="text-purple-400 mr-3 text-xl">•</span>
+            <li className="flex items-start text-gray-300 group hover:text-white transition-all duration-300 hover:translate-x-2">
+              <ArrowRight className="w-5 h-5 text-purple-400 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-400 transition-colors" />
               <span className="text-lg">
                 How you stay in control—override automation any time you want
               </span>
             </li>
-            <li className="flex items-start text-gray-300">
-              <span className="text-purple-400 mr-3 text-xl">•</span>
+            <li className="flex items-start text-gray-300 group hover:text-white transition-all duration-300 hover:translate-x-2">
+              <ArrowRight className="w-5 h-5 text-purple-400 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-400 transition-colors" />
               <span className="text-lg">
                 Answers to common crypto trading questions (myths, risks, and
                 more)
