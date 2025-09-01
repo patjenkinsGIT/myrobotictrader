@@ -74,13 +74,17 @@ export const TradingResults: React.FC = () => {
           </div>
         </div>
 
-        {/* Monthly Chart */}
+        {/* Monthly Chart - FIXED VERSION */}
         <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-8">
           <h3 className="text-2xl font-bold text-white mb-6 text-center">
             Monthly Performance (2025)
           </h3>
 
-          <div className="flex items-end justify-center gap-3 h-48 overflow-x-auto">
+          {/* Fixed chart container with explicit height */}
+          <div
+            className="flex items-end justify-center gap-4 mb-6"
+            style={{ height: "280px" }}
+          >
             {[
               { month: "Jan", profit: 477.17 },
               { month: "Feb", profit: 686.72 },
@@ -91,26 +95,40 @@ export const TradingResults: React.FC = () => {
               { month: "Jul", profit: 817.31 },
               { month: "Aug", profit: 413.54 },
             ].map((month) => {
-              const height = (month.profit / 817.31) * 100; // Scale to highest month
+              // Calculate height in pixels, not percentage
+              const maxBarHeight = 220; // Leave room for labels
+              const height = Math.max(
+                (month.profit / 817.31) * maxBarHeight,
+                15
+              ); // Minimum 15px
               const isHighest = month.profit === 817.31;
+
               return (
                 <div key={month.month} className="flex flex-col items-center">
+                  {/* Profit amount above bar */}
                   <div
                     className={`text-sm mb-2 font-semibold ${
                       isHighest ? "text-yellow-400" : "text-gray-300"
                     }`}
                   >
-                    ${month.profit.toFixed(0)}
+                    ${Math.round(month.profit)}
                   </div>
+
+                  {/* Bar with fixed pixel height */}
                   <div
-                    className={`w-10 rounded-t-lg transition-all duration-1000 ease-out ${
+                    className={`w-12 rounded-t-lg transition-all duration-1000 ease-out ${
                       isHighest
                         ? "bg-gradient-to-t from-yellow-600 to-yellow-400 shadow-lg shadow-yellow-500/30"
-                        : "bg-gradient-to-t from-green-600 to-green-400"
+                        : "bg-gradient-to-t from-green-600 to-green-400 shadow-lg shadow-green-500/20"
                     }`}
-                    style={{ height: `${height}%` }}
+                    style={{
+                      height: `${height}px`,
+                      minHeight: "15px", // Ensure minimum visibility
+                    }}
                   ></div>
-                  <div className="text-xs text-gray-400 mt-2 font-medium">
+
+                  {/* Month label below bar */}
+                  <div className="text-sm text-gray-300 mt-3 font-medium">
                     {month.month}
                   </div>
                 </div>
@@ -118,8 +136,8 @@ export const TradingResults: React.FC = () => {
             })}
           </div>
 
-          <div className="text-center mt-6">
-            <p className="text-green-400 font-semibold">
+          <div className="text-center">
+            <p className="text-green-400 font-semibold text-lg">
               📈 $441.54 average per month • Best month: $817.31 (July)
             </p>
           </div>
