@@ -37,7 +37,7 @@ const faqData = [
       {
         question: "How do I find out more information?",
         answer:
-          "The best way to learn more about the trading is to join the free masterclass where we demonstrate the system live and answer all your questions. You can register at: https://financialintelligence4u.com/masterclass?am_id=patrick1567",
+          "The best way to learn more about autonomous trading is to join the free masterclass where we demonstrate the system live and answer all your questions. You can register at:  https://financialintelligence4u.com/masterclass?am_id=patrick1567",
       },
     ],
   },

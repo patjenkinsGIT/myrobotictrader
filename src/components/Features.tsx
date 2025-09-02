@@ -15,15 +15,15 @@ const features = [
     icon: Bot,
     title: "Autonomous Robotic Trading",
     description:
-      "Advanced Robotic Trader analyzes market patterns and executes trades with precision, adapting to changing market conditions in real-time without human intervention. Never worry about when to buy or sell",
+      "Analyzes market patterns and executes trades with AI precision, adapting to changing conditions in real-time. Never worry about charts or timing again.",
     color: "from-purple-500 to-pink-500",
-    stats: "100% Accurate",
+    stats: "Unattended Trading",
   },
   {
     icon: TrendingUp,
     title: "Takes What the Market Gives",
     description:
-      "Our Robotic Trader capitalizes on market opportunities as they arise, taking profits when conditions are favorable and waiting patiently when they're not. Charts are a thing of the past.",
+      "Capitalizes on market opportunities as they arise, taking profits when favorable and waiting patiently when not. Smart, patient trading.",
     color: "from-green-500 to-blue-500",
     stats: "Market-Driven Results",
   },
@@ -31,7 +31,7 @@ const features = [
     icon: Shield,
     title: "Never Trades at a Loss",
     description:
-      "Our robotic trader only sells when your position is profitable—never at a loss unless you choose otherwise. This smart approach protects your investments and takes advantage of market swings.",
+      "Only sells when your position is profitable—never at a loss unless you choose otherwise. Protects investments while capitalizing on market swings.",
     color: "from-blue-500 to-cyan-500",
     stats: "0% Loss Trades",
   },
@@ -39,7 +39,7 @@ const features = [
     icon: Clock,
     title: "Set It & Forget It",
     description:
-      "Never miss a profitable opportunity. Our autonomous Robotic Trader monitors global markets around the clock, executing trades even while you sleep. The days of staring at charts are over.",
+      "Monitors global markets 24/7, executing trades even while you sleep. Never miss profitable opportunities or stare at charts again.",
     color: "from-orange-500 to-red-500",
     stats: "Always Active",
   },
@@ -47,7 +47,7 @@ const features = [
     icon: Zap,
     title: "Lightning Fast Execution",
     description:
-      "Execute trades in milliseconds, capitalizing on market movements before human traders can react. Speed is crucial in cryptocurrency trading.",
+      "Executes trades in milliseconds, capitalizing on market movements before human traders can react. Speed gives you the competitive edge.",
     color: "from-yellow-500 to-orange-500",
     stats: "100ms Execution",
   },
@@ -55,7 +55,7 @@ const features = [
     icon: DollarSign,
     title: "Your Funds Stay Safe",
     description:
-      "Your funds stay secure in your own Kracken/Coinbase exchange accounts. The robotic trader connects via API with trading-only access—we can never withdraw or transfer funds. For maximum safety, use MFA, hardware security keys, and allow lists on your exchange.",
+      "Funds remain secure in your Kraken/Coinbase accounts. Trading-only API access means we can never withdraw or transfer your money.",
     color: "from-emerald-500 to-teal-500",
     stats: "Your Keys, Your Crypto",
   },
@@ -63,7 +63,7 @@ const features = [
     icon: BarChart3,
     title: "Real-Time Analytics",
     description:
-      "Position and simple profit reporting give you visibility into your Robotic Trader performance and how much profit you save across Coinbase and Kraken.",
+      "Simple position and profit reporting gives you clear visibility into performance and total profits across Coinbase and Kraken.",
     color: "from-indigo-500 to-purple-500",
     stats: "Live Tracking",
   },
@@ -71,7 +71,7 @@ const features = [
     icon: Users,
     title: "Start with Paper Trading",
     description:
-      "Test the Robotic Trader risk-free with paper trading before going live. See how it performs and build confidence in the autonomous trading system.",
+      "Test the system risk-free with paper trading before going live. Build confidence and see performance without risking real money.",
     color: "from-pink-500 to-rose-500",
     stats: "Risk-Free Testing",
   },
@@ -126,9 +126,8 @@ export const Features: React.FC = function () {
           </h2>
 
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Experience the future of cryptocurrency trading with cutting-edge
-            autonomous technology, comprehensive risk management, and
-            unparalleled performance on trusted exchanges.
+            Advanced autonomous technology with comprehensive risk management on
+            trusted exchanges like Coinbase and Kraken.
           </p>
         </div>
 
@@ -186,8 +185,8 @@ export const Features: React.FC = function () {
               Ready to Experience Autonomous Trading?
             </h3>
             <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
-              Join thousands of successful traders who have already discovered
-              the power of set-it-and-forget-it cryptocurrency trading.
+              Join successful traders using set-it-and-forget-it cryptocurrency
+              trading.
             </p>
             <a
               href="https://financialintelligence4u.com/masterclass?am_id=patrick1567"

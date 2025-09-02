@@ -1,5 +1,12 @@
 import * as React from "react";
-import { TrendingUp, DollarSign, Calendar, BarChart3, Zap } from "lucide-react";
+import {
+  TrendingUp,
+  DollarSign,
+  Calendar,
+  BarChart3,
+  Zap,
+  Activity,
+} from "lucide-react";
 import { tradingData, calculateDailyAverage } from "../data/tradingResults";
 
 export const TradingResults: React.FC = () => {
@@ -19,25 +26,25 @@ export const TradingResults: React.FC = () => {
           </div>
 
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
-            Patrick's Trading Results
+            My Trading Results
           </h2>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            These are my actual profits from using my personal robotic trader
-            account.
+            These are my actual profits from using my robotic trader.
             <span className="text-green-400 font-semibold">
               {" "}
               Started January 8, 2025
             </span>{" "}
-            - updated regularly!
+            - Stats Updated Monthly!
           </p>
         </div>
 
-        {/* Main Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        {/* Main Stats Grid - 2 rows of 3 cards each */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          {/* Row 1 */}
           {/* Total Profits */}
           <div className="bg-gradient-to-br from-green-900/30 to-green-800/30 backdrop-blur-sm rounded-2xl border border-green-500/20 p-6 text-center">
             <DollarSign className="w-8 h-8 text-green-400 mx-auto mb-3" />
-            <div className="text-3xl font-bold text-green-400 mb-2">
+            <div className="text-2xl font-bold text-green-400 mb-2 font-mono">
               ${tradingData.totalProfit.toLocaleString()}
             </div>
             <div className="text-gray-300 text-sm">Total Profits</div>
@@ -49,7 +56,9 @@ export const TradingResults: React.FC = () => {
           {/* Monthly Average */}
           <div className="bg-gradient-to-br from-blue-900/30 to-blue-800/30 backdrop-blur-sm rounded-2xl border border-blue-500/20 p-6 text-center">
             <Calendar className="w-8 h-8 text-blue-400 mx-auto mb-3" />
-            <div className="text-3xl font-bold text-blue-400 mb-2">$441.54</div>
+            <div className="text-2xl font-bold text-blue-400 mb-2 font-mono">
+              $441.54
+            </div>
             <div className="text-gray-300 text-sm">Monthly Average</div>
             <div className="text-xs text-gray-400 mt-1">
               Consistent Performance
@@ -59,20 +68,51 @@ export const TradingResults: React.FC = () => {
           {/* Daily Average */}
           <div className="bg-gradient-to-br from-purple-900/30 to-purple-800/30 backdrop-blur-sm rounded-2xl border border-purple-500/20 p-6 text-center">
             <TrendingUp className="w-8 h-8 text-purple-400 mx-auto mb-3" />
-            <div className="text-3xl font-bold text-purple-400 mb-2">
+            <div className="text-2xl font-bold text-purple-400 mb-2 font-mono">
               ${dailyAvg}
             </div>
             <div className="text-gray-300 text-sm">Daily Average</div>
             <div className="text-xs text-gray-400 mt-1">Steady Growth</div>
           </div>
+        </div>
 
+        {/* Second row of stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           {/* Best Month */}
           <div className="bg-gradient-to-br from-pink-900/30 to-pink-800/30 backdrop-blur-sm rounded-2xl border border-pink-500/20 p-6 text-center">
             <Zap className="w-8 h-8 text-pink-400 mx-auto mb-3" />
-            <div className="text-3xl font-bold text-pink-400 mb-2">$817.31</div>
+            <div className="text-2xl font-bold text-pink-400 mb-2 font-mono">
+              $817.31
+            </div>
             <div className="text-gray-300 text-sm">Best Month</div>
             <div className="text-xs text-gray-400 mt-1">July 2025</div>
           </div>
+
+          {/* Total Trades */}
+          <div className="bg-gradient-to-br from-orange-900/30 to-orange-800/30 backdrop-blur-sm rounded-2xl border border-orange-500/20 p-6 text-center">
+            <Activity className="w-8 h-8 text-orange-400 mx-auto mb-3" />
+            <div className="text-2xl font-bold text-orange-400 mb-2 font-mono">
+              840
+            </div>
+            <div className="text-gray-300 text-sm">Closed Trades</div>
+            <div className="text-xs text-gray-400 mt-1">Active System</div>
+          </div>
+
+          {/* Average Profit Per Trade */}
+          <div className="bg-gradient-to-br from-teal-900/30 to-teal-800/30 backdrop-blur-sm rounded-2xl border border-teal-500/20 p-6 text-center">
+            <DollarSign className="w-8 h-8 text-teal-400 mx-auto mb-3" />
+            <div className="text-2xl font-bold text-teal-400 mb-2 font-mono">
+              $4.73
+            </div>
+            <div className="text-gray-300 text-sm">Avg Profit/Trade</div>
+            <div className="text-xs text-gray-400 mt-1">Consistent Gains</div>
+          </div>
+        </div>
+
+        <div className="text-center mb-8">
+          <p className="text-sm text-green-300 bg-green-900/20 backdrop-blur-sm rounded-lg px-4 py-2 inline-block border border-green-500/20">
+            ✓ All profits shown are net amounts after trading fees and rebates
+          </p>
         </div>
 
         {/* Monthly Chart - MOBILE RESPONSIVE VERSION */}
@@ -85,7 +125,7 @@ export const TradingResults: React.FC = () => {
           <div className="w-full overflow-x-auto">
             <div
               className="flex items-end justify-center gap-2 md:gap-4 mb-4 md:mb-6 min-w-max mx-auto"
-              style={{ height: "200px" }} // Smaller height for mobile
+              style={{ height: "200px" }}
             >
               {[
                 { month: "Jan", profit: 477.17 },
@@ -97,8 +137,7 @@ export const TradingResults: React.FC = () => {
                 { month: "Jul", profit: 817.31 },
                 { month: "Aug", profit: 413.54 },
               ].map((month) => {
-                // Responsive bar height
-                const maxBarHeight = 140; // Smaller for mobile
+                const maxBarHeight = 140;
                 const height = Math.max(
                   (month.profit / 817.31) * maxBarHeight,
                   12
@@ -107,7 +146,6 @@ export const TradingResults: React.FC = () => {
 
                 return (
                   <div key={month.month} className="flex flex-col items-center">
-                    {/* Profit amount above bar - responsive text */}
                     <div
                       className={`text-xs md:text-sm mb-1 md:mb-2 font-semibold ${
                         isHighest ? "text-yellow-400" : "text-gray-300"
@@ -116,7 +154,6 @@ export const TradingResults: React.FC = () => {
                       ${Math.round(month.profit)}
                     </div>
 
-                    {/* Bar with responsive width */}
                     <div
                       className={`w-8 md:w-12 rounded-t-lg transition-all duration-1000 ease-out ${
                         isHighest
@@ -129,7 +166,6 @@ export const TradingResults: React.FC = () => {
                       }}
                     ></div>
 
-                    {/* Month label below bar - responsive text */}
                     <div className="text-xs md:text-sm text-gray-300 mt-2 md:mt-3 font-medium">
                       {month.month}
                     </div>
@@ -141,7 +177,8 @@ export const TradingResults: React.FC = () => {
 
           <div className="text-center">
             <p className="text-green-400 font-semibold text-sm md:text-lg">
-              📈 $441.54 average per month • Best month: $817.31 (July)
+              📈 840 trades • $4.73 avg profit/trade • Best month: $817.31
+              (July)
             </p>
           </div>
         </div>
@@ -149,10 +186,10 @@ export const TradingResults: React.FC = () => {
         {/* Disclaimer */}
         <div className="text-center mt-8">
           <p className="text-sm text-gray-400 max-w-2xl mx-auto">
-            * These are Patrick's actual trading results from his personal
-            Robotic Trader account. Started January 8, 2025. Results updated
-            regularly. Past performance does not guarantee future results. Last
-            updated: September 1, 2025
+            * These are my actual trading results from my personal robotic
+            trader account. Started January 8, 2025. Results updated regularly.
+            Past performance does not guarantee future results. Last updated:
+            September 1, 2025
           </p>
         </div>
       </div>
