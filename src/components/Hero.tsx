@@ -126,7 +126,7 @@ export const Hero: React.FC = function () {
 
             <div className="relative text-center">
               <div className="text-4xl font-bold text-purple-400 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:to-pink-400 group-hover:bg-clip-text transition-all duration-300">
-                10K+
+                Thousands
               </div>
               <div className="text-gray-300 font-medium group-hover:text-white transition-colors duration-300">
                 Satisfied Traders
