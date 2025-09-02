@@ -58,8 +58,8 @@ export const MyStory: React.FC = function () {
               </p>
 
               <p className="text-lg text-gray-200 leading-relaxed mb-8">
-                The system's "never trade at a loss" approach immediately made
-                sense to me.
+                The system's "never trade at a loss" and "set it and forget it"
+                approach immediately made sense to me.
               </p>
 
               <p className="text-lg text-gray-200 leading-relaxed mb-8">
