@@ -50,9 +50,14 @@ export const MyStory: React.FC = function () {
 
               <p className="text-lg text-gray-200 leading-relaxed mb-6">
                 <span className="text-green-300 font-semibold">
-                  I got setup the same day and was trading real money within
-                  hours.
+                  After the free masterclass, I couldn't wait to get everything
+                  going. I got setup the same day and was paper trading for
+                  about 2 hours but I almost immediately moved to real money
+                  within hours after a few trades.
                 </span>{" "}
+              </p>
+
+              <p className="text-lg text-gray-200 leading-relaxed mb-8">
                 The system's "never trade at a loss" approach immediately made
                 sense to me.
               </p>
