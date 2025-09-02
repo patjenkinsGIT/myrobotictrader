@@ -1,4 +1,5 @@
 import { Hero } from "./components/Hero";
+import { MyStory } from "./components/MyStory";
 import { TradingResults } from "./components/TradingResults";
 import { Features } from "./components/Features";
 import { CallToAction } from "./components/CallToAction";
@@ -9,6 +10,7 @@ function App() {
   return (
     <div className="App min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <Hero />
+      <MyStory />
       <TradingResults />
       <Features />
       <CallToAction />

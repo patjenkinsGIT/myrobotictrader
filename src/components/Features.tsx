@@ -24,7 +24,7 @@ const features = [
     title: "Takes What the Market Gives",
     description:
       "Capitalizes on market opportunities as they arise, taking profits when favorable and waiting patiently when not. Smart, patient trading.",
-    color: "from-green-500 to-blue-500",
+    color: "from-emerald-500 to-green-500",
     stats: "Market-Driven Results",
   },
   {
@@ -40,7 +40,7 @@ const features = [
     title: "Set It & Forget It",
     description:
       "Monitors global markets 24/7, executing trades even while you sleep. Never miss profitable opportunities or stare at charts again.",
-    color: "from-orange-500 to-red-500",
+    color: "from-orange-500 to-amber-500",
     stats: "Always Active",
   },
   {
@@ -111,21 +111,21 @@ export const Features: React.FC = function () {
     <section className="py-10 px-4 relative">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20 mb-6 mt-4">
-            <Zap className="w-4 h-4 text-purple-400" />
-            <span className="text-purple-300 font-medium">
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-purple-400/40 mb-6 mt-4 shadow-lg shadow-purple-500/20">
+            <Zap className="w-4 h-4 text-purple-300" />
+            <span className="text-purple-200 font-medium">
               Powerful Features
             </span>
           </div>
 
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
             Why Choose Our
-            <span className="block text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text">
+            <span className="block text-transparent bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text">
               Autonomous Trading Platform
             </span>
           </h2>
 
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-200 max-w-3xl mx-auto">
             Advanced autonomous technology with comprehensive risk management on
             trusted exchanges like Coinbase and Kraken.
           </p>
@@ -138,41 +138,65 @@ export const Features: React.FC = function () {
               <div
                 key={index}
                 data-card-index={index}
-                className={`group relative bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/20 transition-all duration-500 transform hover:scale-105 hover:shadow-2xl ${
+                className={`group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-500 transform hover:scale-105 hover:shadow-2xl shadow-lg ${
                   visibleCards[index]
                     ? "opacity-100 translate-y-0"
                     : "opacity-0 translate-y-10"
                 }`}
-                style={{ transitionDelay: `${index * 100}ms` }}
+                style={{
+                  transitionDelay: `${index * 100}ms`,
+                  boxShadow: `0 8px 32px rgba(${
+                    index % 2 === 0 ? "168, 85, 247" : "236, 72, 153"
+                  }, 0.15)`,
+                }}
               >
                 <div
-                  className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity duration-300`}
+                  className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300`}
                 ></div>
 
                 <div
-                  className={`relative w-12 h-12 rounded-xl bg-gradient-to-br ${feature.color} p-3 mb-4 group-hover:scale-110 transition-transform duration-300`}
+                  className={`relative w-12 h-12 rounded-xl bg-gradient-to-br ${feature.color} p-3 mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg`}
+                  style={{
+                    boxShadow: `0 4px 20px rgba(${
+                      feature.color.includes("purple")
+                        ? "168, 85, 247"
+                        : feature.color.includes("emerald")
+                        ? "16, 185, 129"
+                        : feature.color.includes("blue")
+                        ? "59, 130, 246"
+                        : feature.color.includes("orange")
+                        ? "249, 115, 22"
+                        : feature.color.includes("yellow")
+                        ? "245, 158, 11"
+                        : feature.color.includes("teal")
+                        ? "20, 184, 166"
+                        : feature.color.includes("indigo")
+                        ? "99, 102, 241"
+                        : "236, 72, 153"
+                    }, 0.4)`,
+                  }}
                 >
                   <FeatureIcon className="w-full h-full text-white" />
                 </div>
 
                 <div className="relative">
-                  <h3 className="text-xl font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:to-pink-400 group-hover:bg-clip-text transition-all duration-300">
+                  <h3 className="text-xl font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-300 group-hover:to-pink-300 group-hover:bg-clip-text transition-all duration-300">
                     {feature.title}
                   </h3>
 
-                  <p className="text-gray-400 text-sm leading-relaxed mb-4 group-hover:text-gray-300 transition-colors duration-300">
+                  <p className="text-gray-300 text-sm leading-relaxed mb-4 group-hover:text-gray-200 transition-colors duration-300">
                     {feature.description}
                   </p>
 
                   <div
-                    className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ${feature.color} text-white`}
+                    className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ${feature.color} text-white shadow-md`}
                   >
                     {feature.stats}
                   </div>
                 </div>
 
                 <div
-                  className={`absolute inset-0 rounded-2xl bg-gradient-to-r ${feature.color} opacity-0 group-hover:opacity-20 transition-opacity duration-300 -z-10 blur-xl`}
+                  className={`absolute inset-0 rounded-2xl bg-gradient-to-r ${feature.color} opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl`}
                 ></div>
               </div>
             );
@@ -180,11 +204,11 @@ export const Features: React.FC = function () {
         </div>
 
         <div className="text-center mt-16">
-          <div className="bg-gradient-to-r from-purple-600/10 to-pink-600/10 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
+          <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl p-8 border border-purple-400/30 shadow-lg shadow-purple-500/20">
             <h3 className="text-2xl font-bold text-white mb-4">
               Ready to Experience Autonomous Trading?
             </h3>
-            <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
+            <p className="text-gray-200 mb-6 max-w-2xl mx-auto">
               Join successful traders using set-it-and-forget-it cryptocurrency
               trading.
             </p>
@@ -192,7 +216,7 @@ export const Features: React.FC = function () {
               href="https://financialintelligence4u.com/masterclass?am_id=patrick1567"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-500/30"
             >
               Join Free Masterclass
               <TrendingUp className="w-4 h-4" />

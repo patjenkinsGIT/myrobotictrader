@@ -42,70 +42,70 @@ export const TradingResults: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           {/* Row 1 */}
           {/* Total Profits */}
-          <div className="bg-gradient-to-br from-green-900/30 to-green-800/30 backdrop-blur-sm rounded-2xl border border-green-500/20 p-6 text-center">
-            <DollarSign className="w-8 h-8 text-green-400 mx-auto mb-3" />
-            <div className="text-2xl font-bold text-green-400 mb-2 font-mono">
+          <div className="bg-gradient-to-br from-emerald-500/40 to-green-600/40 backdrop-blur-sm rounded-2xl border border-emerald-400/30 p-6 text-center shadow-lg shadow-emerald-500/20">
+            <DollarSign className="w-8 h-8 text-emerald-300 mx-auto mb-3" />
+            <div className="text-2xl font-bold text-emerald-200 mb-2 font-mono">
               ${tradingData.totalProfit.toLocaleString()}
             </div>
-            <div className="text-gray-300 text-sm">Total Profits</div>
-            <div className="text-xs text-green-300 mt-1 font-medium">
+            <div className="text-gray-200 text-sm">Total Profits</div>
+            <div className="text-xs text-emerald-300 mt-1 font-medium">
               8 Months Trading
             </div>
           </div>
 
           {/* Monthly Average */}
-          <div className="bg-gradient-to-br from-blue-900/30 to-blue-800/30 backdrop-blur-sm rounded-2xl border border-blue-500/20 p-6 text-center">
-            <Calendar className="w-8 h-8 text-blue-400 mx-auto mb-3" />
-            <div className="text-2xl font-bold text-blue-400 mb-2 font-mono">
+          <div className="bg-gradient-to-br from-blue-500/40 to-cyan-600/40 backdrop-blur-sm rounded-2xl border border-blue-400/30 p-6 text-center shadow-lg shadow-blue-500/20">
+            <Calendar className="w-8 h-8 text-blue-300 mx-auto mb-3" />
+            <div className="text-2xl font-bold text-blue-200 mb-2 font-mono">
               $441.54
             </div>
-            <div className="text-gray-300 text-sm">Monthly Average</div>
-            <div className="text-xs text-gray-400 mt-1">
+            <div className="text-gray-200 text-sm">Monthly Average</div>
+            <div className="text-xs text-blue-300 mt-1">
               Consistent Performance
             </div>
           </div>
 
           {/* Daily Average */}
-          <div className="bg-gradient-to-br from-purple-900/30 to-purple-800/30 backdrop-blur-sm rounded-2xl border border-purple-500/20 p-6 text-center">
-            <TrendingUp className="w-8 h-8 text-purple-400 mx-auto mb-3" />
-            <div className="text-2xl font-bold text-purple-400 mb-2 font-mono">
+          <div className="bg-gradient-to-br from-purple-500/40 to-violet-600/40 backdrop-blur-sm rounded-2xl border border-purple-400/30 p-6 text-center shadow-lg shadow-purple-500/20">
+            <TrendingUp className="w-8 h-8 text-purple-300 mx-auto mb-3" />
+            <div className="text-2xl font-bold text-purple-200 mb-2 font-mono">
               ${dailyAvg}
             </div>
-            <div className="text-gray-300 text-sm">Daily Average</div>
-            <div className="text-xs text-gray-400 mt-1">Steady Growth</div>
+            <div className="text-gray-200 text-sm">Daily Average</div>
+            <div className="text-xs text-purple-300 mt-1">Steady Growth</div>
           </div>
         </div>
 
         {/* Second row of stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           {/* Best Month */}
-          <div className="bg-gradient-to-br from-pink-900/30 to-pink-800/30 backdrop-blur-sm rounded-2xl border border-pink-500/20 p-6 text-center">
-            <Zap className="w-8 h-8 text-pink-400 mx-auto mb-3" />
-            <div className="text-2xl font-bold text-pink-400 mb-2 font-mono">
+          <div className="bg-gradient-to-br from-pink-500/40 to-rose-600/40 backdrop-blur-sm rounded-2xl border border-pink-400/30 p-6 text-center shadow-lg shadow-pink-500/20">
+            <Zap className="w-8 h-8 text-pink-300 mx-auto mb-3" />
+            <div className="text-2xl font-bold text-pink-200 mb-2 font-mono">
               $817.31
             </div>
-            <div className="text-gray-300 text-sm">Best Month</div>
-            <div className="text-xs text-gray-400 mt-1">July 2025</div>
+            <div className="text-gray-200 text-sm">Best Month</div>
+            <div className="text-xs text-pink-300 mt-1">July 2025</div>
           </div>
 
           {/* Total Trades */}
-          <div className="bg-gradient-to-br from-orange-900/30 to-orange-800/30 backdrop-blur-sm rounded-2xl border border-orange-500/20 p-6 text-center">
-            <Activity className="w-8 h-8 text-orange-400 mx-auto mb-3" />
-            <div className="text-2xl font-bold text-orange-400 mb-2 font-mono">
+          <div className="bg-gradient-to-br from-orange-500/40 to-amber-600/40 backdrop-blur-sm rounded-2xl border border-orange-400/30 p-6 text-center shadow-lg shadow-orange-500/20">
+            <Activity className="w-8 h-8 text-orange-300 mx-auto mb-3" />
+            <div className="text-2xl font-bold text-orange-200 mb-2 font-mono">
               840
             </div>
-            <div className="text-gray-300 text-sm">Closed Trades</div>
-            <div className="text-xs text-gray-400 mt-1">Active System</div>
+            <div className="text-gray-200 text-sm">Closed Trades</div>
+            <div className="text-xs text-orange-300 mt-1">Active System</div>
           </div>
 
           {/* Average Profit Per Trade */}
-          <div className="bg-gradient-to-br from-teal-900/30 to-teal-800/30 backdrop-blur-sm rounded-2xl border border-teal-500/20 p-6 text-center">
-            <DollarSign className="w-8 h-8 text-teal-400 mx-auto mb-3" />
-            <div className="text-2xl font-bold text-teal-400 mb-2 font-mono">
+          <div className="bg-gradient-to-br from-teal-500/40 to-cyan-600/40 backdrop-blur-sm rounded-2xl border border-teal-400/30 p-6 text-center shadow-lg shadow-teal-500/20">
+            <DollarSign className="w-8 h-8 text-teal-300 mx-auto mb-3" />
+            <div className="text-2xl font-bold text-teal-200 mb-2 font-mono">
               $4.73
             </div>
-            <div className="text-gray-300 text-sm">Avg Profit/Trade</div>
-            <div className="text-xs text-gray-400 mt-1">Consistent Gains</div>
+            <div className="text-gray-200 text-sm">Avg Profit/Trade</div>
+            <div className="text-xs text-teal-300 mt-1">Consistent Gains</div>
           </div>
         </div>
 
@@ -148,7 +148,7 @@ export const TradingResults: React.FC = () => {
                   <div key={month.month} className="flex flex-col items-center">
                     <div
                       className={`text-xs md:text-sm mb-1 md:mb-2 font-semibold ${
-                        isHighest ? "text-yellow-400" : "text-gray-300"
+                        isHighest ? "text-yellow-300" : "text-gray-200"
                       }`}
                     >
                       ${Math.round(month.profit)}
@@ -157,8 +157,8 @@ export const TradingResults: React.FC = () => {
                     <div
                       className={`w-8 md:w-12 rounded-t-lg transition-all duration-1000 ease-out ${
                         isHighest
-                          ? "bg-gradient-to-t from-yellow-600 to-yellow-400 shadow-lg shadow-yellow-500/30"
-                          : "bg-gradient-to-t from-green-600 to-green-400 shadow-lg shadow-green-500/20"
+                          ? "bg-gradient-to-t from-yellow-500 to-yellow-300 shadow-lg shadow-yellow-400/40"
+                          : "bg-gradient-to-t from-emerald-500 to-green-400 shadow-lg shadow-emerald-400/30"
                       }`}
                       style={{
                         height: `${height}px`,
@@ -166,7 +166,7 @@ export const TradingResults: React.FC = () => {
                       }}
                     ></div>
 
-                    <div className="text-xs md:text-sm text-gray-300 mt-2 md:mt-3 font-medium">
+                    <div className="text-xs md:text-sm text-gray-200 mt-2 md:mt-3 font-medium">
                       {month.month}
                     </div>
                   </div>
@@ -176,7 +176,7 @@ export const TradingResults: React.FC = () => {
           </div>
 
           <div className="text-center">
-            <p className="text-green-400 font-semibold text-sm md:text-lg">
+            <p className="text-emerald-300 font-semibold text-sm md:text-lg">
               📈 840 trades • $4.73 avg profit/trade • Best month: $817.31
               (July)
             </p>

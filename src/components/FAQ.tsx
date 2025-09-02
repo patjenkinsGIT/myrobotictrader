@@ -6,6 +6,7 @@ import {
   Shield,
   Bot,
   TrendingUp,
+  DollarSign, // Add this import
 } from "lucide-react";
 
 const faqData = [
@@ -15,29 +16,41 @@ const faqData = [
     color: "from-blue-500 to-purple-500",
     questions: [
       {
-        question: "What is robotic crypto trading and how does it work?",
+        question: "What is robotic crypto trading?",
         answer:
-          "Robotic crypto trading uses advanced AI algorithms to automatically buy and sell cryptocurrencies based on market analysis, technical indicators, and predefined strategies. The Robotic Trader monitors the market 24/7, executes trades in milliseconds, and adapts to changing market conditions without human intervention.",
+          "AI algorithms automatically buy and sell cryptocurrencies based on market analysis. The system monitors markets 24/7, executes trades in milliseconds, and adapts to changing conditions without human intervention.",
       },
       {
-        question: "Do I need trading experience to use your platform?",
+        question: "Do I need trading experience?",
         answer:
-          "No trading experience is required! The AI-powered system handles all the complex analysis and decision-making. You simply set your risk preferences and investment amount, and the platform does the rest. We also provide educational resources and 24/7 support to help you understand the process.",
+          "No experience required! The AI handles all analysis and decisions. You set your preferences and investment amount - the platform does the rest. We provide support and resources to help you understand the process.",
       },
       {
         question: "How much money do I need to start?",
         answer:
-          "You can start with as little as $100. We recommend starting small to familiarize yourself with the platform before scaling up your investment. The flexible system allows you to increase your trading capital as you become more comfortable with automated trading.",
+          "Start with as little as $100. We recommend starting small to get familiar with the platform before scaling up your investment.",
       },
       {
-        question: "Can I use this platform if I live outside the USA?",
+        question: "Can I use this outside the USA?",
         answer:
-          "Yes! The Robotic Trading platform is available to users worldwide, as long as you are eligible to trade on Coinbase or Kraken. These exchanges support users from many countries globally. Simply verify that you can create and fund an account with either Coinbase or Kraken in your region, and you'll be able to use the automated trading system.",
+          "Yes! Available worldwide as long as you can trade on Coinbase or Kraken. Simply verify you can create and fund an account with either exchange in your region.",
       },
       {
-        question: "How do I find out more information?",
-        answer:
-          "The best way to learn more about autonomous trading is to join the free masterclass where we demonstrate the system live and answer all your questions. You can register at:  https://financialintelligence4u.com/masterclass?am_id=patrick1567",
+        question: "How do I learn more?",
+        answer: (
+          <>
+            Join our free masterclass where we demonstrate the system live and
+            answer questions. Register at:{" "}
+            <a
+              href="https://financialintelligence4u.com/masterclass?am_id=patrick1567"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-purple-300 hover:text-purple-200 underline transition-colors duration-200"
+            >
+              https://financialintelligence4u.com/masterclass?am_id=patrick1567
+            </a>
+          </>
+        ),
       },
     ],
   },
@@ -47,20 +60,19 @@ const faqData = [
     color: "from-green-500 to-blue-500",
     questions: [
       {
-        question: "Is my money safe with robotic trading?",
+        question: "Is my money safe?",
         answer:
-          "Yes, your funds remain secure in your own exchange accounts (Kraken or Coinbase). The robotic trader only connects via API with trading permissions - we never have access to withdraw or transfer your funds. All asset protection is handled directly by your chosen exchange (Kraken/Coinbase).",
-      },
-
-      {
-        question: "What happens if the Robotic Trader makes losing trades?",
-        answer:
-          "This revolutionary protection system ensures the trader never executes losing trades. It waits for profitable opportunities or doesn't trade at all, safeguarding your capital. This is what sets us apart from traditional trading systems.",
+          "Yes! Your funds stay in your own Kraken/Coinbase accounts. We only connect via API with trading permissions - we can never withdraw or transfer your funds.",
       },
       {
-        question: "Can I stop the Robotic Trader or withdraw my money anytime?",
+        question: "What if the system makes losing trades?",
         answer:
-          "Absolutely! You have complete control over your account. You can pause or stop the Robotic Trader at any time, and withdraw your funds instantly. There are no lock-up periods or withdrawal restrictions. Your money remains in your exchange account under your control.",
+          "Our protection system never executes losing trades. It waits for profitable opportunities or doesn't trade at all, safeguarding your capital.",
+      },
+      {
+        question: "Can I stop trading or withdraw anytime?",
+        answer:
+          "Absolutely! You have complete control. Pause or stop the trader anytime, withdraw funds instantly. No lock-up periods or restrictions.",
       },
     ],
   },
@@ -70,29 +82,62 @@ const faqData = [
     color: "from-purple-500 to-pink-500",
     questions: [
       {
-        question: "What kind of returns can I expect?",
+        question: "What returns can I expect?",
         answer:
-          "While past performance doesn't guarantee future results, the trading platform has historically achieved consistent profitable results by only taking trades when market conditions are favorable. Results vary based on market conditions, risk settings, and investment amount.",
+          "While past performance doesn't guarantee future results, our platform achieves consistent profits by only trading when conditions are favorable. Results vary based on market conditions and your settings.",
       },
       {
-        question: "How often does the Robotic Trader trade?",
+        question: "How often does it trade?",
         answer:
-          "The Robotic Trader operates 24/7 and only executes trades when profitable opportunities arise. The frequency varies based on market conditions - it may trade multiple times per day during favorable conditions, or wait patiently when conditions aren't optimal.",
+          "The system operates 24/7 and only trades when profitable opportunities arise. May trade multiple times daily during favorable conditions, or wait patiently when conditions aren't optimal.",
       },
       {
-        question: "What about ROI (Return on Investment)?",
+        question: "What about ROI?",
         answer:
-          "ROI calculations can be misleading in automated trading because they typically assume a single, fixed investment. Most successful traders grow their capital over time by adding funds and reinvesting profits. The platform's performance is completely market-driven and depends on your individual investment choices, allocation amounts, and how you manage your capital growth. Rather than focusing on ROI percentages, we recommend tracking your overall portfolio growth and the consistency of profitable trades.",
+          "ROI calculations can be misleading since most successful traders grow capital over time. Focus on overall portfolio growth and consistent profitable trades rather than ROI percentages.",
       },
       {
-        question: "Does the robotic trader ever sell my position(s) at a loss?",
+        question: "Does it ever sell at a loss?",
         answer:
-          "The platform is designed so that positions are only sold when they become profitable, unless you manually choose otherwise. Even if you have open (unrealized) losses during market dips, the robotic trader patiently waits for opportunities to sell for a gain. Losses are only realized if you instruct the trader to close positions before they return to profit. This approach allows you to avoid locking in losses and gives your trades the best chance to succeed over time.",
+          "Positions are only sold when profitable, unless you manually choose otherwise. The system waits patiently for opportunities to sell for gains, avoiding locked-in losses.",
       },
       {
         question: "Do you guarantee profits?",
         answer:
-          "While we cannot guarantee profits (no legitimate trading system can), this unique approach of never trading at a loss significantly improves your probability of success. The Robotic Trader is designed to be patient and only take high-probability trades.",
+          "No legitimate system can guarantee profits. However, our approach of never trading at a loss significantly improves your probability of success.",
+      },
+    ],
+  },
+  {
+    category: "Money Management",
+    icon: DollarSign,
+    color: "from-emerald-500 to-teal-500",
+    questions: [
+      {
+        question: "Why doesn't the trader use all my available capital?",
+        answer:
+          "The system is designed to be conservative and patient. It waits for optimal opportunities rather than rushing to deploy all capital at once. This approach protects you from market volatility and ensures funds are available for better entry points.",
+      },
+      {
+        question: "How does profit management work?",
+        answer:
+          "The system automatically manages profits, and you control whether to reinvest them or keep them separate. You can choose to compound your gains for faster growth or withdraw profits while keeping your original capital working.",
+      },
+      {
+        question: "Does the system support dollar cost averaging?",
+        answer:
+          "Yes! There are advanced options where the trader will only buy positions and never sell, effectively creating a dollar cost averaging strategy. This is perfect for long-term accumulation without worrying about exit timing.",
+      },
+      {
+        question:
+          "Why does the trader buy many positions but not sell during market dips?",
+        answer:
+          "Down markets are actually good - this is where you build inventory! The trader takes advantage of lower prices to accumulate positions, creating a well-seasoned portfolio. When markets recover, you'll have multiple profitable positions ready to sell. This patient approach is what produces successful long-term results.",
+      },
+      {
+        question: "Which cryptocurrencies work best for different strategies?",
+        answer:
+          "For active trading, faster-moving currencies often provide more opportunities. However, established coins like BTC and ETH may be better suited for long-term dollar cost averaging strategies due to their stability and growth potential over time. These are examples only - we provide technical support, not investment advice.",
       },
     ],
   },
@@ -104,17 +149,17 @@ const faqData = [
       {
         question: "What exchanges do you support?",
         answer:
-          "We support Coinbase and Kraken exclusively. The Robotic Trader Platform integrates seamlessly with these two trusted exchanges through secure API connections, allowing the Robotic Trader to trade on your behalf while keeping your funds safe in your own accounts.",
+          "Coinbase and Kraken exclusively. Seamless integration through secure API connections while keeping your funds safe in your own accounts.",
       },
       {
         question: "Do I need to keep my computer running?",
         answer:
-          "No! The Robotic Trader runs on cloud servers, so it operates 24/7 even when your computer is off. You can monitor your trades and adjust settings from any device through the Web-Based trading platform. The Robotic Trader never sleeps, ensuring you never miss profitable opportunities.",
+          "No! The system runs on cloud servers 24/7 even when your computer is off. Monitor trades and adjust settings from any device through our web platform.",
       },
       {
-        question: "What kind of support do you provide?",
+        question: "What support do you provide?",
         answer:
-          "We offer comprehensive technical support to help you get started and configure the platform. The Support team can assist with setup, platform configuration, and technical questions. Please note that we provide technical and educational support only - we do not offer financial advice or investment recommendations.",
+          "Comprehensive technical support for setup, configuration, and platform questions. We provide technical and educational support only - no financial advice.",
       },
     ],
   },
@@ -122,26 +167,26 @@ const faqData = [
 
 interface FAQItemProps {
   question: string;
-  answer: string;
+  answer: string | React.ReactNode;
 }
 
 const FAQItem: React.FC<FAQItemProps> = ({ question, answer }) => {
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (
-    <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 overflow-hidden hover:border-white/20 transition-all duration-300">
+    <div className="bg-white/8 backdrop-blur-sm rounded-xl border border-white/20 overflow-hidden hover:border-white/30 transition-all duration-300 shadow-lg shadow-purple-500/10">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-white/5 transition-colors duration-200"
+        className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-white/10 transition-colors duration-200"
       >
         <span className="text-lg font-semibold text-white pr-4">
           {question}
         </span>
         <div className="flex-shrink-0">
           {isOpen ? (
-            <ChevronUp className="w-5 h-5 text-purple-400 transition-transform duration-200" />
+            <ChevronUp className="w-5 h-5 text-purple-300 transition-transform duration-200" />
           ) : (
-            <ChevronDown className="w-5 h-5 text-purple-400 transition-transform duration-200" />
+            <ChevronDown className="w-5 h-5 text-purple-300 transition-transform duration-200" />
           )}
         </div>
       </button>
@@ -151,8 +196,8 @@ const FAQItem: React.FC<FAQItemProps> = ({ question, answer }) => {
           isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
-        <div className="px-6 pb-4 border-t border-white/10">
-          <p className="text-gray-300 leading-relaxed pt-4">{answer}</p>
+        <div className="px-6 pb-4 border-t border-white/20">
+          <div className="text-gray-200 leading-relaxed pt-4">{answer}</div>
         </div>
       </div>
     </div>
@@ -164,23 +209,20 @@ export const FAQ: React.FC = function () {
     <section className="py-10 px-4 relative">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20 mb-6 mt-4">
-            <HelpCircle className="w-4 h-4 text-purple-400" />
-            <span className="text-purple-300 font-medium">
-              Frequently Asked Questions
-            </span>
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-purple-400/40 mb-6 mt-4 shadow-lg shadow-purple-500/20">
+            <HelpCircle className="w-4 h-4 text-purple-300" />
+            <span className="text-purple-200 font-medium">FAQ</span>
           </div>
 
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Everything You Need to Know About
-            <span className="block text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text">
-              Robotic Trading
+            Everything You Need to Know
+            <span className="block text-transparent bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text">
+              About Robotic Trading
             </span>
           </h2>
 
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Get answers to the most common questions about automated
-            cryptocurrency trading and our platform
+          <p className="text-xl text-gray-200 max-w-3xl mx-auto">
+            Common questions about automated cryptocurrency trading answered.
           </p>
         </div>
 
@@ -191,7 +233,20 @@ export const FAQ: React.FC = function () {
               <div key={categoryIndex}>
                 <div className="flex items-center gap-3 mb-6">
                   <div
-                    className={`w-10 h-10 rounded-xl bg-gradient-to-br ${category.color} p-2.5`}
+                    className={`w-10 h-10 rounded-xl bg-gradient-to-br ${category.color} p-2.5 shadow-lg`}
+                    style={{
+                      boxShadow: `0 4px 20px rgba(${
+                        category.color.includes("blue")
+                          ? "59, 130, 246"
+                          : category.color.includes("green")
+                          ? "34, 197, 94"
+                          : category.color.includes("purple")
+                          ? "168, 85, 247"
+                          : category.color.includes("emerald")
+                          ? "16, 185, 129"
+                          : "249, 115, 22"
+                      }, 0.3)`,
+                    }}
                   >
                     <CategoryIcon className="w-full h-full text-white" />
                   </div>
@@ -215,35 +270,45 @@ export const FAQ: React.FC = function () {
         </div>
 
         <div className="text-center mt-16">
-          <div className="bg-gradient-to-r from-purple-600/10 to-pink-600/10 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
+          <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl p-8 border border-purple-400/30 shadow-lg shadow-purple-500/20">
             <h3 className="text-2xl font-bold text-white mb-4">
               Still Have Questions?
             </h3>
-            <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
-              The Product Support team is available to help you get started with
-              automated crypto trading
+            <p className="text-gray-200 mb-6 max-w-2xl mx-auto">
+              Our support team is ready to help you get started with automated
+              crypto trading.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 href="https://financialintelligence4u.com/masterclass?am_id=patrick1567"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-500/30"
               >
-                Join Free Masterclass
+                Get Free Training
                 <HelpCircle className="w-4 h-4" />
               </a>
               <a
                 href="https://gobabytrade.com/fi4u"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 border-2 border-white/30 hover:border-white/50 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 backdrop-blur-sm hover:bg-white/10"
+                className="inline-flex items-center gap-2 border-2 border-white/40 hover:border-white/60 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 backdrop-blur-sm hover:bg-white/15 shadow-lg shadow-white/10"
               >
-                Start Trading Now
+                Start Trading
                 <Bot className="w-4 h-4" />
               </a>
             </div>
           </div>
+        </div>
+
+        {/* General Disclaimer */}
+        <div className="text-center mt-8">
+          <p className="text-sm text-gray-400 max-w-2xl mx-auto">
+            * All cryptocurrency examples and strategies mentioned are for
+            educational purposes only. We provide technical and platform support
+            - not financial or investment advice. Always do your own research
+            and consult with qualified financial advisors.
+          </p>
         </div>
       </div>
     </section>
