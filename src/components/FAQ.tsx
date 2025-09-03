@@ -18,8 +18,9 @@ const faqData = [
       {
         question: "What is robotic crypto trading?",
         answer:
-          "AI algorithms automatically buy and sell cryptocurrencies based on market analysis. The system monitors markets 24/7, executes trades in milliseconds, and adapts to changing conditions without human intervention.",
+          "A robotic trader is an automated trading platform that executes buy and sell decisions based on market conditions and your settings. The system monitors markets 24/7 and executes trades in milliseconds without human intervention. While AI enhancement helps optimize timing for potentially better profits or entry prices, the core trading platform operates on proven algorithms and market analysis that adapt to changing market conditions.",
       },
+
       {
         question: "Do I need trading experience?",
         answer:
@@ -70,9 +71,9 @@ const faqData = [
           "Our protection system never executes losing trades. It waits for profitable opportunities or doesn't trade at all, safeguarding your capital.",
       },
       {
-        question: "Can I stop trading or withdraw anytime?",
+        question: "Can I pause or stop the automated trading anytime?",
         answer:
-          "Absolutely! You have complete control. Pause or stop the trader anytime, withdraw funds instantly. No lock-up periods or restrictions.",
+          "Yes! You have complete control over the automation. You can pause or stop the robotic trader anytime directly in the trader interface. When paused, the system stops making new trades but your existing positions remain untouched.",
       },
     ],
   },

@@ -23,8 +23,8 @@ export const Footer: React.FC = function () {
           </div>
 
           <p className="text-gray-400 mb-8 max-w-2xl mx-auto">
-            Autonomous crypto trading that never trades at a loss. Your funds
-            stay secure while our AI maximizes profits 24/7.
+            Set it and forget it crypto trading that never trades at a loss.
+            Your funds stay secure while our AI maximizes profits 24/7.
           </p>
 
           {/* Links */}
@@ -63,15 +63,21 @@ export const Footer: React.FC = function () {
         {/* Disclaimers Section */}
         <div className="border-t border-white/10 pt-8 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-xs text-gray-500 max-w-5xl mx-auto">
-            {/* Affiliate Disclosure */}
+            {/* Enhanced Affiliate Disclosure */}
             <div className="bg-white/5 rounded-lg p-4 border border-white/10">
               <h4 className="text-gray-300 font-semibold mb-2">
                 Affiliate Disclosure
               </h4>
-              <p className="leading-relaxed">
+              <p className="leading-relaxed mb-3">
                 We earn commissions from recommended products and services. This
                 doesn't affect our recommendations or your costs. We only
                 promote solutions we believe provide real value to traders.
+              </p>
+              <p className="leading-relaxed text-purple-300">
+                <strong>Specific Disclosure:</strong> We are an affiliate of
+                Financial Intelligence 4U (financialintelligence4u.com) and earn
+                commissions when you register for their masterclass or purchase
+                their products through our links.
               </p>
             </div>
 
@@ -85,19 +91,19 @@ export const Footer: React.FC = function () {
               </p>
             </div>
 
-            {/* Facebook/Meta Disclaimer */}
+            {/* Platform Disclaimer */}
             <div className="bg-white/5 rounded-lg p-4 border border-white/10">
               <h4 className="text-gray-300 font-semibold mb-2">
                 Platform Disclaimer
               </h4>
               <p className="leading-relaxed">
-                Not affiliated with Facebook, Meta, or any trading platform
-                unless explicitly stated. All trademarks belong to their
-                respective owners and are used for identification only.
+                Not affiliated with Facebook, Meta, Coinbase, Kraken, or any
+                trading platform unless explicitly stated. All trademarks belong
+                to their respective owners and are used for identification only.
               </p>
             </div>
 
-            {/* General Disclaimer */}
+            {/* Educational Purpose */}
             <div className="bg-white/5 rounded-lg p-4 border border-white/10">
               <h4 className="text-gray-300 font-semibold mb-2">
                 Educational Purpose
@@ -127,7 +133,7 @@ export const Footer: React.FC = function () {
           </div>
           <div className="text-xs text-gray-500">
             Independent affiliate marketing website. Not affiliated with any
-            trading platform or exchange.
+            trading platform or exchange unless explicitly disclosed above.
           </div>
         </div>
       </div>
