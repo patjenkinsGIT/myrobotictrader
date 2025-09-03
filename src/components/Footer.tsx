@@ -23,9 +23,8 @@ export const Footer: React.FC = function () {
           </div>
 
           <p className="text-gray-400 mb-8 max-w-2xl mx-auto">
-            Revolutionizing cryptocurrency trading through advanced AI
-            automation. Join thousands of successful traders who trust our
-            platform for consistent profits.
+            Autonomous crypto trading that never trades at a loss. Your funds
+            stay secure while our AI maximizes profits 24/7.
           </p>
 
           {/* Links */}
@@ -70,12 +69,9 @@ export const Footer: React.FC = function () {
                 Affiliate Disclosure
               </h4>
               <p className="leading-relaxed">
-                MyRoboticTrader.com is an independent affiliate marketer. We may
-                receive compensation when you click on links or purchase
-                products/services through our referral links. This does not
-                affect the price you pay or our honest recommendations. We only
-                promote products and services we believe provide value to our
-                users.
+                We earn commissions from recommended products and services. This
+                doesn't affect our recommendations or your costs. We only
+                promote solutions we believe provide real value to traders.
               </p>
             </div>
 
@@ -83,25 +79,21 @@ export const Footer: React.FC = function () {
             <div className="bg-white/5 rounded-lg p-4 border border-white/10">
               <h4 className="text-gray-300 font-semibold mb-2">Risk Warning</h4>
               <p className="leading-relaxed">
-                Trading cryptocurrencies involves substantial risk and may not
-                be suitable for all investors. Past performance does not
-                guarantee future results. Please consider your investment
-                objectives and risk tolerance before trading. Never invest more
-                than you can afford to lose.
+                Crypto trading involves substantial risk. Past performance
+                doesn't guarantee future results. Only trade with funds you can
+                afford to lose. Consider your risk tolerance carefully.
               </p>
             </div>
 
             {/* Facebook/Meta Disclaimer */}
             <div className="bg-white/5 rounded-lg p-4 border border-white/10">
               <h4 className="text-gray-300 font-semibold mb-2">
-                Facebook Disclaimer
+                Platform Disclaimer
               </h4>
               <p className="leading-relaxed">
-                This website is not affiliated with, endorsed, or sponsored by
-                Facebook, Inc. or Meta Platforms, Inc. Facebook is a trademark
-                of Meta Platforms, Inc. Any Facebook references are used for
-                identification purposes only and do not imply endorsement or
-                affiliation.
+                Not affiliated with Facebook, Meta, or any trading platform
+                unless explicitly stated. All trademarks belong to their
+                respective owners and are used for identification only.
               </p>
             </div>
 
@@ -111,11 +103,9 @@ export const Footer: React.FC = function () {
                 Educational Purpose
               </h4>
               <p className="leading-relaxed">
-                The information provided on this website is for educational and
-                informational purposes only. It should not be considered as
-                financial, investment, or trading advice. Always consult with
-                qualified financial professionals before making investment
-                decisions.
+                Information provided is educational only, not financial advice.
+                Individual results vary. Consult qualified financial
+                professionals before making investment decisions.
               </p>
             </div>
           </div>
