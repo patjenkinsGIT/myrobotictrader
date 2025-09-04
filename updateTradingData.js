@@ -1,4 +1,4 @@
-// updateTradingData.js - Fixed for Calculations tab
+// updateTradingData.js - Secure version with placeholders
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -6,9 +6,9 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Google Sheets API Configuration
-const SHEET_ID = "1Q8I0kU3TinicEOZCgBjisRbktIOryaKnJ2GaBncxako"; // Replace with your Google Sheet ID
-const API_KEY = "AIzaSyDIveQfvUSGqdTuXx-UXh3_lIqqBvLFCeU"; // Replace with your Google API key
+// Google Sheets API Configuration - SECURE PLACEHOLDERS
+const SHEET_ID = "your_sheet_id_here"; // GitHub Actions will replace this
+const API_KEY = "your_google_api_key_here"; // GitHub Actions will replace this
 
 console.log("🔄 Update script is running...");
 
@@ -24,15 +24,15 @@ async function updateTradingData() {
     fs.mkdirSync(dataDir, { recursive: true });
   }
 
-  if (API_KEY.includes("your_google")) {
-    console.log("⚠️  Please update API_KEY in the script!");
+  if (API_KEY.includes("your_google") || SHEET_ID.includes("your_sheet")) {
+    console.log("⚠️  Please update API_KEY and SHEET_ID in the script!");
     return;
   }
 
   console.log("🌐 Fetching live data from Google Sheets...");
 
   try {
-    // Fixed: Use the correct sheet name "Calculations"
+    // Use the correct sheet name "Calculations"
     const monthlyResponse = await fetch(
       `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Calculations!A3:C12?key=${API_KEY}`
     );
