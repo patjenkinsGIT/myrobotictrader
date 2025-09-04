@@ -11,9 +11,8 @@ export const MyStory: React.FC = () => {
   const currentData = liveTradingData.isLiveData
     ? liveTradingData
     : tradingData;
-  const dailyAvg = liveTradingData.isLiveData
-    ? calculateLiveDailyAverage()
-    : calculateDailyAverage();
+  // Remove this line since we're not using dailyAvg in MyStory
+  // const dailyAvg = liveTradingData.isLiveData ? calculateLiveDailyAverage() : calculateDailyAverage();
 
   // Helper function to get full month name
   const getFullMonthName = (shortMonth: string): string => {
