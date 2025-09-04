@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Bot, ExternalLink, Twitter } from "lucide-react";
+import { ExternalLink, Twitter } from "lucide-react";
 
 export const Footer: React.FC = function () {
   return (
