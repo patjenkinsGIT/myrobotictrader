@@ -22,6 +22,16 @@ export const TradingResults: React.FC = () => {
     ? calculateLiveDailyAverage()
     : calculateDailyAverage();
 
+  // Split monthly data for better mobile display with smooth transition
+  const allMonthlyData = currentData.monthlyData;
+  const recentMonths = allMonthlyData.slice(-6); // Last 6 months for chart
+  const olderMonths = allMonthlyData.slice(0, -5).reverse(); // Previous months for table (newest first)
+
+  // Find best month with name
+  const bestMonthData = allMonthlyData.reduce((best, current) =>
+    current.profit > best.profit ? current : best
+  );
+
   return (
     <section className="py-16 px-4 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-r from-green-900/20 to-blue-900/20"></div>
@@ -100,14 +110,11 @@ export const TradingResults: React.FC = () => {
           <div className="bg-gradient-to-br from-pink-500/40 to-rose-600/40 backdrop-blur-sm rounded-2xl border border-pink-400/30 p-6 text-center shadow-lg shadow-pink-500/20">
             <Zap className="w-8 h-8 text-pink-300 mx-auto mb-3" />
             <div className="text-2xl font-bold text-pink-200 mb-2 font-mono">
-              ${currentData.bestMonth.toFixed(2)}
+              ${bestMonthData.profit.toFixed(2)}
             </div>
             <div className="text-gray-200 text-sm">Best Month</div>
             <div className="text-xs text-pink-300 mt-1">
-              {currentData.monthlyData.find(
-                (m) => m.profit === currentData.bestMonth
-              )?.month || "July"}{" "}
-              2025
+              {bestMonthData.month} 2025
             </div>
           </div>
 
@@ -136,20 +143,21 @@ export const TradingResults: React.FC = () => {
           </p>
         </div>
 
-        <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8">
+        {/* Recent Months Chart - Mobile Optimized (Last 6 Months) */}
+        <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8 mb-8">
           <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6 text-center">
-            Monthly Performance (2025)
+            Recent Performance (Last 6 Months)
           </h3>
 
           <div className="w-full overflow-x-auto">
             <div
-              className="flex items-end justify-center gap-2 md:gap-4 mb-4 md:mb-6 min-w-max mx-auto"
+              className="flex items-end justify-center gap-3 md:gap-6 mb-4 md:mb-6 min-w-max mx-auto"
               style={{ height: "200px" }}
             >
-              {currentData.monthlyData.map((month) => {
+              {recentMonths.map((month) => {
                 const maxBarHeight = 140;
                 const maxProfit = Math.max(
-                  ...currentData.monthlyData.map((m) => m.profit)
+                  ...recentMonths.map((m) => m.profit)
                 );
                 const height = Math.max(
                   (month.profit / maxProfit) * maxBarHeight,
@@ -168,7 +176,7 @@ export const TradingResults: React.FC = () => {
                     </div>
 
                     <div
-                      className={`w-8 md:w-12 rounded-t-lg transition-all duration-1000 ease-out ${
+                      className={`w-10 md:w-16 rounded-t-lg transition-all duration-1000 ease-out ${
                         isHighest
                           ? "bg-gradient-to-t from-yellow-500 to-yellow-300 shadow-lg shadow-yellow-400/40"
                           : "bg-gradient-to-t from-emerald-500 to-green-400 shadow-lg shadow-emerald-400/30"
@@ -192,10 +200,60 @@ export const TradingResults: React.FC = () => {
             <p className="text-emerald-300 font-semibold text-sm md:text-lg">
               📈 {currentData.totalTrades} trades • $
               {currentData.avgProfitPerTrade.toFixed(2)} avg profit/trade • Best
-              month: ${currentData.bestMonth.toFixed(2)}
+              month: ${bestMonthData.profit.toFixed(2)} ({bestMonthData.month})
             </p>
           </div>
         </div>
+
+        {/* Previous Months Table (with smooth transition from chart) */}
+        {olderMonths.length > 0 && (
+          <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8 mb-8">
+            <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6 text-center">
+              Previous Months Performance
+            </h3>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead>
+                  <tr className="border-b border-white/10">
+                    <th className="text-gray-300 font-semibold py-3 px-4">
+                      Month
+                    </th>
+                    <th className="text-gray-300 font-semibold py-3 px-4 text-right">
+                      Profit
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {olderMonths.map((month, index) => (
+                    <tr
+                      key={month.month}
+                      className={`border-b border-white/5 ${
+                        index % 2 === 0 ? "bg-white/5" : ""
+                      }`}
+                    >
+                      <td className="text-gray-200 py-3 px-4 font-medium">
+                        {month.month} 2025
+                      </td>
+                      <td className="text-emerald-300 py-3 px-4 text-right font-mono font-semibold">
+                        ${month.profit.toFixed(2)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="text-center mt-4">
+              <p className="text-gray-400 text-sm">
+                Showing {olderMonths.length} previous months • Total: $
+                {olderMonths
+                  .reduce((sum, month) => sum + month.profit, 0)
+                  .toFixed(2)}
+              </p>
+            </div>
+          </div>
+        )}
 
         <div className="text-center mt-8">
           <p className="text-sm text-gray-400 max-w-2xl mx-auto">
