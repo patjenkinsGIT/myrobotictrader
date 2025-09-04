@@ -4,7 +4,7 @@ import { FloatingIcons } from "./FloatingIcons";
 
 export const Hero: React.FC = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden pb-10 pt-10">
+    <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden pb-6 pt-6">
       {/* Background effects */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900"></div>
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-transparent via-purple-500/15 to-transparent"></div>
@@ -13,7 +13,7 @@ export const Hero: React.FC = () => {
       <FloatingIcons />
 
       {/* Logo at top */}
-      <div className="absolute top-8 left-1/2 transform -translate-x-1/2 z-20">
+      <div className="absolute top-6 left-1/2 transform -translate-x-1/2 z-20">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 p-2.5 shadow-lg shadow-purple-500/40">
             <Bot className="w-full h-full text-white" />
@@ -29,30 +29,30 @@ export const Hero: React.FC = () => {
         </div>
       </div>
 
-      <div className="relative max-w-6xl mx-auto text-center z-10 mt-16">
-        <div className="mb-8">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-purple-400/40 mb-6 mt-4 shadow-lg shadow-purple-500/20">
+      <div className="relative max-w-6xl mx-auto text-center z-10 mt-12">
+        <div className="mb-6">
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-purple-400/40 mb-4 mt-2 shadow-lg shadow-purple-500/20">
             <Bot className="w-4 h-4 text-purple-300" />
             <span className="text-purple-200 font-medium">
               Autonomous Trading
             </span>
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 leading-tight">
             Turn Crypto Dreams Into
             <span className="block text-transparent bg-gradient-to-r from-green-300 via-blue-400 to-purple-400 bg-clip-text">
               Automated Profits
             </span>
           </h1>
 
-          <p className="text-xl md:text-2xl text-gray-200 mb-8 max-w-4xl mx-auto">
+          <p className="text-xl md:text-2xl text-gray-200 mb-6 max-w-4xl mx-auto">
             AI-powered robotic trader works 24/7 on Coinbase and Kraken. No
             experience needed - completely hands-free profit generation.
           </p>
         </div>
 
         {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
           <a
             href="https://financialintelligence4u.com/masterclass?am_id=patrick1567"
             target="_blank"
@@ -74,7 +74,7 @@ export const Hero: React.FC = () => {
         </div>
 
         {/* Enhanced Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-8">
           {/* 100% Hands-Free */}
           <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-green-500/15">
             <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
