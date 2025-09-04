@@ -3,7 +3,30 @@ export const tradingData = {
   // Total profit since starting with the robotic trader
   totalProfit: 3973.86,
 
-  // Recent performance metrics
+  // Monthly average and daily average
+  monthlyAverage: 441.54,
+  dailyAverage: 16.79,
+
+  // Best performing month
+  bestMonth: 817.31,
+
+  // Trading statistics
+  totalTrades: 840,
+  avgProfitPerTrade: 4.73,
+
+  // Monthly breakdown data
+  monthlyData: [
+    { month: "Jan", profit: 477.17 },
+    { month: "Feb", profit: 686.72 },
+    { month: "Mar", profit: 261.93 },
+    { month: "Apr", profit: 552.58 },
+    { month: "May", profit: 376.29 },
+    { month: "Jun", profit: 382.98 },
+    { month: "Jul", profit: 817.31 },
+    { month: "Aug", profit: 413.54 },
+  ],
+
+  // Recent performance metrics (keeping your original data)
   todayProfit: 5.33,
   thirtyDayProfit: 408.33,
 
@@ -23,8 +46,7 @@ export const tradingData = {
 
 // Helper functions
 export const calculateDailyAverage = () => {
-  const days = Math.max(tradingData.accountInfo.tradingDays, 1);
-  return (tradingData.totalProfit / days).toFixed(2);
+  return tradingData.dailyAverage.toFixed(2);
 };
 
 export const calculateWeeklyAverage = () => {
