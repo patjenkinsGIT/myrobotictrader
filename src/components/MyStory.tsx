@@ -75,9 +75,11 @@ export const MyStory: React.FC = () => {
             <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm rounded-2xl border border-blue-400/20 p-8 shadow-lg shadow-blue-500/10">
               <div className="space-y-6">
                 <p className="text-lg text-gray-200 leading-relaxed">
-                  Like many people, I was skeptical about automated trading. I'd
-                  tried various strategies before, lost money on risky trades,
-                  and was honestly burned out on the whole thing.
+                  Like many people, I didn't believe automated trading was
+                  really possible. I've always enjoyed investing and have had
+                  reasonable success with stocks, but this is the first
+                  automated system I found that simplifies so much of what we've
+                  grown to learn in typical investing.
                 </p>
 
                 <p className="text-lg text-gray-200 leading-relaxed">
