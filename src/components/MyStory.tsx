@@ -1,20 +1,12 @@
 import * as React from "react";
-import {
-  User,
-  TrendingUp,
-  CheckCircle,
-  Calendar,
-  DollarSign,
-  Target,
-  Zap,
-} from "lucide-react";
+import { User, TrendingUp, CheckCircle, Target } from "lucide-react";
 import { tradingData, calculateDailyAverage } from "../data/tradingResults";
 import {
   liveTradingData,
   calculateLiveDailyAverage,
 } from "../data/liveTrading";
 
-export const MyStory: React.FC = function () {
+export const MyStory: React.FC = () => {
   // Use live data if available, fallback to original data
   const currentData = liveTradingData.isLiveData
     ? liveTradingData
@@ -23,8 +15,27 @@ export const MyStory: React.FC = function () {
     ? calculateLiveDailyAverage()
     : calculateDailyAverage();
 
+  // Helper function to get full month name
+  const getFullMonthName = (shortMonth: string): string => {
+    const monthMap: { [key: string]: string } = {
+      Jan: "January",
+      Feb: "February",
+      Mar: "March",
+      Apr: "April",
+      May: "May",
+      Jun: "June",
+      Jul: "July",
+      Aug: "August",
+      Sep: "September",
+      Oct: "October",
+      Nov: "November",
+      Dec: "December",
+    };
+    return monthMap[shortMonth] || shortMonth;
+  };
+
   // Find best month for story context
-  const bestMonthData = currentData.monthlyData.reduce((best, current) =>
+  const bestMonth = currentData.monthlyData.reduce((best, current) =>
     current.profit > best.profit ? current : best
   );
 
@@ -52,16 +63,16 @@ export const MyStory: React.FC = function () {
           {/* Photo Side */}
           <div className="flex justify-center lg:justify-end">
             <div className="relative">
-              <div className="w-80 h-80 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
+              <div className="w-64 h-64 md:w-72 md:h-72 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
                 <img
                   src="/patrick-2.jpeg"
                   alt="Patrick - MyRoboticTrader Creator"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover object-center"
                 />
               </div>
               {/* Decorative elements */}
-              <div className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full shadow-lg shadow-green-400/40"></div>
-              <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full shadow-lg shadow-purple-400/40"></div>
+              <div className="absolute -top-3 -right-3 w-6 h-6 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full shadow-lg shadow-green-400/40"></div>
+              <div className="absolute -bottom-3 -left-3 w-5 h-5 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full shadow-lg shadow-purple-400/40"></div>
             </div>
           </div>
 
@@ -87,10 +98,10 @@ export const MyStory: React.FC = function () {
 
                 <p className="text-lg text-gray-200 leading-relaxed">
                   <span className="text-green-300 font-semibold">
-                    After the free masterclass, I couldn't wait to get started.
-                    I got setup the same day and was paper trading for about 2
-                    hours, but I almost immediately moved to real money within
-                    hours after seeing a few successful trades.
+                    After attending the free training, I couldn't wait to get
+                    started. I got setup the same day and was paper trading for
+                    about 2 hours, but I almost immediately moved to real money
+                    within hours after seeing a few successful trades.
                   </span>
                 </p>
 
@@ -104,13 +115,13 @@ export const MyStory: React.FC = function () {
                 </p>
 
                 <p className="text-lg text-gray-200 leading-relaxed">
-                  What happened next blew my mind. Month after month, consistent
-                  profits. My best month was{" "}
+                  What happened next surprised me. Month after month, consistent
+                  results. My best month was{" "}
                   <span className="text-yellow-300 font-semibold">
-                    {bestMonthData.month}
-                    with ${bestMonthData.profit.toFixed(2)}
+                    {getFullMonthName(bestMonth.month)} with $
+                    {bestMonth.profit.toFixed(2)}
                   </span>
-                  , but even my "slower" months were profitable.
+                  , but even my quieter months were profitable.
                 </p>
 
                 <p className="text-lg text-gray-200 leading-relaxed">
@@ -118,76 +129,33 @@ export const MyStory: React.FC = function () {
                   <span className="text-purple-300 font-semibold">
                     8 months
                   </span>{" "}
-                  of using this system and seeing{" "}
-                  <span className="text-green-300 font-semibold">
-                    ${currentData.totalProfit.toLocaleString()} in total profits
-                  </span>
-                  , I knew I had to share it with others. The results speak for
-                  themselves.
+                  of consistent results, I knew I had to share this with others.
+                  The system simply works.
                 </p>
               </div>
-            </div>
 
-            {/* Dynamic Stats Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="flex flex-col items-center gap-2 bg-green-500/10 rounded-lg p-4 border border-green-400/20">
-                <DollarSign className="w-6 h-6 text-green-300" />
-                <div className="text-green-300 font-bold font-mono">
-                  ${currentData.totalProfit.toLocaleString()}
-                </div>
-                <div className="text-gray-300 text-xs text-center">
-                  Total Profits
-                </div>
-              </div>
-
-              <div className="flex flex-col items-center gap-2 bg-blue-500/10 rounded-lg p-4 border border-blue-400/20">
-                <Calendar className="w-6 h-6 text-blue-300" />
-                <div className="text-blue-300 font-bold font-mono">
-                  ${currentData.monthlyAverage.toFixed(0)}
-                </div>
-                <div className="text-gray-300 text-xs text-center">
-                  Monthly Avg
-                </div>
-              </div>
-
-              <div className="flex flex-col items-center gap-2 bg-purple-500/10 rounded-lg p-4 border border-purple-400/20">
-                <Target className="w-6 h-6 text-purple-300" />
-                <div className="text-purple-300 font-bold font-mono">
-                  ${dailyAvg}
-                </div>
-                <div className="text-gray-300 text-xs text-center">
-                  Daily Avg
-                </div>
-              </div>
-
-              <div className="flex flex-col items-center gap-2 bg-yellow-500/10 rounded-lg p-4 border border-yellow-400/20">
-                <Zap className="w-6 h-6 text-yellow-300" />
-                <div className="text-yellow-300 font-bold font-mono">
-                  ${bestMonthData.profit.toFixed(0)}
-                </div>
-                <div className="text-gray-300 text-xs text-center">
-                  Best Month
-                </div>
-              </div>
-            </div>
-
-            {/* Live Data Indicator */}
-            {liveTradingData.isLiveData && (
-              <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-lg p-4 border border-green-400/30">
-                <div className="flex items-center gap-3">
-                  <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+              {/* Quick Stats - Back to original 2 cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+                <div className="flex items-center gap-3 bg-green-500/10 rounded-lg p-4 border border-green-400/20">
+                  <CheckCircle className="w-6 h-6 text-green-300 flex-shrink-0" />
                   <div>
-                    <p className="text-green-300 font-semibold text-sm">
-                      Live Data Connected
-                    </p>
-                    <p className="text-gray-300 text-xs">
-                      Last updated:{" "}
-                      {new Date(liveTradingData.lastUpdated).toLocaleString()}
-                    </p>
+                    <div className="text-green-300 font-semibold font-mono">
+                      ${currentData.totalProfit.toLocaleString()}
+                    </div>
+                    <div className="text-gray-300 text-sm">Total Profits</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 bg-blue-500/10 rounded-lg p-4 border border-blue-400/20">
+                  <TrendingUp className="w-6 h-6 text-blue-300 flex-shrink-0" />
+                  <div>
+                    <div className="text-blue-300 font-semibold">8 Months</div>
+                    <div className="text-gray-300 text-sm">
+                      Consistent Trading
+                    </div>
                   </div>
                 </div>
               </div>
-            )}
+            </div>
 
             {/* Transition to results */}
             <div className="text-center">
@@ -202,7 +170,7 @@ export const MyStory: React.FC = function () {
           </div>
         </div>
 
-        {/* Additional Story Section */}
+        {/* Why I'm Sharing Section - Updated with your personal input */}
         <div className="mt-16 bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-8">
           <h3 className="text-2xl font-bold text-white mb-6 text-center">
             Why I'm Sharing This With You
@@ -214,11 +182,12 @@ export const MyStory: React.FC = function () {
                 <CheckCircle className="w-8 h-8 text-white" />
               </div>
               <h4 className="text-lg font-semibold text-white mb-2">
-                Proven Results
+                Real Results
               </h4>
               <p className="text-gray-300 text-sm">
-                {currentData.totalTrades.toLocaleString()} trades executed with
-                consistent profitability over 8 months of real trading.
+                I've always had an interest in investing and have invested in
+                stocks before with reasonable success, but I've never had
+                anything that trades this frequently and automatically.
               </p>
             </div>
 
@@ -227,11 +196,12 @@ export const MyStory: React.FC = function () {
                 <Target className="w-8 h-8 text-white" />
               </div>
               <h4 className="text-lg font-semibold text-white mb-2">
-                No Guesswork
+                Automated Approach
               </h4>
               <p className="text-gray-300 text-sm">
-                The system does everything automatically. Average profit per
-                trade: ${currentData.avgProfitPerTrade.toFixed(2)}.
+                The system handles the analysis and execution automatically. No
+                need to watch charts or make emotional decisions - just
+                consistent, methodical trading.
               </p>
             </div>
 
@@ -240,22 +210,23 @@ export const MyStory: React.FC = function () {
                 <TrendingUp className="w-8 h-8 text-white" />
               </div>
               <h4 className="text-lg font-semibold text-white mb-2">
-                Consistent Growth
+                Worth Sharing
               </h4>
               <p className="text-gray-300 text-sm">
-                Every single month has been profitable, with steady growth
-                averaging ${currentData.monthlyAverage.toFixed(2)} per month.
+                We are still early in this phase of decentralized finance and
+                the opportunities are amazing. It's an exciting time to see
+                what's going to happen!
               </p>
             </div>
           </div>
 
           <div className="text-center mt-8">
             <p className="text-gray-300 max-w-3xl mx-auto">
-              I'm not a financial guru or trading expert - I'm just someone who
-              found a system that works and wanted to share it with others who
-              are looking for a reliable way to generate passive income. The
-              numbers below are my actual results, updated{" "}
-              {liveTradingData.isLiveData ? "live" : "regularly"}.
+              I'm not a financial expert - I'm just someone who found a system
+              that has worked consistently for me and wanted to share it with
+              others who might be interested in a systematic approach to
+              trading. The detailed results below show exactly what this system
+              has produced over 8 months.
             </p>
           </div>
         </div>

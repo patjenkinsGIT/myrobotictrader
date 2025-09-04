@@ -2,7 +2,7 @@ import * as React from "react";
 import { ArrowRight, Bot, Shield, Clock, Users } from "lucide-react";
 import { FloatingIcons } from "./FloatingIcons";
 
-export const Hero: React.FC = function () {
+export const Hero: React.FC = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden pb-10 pt-10">
       {/* Background effects */}
@@ -115,7 +115,7 @@ export const Hero: React.FC = function () {
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
 
-          {/* Thousands Satisfied */}
+          {/* Proven Results */}
           <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/15">
             <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
 
