@@ -28,9 +28,11 @@ jobs:
       - name: Update trading data
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
         run: |
-          # Replace the API key placeholder in the script
+          # Replace both placeholders
           sed -i "s/your_google_api_key_here/$GOOGLE_API_KEY/g" updateTradingData.js
+          sed -i "s/your_sheet_id_here/$GOOGLE_SHEET_ID/g" updateTradingData.js
           npm run update-trading
 
       - name: Commit and push if data changed
