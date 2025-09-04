@@ -8,10 +8,14 @@ on:
 jobs:
   update-data:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Add this permission
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }} # Add this
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
