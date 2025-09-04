@@ -7,6 +7,15 @@ export const CallToAction: React.FC = function () {
       {/* Background effects */}
       <div className="absolute inset-0 bg-gradient-to-r from-purple-900/60 to-pink-900/60"></div>
 
+      {/* Subtle robot accent - top right */}
+      <div className="absolute top-10 right-10 opacity-8 pointer-events-none hidden lg:block">
+        <img
+          src="/robot-trading.png"
+          alt=""
+          className="w-20 h-20 animate-pulse"
+        />
+      </div>
+
       <div className="relative max-w-4xl mx-auto text-center">
         <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-purple-400/40 mb-6 mt-4 shadow-lg shadow-purple-500/20">
           <Rocket className="w-4 h-4 text-purple-300" />
@@ -42,7 +51,12 @@ export const CallToAction: React.FC = function () {
         </div>
 
         {/* Masterclass Bullet List */}
-        <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl border border-purple-400/30 p-8 mb-8 max-w-3xl mx-auto shadow-lg shadow-purple-500/20">
+        <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl border border-purple-400/30 p-8 mb-8 max-w-3xl mx-auto shadow-lg shadow-purple-500/20 relative">
+          {/* Small robot accent inside the box */}
+          <div className="absolute bottom-4 right-4 opacity-10 pointer-events-none hidden md:block">
+            <img src="/robot-trading.png" alt="" className="w-12 h-12" />
+          </div>
+
           <h3 className="text-2xl md:text-3xl font-bold text-white mb-6">
             Free Masterclass Reveals:
           </h3>

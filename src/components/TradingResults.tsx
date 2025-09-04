@@ -144,7 +144,16 @@ export const TradingResults: React.FC = () => {
         </div>
 
         {/* Recent Months Chart - Mobile Optimized (Last 6 Months) */}
-        <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8 mb-8">
+        <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8 mb-8 relative">
+          {/* Robot accent - subtle and thematic */}
+          <div className="absolute top-4 right-4 opacity-10 pointer-events-none hidden md:block">
+            <img
+              src="/robot-trading.png"
+              alt=""
+              className="w-16 h-16 animate-pulse"
+            />
+          </div>
+
           <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6 text-center">
             Recent Performance (Last 6 Months)
           </h3>

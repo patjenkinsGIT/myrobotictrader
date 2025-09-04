@@ -6,7 +6,7 @@ import {
   Shield,
   Bot,
   TrendingUp,
-  DollarSign, // Add this import
+  DollarSign,
 } from "lucide-react";
 
 const faqData = [
@@ -20,7 +20,6 @@ const faqData = [
         answer:
           "A robotic trader is an automated trading platform that executes buy and sell decisions based on market conditions and your settings. The system monitors markets 24/7 and executes trades in milliseconds without human intervention. While AI enhancement helps optimize timing for potentially better profits or entry prices, the core trading platform operates on proven algorithms and market analysis that adapt to changing market conditions.",
       },
-
       {
         question: "Do I need trading experience?",
         answer:

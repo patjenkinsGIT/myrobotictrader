@@ -7,10 +7,16 @@ export const Footer: React.FC = function () {
       <div className="max-w-6xl mx-auto">
         {/* Main Footer Content with Logo */}
         <div className="text-center mb-8">
-          {/* Footer Logo - Slightly Different Style */}
+          {/* Footer Logo - Updated with custom robot */}
           <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 p-2">
-              <Bot className="w-full h-full text-white" />
+            <div className="w-8 h-8 rounded-lg overflow-hidden shadow-lg shadow-purple-500/40 bg-gradient-to-br from-purple-500 to-pink-500 p-0.5">
+              <div className="w-full h-full rounded overflow-hidden bg-white/10 backdrop-blur-sm">
+                <img
+                  src="/robot-logo.png"
+                  alt="MyRoboticTrader Robot"
+                  className="w-full h-full object-cover"
+                />
+              </div>
             </div>
             <div className="text-xl font-bold">
               <span className="text-gray-300">My</span>
@@ -120,8 +126,14 @@ export const Footer: React.FC = function () {
         {/* Copyright with Mini Logo */}
         <div className="border-t border-white/10 pt-8 text-center">
           <div className="flex items-center justify-center gap-2 mb-3">
-            <div className="w-5 h-5 rounded bg-gradient-to-br from-purple-500 to-pink-500 p-1">
-              <Bot className="w-full h-full text-white" />
+            <div className="w-5 h-5 rounded overflow-hidden bg-gradient-to-br from-purple-500 to-pink-500 p-0.5">
+              <div className="w-full h-full rounded overflow-hidden bg-white/10 backdrop-blur-sm">
+                <img
+                  src="/robot-logo.png"
+                  alt=""
+                  className="w-full h-full object-cover"
+                />
+              </div>
             </div>
             <span className="text-gray-400 text-sm">
               © 2025{" "}
