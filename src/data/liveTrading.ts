@@ -1,5 +1,5 @@
 // Live Trading Data - Updated from Google Sheets
-// Last updated: 2025-09-04T18:33:09.463Z
+// Last updated: 2025-09-05T01:50:28.698Z
 
 export const liveTradingData = {
   totalProfit: 4000.25,
@@ -46,7 +46,7 @@ export const liveTradingData = {
     "profit": 31.72
   }
 ],
-  lastUpdated: "2025-09-04T18:33:09.463Z",
+  lastUpdated: "2025-09-05T01:50:28.698Z",
   isLiveData: true,
 };
 
