@@ -16,9 +16,8 @@ export const FloatingIcons: React.FC = () => {
       {icons.map(({ Icon, delay, position }, index) => (
         <div
           key={index}
-          className={`absolute ${position} opacity-20 pointer-events-none hidden lg:block`}
+          className={`absolute ${position} opacity-20 pointer-events-none hidden lg:block animate-float-subtle`}
           style={{
-            animation: `float 6s ease-in-out infinite`,
             animationDelay: delay,
           }}
         >
@@ -27,18 +26,6 @@ export const FloatingIcons: React.FC = () => {
           </div>
         </div>
       ))}
-
-      <style jsx>{`
-        @keyframes float {
-          0%,
-          100% {
-            transform: translateY(0px) rotate(0deg);
-          }
-          50% {
-            transform: translateY(-20px) rotate(5deg);
-          }
-        }
-      `}</style>
     </>
   );
 };
