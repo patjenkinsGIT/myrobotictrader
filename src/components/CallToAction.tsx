@@ -66,7 +66,7 @@ export const CallToAction: React.FC = function () {
             <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
               <ArrowRight className="w-5 h-5 text-purple-300 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-300 transition-colors" />
               <span className="text-lg">
-                How our system avoids losses—even during market crashes
+                How the system avoids losses—even during market crashes
               </span>
             </li>
             <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
@@ -85,7 +85,8 @@ export const CallToAction: React.FC = function () {
             <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
               <ArrowRight className="w-5 h-5 text-purple-300 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-300 transition-colors" />
               <span className="text-lg">
-                The truth about "never trading at a loss" (and how we do it)
+                The truth about "never trading at a loss" (and how it can work
+                for you)
               </span>
             </li>
             <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
@@ -97,7 +98,8 @@ export const CallToAction: React.FC = function () {
             <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
               <ArrowRight className="w-5 h-5 text-purple-300 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-300 transition-colors" />
               <span className="text-lg">
-                Stay in complete control—override automation anytime
+                Stay in complete control—override automation anytime but you
+                won't want to 🤖
               </span>
             </li>
             <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">

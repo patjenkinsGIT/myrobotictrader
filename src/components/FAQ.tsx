@@ -159,7 +159,7 @@ const faqData = [
       {
         question: "What support do you provide?",
         answer:
-          "Comprehensive technical support for setup, configuration, and platform questions. We provide technical and educational support only - no financial advice.",
+          "Comprehensive technical support for setup, configuration, and platform questions.  The provided support is for technical and educational support only - no financial advice.",
       },
     ],
   },
