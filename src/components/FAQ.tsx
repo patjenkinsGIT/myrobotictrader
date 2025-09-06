@@ -47,7 +47,7 @@ const faqData = [
               rel="noopener noreferrer"
               className="text-purple-300 hover:text-purple-200 underline transition-colors duration-200"
             >
-              https://financialintelligence4u.com/masterclass?am_id=patrick1567
+              https://dailyprofits.link/class
             </a>
           </>
         ),
