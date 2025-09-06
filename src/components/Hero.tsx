@@ -37,24 +37,27 @@ export const Hero: React.FC = () => {
 
       <div className="relative max-w-6xl mx-auto text-center z-10 mt-16">
         <div className="mb-8">
-          {/* Reverted badge to generic Bot icon */}
+          {/* Updated badge to AI-Enhanced Autonomous Trading */}
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-purple-400/40 mb-6 mt-4 shadow-lg shadow-purple-500/20">
             <Bot className="w-4 h-4 text-purple-300" />
             <span className="text-purple-200 font-medium">
-              Autonomous Trading
+              AI-Enhanced Autonomous Trading
             </span>
           </div>
 
+          {/* Updated headline - Option 1: Set It and Forget It Crypto Trading */}
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-            Turn Crypto Dreams Into
+            Set It and Forget It
             <span className="block text-transparent bg-gradient-to-r from-green-300 via-blue-400 to-purple-400 bg-clip-text">
-              Automated Profits
+              Crypto Trading
             </span>
           </h1>
 
+          {/* Updated description - AI-Enhanced instead of AI-powered */}
           <p className="text-xl md:text-2xl text-gray-200 mb-8 max-w-4xl mx-auto">
-            AI-powered robotic trader works 24/7 on Coinbase and Kraken. No
-            experience needed - completely hands-free profit generation.
+            AI-Enhanced autonomous robotic trader works 24/7 on Coinbase and
+            Kraken. No experience needed - completely hands-free profit
+            generation.
           </p>
         </div>
 

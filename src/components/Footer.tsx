@@ -28,9 +28,11 @@ export const Footer: React.FC = function () {
             </div>
           </div>
 
+          {/* Updated description - removed "our AI" */}
           <p className="text-gray-400 mb-8 max-w-2xl mx-auto">
             Set it and forget it crypto trading that never trades at a loss.
-            Your funds stay secure while our AI maximizes profits 24/7.
+            Your funds stay secure while AI-Enhanced technology maximizes
+            profits 24/7.
           </p>
 
           {/* Links */}

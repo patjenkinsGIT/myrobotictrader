@@ -22,10 +22,11 @@ export const CallToAction: React.FC = function () {
           <span className="text-purple-200 font-medium">Ready to Start?</span>
         </div>
 
+        {/* Updated headline - Option A: Ready for True Set-It-and-Forget-It Trading? */}
         <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-          Start Your Journey to
+          Ready for True
           <span className="block text-transparent bg-gradient-to-r from-green-300 via-blue-400 to-purple-400 bg-clip-text">
-            Financial Freedom
+            Set-It-and-Forget-It Trading?
           </span>
         </h2>
 
