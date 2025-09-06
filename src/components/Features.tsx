@@ -119,7 +119,7 @@ export const Features: React.FC = function () {
           </div>
 
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Why Choose Our
+            Why Choose This
             <span className="block text-transparent bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text">
               Autonomous Trading Platform
             </span>
