@@ -1,3 +1,7 @@
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+// Your existing components
 import { Hero } from "./components/Hero";
 import { MyStory } from "./components/MyStory";
 import { TradingResults } from "./components/TradingResults";
@@ -6,9 +10,13 @@ import { CallToAction } from "./components/CallToAction";
 import { FAQ } from "./components/FAQ";
 import { Footer } from "./components/Footer";
 
-function App() {
+// Your new page component
+import { ResourcesPage } from "./components/ResourcesPage"; // or "./pages/ResourcesPage" if you put it in a pages folder
+
+// Create a HomePage component from your existing layout
+const HomePage: React.FC = () => {
   return (
-    <div className="App min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <>
       <Hero />
       <MyStory />
       <TradingResults />
@@ -16,6 +24,22 @@ function App() {
       <CallToAction />
       <FAQ />
       <Footer />
+    </>
+  );
+};
+
+function App() {
+  return (
+    <div className="App min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/resources" element={<ResourcesPage />} />
+          {/* Future routes */}
+          {/* <Route path="/coinbase" element={<CoinbasePage />} /> */}
+          {/* <Route path="/cointracker" element={<CoinTrackerPage />} /> */}
+        </Routes>
+      </Router>
     </div>
   );
 }
