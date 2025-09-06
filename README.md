@@ -227,4 +227,16 @@ MIT License - see [LICENSE](LICENSE) file for details.
 - **Mobile Optimized**: Responsive design for all devices
 - **Performance**: Fast loading with Vite and Cloudflare Pages
 
+## ⚖️ Legal & Usage Notice
+
+**Educational Purpose Only:** This documentation is provided for educational and reference purposes. The trading results, strategies, and implementation details are specific to Patrick Jenkins' personal trading experience and business model.
+
+**Intellectual Property:** The design, messaging, branding, and specific implementation of MyRoboticTrader.com are proprietary. While the technical setup is shared for educational purposes, direct copying of the site design, messaging, or business model is not permitted.
+
+**Trading Results:** All trading results shown are Patrick's actual personal results and cannot be replicated or used by others. Any use of similar trading data or claims would be fraudulent.
+
+**Attribution Required:** If you use any concepts or technical approaches from this project, please provide appropriate attribution to the original work.
+
+**No Warranty:** This information is provided "as-is" without warranty. Individual results will vary.
+
 **Built with ❤️ by Patrick Jenkins**
