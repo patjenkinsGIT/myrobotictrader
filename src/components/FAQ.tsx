@@ -42,7 +42,7 @@ const faqData = [
             Join our free masterclass where we demonstrate the system live and
             answer questions. Register at:{" "}
             <a
-              href="https://financialintelligence4u.com/masterclass?am_id=patrick1567"
+              href="https://dailyprofits.link/class"
               target="_blank"
               rel="noopener noreferrer"
               className="text-purple-300 hover:text-purple-200 underline transition-colors duration-200"
@@ -280,7 +280,7 @@ export const FAQ: React.FC = function () {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
-                href="https://financialintelligence4u.com/masterclass?am_id=patrick1567"
+                href="https://dailyprofits.link/class"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-500/30"
@@ -289,7 +289,7 @@ export const FAQ: React.FC = function () {
                 <HelpCircle className="w-4 h-4" />
               </a>
               <a
-                href="https://gobabytrade.com/fi4u"
+                href="https://dailyprofits.link/gbt"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 border-2 border-white/40 hover:border-white/60 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 backdrop-blur-sm hover:bg-white/15 shadow-lg shadow-white/10"

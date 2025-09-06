@@ -38,7 +38,7 @@ export const Footer: React.FC = function () {
           {/* Links */}
           <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mb-8">
             <a
-              href="https://financialintelligence4u.com/masterclass?am_id=patrick1567"
+              href="https://dailyprofits.link/class"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-400 hover:text-purple-400 transition-colors flex items-center gap-2 group"
@@ -47,7 +47,7 @@ export const Footer: React.FC = function () {
               <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
             </a>
             <a
-              href="https://gobabytrade.com/fi4u"
+              href="https://dailyprofits.link/gbt"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-400 hover:text-purple-400 transition-colors flex items-center gap-2 group"

@@ -119,7 +119,7 @@ export const CallToAction: React.FC = function () {
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
           <a
-            href="https://financialintelligence4u.com/masterclass?am_id=patrick1567"
+            href="https://dailyprofits.link/class"
             target="_blank"
             rel="noopener noreferrer"
             className="group bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2"
@@ -129,7 +129,7 @@ export const CallToAction: React.FC = function () {
           </a>
 
           <a
-            href="https://gobabytrade.com/fi4u"
+            href="https://dailyprofits.link/gbt"
             target="_blank"
             rel="noopener noreferrer"
             className="group border-2 border-white/40 hover:border-white/60 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 backdrop-blur-sm hover:bg-white/15 flex items-center justify-center gap-2 shadow-lg shadow-white/10"
