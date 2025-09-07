@@ -3,179 +3,187 @@ import React from "react";
 import {
   DollarSign,
   Target,
-  Zap,
+  TrendingUp,
   ExternalLink,
   Smartphone,
   ArrowRight,
 } from "lucide-react";
-import { tradingData } from "../data/tradingResults";
-import { liveTradingData } from "../data/liveTrading";
+import { tradingData, calculateDailyAverage } from "../data/tradingResults";
+import {
+  liveTradingData,
+  calculateLiveDailyAverage,
+} from "../data/liveTrading";
 
 export const BusinessCardLanding: React.FC = () => {
   // Use your existing data logic
   const currentData = liveTradingData.isLiveData
     ? liveTradingData
     : tradingData;
+  const dailyAvg = liveTradingData.isLiveData
+    ? calculateLiveDailyAverage()
+    : calculateDailyAverage();
 
   // Your actual affiliate link with tracking
   const affiliateLink =
     "https://dailyprofits.link/class?utm_source=business_card&utm_medium=nfc_qr&utm_campaign=live_results_2024";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 relative overflow-hidden">
-      {/* Background effects */}
-      <div className="absolute inset-0 bg-gradient-to-r from-green-900/20 to-blue-900/20"></div>
+    <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden pb-10 pt-10">
+      {/* Background effects - matching your Hero */}
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900"></div>
+      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-transparent via-purple-500/15 to-transparent"></div>
 
-      {/* Floating particles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(15)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-2 h-2 bg-cyan-400/30 rounded-full animate-pulse"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-            }}
-          />
-        ))}
+      {/* Logo at top - Same as your Hero */}
+      <div className="absolute top-8 left-1/2 transform -translate-x-1/2 z-20">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-purple-500/40 bg-gradient-to-br from-purple-500 to-pink-500 p-0.5">
+            <div className="w-full h-full rounded-lg overflow-hidden bg-white/10 backdrop-blur-sm">
+              <img
+                src="/robot-logo.png"
+                alt="MyRoboticTrader Robot"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+          <div className="text-2xl font-bold">
+            <span className="text-white">My</span>
+            <span className="text-transparent bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text">
+              Robotic
+            </span>
+            <span className="text-white">Trader</span>
+            <span className="text-purple-300 text-sm ml-1">.com</span>
+          </div>
+        </div>
       </div>
 
-      <div className="relative z-10 min-h-screen flex flex-col py-8 px-4">
+      <div className="relative max-w-6xl mx-auto text-center z-10 mt-16">
         {/* Header */}
-        <div className="text-center mb-8">
-          {/* Live indicator */}
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-600/20 to-emerald-600/20 backdrop-blur-sm rounded-full px-4 py-2 border border-green-400/30 mb-6">
+        <div className="mb-8">
+          {/* Live indicator - matching your badge style */}
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-500/30 to-emerald-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-green-400/40 mb-6 shadow-lg shadow-green-500/20">
             <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-            <span className="text-green-300 font-medium text-sm">
+            <span className="text-green-200 font-medium">
               {liveTradingData.isLiveData ? "LIVE DATA" : "REAL RESULTS"}
             </span>
           </div>
 
-          {/* Robot branding */}
+          {/* Welcome message */}
           <div className="mb-6">
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-3">
-              MyRoboticTrader.com
-            </h1>
-            <p className="text-2xl text-cyan-300 font-semibold mb-4">
-              "Set It and Forget It"
-            </p>
-          </div>
-
-          <div className="space-y-2">
-            <p className="text-gray-200 text-xl font-medium">
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
               Thanks for tapping my card! 👋
-            </p>
-            <p className="text-purple-200 text-lg">
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-200 mb-2">
               Here are my LIVE trading results:
             </p>
+            <p className="text-lg text-purple-200">
+              "Set It and Forget It" in action
+            </p>
           </div>
         </div>
 
-        {/* Main stats */}
-        <div className="flex-1 max-w-md mx-auto w-full">
-          <div className="space-y-6">
-            {/* Total Profits - Hero stat */}
-            <div className="bg-gradient-to-br from-green-500/20 to-emerald-600/20 backdrop-blur-sm rounded-3xl border border-green-400/30 p-8 text-center shadow-xl shadow-green-500/20">
-              <DollarSign className="w-16 h-16 text-green-300 mx-auto mb-4" />
-              <div className="text-5xl md:text-6xl font-bold text-green-300 font-mono mb-3">
+        {/* Main stats - matching your Hero card style */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-10">
+          {/* Total Profits - Hero stat */}
+          <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-green-500/15">
+            <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
+
+            <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-green-500/40">
+              <DollarSign className="w-full h-full text-white" />
+            </div>
+
+            <div className="relative text-center">
+              <div className="text-4xl font-bold text-green-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-green-300 group-hover:to-emerald-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
                 ${currentData.totalProfit.toLocaleString()}
               </div>
-              <div className="text-green-200 font-semibold text-xl mb-2">
+              <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
                 Total Profits
               </div>
-              <div className="text-green-300 text-base font-medium">
-                8+ Months • Always Growing! 📈
+              <div className="text-green-300 text-sm mt-1">
+                8+ Months • Always Growing!
               </div>
             </div>
 
-            {/* Total Trades & Average */}
-            <div className="grid grid-cols-1 gap-4">
-              <div className="bg-gradient-to-br from-blue-500/20 to-cyan-600/20 backdrop-blur-sm rounded-2xl border border-blue-400/30 p-6 text-center shadow-lg shadow-blue-500/20">
-                <Target className="w-12 h-12 text-blue-300 mx-auto mb-3" />
-                <div className="text-3xl font-bold text-blue-300 font-mono mb-2">
-                  {currentData.totalTrades.toLocaleString()}
-                </div>
-                <div className="text-blue-200 font-medium text-lg">
-                  Total Trades
-                </div>
-                <div className="text-blue-300 text-sm mt-1">
-                  Consistent & Automated
-                </div>
-              </div>
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
+          </div>
 
-              <div className="bg-gradient-to-br from-purple-500/20 to-violet-600/20 backdrop-blur-sm rounded-2xl border border-purple-400/30 p-6 text-center shadow-lg shadow-purple-500/20">
-                <Zap className="w-12 h-12 text-purple-300 mx-auto mb-3" />
-                <div className="text-3xl font-bold text-purple-300 font-mono mb-2">
-                  ${currentData.avgProfitPerTrade.toFixed(2)}
-                </div>
-                <div className="text-purple-200 font-medium text-lg">
-                  Avg Per Trade
-                </div>
-                <div className="text-purple-300 text-sm mt-1">
-                  Steady Performance
-                </div>
+          {/* Total Trades */}
+          <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-blue-500/15">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
+
+            <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-blue-500/40">
+              <Target className="w-full h-full text-white" />
+            </div>
+
+            <div className="relative text-center">
+              <div className="text-4xl font-bold text-blue-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-300 group-hover:to-cyan-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
+                {currentData.totalTrades.toLocaleString()}
+              </div>
+              <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
+                Total Trades
+              </div>
+              <div className="text-blue-300 text-sm mt-1">
+                Consistent & Automated
               </div>
             </div>
 
-            {/* Last updated */}
-            {liveTradingData.isLiveData && (
-              <div className="text-center">
-                <p className="text-xs text-gray-400">
-                  Last updated:{" "}
-                  {new Date(liveTradingData.lastUpdated).toLocaleString()}
-                </p>
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
+          </div>
+
+          {/* Daily Average - More impactful! */}
+          <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/15">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
+
+            <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-purple-500/40">
+              <TrendingUp className="w-full h-full text-white" />
+            </div>
+
+            <div className="relative text-center">
+              <div className="text-4xl font-bold text-purple-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-300 group-hover:to-pink-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
+                ${dailyAvg}
               </div>
-            )}
-
-            {/* Call to Action - Main conversion button */}
-            <div className="pt-4">
-              <a
-                href={affiliateLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-bold py-5 px-6 rounded-3xl text-center text-xl transition-all duration-300 transform hover:scale-105 shadow-xl shadow-cyan-500/25"
-              >
-                <div className="flex items-center justify-center gap-3">
-                  <span>Get FREE Access Now</span>
-                  <ExternalLink className="w-6 h-6" />
-                </div>
-              </a>
+              <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
+                Daily Average
+              </div>
+              <div className="text-purple-300 text-sm mt-1">Steady Growth</div>
             </div>
 
-            {/* Secondary CTA with urgency */}
-            <div className="text-center">
-              <p className="text-sm text-yellow-300 font-medium mb-3">
-                🔥 Limited Time: Free Access to Daily Profits Class
-              </p>
-            </div>
-
-            {/* Secondary link back to main site */}
-            <div className="text-center pt-4">
-              <p className="text-base text-gray-300 mb-4">
-                Want to see the full system in action?
-              </p>
-              <a
-                href="/"
-                className="inline-flex items-center gap-2 text-cyan-300 hover:text-cyan-200 text-base font-medium transition-colors"
-              >
-                <Smartphone className="w-5 h-5" />
-                View Full Site
-                <ArrowRight className="w-5 h-5" />
-              </a>
-            </div>
-
-            {/* Disclaimer */}
-            <div className="text-center pt-8">
-              <p className="text-xs text-gray-500 max-w-sm mx-auto leading-relaxed">
-                * Actual trading results from my personal account. Started
-                January 8, 2025. Past performance does not guarantee future
-                results.
-              </p>
-            </div>
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
         </div>
+
+        {/* CTA Buttons - matching your Hero style */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+          <a
+            href={affiliateLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2"
+          >
+            Get FREE Access Now
+            <ExternalLink className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          </a>
+
+          <a
+            href="/"
+            className="group border-2 border-white/40 hover:border-white/60 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 backdrop-blur-sm hover:bg-white/15 flex items-center justify-center gap-2 shadow-lg shadow-white/10"
+          >
+            <Smartphone className="w-5 h-5" />
+            View Full Site
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          </a>
+        </div>
+
+        {/* Secondary info */}
+        <div className="text-center">
+          <p className="text-sm text-yellow-300 font-medium mb-4">
+            🔥 Limited Time: Free Access to Daily Profits Class
+          </p>
+          <p className="text-xs text-gray-500 max-w-sm mx-auto leading-relaxed">
+            * Actual trading results from my personal account. Started January
+            8, 2025. Past performance does not guarantee future results.
+          </p>
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
