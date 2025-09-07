@@ -103,14 +103,16 @@ export const ResourcesPage: React.FC = function () {
 
           {/* Coinbase One Card */}
           <div className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 backdrop-blur-sm rounded-2xl border border-blue-400/20 p-8 mb-8 shadow-lg shadow-blue-500/10 relative">
-            <div className="absolute top-6 right-6">
-              <div className="bg-gradient-to-r from-green-400 to-emerald-400 text-black px-3 py-1 rounded-full text-sm font-bold">
+            {/* FIXED: Better mobile positioning for badge */}
+            <div className="absolute top-4 right-4 md:top-6 md:right-6">
+              <div className="bg-gradient-to-r from-green-400 to-emerald-400 text-black px-2 py-1 md:px-3 md:py-1 rounded-full text-xs md:text-sm font-bold">
                 ESSENTIAL
               </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-              <div>
+              {/* FIXED: Added top margin to prevent badge overlap on mobile */}
+              <div className="mt-8 md:mt-0">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl p-3">
                     <Wallet className="w-full h-full text-white" />
@@ -193,14 +195,16 @@ export const ResourcesPage: React.FC = function () {
 
           {/* Kraken Card */}
           <div className="bg-gradient-to-r from-indigo-500/10 to-purple-500/10 backdrop-blur-sm rounded-2xl border border-indigo-400/20 p-8 shadow-lg shadow-indigo-500/10 relative">
-            <div className="absolute top-6 right-6">
-              <div className="bg-gradient-to-r from-blue-400 to-indigo-400 text-white px-3 py-1 rounded-full text-sm font-bold">
+            {/* FIXED: Better mobile positioning for badge */}
+            <div className="absolute top-4 right-4 md:top-6 md:right-6">
+              <div className="bg-gradient-to-r from-blue-400 to-indigo-400 text-white px-2 py-1 md:px-3 md:py-1 rounded-full text-xs md:text-sm font-bold">
                 GREAT ALTERNATIVE
               </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-              <div>
+              {/* FIXED: Added top margin to prevent badge overlap on mobile */}
+              <div className="mt-8 md:mt-0">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl p-3">
                     <Wallet className="w-full h-full text-white" />
@@ -301,14 +305,16 @@ export const ResourcesPage: React.FC = function () {
 
           {/* CoinTracker Card */}
           <div className="bg-gradient-to-r from-orange-500/10 to-red-500/10 backdrop-blur-sm rounded-2xl border border-orange-400/20 p-8 shadow-lg shadow-orange-500/10 relative">
-            <div className="absolute top-6 right-6">
-              <div className="bg-gradient-to-r from-green-400 to-emerald-400 text-black px-3 py-1 rounded-full text-sm font-bold">
+            {/* FIXED: Better mobile positioning for badge */}
+            <div className="absolute top-4 right-4 md:top-6 md:right-6">
+              <div className="bg-gradient-to-r from-green-400 to-emerald-400 text-black px-2 py-1 md:px-3 md:py-1 rounded-full text-xs md:text-sm font-bold">
                 ESSENTIAL
               </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-              <div>
+              {/* FIXED: Added top margin to prevent badge overlap on mobile */}
+              <div className="mt-8 md:mt-0">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl p-3">
                     <Calculator className="w-full h-full text-white" />
