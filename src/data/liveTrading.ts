@@ -1,10 +1,10 @@
 // Live Trading Data - Updated from Google Sheets
-// Last updated: 2025-09-07T01:56:16.063Z
+// Last updated: 2025-09-07T06:31:30.533Z
 
 export const liveTradingData = {
   totalProfit: 4010.49,
   monthlyAverage: 445.61,
-  dailyAverage: 16.64,
+  dailyAverage: 16.57,
   bestMonth: 817.31,
   totalTrades: 847,
   avgProfitPerTrade: 4.73,
@@ -46,7 +46,7 @@ export const liveTradingData = {
     "profit": 41.96
   }
 ],
-  lastUpdated: "2025-09-07T01:56:16.063Z",
+  lastUpdated: "2025-09-07T06:31:30.533Z",
   isLiveData: true,
 };
 
