@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ExternalLink, Twitter, ArrowRight } from "lucide-react";
+import { ExternalLink, Twitter, ArrowRight, Shield } from "lucide-react";
 
 export const Footer: React.FC = function () {
   return (
@@ -38,7 +38,7 @@ export const Footer: React.FC = function () {
             profits 24/7.
           </p>
 
-          {/* Links - WITH RESOURCES LINK */}
+          {/* Links - WITH PRIVACY POLICY LINK ADDED */}
           <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mb-8">
             <a
               href="https://dailyprofits.link/class"
@@ -63,6 +63,14 @@ export const Footer: React.FC = function () {
               className="text-gray-400 hover:text-purple-400 transition-colors flex items-center gap-2 group"
             >
               Recommended Tools
+              <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </a>
+            <a
+              href="/privacy"
+              className="text-gray-400 hover:text-purple-400 transition-colors flex items-center gap-2 group"
+            >
+              <Shield className="w-4 h-4" />
+              Privacy Policy
               <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
             </a>
             <a

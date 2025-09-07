@@ -10,8 +10,9 @@ import { CallToAction } from "./components/CallToAction";
 import { FAQ } from "./components/FAQ";
 import { Footer } from "./components/Footer";
 
-// Your new page component
+// Your page components
 import { ResourcesPage } from "./pages/ResourcesPage";
+import { PrivacyPage } from "./pages/PrivacyPage"; // ← ADD THIS
 
 // Create a HomePage component from your existing layout
 const HomePage: React.FC = () => {
@@ -35,6 +36,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/resources" element={<ResourcesPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} /> {/* ← ADD THIS */}
           {/* Future routes */}
           {/* <Route path="/coinbase" element={<CoinbasePage />} /> */}
           {/* <Route path="/cointracker" element={<CoinTrackerPage />} /> */}
