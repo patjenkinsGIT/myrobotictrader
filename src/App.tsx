@@ -13,6 +13,7 @@ import { Footer } from "./components/Footer";
 // Your page components
 import { ResourcesPage } from "./pages/ResourcesPage";
 import { PrivacyPage } from "./pages/PrivacyPage"; // ← ADD THIS
+import { BusinessCardLanding } from "./components/BusinessCardLanding";
 
 // Create a HomePage component from your existing layout
 const HomePage: React.FC = () => {
@@ -37,6 +38,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/resources" element={<ResourcesPage />} />
           <Route path="/privacy" element={<PrivacyPage />} /> {/* ← ADD THIS */}
+          <Route path="/card" element={<BusinessCardLanding />} />
           {/* Future routes */}
           {/* <Route path="/coinbase" element={<CoinbasePage />} /> */}
           {/* <Route path="/cointracker" element={<CoinTrackerPage />} /> */}
