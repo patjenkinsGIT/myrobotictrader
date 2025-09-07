@@ -1,10 +1,7 @@
 import * as React from "react";
 import { User, TrendingUp, CheckCircle, Target } from "lucide-react";
 import { tradingData, calculateDailyAverage } from "../data/tradingResults";
-import {
-  liveTradingData,
-  calculateLiveDailyAverage,
-} from "../data/liveTrading";
+import { liveTradingData } from "../data/liveTrading";
 
 export const MyStory: React.FC = function () {
   // Use live data if available, fallback to original data
