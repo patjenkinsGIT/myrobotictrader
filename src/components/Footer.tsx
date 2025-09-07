@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ExternalLink, Twitter } from "lucide-react";
+import { ExternalLink, Twitter, ArrowRight } from "lucide-react";
 
 export const Footer: React.FC = function () {
   return (
@@ -7,9 +7,12 @@ export const Footer: React.FC = function () {
       <div className="max-w-6xl mx-auto">
         {/* Main Footer Content with Logo */}
         <div className="text-center mb-8">
-          {/* Footer Logo - Updated with custom robot */}
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="w-8 h-8 rounded-lg overflow-hidden shadow-lg shadow-purple-500/40 bg-gradient-to-br from-purple-500 to-pink-500 p-0.5">
+          {/* Footer Logo - CLICKABLE */}
+          <a
+            href="/"
+            className="inline-flex items-center justify-center gap-3 mb-6 group"
+          >
+            <div className="w-8 h-8 rounded-lg overflow-hidden shadow-lg shadow-purple-500/40 bg-gradient-to-br from-purple-500 to-pink-500 p-0.5 group-hover:scale-105 transition-transform">
               <div className="w-full h-full rounded overflow-hidden bg-white/10 backdrop-blur-sm">
                 <img
                   src="/robot-logo.png"
@@ -18,7 +21,7 @@ export const Footer: React.FC = function () {
                 />
               </div>
             </div>
-            <div className="text-xl font-bold">
+            <div className="text-xl font-bold group-hover:scale-105 transition-transform">
               <span className="text-gray-300">My</span>
               <span className="text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text">
                 Robotic
@@ -26,16 +29,16 @@ export const Footer: React.FC = function () {
               <span className="text-gray-300">Trader</span>
               <span className="text-purple-400 text-sm ml-1">.com</span>
             </div>
-          </div>
+          </a>
 
-          {/* Updated description - removed "our AI" */}
+          {/* Updated description */}
           <p className="text-gray-400 mb-8 max-w-2xl mx-auto">
             Set it and forget it crypto trading that never trades at a loss.
             Your funds stay secure while AI-Enhanced technology maximizes
             profits 24/7.
           </p>
 
-          {/* Links */}
+          {/* Links - WITH RESOURCES LINK */}
           <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mb-8">
             <a
               href="https://dailyprofits.link/class"
@@ -54,6 +57,13 @@ export const Footer: React.FC = function () {
             >
               Start Trading Now
               <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </a>
+            <a
+              href="/resources"
+              className="text-gray-400 hover:text-purple-400 transition-colors flex items-center gap-2 group"
+            >
+              Recommended Tools
+              <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
             </a>
             <a
               href="https://x.com/myrobotictrader"
@@ -125,10 +135,13 @@ export const Footer: React.FC = function () {
           </div>
         </div>
 
-        {/* Copyright with Mini Logo */}
+        {/* Copyright with Mini Logo - CLICKABLE */}
         <div className="border-t border-white/10 pt-8 text-center">
-          <div className="flex items-center justify-center gap-2 mb-3">
-            <div className="w-5 h-5 rounded overflow-hidden bg-gradient-to-br from-purple-500 to-pink-500 p-0.5">
+          <a
+            href="/"
+            className="inline-flex items-center justify-center gap-2 mb-3 group"
+          >
+            <div className="w-5 h-5 rounded overflow-hidden bg-gradient-to-br from-purple-500 to-pink-500 p-0.5 group-hover:scale-105 transition-transform">
               <div className="w-full h-full rounded overflow-hidden bg-white/10 backdrop-blur-sm">
                 <img
                   src="/robot-logo.png"
@@ -137,14 +150,14 @@ export const Footer: React.FC = function () {
                 />
               </div>
             </div>
-            <span className="text-gray-400 text-sm">
+            <span className="text-gray-400 text-sm group-hover:text-purple-400 transition-colors">
               © 2025{" "}
               <span className="text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text font-semibold">
                 MyRoboticTrader
               </span>
               .com
             </span>
-          </div>
+          </a>
           <div className="text-xs text-gray-500">
             Independent affiliate marketing website. Not affiliated with any
             trading platform or exchange unless explicitly disclosed above.

@@ -11,7 +11,7 @@ import { FAQ } from "./components/FAQ";
 import { Footer } from "./components/Footer";
 
 // Your new page component
-import { ResourcesPage } from "./components/ResourcesPage"; // or "./pages/ResourcesPage" if you put it in a pages folder
+import { ResourcesPage } from "./pages/ResourcesPage";
 
 // Create a HomePage component from your existing layout
 const HomePage: React.FC = () => {
@@ -23,7 +23,7 @@ const HomePage: React.FC = () => {
       <Features />
       <CallToAction />
       <FAQ />
-      <Footer />
+      {/* Footer moved outside - will be added globally */}
     </>
   );
 };
@@ -39,6 +39,8 @@ function App() {
           {/* <Route path="/coinbase" element={<CoinbasePage />} /> */}
           {/* <Route path="/cointracker" element={<CoinTrackerPage />} /> */}
         </Routes>
+        {/* Footer appears on ALL pages */}
+        <Footer />
       </Router>
     </div>
   );

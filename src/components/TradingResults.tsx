@@ -6,6 +6,7 @@ import {
   BarChart3,
   Zap,
   Activity,
+  Target,
 } from "lucide-react";
 import { tradingData, calculateDailyAverage } from "../data/tradingResults";
 import {
@@ -32,6 +33,25 @@ export const TradingResults: React.FC = () => {
     current.profit > best.profit ? current : best
   );
 
+  // Get full month name
+  const getFullMonthName = (shortMonth: string) => {
+    const monthMap: { [key: string]: string } = {
+      Jan: "January",
+      Feb: "February",
+      Mar: "March",
+      Apr: "April",
+      May: "May",
+      Jun: "June",
+      Jul: "July",
+      Aug: "August",
+      Sep: "September",
+      Oct: "October",
+      Nov: "November",
+      Dec: "December",
+    };
+    return monthMap[shortMonth] || shortMonth;
+  };
+
   return (
     <section className="py-16 px-4 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-r from-green-900/20 to-blue-900/20"></div>
@@ -51,6 +71,18 @@ export const TradingResults: React.FC = () => {
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
             My Trading Results
           </h2>
+
+          {/* Sub-headline with bouncing graph */}
+          <div className="mb-6">
+            <p className="text-xl text-purple-200 font-medium mb-4">
+              Don't just take my word for it - here are my actual trading
+              results:
+            </p>
+            <div>
+              <TrendingUp className="w-8 h-8 text-green-300 mx-auto animate-bounce" />
+            </div>
+          </div>
+
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
             These are my actual profits from using my robotic trader.
             <span className="text-green-400 font-semibold">
@@ -63,28 +95,59 @@ export const TradingResults: React.FC = () => {
               : "Stats Updated Monthly!"}
           </p>
 
+          {/* Live Data Indicator - Centered and prominent */}
           {liveTradingData.isLiveData && (
-            <div className="mt-4">
-              <p className="text-sm text-green-300">
-                Last updated:{" "}
-                {new Date(liveTradingData.lastUpdated).toLocaleString()}
-              </p>
+            <div className="mt-6 flex justify-center">
+              <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-lg p-4 border border-green-400/30 shadow-lg shadow-green-500/10">
+                <div className="flex items-center gap-3">
+                  <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                  <div className="text-center">
+                    <p className="text-green-300 font-semibold text-sm">
+                      Live Data Connected
+                    </p>
+                    <p className="text-gray-300 text-xs">
+                      Last updated:{" "}
+                      {new Date(liveTradingData.lastUpdated).toLocaleString()}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
         </div>
 
+        {/* First row - The 3 main stats from MyStory */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-gradient-to-br from-emerald-500/40 to-green-600/40 backdrop-blur-sm rounded-2xl border border-emerald-400/30 p-6 text-center shadow-lg shadow-emerald-500/20">
-            <DollarSign className="w-8 h-8 text-emerald-300 mx-auto mb-3" />
-            <div className="text-2xl font-bold text-emerald-200 mb-2 font-mono">
+          <div className="flex flex-col items-center gap-2 bg-green-500/10 rounded-lg p-6 border border-green-400/20">
+            <DollarSign className="w-8 h-8 text-green-300" />
+            <div className="text-3xl font-bold text-green-300 font-mono">
               ${currentData.totalProfit.toLocaleString()}
             </div>
-            <div className="text-gray-200 text-sm">Total Profits</div>
-            <div className="text-xs text-emerald-300 mt-1 font-medium">
-              8 Months Trading
-            </div>
+            <div className="text-gray-200 font-medium">Total Profits</div>
+            <div className="text-green-300 text-sm">8 Months</div>
           </div>
 
+          <div className="flex flex-col items-center gap-2 bg-blue-500/10 rounded-lg p-6 border border-blue-400/20">
+            <Target className="w-8 h-8 text-blue-300" />
+            <div className="text-3xl font-bold text-blue-300 font-mono">
+              {currentData.totalTrades.toLocaleString()}
+            </div>
+            <div className="text-gray-200 font-medium">Total Trades</div>
+            <div className="text-blue-300 text-sm">Consistent Trading</div>
+          </div>
+
+          <div className="flex flex-col items-center gap-2 bg-purple-500/10 rounded-lg p-6 border border-purple-400/20">
+            <Zap className="w-8 h-8 text-purple-300" />
+            <div className="text-3xl font-bold text-purple-300 font-mono">
+              ${currentData.avgProfitPerTrade.toFixed(2)}
+            </div>
+            <div className="text-gray-200 font-medium">Avg Per Trade</div>
+            <div className="text-purple-300 text-sm">Steady Gains</div>
+          </div>
+        </div>
+
+        {/* Second row - Monthly Average, Daily Average, Best Month */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <div className="bg-gradient-to-br from-blue-500/40 to-cyan-600/40 backdrop-blur-sm rounded-2xl border border-blue-400/30 p-6 text-center shadow-lg shadow-blue-500/20">
             <Calendar className="w-8 h-8 text-blue-300 mx-auto mb-3" />
             <div className="text-2xl font-bold text-blue-200 mb-2 font-mono">
@@ -104,9 +167,7 @@ export const TradingResults: React.FC = () => {
             <div className="text-gray-200 text-sm">Daily Average</div>
             <div className="text-xs text-purple-300 mt-1">Steady Growth</div>
           </div>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <div className="bg-gradient-to-br from-pink-500/40 to-rose-600/40 backdrop-blur-sm rounded-2xl border border-pink-400/30 p-6 text-center shadow-lg shadow-pink-500/20">
             <Zap className="w-8 h-8 text-pink-300 mx-auto mb-3" />
             <div className="text-2xl font-bold text-pink-200 mb-2 font-mono">
@@ -114,26 +175,8 @@ export const TradingResults: React.FC = () => {
             </div>
             <div className="text-gray-200 text-sm">Best Month</div>
             <div className="text-xs text-pink-300 mt-1">
-              {bestMonthData.month} 2025
+              {getFullMonthName(bestMonthData.month)} 2025
             </div>
-          </div>
-
-          <div className="bg-gradient-to-br from-orange-500/40 to-amber-600/40 backdrop-blur-sm rounded-2xl border border-orange-400/30 p-6 text-center shadow-lg shadow-orange-500/20">
-            <Activity className="w-8 h-8 text-orange-300 mx-auto mb-3" />
-            <div className="text-2xl font-bold text-orange-200 mb-2 font-mono">
-              {currentData.totalTrades.toLocaleString()}
-            </div>
-            <div className="text-gray-200 text-sm">Closed Trades</div>
-            <div className="text-xs text-orange-300 mt-1">Active System</div>
-          </div>
-
-          <div className="bg-gradient-to-br from-teal-500/40 to-cyan-600/40 backdrop-blur-sm rounded-2xl border border-teal-400/30 p-6 text-center shadow-lg shadow-teal-500/20">
-            <DollarSign className="w-8 h-8 text-teal-300 mx-auto mb-3" />
-            <div className="text-2xl font-bold text-teal-200 mb-2 font-mono">
-              ${currentData.avgProfitPerTrade.toFixed(2)}
-            </div>
-            <div className="text-gray-200 text-sm">Avg Profit/Trade</div>
-            <div className="text-xs text-teal-300 mt-1">Consistent Gains</div>
           </div>
         </div>
 
@@ -197,7 +240,7 @@ export const TradingResults: React.FC = () => {
                     ></div>
 
                     <div className="text-xs md:text-sm text-gray-200 mt-2 md:mt-3 font-medium">
-                      {month.month}
+                      {getFullMonthName(month.month)}
                     </div>
                   </div>
                 );
@@ -209,7 +252,8 @@ export const TradingResults: React.FC = () => {
             <p className="text-emerald-300 font-semibold text-sm md:text-lg">
               📈 {currentData.totalTrades} trades • $
               {currentData.avgProfitPerTrade.toFixed(2)} avg profit/trade • Best
-              month: ${bestMonthData.profit.toFixed(2)} ({bestMonthData.month})
+              month: {getFullMonthName(bestMonthData.month)} with $
+              {bestMonthData.profit.toFixed(2)}
             </p>
           </div>
         </div>
@@ -242,7 +286,7 @@ export const TradingResults: React.FC = () => {
                       }`}
                     >
                       <td className="text-gray-200 py-3 px-4 font-medium">
-                        {month.month} 2025
+                        {getFullMonthName(month.month)} 2025
                       </td>
                       <td className="text-emerald-300 py-3 px-4 text-right font-mono font-semibold">
                         ${month.profit.toFixed(2)}
@@ -272,10 +316,6 @@ export const TradingResults: React.FC = () => {
               ? " Live data from Google Sheets."
               : " Results updated regularly."}
             Past performance does not guarantee future results.
-            {liveTradingData.isLiveData &&
-              ` Last updated: ${new Date(
-                liveTradingData.lastUpdated
-              ).toLocaleDateString()}`}
           </p>
         </div>
       </div>

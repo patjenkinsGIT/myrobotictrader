@@ -6,7 +6,6 @@ import {
   TrendingUp,
   BookOpen,
   Wallet,
-  Star,
   CheckCircle,
   ArrowRight,
 } from "lucide-react";
@@ -14,7 +13,7 @@ import {
 export const ResourcesPage: React.FC = function () {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
-      {/* Hero Section */}
+      {/* Hero Section - MATCHING HOMEPAGE STRUCTURE */}
       <section className="py-16 px-4 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-purple-900/40 to-pink-900/40"></div>
 
@@ -27,39 +26,64 @@ export const ResourcesPage: React.FC = function () {
           />
         </div>
 
-        <div className="relative max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-purple-400/40 mb-6 shadow-lg shadow-purple-500/20">
-            <BookOpen className="w-4 h-4 text-purple-300" />
-            <span className="text-purple-200 font-medium">
-              Recommended Tools
-            </span>
-          </div>
+        {/* Logo at top - CLICKABLE VERSION */}
+        <div className="absolute top-8 left-1/2 transform -translate-x-1/2 z-20">
+          <a href="/" className="flex items-center gap-3 group">
+            <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-purple-500/40 bg-gradient-to-br from-purple-500 to-pink-500 p-0.5 group-hover:scale-105 transition-transform">
+              <div className="w-full h-full rounded-lg overflow-hidden bg-white/10 backdrop-blur-sm">
+                <img
+                  src="/robot-logo.png"
+                  alt="MyRoboticTrader Robot"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+            <div className="text-2xl font-bold group-hover:scale-105 transition-transform">
+              <span className="text-white">My</span>
+              <span className="text-transparent bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text">
+                Robotic
+              </span>
+              <span className="text-white">Trader</span>
+              <span className="text-purple-300 text-sm ml-1">.com</span>
+            </div>
+          </a>
+        </div>
 
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-            Tools I Use &
-            <span className="block text-transparent bg-gradient-to-r from-green-300 via-blue-400 to-purple-400 bg-clip-text">
-              Personally Recommend
-            </span>
-          </h1>
+        <div className="relative max-w-6xl mx-auto text-center z-10 mt-16">
+          <div className="mb-8">
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-purple-400/40 mb-6 shadow-lg shadow-purple-500/20">
+              <BookOpen className="w-4 h-4 text-purple-300" />
+              <span className="text-purple-200 font-medium">
+                Recommended Tools
+              </span>
+            </div>
 
-          <p className="text-xl text-gray-200 mb-8 max-w-3xl mx-auto">
-            After 8 months of successful automated trading, these are the
-            essential tools and services that have made my crypto journey
-            profitable and stress-free.
-          </p>
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
+              Tools I Use &
+              <span className="block text-transparent bg-gradient-to-r from-green-300 via-blue-400 to-purple-400 bg-clip-text">
+                Personally Recommend
+              </span>
+            </h1>
 
-          <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm rounded-2xl border border-blue-400/20 p-6 max-w-2xl mx-auto">
-            <p className="text-blue-200 font-medium">
-              💡 <strong>My Promise:</strong> I only recommend tools I
-              personally use and believe provide real value. Your success is my
-              success.
+            <p className="text-xl text-gray-200 mb-8 max-w-3xl mx-auto">
+              After 8 months of successful automated trading, these are the
+              essential tools and services that have made my crypto journey
+              profitable and stress-free.
             </p>
+
+            <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm rounded-2xl border border-blue-400/20 p-6 max-w-2xl mx-auto">
+              <p className="text-blue-200 font-medium">
+                💡 <strong>My Promise:</strong> I only recommend tools I
+                personally use and believe provide real value. Your success is
+                my success.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Trading Platforms Section */}
-      <section className="py-16 px-4">
+      {/* Trading Platforms Section - Reduced bottom padding */}
+      <section className="py-16 px-4 pb-8">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-500/30 to-emerald-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-green-400/40 mb-6 shadow-lg shadow-green-500/20">
@@ -72,16 +96,17 @@ export const ResourcesPage: React.FC = function () {
               Where I Trade & Why
             </h2>
             <p className="text-gray-300 max-w-2xl mx-auto">
-              These are the exchanges I use for my automated trading system.
-              Reliable, secure, and perfect for robotic trading.
+              You need at least one of these exchanges to work with the robotic
+              trader. Both are reliable, secure, and perfect for automated
+              trading.
             </p>
           </div>
 
           {/* Coinbase One Card */}
           <div className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 backdrop-blur-sm rounded-2xl border border-blue-400/20 p-8 mb-8 shadow-lg shadow-blue-500/10 relative">
             <div className="absolute top-6 right-6">
-              <div className="bg-gradient-to-r from-yellow-400 to-orange-400 text-black px-3 py-1 rounded-full text-sm font-bold">
-                RECOMMENDED
+              <div className="bg-gradient-to-r from-green-400 to-emerald-400 text-black px-3 py-1 rounded-full text-sm font-bold">
+                ESSENTIAL
               </div>
             </div>
 
@@ -166,11 +191,98 @@ export const ResourcesPage: React.FC = function () {
               </div>
             </div>
           </div>
+
+          {/* Kraken Card */}
+          <div className="bg-gradient-to-r from-indigo-500/10 to-purple-500/10 backdrop-blur-sm rounded-2xl border border-indigo-400/20 p-8 shadow-lg shadow-indigo-500/10 relative">
+            <div className="absolute top-6 right-6">
+              <div className="bg-gradient-to-r from-blue-400 to-indigo-400 text-white px-3 py-1 rounded-full text-sm font-bold">
+                GREAT ALTERNATIVE
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+              <div>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl p-3">
+                    <Wallet className="w-full h-full text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white">Kraken</h3>
+                </div>
+
+                <p className="text-gray-200 mb-6 leading-relaxed">
+                  My alternative exchange for automated trading. Kraken offers
+                  excellent API reliability and competitive fees. Great option
+                  if you prefer a different platform or want to diversify across
+                  exchanges.
+                </p>
+
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-green-300 flex-shrink-0" />
+                    <span className="text-gray-200">
+                      Low trading fees and excellent API
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-green-300 flex-shrink-0" />
+                    <span className="text-gray-200">
+                      Strong security and reputation
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-green-300 flex-shrink-0" />
+                    <span className="text-gray-200">
+                      Works perfectly with robotic trader
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-green-300 flex-shrink-0" />
+                    <span className="text-gray-200">
+                      Advanced trading features
+                    </span>
+                  </div>
+                </div>
+
+                <a
+                  href="https://dailyprofits.link/krak"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-indigo-500/30"
+                >
+                  Get Kraken Account
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              </div>
+
+              <div className="bg-gradient-to-r from-indigo-500/5 to-purple-500/5 rounded-xl p-6 border border-indigo-400/10">
+                <h4 className="text-lg font-semibold text-white mb-4">
+                  Why Kraken Works Great:
+                </h4>
+                <div className="space-y-3 text-sm text-gray-300">
+                  <p>
+                    🔒 <strong>Security first</strong> - excellent track record
+                  </p>
+                  <p>
+                    ⚡ <strong>Fast API</strong> - reliable for automated
+                    trading
+                  </p>
+                  <p>
+                    💰 <strong>Competitive fees</strong> - keep more of your
+                    profits
+                  </p>
+                  <p>
+                    🌍 <strong>Global reach</strong> - available in most
+                    countries
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Tax & Accounting Section */}
-      <section className="py-16 px-4">
+      {/* Tax & Accounting Section - Reduced top padding */}
+      <section className="py-8 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500/30 to-red-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-orange-400/40 mb-6 shadow-lg shadow-orange-500/20">
@@ -273,57 +385,6 @@ export const ResourcesPage: React.FC = function () {
                   </p>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Coming Soon Section */}
-      <section className="py-16 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-purple-400/40 mb-6 shadow-lg shadow-purple-500/20">
-              <Star className="w-4 h-4 text-purple-300" />
-              <span className="text-purple-200 font-medium">Coming Soon</span>
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              More Tools I'm Evaluating
-            </h2>
-            <p className="text-gray-300 max-w-2xl mx-auto">
-              I'm constantly testing new tools to improve my trading setup.
-              Here's what's coming next to this resource page.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-gradient-to-r from-gray-800/50 to-gray-700/50 backdrop-blur-sm rounded-xl border border-gray-600/20 p-6 text-center">
-              <Shield className="w-8 h-8 text-gray-400 mx-auto mb-3" />
-              <h3 className="text-lg font-semibold text-white mb-2">
-                Hardware Wallets
-              </h3>
-              <p className="text-gray-400 text-sm">
-                Ledger & Trezor for cold storage security
-              </p>
-            </div>
-
-            <div className="bg-gradient-to-r from-gray-800/50 to-gray-700/50 backdrop-blur-sm rounded-xl border border-gray-600/20 p-6 text-center">
-              <TrendingUp className="w-8 h-8 text-gray-400 mx-auto mb-3" />
-              <h3 className="text-lg font-semibold text-white mb-2">
-                Trading Tools
-              </h3>
-              <p className="text-gray-400 text-sm">
-                TradingView & analysis platforms
-              </p>
-            </div>
-
-            <div className="bg-gradient-to-r from-gray-800/50 to-gray-700/50 backdrop-blur-sm rounded-xl border border-gray-600/20 p-6 text-center">
-              <BookOpen className="w-8 h-8 text-gray-400 mx-auto mb-3" />
-              <h3 className="text-lg font-semibold text-white mb-2">
-                Education
-              </h3>
-              <p className="text-gray-400 text-sm">
-                Courses & books that shaped my strategy
-              </p>
             </div>
           </div>
         </div>
