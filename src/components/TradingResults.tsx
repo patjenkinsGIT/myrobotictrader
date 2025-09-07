@@ -5,7 +5,6 @@ import {
   Calendar,
   BarChart3,
   Zap,
-  Activity,
   Target,
 } from "lucide-react";
 import { tradingData, calculateDailyAverage } from "../data/tradingResults";
