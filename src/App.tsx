@@ -103,8 +103,8 @@ const seoConfigs = {
   },
 };
 
-// Component to handle SEO for each route - THIS IS THE FIXED VERSION
-const SEOWrapper: React.FCReact.FCReact.FCReact.FC<{
+// Component to handle SEO for each route - CORRECTED LINE 107
+const SEOWrapper: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const location = useLocation();
