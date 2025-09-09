@@ -648,3 +648,4 @@ export const LiveTransactionLog: React.FC = () => {
     </div>
   );
 };
+// Force rebuild for env vars
