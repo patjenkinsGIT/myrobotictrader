@@ -12,7 +12,6 @@ interface SEOHeadProps {
   twitterImage?: string;
   canonicalUrl?: string;
   pageType?: "home" | "resources" | "privacy" | "card";
-  structuredData?: any;
 }
 
 export const SEOHead: React.FC<SEOHeadProps> = ({
@@ -27,7 +26,6 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
   twitterImage = "https://myrobotictrader.com/robot-twitter.png",
   canonicalUrl = "https://myrobotictrader.com/",
   pageType = "home",
-  structuredData,
 }) => {
   useEffect(() => {
     console.log("🔧 SEO Component: Updating meta tags for:", title);
