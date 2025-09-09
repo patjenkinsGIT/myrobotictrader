@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { Activity, Clock, Target, RefreshCw } from "lucide-react";
+import { Activity, Clock, Target, RefreshCw, TrendingUp } from "lucide-react";
 
 export interface LiveTransaction {
   id: string;
@@ -118,7 +118,7 @@ export const LiveTransactionLog: React.FC = () => {
     []
   );
 
-  // Parse Google Sheets data from A:G columns
+  // Parse Google Sheets data from A:G columns - NOW INCLUDES BOTH OPEN AND CLOSED
   const parseGoogleSheetsData = useCallback(
     (rows: string[][]): LiveTransaction[] => {
       if (!rows || rows.length === 0) return [];
@@ -161,18 +161,19 @@ export const LiveTransactionLog: React.FC = () => {
         })
         .filter(
           (tx): tx is LiveTransaction =>
-            tx !== null && tx.coin.length > 0 && tx.profit > 0
+            tx !== null && tx.coin.length > 0 && tx.profit !== undefined
         );
     },
     [formatPrice, formatQuantity, formatTimestamp, parseStatus]
   );
 
-  // Fallback data matching your exact format
+  // Fallback data with both OPEN and CLOSED transactions
   const getFallbackData = useCallback((): LiveTransaction[] => {
     console.log("📦 Using fallback transaction data");
 
     const mockRows: string[][] = [
       ["Coin", "Action", "Price", "Quantity", "Status", "Profit", "Timestamp"], // Header
+      // Recent CLOSED transactions
       [
         "SUI",
         "CLOSE",
@@ -202,23 +203,32 @@ export const LiveTransactionLog: React.FC = () => {
         "9/7 11:45 PM",
       ],
       ["ETH", "CLOSE", "$2,650.75", "1.8", "Completed", "$8.92", "9/7 6:33 PM"],
-      ["ADA", "CLOSE", "$0.45", "2,450", "Completed", "$6.78", "9/7 2:15 PM"],
+      // Current OPEN positions
+      [
+        "ADA",
+        "OPEN",
+        "$0.45",
+        "2,450",
+        "Active Position",
+        "$2.15",
+        "9/7 2:15 PM",
+      ],
       [
         "SOL",
-        "CLOSE",
+        "OPEN",
         "$145.32",
         "12.5",
-        "Profit Goal Reached",
-        "$15.67",
+        "Active Position",
+        "$5.67",
         "9/7 8:22 AM",
       ],
       [
         "MATIC",
-        "CLOSE",
+        "OPEN",
         "$0.89",
         "1,200",
-        "Completed",
-        "$4.23",
+        "Active Position",
+        "$1.23",
         "9/6 11:58 PM",
       ],
       ["LINK", "CLOSE", "$11.45", "85.3", "Completed", "$9.87", "9/6 7:41 PM"],
@@ -234,7 +244,15 @@ export const LiveTransactionLog: React.FC = () => {
       ],
       ["UNI", "CLOSE", "$6.78", "125.8", "Completed", "$5.89", "9/5 9:47 PM"],
       ["ATOM", "CLOSE", "$9.23", "95.7", "Completed", "$8.45", "9/5 4:12 PM"],
-      ["FTM", "CLOSE", "$0.35", "3,200", "Completed", "$6.23", "9/5 12:38 PM"],
+      [
+        "FTM",
+        "OPEN",
+        "$0.35",
+        "3,200",
+        "Active Position",
+        "$3.23",
+        "9/5 12:38 PM",
+      ],
       ["ALGO", "CLOSE", "$0.18", "5,500", "Completed", "$4.67", "9/5 8:55 AM"],
       [
         "XRP",
@@ -246,7 +264,15 @@ export const LiveTransactionLog: React.FC = () => {
         "9/4 11:23 PM",
       ],
       ["LTC", "CLOSE", "$67.89", "18.5", "Completed", "$7.89", "9/4 6:17 PM"],
-      ["BCH", "CLOSE", "$234.56", "5.2", "Completed", "$10.45", "9/4 1:44 PM"],
+      [
+        "BCH",
+        "OPEN",
+        "$234.56",
+        "5.2",
+        "Active Position",
+        "$4.45",
+        "9/4 1:44 PM",
+      ],
       ["VET", "CLOSE", "$0.02", "12,500", "Completed", "$5.78", "9/4 9:31 AM"],
       ["THETA", "CLOSE", "$1.23", "450", "Completed", "$8.23", "9/3 10:56 PM"],
       ["HBAR", "CLOSE", "$0.06", "8,900", "Completed", "$6.45", "9/3 5:42 PM"],
@@ -259,7 +285,15 @@ export const LiveTransactionLog: React.FC = () => {
         "$9.67",
         "9/3 2:18 PM",
       ],
-      ["NEAR", "CLOSE", "$3.45", "125.7", "Completed", "$7.34", "9/3 10:25 AM"],
+      [
+        "NEAR",
+        "OPEN",
+        "$3.45",
+        "125.7",
+        "Active Position",
+        "$2.34",
+        "9/3 10:25 AM",
+      ],
       ["FLOW", "CLOSE", "$0.78", "650", "Completed", "$4.89", "9/2 8:13 PM"],
       ["MANA", "CLOSE", "$0.45", "1,100", "Completed", "$6.12", "9/2 3:47 PM"],
     ];
@@ -374,19 +408,36 @@ export const LiveTransactionLog: React.FC = () => {
     fetchTransactions(true);
   }, [fetchTransactions]);
 
-  // Calculate summary stats from current transactions
+  // Calculate summary stats from current transactions - SEPARATE OPEN/CLOSED
   const summary = useMemo(() => {
-    const totalProfit = transactions.reduce((sum, tx) => sum + tx.profit, 0);
-    const avgProfit =
-      transactions.length > 0 ? totalProfit / transactions.length : 0;
-    const profitGoalReached = transactions.filter(
+    const closedTransactions = transactions.filter(
+      (tx) => tx.action === "CLOSE"
+    );
+    const openTransactions = transactions.filter((tx) => tx.action === "OPEN");
+
+    const closedProfit = closedTransactions.reduce(
+      (sum, tx) => sum + tx.profit,
+      0
+    );
+    const openProfit = openTransactions.reduce((sum, tx) => sum + tx.profit, 0);
+    const totalProfit = closedProfit + openProfit;
+
+    const avgClosedProfit =
+      closedTransactions.length > 0
+        ? closedProfit / closedTransactions.length
+        : 0;
+    const profitGoalReached = closedTransactions.filter(
       (tx) => tx.status === "profit_goal_reached"
     ).length;
 
     return {
-      totalProfit: totalProfit,
-      avgProfit: avgProfit,
+      totalProfit,
+      closedProfit,
+      openProfit,
+      avgClosedProfit,
       totalTrades: transactions.length,
+      closedTrades: closedTransactions.length,
+      openTrades: openTransactions.length,
       profitGoalReached,
       successRate: "100%",
     };
@@ -427,6 +478,12 @@ export const LiveTransactionLog: React.FC = () => {
     if (profit >= 10) return "text-green-300";
     if (profit >= 7) return "text-green-400";
     return "text-green-500";
+  };
+
+  const getActionColor = (action: string) => {
+    return action === "CLOSE"
+      ? "bg-green-500/20 text-green-300"
+      : "bg-blue-500/20 text-blue-300";
   };
 
   if (isLoading && transactions.length === 0) {
@@ -492,8 +549,8 @@ export const LiveTransactionLog: React.FC = () => {
         </div>
       )}
 
-      {/* Summary stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      {/* Enhanced Summary stats - SEPARATE OPEN/CLOSED */}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
         <div className="bg-white/5 rounded-lg p-3 text-center">
           <div className="text-lg font-bold text-green-300">
             ${summary.totalProfit.toFixed(2)}
@@ -501,16 +558,22 @@ export const LiveTransactionLog: React.FC = () => {
           <div className="text-xs text-gray-400">Total Profit</div>
         </div>
         <div className="bg-white/5 rounded-lg p-3 text-center">
-          <div className="text-lg font-bold text-blue-300">
-            ${summary.avgProfit.toFixed(2)}
+          <div className="text-lg font-bold text-green-400">
+            ${summary.closedProfit.toFixed(2)}
           </div>
-          <div className="text-xs text-gray-400">Avg/Trade</div>
+          <div className="text-xs text-gray-400">Closed Profit</div>
+        </div>
+        <div className="bg-white/5 rounded-lg p-3 text-center">
+          <div className="text-lg font-bold text-blue-300">
+            ${summary.openProfit.toFixed(2)}
+          </div>
+          <div className="text-xs text-gray-400">Open Profit</div>
         </div>
         <div className="bg-white/5 rounded-lg p-3 text-center">
           <div className="text-lg font-bold text-purple-300">
-            {summary.totalTrades}
+            {summary.closedTrades}/{summary.openTrades}
           </div>
-          <div className="text-xs text-gray-400">Trades</div>
+          <div className="text-xs text-gray-400">Closed/Open</div>
         </div>
         <div className="bg-white/5 rounded-lg p-3 text-center">
           <div className="text-lg font-bold text-yellow-300">
@@ -559,6 +622,10 @@ export const LiveTransactionLog: React.FC = () => {
                 key={transaction.id}
                 className={`px-4 py-3 border-b border-white/5 hover:bg-white/5 transition-colors duration-200 ${
                   index % 2 === 0 ? "bg-white/2" : ""
+                } ${
+                  transaction.action === "OPEN"
+                    ? "border-l-2 border-l-blue-400"
+                    : ""
                 }`}
               >
                 <div className="grid grid-cols-12 gap-2 items-center text-sm">
@@ -571,9 +638,13 @@ export const LiveTransactionLog: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Action - hidden on mobile */}
+                  {/* Action - hidden on mobile, different colors for OPEN/CLOSE */}
                   <div className="col-span-2 hidden md:block">
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-300">
+                    <span
+                      className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getActionColor(
+                        transaction.action
+                      )}`}
+                    >
                       {transaction.action}
                     </span>
                   </div>
@@ -607,6 +678,12 @@ export const LiveTransactionLog: React.FC = () => {
                         <span className="hidden sm:inline">Goal Reached</span>
                       </div>
                     )}
+                    {transaction.action === "OPEN" && (
+                      <div className="text-xs text-blue-400 flex items-center gap-1 mt-1">
+                        <TrendingUp className="w-3 h-3" />
+                        <span className="hidden sm:inline">Active</span>
+                      </div>
+                    )}
                   </div>
 
                   {/* Time */}
@@ -629,14 +706,14 @@ export const LiveTransactionLog: React.FC = () => {
             <>
               ✅ Connected to Google Sheets "Last25Results" tab (A:G) •{" "}
               <span className="text-green-400 font-medium">
-                Never trades at a loss
+                Shows both Open & Closed positions
               </span>
             </>
           ) : (
             <>
               ✅ Sample data showing Last25Results format (A:G) •{" "}
               <span className="text-green-400 font-medium">
-                Never trades at a loss
+                Shows both Open & Closed positions
               </span>
             </>
           )}
@@ -648,4 +725,3 @@ export const LiveTransactionLog: React.FC = () => {
     </div>
   );
 };
-// Force rebuild for env vars
