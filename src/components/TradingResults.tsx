@@ -13,6 +13,7 @@ import {
   calculateLiveDailyAverage,
 } from "../data/liveTrading";
 import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
+import { calculateTimeSinceStart } from "../utils/tradingTime";
 
 export const TradingResults: React.FC = () => {
   // Use live data if available, fallback to original data
@@ -22,6 +23,9 @@ export const TradingResults: React.FC = () => {
   const dailyAvg = liveTradingData.isLiveData
     ? calculateLiveDailyAverage()
     : calculateDailyAverage();
+
+  // Get dynamic time since start
+  const timeSinceStart = calculateTimeSinceStart();
 
   // Split monthly data for better mobile display with smooth transition
   const allMonthlyData = currentData.monthlyData;
@@ -50,6 +54,11 @@ export const TradingResults: React.FC = () => {
       Dec: "December",
     };
     return monthMap[shortMonth] || shortMonth;
+  };
+
+  // Get short month name for mobile (3 letters)
+  const getShortMonthName = (shortMonth: string) => {
+    return shortMonth.substring(0, 3);
   };
 
   // CTA tracking handler
@@ -125,67 +134,137 @@ export const TradingResults: React.FC = () => {
           )}
         </div>
 
-        {/* First row - The 3 main stats from MyStory */}
+        {/* First row - BRIGHTENED CARDS like Hero style */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="flex flex-col items-center gap-2 bg-green-500/10 rounded-lg p-6 border border-green-400/20">
-            <DollarSign className="w-8 h-8 text-green-300" />
-            <div className="text-3xl font-bold text-green-300 font-mono">
-              ${currentData.totalProfit.toLocaleString()}
+          <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-green-500/15">
+            <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
+
+            <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-green-500/40">
+              <DollarSign className="w-full h-full text-white" />
             </div>
-            <div className="text-gray-200 font-medium">Total Profits</div>
-            <div className="text-green-300 text-sm">8 Months</div>
+
+            <div className="relative text-center">
+              <div className="text-3xl font-bold text-green-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-green-300 group-hover:to-emerald-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
+                ${currentData.totalProfit.toLocaleString()}
+              </div>
+              <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
+                Total Profits
+              </div>
+              <div className="text-green-300 text-sm mt-1">
+                {timeSinceStart}
+              </div>
+            </div>
+
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
 
-          <div className="flex flex-col items-center gap-2 bg-blue-500/10 rounded-lg p-6 border border-blue-400/20">
-            <Target className="w-8 h-8 text-blue-300" />
-            <div className="text-3xl font-bold text-blue-300 font-mono">
-              {currentData.totalTrades.toLocaleString()}
+          <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-blue-500/15">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
+
+            <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-blue-500/40">
+              <Target className="w-full h-full text-white" />
             </div>
-            <div className="text-gray-200 font-medium">Total Trades</div>
-            <div className="text-blue-300 text-sm">Consistent Trading</div>
+
+            <div className="relative text-center">
+              <div className="text-3xl font-bold text-blue-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-300 group-hover:to-cyan-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
+                {currentData.totalTrades.toLocaleString()}
+              </div>
+              <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
+                Total Trades
+              </div>
+              <div className="text-blue-300 text-sm mt-1">
+                Consistent Trading
+              </div>
+            </div>
+
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
 
-          <div className="flex flex-col items-center gap-2 bg-purple-500/10 rounded-lg p-6 border border-purple-400/20">
-            <Zap className="w-8 h-8 text-purple-300" />
-            <div className="text-3xl font-bold text-purple-300 font-mono">
-              ${currentData.avgProfitPerTrade.toFixed(2)}
+          <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/15">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
+
+            <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-purple-500/40">
+              <Zap className="w-full h-full text-white" />
             </div>
-            <div className="text-gray-200 font-medium">Avg Per Trade</div>
-            <div className="text-purple-300 text-sm">Steady Gains</div>
+
+            <div className="relative text-center">
+              <div className="text-3xl font-bold text-purple-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-300 group-hover:to-pink-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
+                ${currentData.avgProfitPerTrade.toFixed(2)}
+              </div>
+              <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
+                Avg Per Trade
+              </div>
+              <div className="text-purple-300 text-sm mt-1">Steady Gains</div>
+            </div>
+
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
         </div>
 
-        {/* Second row - Monthly Average, Daily Average, Best Month */}
+        {/* Second row - BRIGHTENED CARDS like Hero style */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <div className="bg-gradient-to-br from-blue-500/40 to-cyan-600/40 backdrop-blur-sm rounded-2xl border border-blue-400/30 p-6 text-center shadow-lg shadow-blue-500/20">
-            <Calendar className="w-8 h-8 text-blue-300 mx-auto mb-3" />
-            <div className="text-2xl font-bold text-blue-200 mb-2 font-mono">
-              ${currentData.monthlyAverage.toFixed(2)}
+          <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-blue-500/15">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
+
+            <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-blue-500/40">
+              <Calendar className="w-full h-full text-white" />
             </div>
-            <div className="text-gray-200 text-sm">Monthly Average</div>
-            <div className="text-xs text-blue-300 mt-1">
-              Consistent Performance
+
+            <div className="relative text-center">
+              <div className="text-2xl font-bold text-blue-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-300 group-hover:to-cyan-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
+                ${currentData.monthlyAverage.toFixed(2)}
+              </div>
+              <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
+                Monthly Average
+              </div>
+              <div className="text-blue-300 text-sm mt-1">
+                Consistent Performance
+              </div>
             </div>
+
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
 
-          <div className="bg-gradient-to-br from-purple-500/40 to-violet-600/40 backdrop-blur-sm rounded-2xl border border-purple-400/30 p-6 text-center shadow-lg shadow-purple-500/20">
-            <TrendingUp className="w-8 h-8 text-purple-300 mx-auto mb-3" />
-            <div className="text-2xl font-bold text-purple-200 mb-2 font-mono">
-              ${dailyAvg}
+          <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/15">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
+
+            <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-purple-500/40">
+              <TrendingUp className="w-full h-full text-white" />
             </div>
-            <div className="text-gray-200 text-sm">Daily Average</div>
-            <div className="text-xs text-purple-300 mt-1">Steady Growth</div>
+
+            <div className="relative text-center">
+              <div className="text-2xl font-bold text-purple-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-300 group-hover:to-pink-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
+                ${dailyAvg}
+              </div>
+              <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
+                Daily Average
+              </div>
+              <div className="text-purple-300 text-sm mt-1">Steady Growth</div>
+            </div>
+
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
 
-          <div className="bg-gradient-to-br from-pink-500/40 to-rose-600/40 backdrop-blur-sm rounded-2xl border border-pink-400/30 p-6 text-center shadow-lg shadow-pink-500/20">
-            <Zap className="w-8 h-8 text-pink-300 mx-auto mb-3" />
-            <div className="text-2xl font-bold text-pink-200 mb-2 font-mono">
-              ${bestMonthData.profit.toFixed(2)}
+          <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-pink-500/15">
+            <div className="absolute inset-0 bg-gradient-to-br from-pink-500 to-rose-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
+
+            <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-pink-500 to-rose-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-pink-500/40">
+              <Zap className="w-full h-full text-white" />
             </div>
-            <div className="text-gray-200 text-sm">Best Month</div>
-            <div className="text-xs text-pink-300 mt-1">
-              {getFullMonthName(bestMonthData.month)} 2025
+
+            <div className="relative text-center">
+              <div className="text-2xl font-bold text-pink-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-pink-300 group-hover:to-rose-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
+                ${bestMonthData.profit.toFixed(2)}
+              </div>
+              <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
+                Best Month
+              </div>
+              <div className="text-pink-300 text-sm mt-1">
+                {getFullMonthName(bestMonthData.month)} 2025
+              </div>
             </div>
+
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-pink-500 to-rose-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
         </div>
 
@@ -195,7 +274,7 @@ export const TradingResults: React.FC = () => {
           </p>
         </div>
 
-        {/* Recent Months Chart - Mobile Optimized (Last 6 Months) */}
+        {/* Recent Months Chart - IMPROVED MOBILE LAYOUT */}
         <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8 mb-8 relative">
           {/* Robot accent - subtle and thematic */}
           <div className="absolute top-4 right-4 opacity-10 pointer-events-none hidden md:block">
@@ -212,7 +291,7 @@ export const TradingResults: React.FC = () => {
 
           <div className="w-full overflow-x-auto">
             <div
-              className="flex items-end justify-center gap-3 md:gap-6 mb-4 md:mb-6 min-w-max mx-auto"
+              className="flex items-end justify-center gap-2 md:gap-6 mb-4 md:mb-6 min-w-max mx-auto px-2"
               style={{ height: "200px" }}
             >
               {recentMonths.map((month) => {
@@ -227,7 +306,10 @@ export const TradingResults: React.FC = () => {
                 const isHighest = month.profit === maxProfit;
 
                 return (
-                  <div key={month.month} className="flex flex-col items-center">
+                  <div
+                    key={month.month}
+                    className="flex flex-col items-center min-w-0"
+                  >
                     <div
                       className={`text-xs md:text-sm mb-1 md:mb-2 font-semibold ${
                         isHighest ? "text-yellow-300" : "text-gray-200"
@@ -237,7 +319,7 @@ export const TradingResults: React.FC = () => {
                     </div>
 
                     <div
-                      className={`w-10 md:w-16 rounded-t-lg transition-all duration-1000 ease-out ${
+                      className={`w-8 md:w-16 rounded-t-lg transition-all duration-1000 ease-out ${
                         isHighest
                           ? "bg-gradient-to-t from-yellow-500 to-yellow-300 shadow-lg shadow-yellow-400/40"
                           : "bg-gradient-to-t from-emerald-500 to-green-400 shadow-lg shadow-emerald-400/30"
@@ -248,8 +330,13 @@ export const TradingResults: React.FC = () => {
                       }}
                     ></div>
 
-                    <div className="text-xs md:text-sm text-gray-200 mt-2 md:mt-3 font-medium">
-                      {getFullMonthName(month.month)}
+                    <div className="text-xs md:text-sm text-gray-200 mt-2 md:mt-3 font-medium text-center">
+                      <span className="md:hidden">
+                        {getShortMonthName(month.month)}
+                      </span>
+                      <span className="hidden md:inline">
+                        {getFullMonthName(month.month)}
+                      </span>
                     </div>
                   </div>
                 );

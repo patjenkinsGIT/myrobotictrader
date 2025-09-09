@@ -1,4 +1,3 @@
-// src/components/BusinessCardLanding.tsx
 import React from "react";
 import {
   DollarSign,
@@ -13,6 +12,7 @@ import {
   liveTradingData,
   calculateLiveDailyAverage,
 } from "../data/liveTrading";
+import { calculateTimeSinceStart } from "../utils/tradingTime";
 
 export const BusinessCardLanding: React.FC = () => {
   // Use your existing data logic
@@ -22,6 +22,9 @@ export const BusinessCardLanding: React.FC = () => {
   const dailyAvg = liveTradingData.isLiveData
     ? calculateLiveDailyAverage()
     : calculateDailyAverage();
+
+  // Get dynamic time since start
+  const timeSinceStart = calculateTimeSinceStart();
 
   // Your actual affiliate link with tracking
   const affiliateLink =
@@ -99,7 +102,7 @@ export const BusinessCardLanding: React.FC = () => {
                 Total Profits
               </div>
               <div className="text-green-300 text-sm mt-1">
-                8+ Months • Always Growing!
+                {timeSinceStart} • Always Growing!
               </div>
             </div>
 

@@ -1,13 +1,59 @@
 import React from "react";
 import { User, TrendingUp, CheckCircle, Target } from "lucide-react";
-import { tradingData } from "../data/tradingResults";
-import { liveTradingData } from "../data/liveTrading";
+import { tradingData, calculateDailyAverage } from "../data/tradingResults";
+import {
+  liveTradingData,
+  calculateLiveDailyAverage,
+} from "../data/liveTrading";
 
 export const MyStory: React.FC = () => {
   // Use live data if available, fallback to original data
   const currentData = liveTradingData.isLiveData
     ? liveTradingData
     : tradingData;
+
+  // Calculate daily average
+  const dailyAvg = liveTradingData.isLiveData
+    ? calculateLiveDailyAverage()
+    : calculateDailyAverage();
+
+  // Calculate time since starting trading (January 8, 2025)
+  const calculateTimeSinceStart = () => {
+    const startDate = new Date("2025-01-08");
+    const currentDate = new Date();
+
+    const yearDiff = currentDate.getFullYear() - startDate.getFullYear();
+    const monthDiff = currentDate.getMonth() - startDate.getMonth();
+    const dayDiff = currentDate.getDate() - startDate.getDate();
+
+    let totalMonths = yearDiff * 12 + monthDiff;
+
+    // If we haven't reached the same day of the month, subtract 1
+    if (dayDiff < 0) {
+      totalMonths -= 1;
+    }
+
+    // Ensure at least 1 month is shown
+    totalMonths = Math.max(totalMonths, 1);
+
+    const years = Math.floor(totalMonths / 12);
+    const months = totalMonths % 12;
+
+    if (years === 0) {
+      // Less than 12 months: "8 months", "11 months"
+      return `${totalMonths} ${totalMonths === 1 ? "month" : "months"}`;
+    } else if (months === 0) {
+      // Exactly 1 year, 2 years, etc: "1 year", "2 years"
+      return `${years} ${years === 1 ? "year" : "years"}`;
+    } else {
+      // Mixed: "1 year 1 month", "2 years 3 months"
+      const yearText = `${years} ${years === 1 ? "year" : "years"}`;
+      const monthText = `${months} ${months === 1 ? "month" : "months"}`;
+      return `${yearText} ${monthText}`;
+    }
+  };
+
+  const timeSinceStart = calculateTimeSinceStart();
 
   return (
     <section className="py-16 px-4 relative overflow-hidden">
@@ -64,69 +110,74 @@ export const MyStory: React.FC = () => {
               </div>
             </div>
 
-            {/* Story Text */}
+            {/* Story Text - UPDATED WITH AUTHENTIC LANGUAGE */}
             <div className="space-y-6 text-lg text-gray-200 leading-relaxed">
               <p>
-                I've been seriously following the markets since 2014, and I love
-                investing. But like many people, I've been burned by "gurus"
-                before.
-              </p>
-
-              <p>
-                <span className="text-red-300 font-semibold">
-                  Over the years, I spent at least $30,000 on courses
-                </span>{" "}
-                - email marketing, affiliate marketing, CPA marketing, Amazon
-                wholesale. Most were a complete waste of money and time.
-              </p>
-
-              <p>
-                So when I discovered this robotic trading system while searching
-                for new opportunities,
-                <span className="text-yellow-300 font-semibold">
-                  {" "}
-                  I honestly thought it was too good to be true.
-                </span>
-              </p>
-
-              <p>
-                <span className="text-green-300 font-semibold">
-                  But then I attended their live webinar, and I saw something
-                  different.
-                </span>{" "}
-                Real authenticity. They answered every single question. They're
-                live every week, encouraging people to come back. You can see
-                the developer himself talking about the product - he's there
-                every week.
+                I've been following the markets since 2014, and I genuinely love
+                investing. But like many people, I've tried a lot of different
+                approaches over the years.
               </p>
 
               <p>
                 <span className="text-blue-300 font-semibold">
-                  When I saw the first couple of trades go through during the
-                  demo, I couldn't wait to start trading immediately.
+                  Over the years, I invested tens of thousands in various
+                  courses and systems
+                </span>{" "}
+                - email marketing, affiliate marketing, Amazon wholesale, you
+                name it. Some taught me valuable skills, but honestly, most
+                didn't deliver what they promised.
+              </p>
+
+              <p>
+                So when I discovered this robotic trading system while
+                researching new opportunities,
+                <span className="text-yellow-300 font-semibold">
+                  {" "}
+                  I was naturally skeptical.
+                </span>
+              </p>
+
+              <p>
+                <span className="text-green-300 font-semibold">
+                  But then I attended their live webinar, and something felt
+                  different.
+                </span>{" "}
+                The authenticity was refreshing. They answered every question
+                thoroughly. They're live every week, genuinely encouraging
+                people to come back and ask more questions. You can see the
+                actual developer talking about the product - he's there every
+                single week.
+              </p>
+
+              <p>
+                <span className="text-blue-300 font-semibold">
+                  When I watched the first few trades execute during the live
+                  demo, I knew I had to try this for myself.
                 </span>{" "}
                 I started on January 8, 2025, and moved from paper trading to
-                real money almost instantly.
+                real money pretty quickly once I saw how it worked.
               </p>
 
               <p>
                 After{" "}
-                <span className="text-purple-300 font-semibold">8 months</span>{" "}
+                <span className="text-purple-300 font-semibold">
+                  {timeSinceStart}
+                </span>{" "}
                 of using this system and seeing{" "}
                 <span className="text-green-300 font-semibold">
                   ${currentData.totalProfit.toLocaleString()} in total profits
                 </span>
-                , I'm so much more relaxed now. I know it works, and my results
-                speak for themselves.
+                , I'm honestly much more relaxed about my financial future. The
+                results speak for themselves.
               </p>
 
               <p>
                 <span className="text-yellow-300 font-semibold">
-                  As I approach retirement, this is the closest thing to true
-                  passive income I've ever experienced.
+                  As I approach retirement, this really is the closest thing to
+                  true passive income I've experienced.
                 </span>{" "}
-                After wasting so much money on courses that didn't deliver, I
-                wish I had found this system years ago.
+                I wish I had discovered this system years ago, but I'm grateful
+                I found it when I did.
               </p>
             </div>
 
@@ -135,10 +186,10 @@ export const MyStory: React.FC = () => {
           </div>
         </div>
 
-        {/* Additional Story Section */}
+        {/* Additional Story Section - COMPLETELY UPDATED */}
         <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-8">
           <h3 className="text-2xl font-bold text-white mb-6 text-center">
-            Why I'm Sharing This With You
+            Why I Built This Site
           </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -147,11 +198,12 @@ export const MyStory: React.FC = () => {
                 <CheckCircle className="w-8 h-8 text-white" />
               </div>
               <h4 className="text-lg font-semibold text-white mb-2">
-                Proven Results
+                Real Results
               </h4>
               <p className="text-gray-300 text-sm">
-                {currentData.totalTrades.toLocaleString()} trades executed with
-                consistent profitability over 8 months of real trading.
+                {currentData.totalTrades.toLocaleString()} actual trades
+                executed with consistent profitability over {timeSinceStart} of
+                real trading.
               </p>
             </div>
 
@@ -160,12 +212,12 @@ export const MyStory: React.FC = () => {
                 <Target className="w-8 h-8 text-white" />
               </div>
               <h4 className="text-lg font-semibold text-white mb-2">
-                No More Guesswork
+                Learning Experience
               </h4>
               <p className="text-gray-300 text-sm">
-                After wasting $30,000+ on guru courses, this system actually
-                works. Average profit per trade: $
-                {currentData.avgProfitPerTrade.toFixed(2)}.
+                Building this site taught me that I can create powerful tools to
+                share something genuinely valuable. Daily average: ${dailyAvg}{" "}
+                per day.
               </p>
             </div>
 
@@ -174,21 +226,22 @@ export const MyStory: React.FC = () => {
                 <TrendingUp className="w-8 h-8 text-white" />
               </div>
               <h4 className="text-lg font-semibold text-white mb-2">
-                True Passive Income
+                Helping Others
               </h4>
               <p className="text-gray-300 text-sm">
-                Every single month has been profitable, with steady growth
-                averaging ${currentData.monthlyAverage.toFixed(2)} per month.
+                I see people struggling with finances, having too much month
+                left at the end of the money. This platform could really help,
+                but not many people know about it.
               </p>
             </div>
           </div>
 
           <div className="text-center mt-8">
             <p className="text-gray-300 max-w-3xl mx-auto">
-              I'm not a financial guru - I'm just someone who got tired of being
-              scammed by internet marketers and finally found something that
-              actually works. The numbers below are my actual results, updated{" "}
-              {liveTradingData.isLiveData ? "live" : "regularly"}.
+              I'm not a financial guru or marketing expert - I'm just someone
+              who found something that works and learned I could build this site
+              to share it with others. The numbers below are my actual results,
+              updated {liveTradingData.isLiveData ? "live" : "regularly"}.
             </p>
           </div>
         </div>

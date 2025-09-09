@@ -3,8 +3,6 @@ import { ArrowRight, Bot, Shield, Clock, Users } from "lucide-react";
 import { FloatingIcons } from "./FloatingIcons";
 import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
 
-// Add these handler functions:
-
 export const Hero: React.FC = () => {
   const handleGetFreeTraining = () => {
     trackCTAClick("get_free_training", "hero");
@@ -15,6 +13,7 @@ export const Hero: React.FC = () => {
     trackCTAClick("start_trading", "hero");
     trackOutboundLink("https://dailyprofits.link/gbt", "Start Trading");
   };
+
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden pb-10 pt-10">
       {/* Background effects */}
