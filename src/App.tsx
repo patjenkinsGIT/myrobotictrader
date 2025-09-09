@@ -103,7 +103,7 @@ const seoConfigs = {
   },
 };
 
-// Component to handle SEO for each route
+// Component to handle SEO for each route - FIXED THE ERROR HERE
 const SEOWrapper: React.FCReact.FCReact.FCReact.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
