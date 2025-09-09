@@ -1,5 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+import { initGA } from "./utils/analytics";
 
 // Your existing components
 import { Hero } from "./components/Hero";
@@ -31,6 +33,11 @@ const HomePage: React.FC = () => {
 };
 
 function App() {
+  // Add this useEffect inside your App component:
+  useEffect(() => {
+    // Initialize Google Analytics when the app loads
+    initGA();
+  }, []);
   return (
     <div className="App min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <Router>

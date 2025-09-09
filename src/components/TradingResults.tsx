@@ -12,6 +12,7 @@ import {
   liveTradingData,
   calculateLiveDailyAverage,
 } from "../data/liveTrading";
+import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
 
 export const TradingResults: React.FC = () => {
   // Use live data if available, fallback to original data
@@ -49,6 +50,15 @@ export const TradingResults: React.FC = () => {
       Dec: "December",
     };
     return monthMap[shortMonth] || shortMonth;
+  };
+
+  // CTA tracking handler
+  const handleJoinMasterclass = () => {
+    trackCTAClick("join_free_masterclass", "trading_results_section");
+    trackOutboundLink(
+      "https://dailyprofits.link/class",
+      "Join Free Masterclass Trading Results"
+    );
   };
 
   return (
@@ -306,6 +316,26 @@ export const TradingResults: React.FC = () => {
             </div>
           </div>
         )}
+
+        {/* CTA Container - Moved from Features */}
+        <div className="text-center mt-16">
+          <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl p-8 border border-purple-400/30 shadow-lg shadow-purple-500/20">
+            <h3 className="text-2xl font-bold text-white mb-4">
+              Ready to Experience Autonomous Trading?
+            </h3>
+            <p className="text-gray-200 mb-6 max-w-2xl mx-auto">
+              Join successful traders using set-it-and-forget-it cryptocurrency
+              trading.
+            </p>
+            <button
+              onClick={handleJoinMasterclass}
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-500/30"
+            >
+              Join Free Masterclass
+              <TrendingUp className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
 
         <div className="text-center mt-8">
           <p className="text-sm text-gray-400 max-w-2xl mx-auto">

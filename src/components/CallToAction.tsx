@@ -1,7 +1,21 @@
 import * as React from "react";
 import { ArrowRight, CheckCircle, Rocket, TrendingUp } from "lucide-react";
+import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
 
 export const CallToAction: React.FC = function () {
+  const handleGetFreeTraining = () => {
+    trackCTAClick("get_free_training", "cta_section");
+    trackOutboundLink(
+      "https://dailyprofits.link/class",
+      "Get Free Training CTA"
+    );
+  };
+
+  const handleStartTrading = () => {
+    trackCTAClick("start_trading", "cta_section");
+    trackOutboundLink("https://dailyprofits.link/gbt", "Start Trading CTA");
+  };
+
   return (
     <section className="py-10 px-4 relative overflow-hidden">
       {/* Background effects */}
@@ -120,6 +134,7 @@ export const CallToAction: React.FC = function () {
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
           <a
             href="https://dailyprofits.link/class"
+            onClick={handleGetFreeTraining}
             target="_blank"
             rel="noopener noreferrer"
             className="group bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2"
@@ -130,6 +145,7 @@ export const CallToAction: React.FC = function () {
 
           <a
             href="https://dailyprofits.link/gbt"
+            onClick={handleStartTrading}
             target="_blank"
             rel="noopener noreferrer"
             className="group border-2 border-white/40 hover:border-white/60 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 backdrop-blur-sm hover:bg-white/15 flex items-center justify-center gap-2 shadow-lg shadow-white/10"

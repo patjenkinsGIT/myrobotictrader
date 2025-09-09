@@ -9,6 +9,7 @@ import {
   BarChart3,
   Users,
 } from "lucide-react";
+import { trackEvent } from "../utils/analytics";
 
 const features = [
   {
@@ -95,6 +96,9 @@ export const Features: React.FC = function () {
               newState[index] = true;
               return newState;
             });
+
+            // Track feature card views
+            trackEvent("view", "feature_card", features[index].title, 1);
           }
         });
       },
@@ -106,6 +110,10 @@ export const Features: React.FC = function () {
 
     return () => observer.disconnect();
   }, []);
+
+  const handleFeatureClick = (featureTitle: string, index: number) => {
+    trackEvent("click", "feature_card", `${featureTitle}_card_${index + 1}`, 1);
+  };
 
   return (
     <section className="py-10 px-4 relative">
@@ -138,7 +146,8 @@ export const Features: React.FC = function () {
               <div
                 key={index}
                 data-card-index={index}
-                className={`group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-500 transform hover:scale-105 hover:shadow-2xl shadow-lg ${
+                onClick={() => handleFeatureClick(feature.title, index)}
+                className={`group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-500 transform hover:scale-105 hover:shadow-2xl shadow-lg cursor-pointer ${
                   visibleCards[index]
                     ? "opacity-100 translate-y-0"
                     : "opacity-0 translate-y-10"
@@ -201,27 +210,6 @@ export const Features: React.FC = function () {
               </div>
             );
           })}
-        </div>
-
-        <div className="text-center mt-16">
-          <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl p-8 border border-purple-400/30 shadow-lg shadow-purple-500/20">
-            <h3 className="text-2xl font-bold text-white mb-4">
-              Ready to Experience Autonomous Trading?
-            </h3>
-            <p className="text-gray-200 mb-6 max-w-2xl mx-auto">
-              Join successful traders using set-it-and-forget-it cryptocurrency
-              trading.
-            </p>
-            <a
-              href="https://dailyprofits.link/class"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-500/30"
-            >
-              Join Free Masterclass
-              <TrendingUp className="w-4 h-4" />
-            </a>
-          </div>
         </div>
       </div>
     </section>

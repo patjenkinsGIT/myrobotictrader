@@ -1,9 +1,9 @@
-import * as React from "react";
+import React from "react";
 import { User, TrendingUp, CheckCircle, Target } from "lucide-react";
 import { tradingData } from "../data/tradingResults";
 import { liveTradingData } from "../data/liveTrading";
 
-export const MyStory: React.FC = function () {
+export const MyStory: React.FC = () => {
   // Use live data if available, fallback to original data
   const currentData = liveTradingData.isLiveData
     ? liveTradingData
@@ -42,7 +42,7 @@ export const MyStory: React.FC = function () {
               <div className="w-64 h-64 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
                 <img
                   src="/patrick-2.jpeg"
-                  alt="Patrick - MyRoboticTrader Creator"
+                  alt="Patrick Jenkins"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -59,7 +59,7 @@ export const MyStory: React.FC = function () {
                 <div className="w-80 h-80 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
                   <img
                     src="/patrick-2.jpeg"
-                    alt="Patrick - MyRoboticTrader Creator"
+                    alt="Patrick Jenkins"
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -72,45 +72,46 @@ export const MyStory: React.FC = function () {
             {/* Story Text */}
             <div className="space-y-6 text-lg text-gray-200 leading-relaxed">
               <p>
-                Like many people, I was skeptical about automated trading. I'd
-                tried various strategies before, lost money on risky trades, and
-                was honestly burned out on the whole thing.
+                I've been seriously following the markets since 2014, and I love
+                investing. But like many people, I've been burned by "gurus"
+                before.
               </p>
 
               <p>
-                <span className="text-yellow-300 font-semibold">
-                  But then I discovered this robotic trader system in late 2024.
+                <span className="text-red-300 font-semibold">
+                  Over the years, I spent at least $30,000 on courses
                 </span>{" "}
-                The "never trade at a loss" principle immediately caught my
-                attention - it was exactly the opposite of everything I'd
-                experienced before.
+                - email marketing, affiliate marketing, CPA marketing, Amazon
+                wholesale. Most were a complete waste of money and time.
+              </p>
+
+              <p>
+                So when I discovered this robotic trading system while searching
+                for new opportunities,
+                <span className="text-yellow-300 font-semibold">
+                  {" "}
+                  I honestly thought it was too good to be true.
+                </span>
               </p>
 
               <p>
                 <span className="text-green-300 font-semibold">
-                  After the free masterclass, I couldn't wait to get started. I
-                  got setup the same day and was paper trading for about 2
-                  hours, but I almost immediately moved to real money within
-                  hours after seeing a few successful trades.
-                </span>
+                  But then I attended their live webinar, and I saw something
+                  different.
+                </span>{" "}
+                Real authenticity. They answered every single question. They're
+                live every week, encouraging people to come back. You can see
+                the developer himself talking about the product - he's there
+                every week.
               </p>
 
               <p>
                 <span className="text-blue-300 font-semibold">
-                  January 8, 2025
+                  When I saw the first couple of trades go through during the
+                  demo, I couldn't wait to start trading immediately.
                 </span>{" "}
-                - that's when I started trading with real money. The system's
-                "set it and forget it" approach was perfect for my busy
-                schedule.
-              </p>
-
-              <p>
-                What happened next blew my mind. Month after month, consistent
-                profits. My best month was{" "}
-                <span className="text-yellow-300 font-semibold">
-                  July with ${bestMonthData.profit.toFixed(2)}
-                </span>
-                , but even my "slower" months were profitable.
+                I started on January 8, 2025, and moved from paper trading to
+                real money almost instantly.
               </p>
 
               <p>
@@ -120,8 +121,17 @@ export const MyStory: React.FC = function () {
                 <span className="text-green-300 font-semibold">
                   ${currentData.totalProfit.toLocaleString()} in total profits
                 </span>
-                , I knew I had to share it with others. The results speak for
-                themselves.
+                , I'm so much more relaxed now. I know it works, and my results
+                speak for themselves.
+              </p>
+
+              <p>
+                <span className="text-yellow-300 font-semibold">
+                  As I approach retirement, this is the closest thing to true
+                  passive income I've ever experienced.
+                </span>{" "}
+                After wasting so much money on courses that didn't deliver, I
+                wish I had found this system years ago.
               </p>
             </div>
 
@@ -155,11 +165,12 @@ export const MyStory: React.FC = function () {
                 <Target className="w-8 h-8 text-white" />
               </div>
               <h4 className="text-lg font-semibold text-white mb-2">
-                No Guesswork
+                No More Guesswork
               </h4>
               <p className="text-gray-300 text-sm">
-                The system does everything automatically. Average profit per
-                trade: ${currentData.avgProfitPerTrade.toFixed(2)}.
+                After wasting $30,000+ on guru courses, this system actually
+                works. Average profit per trade: $
+                {currentData.avgProfitPerTrade.toFixed(2)}.
               </p>
             </div>
 
@@ -168,7 +179,7 @@ export const MyStory: React.FC = function () {
                 <TrendingUp className="w-8 h-8 text-white" />
               </div>
               <h4 className="text-lg font-semibold text-white mb-2">
-                Consistent Growth
+                True Passive Income
               </h4>
               <p className="text-gray-300 text-sm">
                 Every single month has been profitable, with steady growth
@@ -179,10 +190,9 @@ export const MyStory: React.FC = function () {
 
           <div className="text-center mt-8">
             <p className="text-gray-300 max-w-3xl mx-auto">
-              I'm not a financial guru or trading expert - I'm just someone who
-              found a system that works and wanted to share it with others who
-              are looking for a reliable way to generate passive income. The
-              numbers below are my actual results, updated{" "}
+              I'm not a financial guru - I'm just someone who got tired of being
+              scammed by internet marketers and finally found something that
+              actually works. The numbers below are my actual results, updated{" "}
               {liveTradingData.isLiveData ? "live" : "regularly"}.
             </p>
           </div>
