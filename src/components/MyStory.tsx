@@ -9,11 +9,6 @@ export const MyStory: React.FC = () => {
     ? liveTradingData
     : tradingData;
 
-  // Find best month for story context
-  const bestMonthData = currentData.monthlyData.reduce((best, current) =>
-    current.profit > best.profit ? current : best
-  );
-
   return (
     <section className="py-16 px-4 relative overflow-hidden">
       {/* Background effects */}
