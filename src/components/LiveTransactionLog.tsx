@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { Activity, Clock, Target, RefreshCw, TrendingUp } from "lucide-react";
+import { Activity, Clock, Target, TrendingUp } from "lucide-react";
 
 export interface LiveTransaction {
   id: string;
@@ -210,7 +210,7 @@ export const LiveTransactionLog: React.FC = () => {
         "$0.45",
         "2,450",
         "Active Position",
-        "$2.15",
+        "$0.00",
         "9/7 2:15 PM",
       ],
       [
@@ -219,7 +219,7 @@ export const LiveTransactionLog: React.FC = () => {
         "$145.32",
         "12.5",
         "Active Position",
-        "$5.67",
+        "$0.00",
         "9/7 8:22 AM",
       ],
       [
@@ -228,7 +228,7 @@ export const LiveTransactionLog: React.FC = () => {
         "$0.89",
         "1,200",
         "Active Position",
-        "$1.23",
+        "$0.00",
         "9/6 11:58 PM",
       ],
       ["LINK", "CLOSE", "$11.45", "85.3", "Completed", "$9.87", "9/6 7:41 PM"],
@@ -250,7 +250,7 @@ export const LiveTransactionLog: React.FC = () => {
         "$0.35",
         "3,200",
         "Active Position",
-        "$3.23",
+        "$0.00",
         "9/5 12:38 PM",
       ],
       ["ALGO", "CLOSE", "$0.18", "5,500", "Completed", "$4.67", "9/5 8:55 AM"],
@@ -270,7 +270,7 @@ export const LiveTransactionLog: React.FC = () => {
         "$234.56",
         "5.2",
         "Active Position",
-        "$4.45",
+        "$0.00",
         "9/4 1:44 PM",
       ],
       ["VET", "CLOSE", "$0.02", "12,500", "Completed", "$5.78", "9/4 9:31 AM"],
@@ -291,7 +291,7 @@ export const LiveTransactionLog: React.FC = () => {
         "$3.45",
         "125.7",
         "Active Position",
-        "$2.34",
+        "$0.00",
         "9/3 10:25 AM",
       ],
       ["FLOW", "CLOSE", "$0.78", "650", "Completed", "$4.89", "9/2 8:13 PM"],
@@ -390,51 +390,30 @@ export const LiveTransactionLog: React.FC = () => {
     ]
   );
 
-  // Fetch on mount and set up auto-refresh
+  // Fetch on mount - NO AUTO-REFRESH
   useEffect(() => {
     fetchTransactions();
-
-    // Auto-refresh every 2 minutes
-    const interval = setInterval(() => {
-      fetchTransactions(false); // Silent update
-    }, 2 * 60 * 1000);
-
-    return () => clearInterval(interval);
   }, [fetchTransactions]);
 
-  // Manual refresh function
-  const refreshTransactions = useCallback(() => {
-    console.log("🔄 Manual refresh triggered");
-    fetchTransactions(true);
-  }, [fetchTransactions]);
-
-  // Calculate summary stats from current transactions - SEPARATE OPEN/CLOSED
+  // Calculate summary stats from current transactions - ONLY CLOSED TRADES FOR PROFIT
   const summary = useMemo(() => {
     const closedTransactions = transactions.filter(
       (tx) => tx.action === "CLOSE"
     );
     const openTransactions = transactions.filter((tx) => tx.action === "OPEN");
 
-    const closedProfit = closedTransactions.reduce(
+    // Only closed trades have profit
+    const totalProfit = closedTransactions.reduce(
       (sum, tx) => sum + tx.profit,
       0
     );
-    const openProfit = openTransactions.reduce((sum, tx) => sum + tx.profit, 0);
-    const totalProfit = closedProfit + openProfit;
 
-    const avgClosedProfit =
-      closedTransactions.length > 0
-        ? closedProfit / closedTransactions.length
-        : 0;
     const profitGoalReached = closedTransactions.filter(
       (tx) => tx.status === "profit_goal_reached"
     ).length;
 
     return {
       totalProfit,
-      closedProfit,
-      openProfit,
-      avgClosedProfit,
       totalTrades: transactions.length,
       closedTrades: closedTransactions.length,
       openTrades: openTransactions.length,
@@ -492,7 +471,7 @@ export const LiveTransactionLog: React.FC = () => {
         <div className="flex items-center justify-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-400"></div>
           <span className="ml-3 text-gray-300">
-            Loading from Last25Results tab...
+            Loading transaction data...
           </span>
         </div>
       </div>
@@ -512,26 +491,12 @@ export const LiveTransactionLog: React.FC = () => {
               🔥 LIVE TRADING LOG
             </h3>
             <p className="text-sm text-gray-400">
-              From Last25Results • {transactions.length} Transactions
+              Last {transactions.length} Transactions
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          {/* Refresh button */}
-          <button
-            onClick={refreshTransactions}
-            disabled={isLoading}
-            className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors disabled:opacity-50"
-            title="Refresh from Last25Results tab"
-          >
-            <RefreshCw
-              className={`w-4 h-4 text-gray-300 ${
-                isLoading ? "animate-spin" : ""
-              }`}
-            />
-          </button>
-
           {/* Live indicator */}
           <div className="flex items-center gap-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-full px-3 py-1 border border-green-400/30">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
@@ -549,37 +514,61 @@ export const LiveTransactionLog: React.FC = () => {
         </div>
       )}
 
-      {/* Enhanced Summary stats - SEPARATE OPEN/CLOSED */}
+      {/* Updated Summary stats - BRIGHTENED CARDS WITH HOVER EFFECTS */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-        <div className="bg-white/5 rounded-lg p-3 text-center">
-          <div className="text-lg font-bold text-green-300">
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-green-500/15 text-center">
+          <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
+          <div className="relative text-lg font-bold text-green-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-green-300 group-hover:to-emerald-300 group-hover:bg-clip-text transition-all duration-300">
             ${summary.totalProfit.toFixed(2)}
           </div>
-          <div className="text-xs text-gray-400">Total Profit</div>
-        </div>
-        <div className="bg-white/5 rounded-lg p-3 text-center">
-          <div className="text-lg font-bold text-green-400">
-            ${summary.closedProfit.toFixed(2)}
+          <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
+            Total Profit
           </div>
-          <div className="text-xs text-gray-400">Closed Profit</div>
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
         </div>
-        <div className="bg-white/5 rounded-lg p-3 text-center">
-          <div className="text-lg font-bold text-blue-300">
-            ${summary.openProfit.toFixed(2)}
+
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-green-500/15 text-center">
+          <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
+          <div className="relative text-lg font-bold text-green-400 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-green-400 group-hover:to-emerald-400 group-hover:bg-clip-text transition-all duration-300">
+            {summary.closedTrades}
           </div>
-          <div className="text-xs text-gray-400">Open Profit</div>
-        </div>
-        <div className="bg-white/5 rounded-lg p-3 text-center">
-          <div className="text-lg font-bold text-purple-300">
-            {summary.closedTrades}/{summary.openTrades}
+          <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
+            Closed Trades
           </div>
-          <div className="text-xs text-gray-400">Closed/Open</div>
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
         </div>
-        <div className="bg-white/5 rounded-lg p-3 text-center">
-          <div className="text-lg font-bold text-yellow-300">
+
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-blue-500/15 text-center">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
+          <div className="relative text-lg font-bold text-blue-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-300 group-hover:to-cyan-300 group-hover:bg-clip-text transition-all duration-300">
+            {summary.openTrades}
+          </div>
+          <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
+            Open Trades
+          </div>
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
+        </div>
+
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/15 text-center">
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
+          <div className="relative text-lg font-bold text-purple-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-300 group-hover:to-pink-300 group-hover:bg-clip-text transition-all duration-300">
+            {summary.totalTrades}
+          </div>
+          <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
+            Total Trades
+          </div>
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
+        </div>
+
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-orange-500/15 text-center">
+          <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-amber-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
+          <div className="relative text-lg font-bold text-orange-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-orange-300 group-hover:to-amber-300 group-hover:bg-clip-text transition-all duration-300">
             {summary.successRate}
           </div>
-          <div className="text-xs text-gray-400">Success</div>
+          <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
+            Success
+          </div>
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
         </div>
       </div>
 
@@ -589,14 +578,12 @@ export const LiveTransactionLog: React.FC = () => {
         <span className="text-xs text-gray-400">
           Last updated: {lastUpdated.toLocaleTimeString()}
           {SHEET_ID && API_KEY && !error && (
-            <span className="text-green-400 ml-2">
-              • Live from Last25Results
-            </span>
+            <span className="text-green-400 ml-2">• Live Data Connected</span>
           )}
         </span>
       </div>
 
-      {/* Transaction log */}
+      {/* Transaction log - BACK TO SINGLE LIST */}
       <div className="bg-black/20 rounded-xl border border-white/5 overflow-hidden">
         {/* Header */}
         <div className="bg-white/5 px-4 py-3 border-b border-white/5">
@@ -614,7 +601,7 @@ export const LiveTransactionLog: React.FC = () => {
         <div className="max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
           {transactions.length === 0 ? (
             <div className="p-8 text-center text-gray-400">
-              No transactions available from Last25Results tab
+              No transactions available
             </div>
           ) : (
             transactions.map((transaction, index) => (
@@ -665,13 +652,17 @@ export const LiveTransactionLog: React.FC = () => {
 
                   {/* Profit */}
                   <div className="col-span-2">
-                    <div
-                      className={`font-bold font-mono ${getProfitColor(
-                        transaction.profit
-                      )}`}
-                    >
-                      +${transaction.profit.toFixed(2)}
-                    </div>
+                    {transaction.action === "CLOSE" ? (
+                      <div
+                        className={`font-bold font-mono ${getProfitColor(
+                          transaction.profit
+                        )}`}
+                      >
+                        +${transaction.profit.toFixed(2)}
+                      </div>
+                    ) : (
+                      <div className="text-gray-500 font-mono text-xs">-</div>
+                    )}
                     {transaction.status === "profit_goal_reached" && (
                       <div className="text-xs text-yellow-400 flex items-center gap-1 mt-1">
                         <Target className="w-3 h-3" />
@@ -699,27 +690,24 @@ export const LiveTransactionLog: React.FC = () => {
         </div>
       </div>
 
-      {/* Footer note */}
+      {/* Footer note - CLEANED UP */}
       <div className="mt-4 text-center">
         <p className="text-xs text-gray-500">
           {SHEET_ID && API_KEY && !error ? (
             <>
-              ✅ Connected to Google Sheets "Last25Results" tab (A:G) •{" "}
+              ✅ Connected to live trading data •{" "}
               <span className="text-green-400 font-medium">
                 Shows both Open & Closed positions
               </span>
             </>
           ) : (
             <>
-              ✅ Sample data showing Last25Results format (A:G) •{" "}
+              ✅ Sample trading data •{" "}
               <span className="text-green-400 font-medium">
                 Shows both Open & Closed positions
               </span>
             </>
           )}
-        </p>
-        <p className="text-xs text-gray-600 mt-1">
-          🔄 Using same Google Sheets credentials as your existing workflow
         </p>
       </div>
     </div>
