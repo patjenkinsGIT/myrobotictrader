@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { Activity, Clock, Target, TrendingUp } from "lucide-react";
+import { Activity, Clock, Target, TrendingUp, Eye, EyeOff } from "lucide-react";
 
 export interface LiveTransaction {
   id: string;
@@ -17,6 +17,7 @@ export const LiveTransactionLog: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+  const [showOnMobile, setShowOnMobile] = useState(false);
 
   // Use the SAME environment variables as TradingResults.tsx
   const SHEET_ID =
@@ -479,28 +480,46 @@ export const LiveTransactionLog: React.FC = () => {
   }
 
   return (
-    <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-6 mb-8">
-      {/* Header with live indicator */}
-      <div className="flex items-center justify-between mb-6">
+    <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-6 mb-8">
+      {/* Header with live indicator and mobile toggle */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 p-3 shadow-lg shadow-green-500/40">
+          <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 p-2 md:p-3 shadow-lg shadow-green-500/40">
             <Activity className="w-full h-full text-white" />
           </div>
           <div>
-            <h3 className="text-xl md:text-2xl font-bold text-white">
+            <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-white">
               🔥 LIVE TRADING LOG
             </h3>
-            <p className="text-sm text-gray-400">
+            <p className="text-xs md:text-sm text-gray-400">
               Last {transactions.length} Transactions
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
+          {/* Mobile toggle button */}
+          <button
+            onClick={() => setShowOnMobile(!showOnMobile)}
+            className="md:hidden flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full px-3 py-2 border border-white/20 transition-all duration-200"
+          >
+            {showOnMobile ? (
+              <>
+                <EyeOff className="w-4 h-4 text-gray-300" />
+                <span className="text-xs text-gray-300">Hide Details</span>
+              </>
+            ) : (
+              <>
+                <Eye className="w-4 h-4 text-gray-300" />
+                <span className="text-xs text-gray-300">Show Details</span>
+              </>
+            )}
+          </button>
+
           {/* Live indicator */}
           <div className="flex items-center gap-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-full px-3 py-1 border border-green-400/30">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span className="text-green-300 text-sm font-medium">
+            <span className="text-green-300 text-xs md:text-sm font-medium">
               {SHEET_ID && API_KEY && !error ? "LIVE" : "SAMPLE"}
             </span>
           </div>
@@ -514,67 +533,67 @@ export const LiveTransactionLog: React.FC = () => {
         </div>
       )}
 
-      {/* Updated Summary stats - BRIGHTENED CARDS WITH HOVER EFFECTS */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-green-500/15 text-center">
-          <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
-          <div className="relative text-lg font-bold text-green-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-green-300 group-hover:to-emerald-300 group-hover:bg-clip-text transition-all duration-300">
+      {/* Summary stats - Always visible, optimized for mobile */}
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-2 md:gap-4 mb-6">
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-green-500/15 text-center">
+          <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-500 opacity-0 group-hover:opacity-15 rounded-xl transition-opacity duration-300"></div>
+          <div className="relative text-sm md:text-lg font-bold text-green-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-green-300 group-hover:to-emerald-300 group-hover:bg-clip-text transition-all duration-300">
             ${summary.totalProfit.toFixed(2)}
           </div>
           <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
             Total Profit
           </div>
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
+          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
         </div>
 
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-green-500/15 text-center">
-          <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
-          <div className="relative text-lg font-bold text-green-400 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-green-400 group-hover:to-emerald-400 group-hover:bg-clip-text transition-all duration-300">
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-green-500/15 text-center">
+          <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-500 opacity-0 group-hover:opacity-15 rounded-xl transition-opacity duration-300"></div>
+          <div className="relative text-sm md:text-lg font-bold text-green-400 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-green-400 group-hover:to-emerald-400 group-hover:bg-clip-text transition-all duration-300">
             {summary.closedTrades}
           </div>
           <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
-            Closed Trades
+            Closed
           </div>
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
+          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
         </div>
 
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-blue-500/15 text-center">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
-          <div className="relative text-lg font-bold text-blue-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-300 group-hover:to-cyan-300 group-hover:bg-clip-text transition-all duration-300">
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-blue-500/15 text-center">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-15 rounded-xl transition-opacity duration-300"></div>
+          <div className="relative text-sm md:text-lg font-bold text-blue-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-300 group-hover:to-cyan-300 group-hover:bg-clip-text transition-all duration-300">
             {summary.openTrades}
           </div>
           <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
-            Open Trades
+            Open
           </div>
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
+          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
         </div>
 
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/15 text-center">
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
-          <div className="relative text-lg font-bold text-purple-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-300 group-hover:to-pink-300 group-hover:bg-clip-text transition-all duration-300">
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/15 text-center">
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-500 opacity-0 group-hover:opacity-15 rounded-xl transition-opacity duration-300"></div>
+          <div className="relative text-sm md:text-lg font-bold text-purple-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-300 group-hover:to-pink-300 group-hover:bg-clip-text transition-all duration-300">
             {summary.totalTrades}
           </div>
           <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
-            Total Trades
+            Total
           </div>
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
+          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
         </div>
 
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-orange-500/15 text-center">
-          <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-amber-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
-          <div className="relative text-lg font-bold text-orange-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-orange-300 group-hover:to-amber-300 group-hover:bg-clip-text transition-all duration-300">
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-orange-500/15 text-center col-span-2 lg:col-span-1">
+          <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-amber-500 opacity-0 group-hover:opacity-15 rounded-xl transition-opacity duration-300"></div>
+          <div className="relative text-sm md:text-lg font-bold text-orange-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-orange-300 group-hover:to-amber-300 group-hover:bg-clip-text transition-all duration-300">
             {summary.successRate}
           </div>
           <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
             Success
           </div>
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
+          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
         </div>
       </div>
 
       {/* Last updated info */}
       <div className="flex items-center justify-center gap-2 mb-4">
-        <Clock className="w-4 h-4 text-gray-400" />
+        <Clock className="w-3 h-3 md:w-4 md:h-4 text-gray-400" />
         <span className="text-xs text-gray-400">
           Last updated: {lastUpdated.toLocaleTimeString()}
           {SHEET_ID && API_KEY && !error && (
@@ -583,110 +602,210 @@ export const LiveTransactionLog: React.FC = () => {
         </span>
       </div>
 
-      {/* Transaction log - BACK TO SINGLE LIST */}
-      <div className="bg-black/20 rounded-xl border border-white/5 overflow-hidden">
-        {/* Header */}
-        <div className="bg-white/5 px-4 py-3 border-b border-white/5">
-          <div className="grid grid-cols-12 gap-2 text-xs font-semibold text-gray-300 uppercase tracking-wider">
-            <div className="col-span-2">Coin</div>
-            <div className="col-span-2 hidden md:block">Action</div>
-            <div className="col-span-2">Price</div>
-            <div className="col-span-2 hidden sm:block">Quantity</div>
-            <div className="col-span-2">Profit</div>
-            <div className="col-span-2 md:col-span-2">Time</div>
-          </div>
-        </div>
-
-        {/* Scrollable transaction list */}
-        <div className="max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
-          {transactions.length === 0 ? (
-            <div className="p-8 text-center text-gray-400">
-              No transactions available
-            </div>
-          ) : (
-            transactions.map((transaction, index) => (
-              <div
-                key={transaction.id}
-                className={`px-4 py-3 border-b border-white/5 hover:bg-white/5 transition-colors duration-200 ${
-                  index % 2 === 0 ? "bg-white/2" : ""
-                } ${
-                  transaction.action === "OPEN"
-                    ? "border-l-2 border-l-blue-400"
-                    : ""
-                }`}
-              >
-                <div className="grid grid-cols-12 gap-2 items-center text-sm">
-                  {/* Coin */}
-                  <div className="col-span-2">
-                    <div
-                      className={`font-bold ${getCoinColor(transaction.coin)}`}
-                    >
-                      {transaction.coin}
+      {/* Transaction log - Conditional rendering for mobile */}
+      <div
+        className={`bg-black/20 rounded-xl border border-white/5 overflow-hidden ${
+          !showOnMobile ? "hidden md:block" : ""
+        }`}
+      >
+        {/* Mobile-first transaction list - Card layout for mobile, table for desktop */}
+        <div className="block md:hidden">
+          {/* Mobile Card Layout */}
+          <div className="space-y-2 p-2 max-h-96 overflow-y-auto">
+            {transactions.length === 0 ? (
+              <div className="p-8 text-center text-gray-400">
+                No transactions available
+              </div>
+            ) : (
+              transactions.slice(0, 10).map((transaction) => (
+                <div
+                  key={transaction.id}
+                  className={`bg-white/5 rounded-lg p-3 border border-white/10 ${
+                    transaction.action === "OPEN"
+                      ? "border-l-2 border-l-blue-400"
+                      : ""
+                  }`}
+                >
+                  {/* Top row: Coin and Action */}
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`font-bold text-sm ${getCoinColor(
+                          transaction.coin
+                        )}`}
+                      >
+                        {transaction.coin}
+                      </span>
+                      <span
+                        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getActionColor(
+                          transaction.action
+                        )}`}
+                      >
+                        {transaction.action}
+                      </span>
+                    </div>
+                    <div className="text-xs text-gray-400">
+                      {transaction.timestamp}
                     </div>
                   </div>
 
-                  {/* Action - hidden on mobile, different colors for OPEN/CLOSE */}
-                  <div className="col-span-2 hidden md:block">
-                    <span
-                      className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getActionColor(
-                        transaction.action
-                      )}`}
-                    >
-                      {transaction.action}
-                    </span>
-                  </div>
-
-                  {/* Price */}
-                  <div className="col-span-2">
-                    <div className="text-gray-200 font-mono text-xs">
+                  {/* Middle row: Price and Quantity */}
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="text-xs text-gray-300">
+                      <span className="text-gray-500">Price:</span>{" "}
                       {transaction.price}
                     </div>
-                  </div>
-
-                  {/* Quantity - hidden on small screens */}
-                  <div className="col-span-2 hidden sm:block">
-                    <div className="text-gray-300 font-mono text-xs">
+                    <div className="text-xs text-gray-300">
+                      <span className="text-gray-500">Qty:</span>{" "}
                       {transaction.quantity}
                     </div>
                   </div>
 
-                  {/* Profit */}
-                  <div className="col-span-2">
-                    {transaction.action === "CLOSE" ? (
-                      <div
-                        className={`font-bold font-mono ${getProfitColor(
-                          transaction.profit
-                        )}`}
-                      >
-                        +${transaction.profit.toFixed(2)}
-                      </div>
-                    ) : (
-                      <div className="text-gray-500 font-mono text-xs">-</div>
-                    )}
-                    {transaction.status === "profit_goal_reached" && (
-                      <div className="text-xs text-yellow-400 flex items-center gap-1 mt-1">
-                        <Target className="w-3 h-3" />
-                        <span className="hidden sm:inline">Goal Reached</span>
-                      </div>
-                    )}
-                    {transaction.action === "OPEN" && (
-                      <div className="text-xs text-blue-400 flex items-center gap-1 mt-1">
-                        <TrendingUp className="w-3 h-3" />
-                        <span className="hidden sm:inline">Active</span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Time */}
-                  <div className="col-span-2 md:col-span-2">
-                    <div className="text-gray-400 text-xs">
-                      {transaction.timestamp}
+                  {/* Bottom row: Profit and Status */}
+                  <div className="flex items-center justify-between">
+                    <div>
+                      {transaction.action === "CLOSE" ? (
+                        <div
+                          className={`font-bold text-sm ${getProfitColor(
+                            transaction.profit
+                          )}`}
+                        >
+                          +${transaction.profit.toFixed(2)}
+                        </div>
+                      ) : (
+                        <div className="text-gray-500 text-sm">
+                          Active Position
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      {transaction.status === "profit_goal_reached" && (
+                        <>
+                          <Target className="w-3 h-3 text-yellow-400" />
+                          <span className="text-xs text-yellow-400">Goal</span>
+                        </>
+                      )}
+                      {transaction.action === "OPEN" && (
+                        <>
+                          <TrendingUp className="w-3 h-3 text-blue-400" />
+                          <span className="text-xs text-blue-400">Active</span>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        {/* Desktop Table Layout */}
+        <div className="hidden md:block">
+          {/* Header */}
+          <div className="bg-white/5 px-4 py-3 border-b border-white/5">
+            <div className="grid grid-cols-12 gap-2 text-xs font-semibold text-gray-300 uppercase tracking-wider">
+              <div className="col-span-2">Coin</div>
+              <div className="col-span-2">Action</div>
+              <div className="col-span-2">Price</div>
+              <div className="col-span-2">Quantity</div>
+              <div className="col-span-2">Profit</div>
+              <div className="col-span-2">Time</div>
+            </div>
+          </div>
+
+          {/* Scrollable transaction list */}
+          <div className="max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
+            {transactions.length === 0 ? (
+              <div className="p-8 text-center text-gray-400">
+                No transactions available
               </div>
-            ))
-          )}
+            ) : (
+              transactions.map((transaction, index) => (
+                <div
+                  key={transaction.id}
+                  className={`px-4 py-3 border-b border-white/5 hover:bg-white/5 transition-colors duration-200 ${
+                    index % 2 === 0 ? "bg-white/2" : ""
+                  } ${
+                    transaction.action === "OPEN"
+                      ? "border-l-2 border-l-blue-400"
+                      : ""
+                  }`}
+                >
+                  <div className="grid grid-cols-12 gap-2 items-center text-sm">
+                    {/* Coin */}
+                    <div className="col-span-2">
+                      <div
+                        className={`font-bold ${getCoinColor(
+                          transaction.coin
+                        )}`}
+                      >
+                        {transaction.coin}
+                      </div>
+                    </div>
+
+                    {/* Action */}
+                    <div className="col-span-2">
+                      <span
+                        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getActionColor(
+                          transaction.action
+                        )}`}
+                      >
+                        {transaction.action}
+                      </span>
+                    </div>
+
+                    {/* Price */}
+                    <div className="col-span-2">
+                      <div className="text-gray-200 font-mono text-xs">
+                        {transaction.price}
+                      </div>
+                    </div>
+
+                    {/* Quantity */}
+                    <div className="col-span-2">
+                      <div className="text-gray-300 font-mono text-xs">
+                        {transaction.quantity}
+                      </div>
+                    </div>
+
+                    {/* Profit */}
+                    <div className="col-span-2">
+                      {transaction.action === "CLOSE" ? (
+                        <div
+                          className={`font-bold font-mono ${getProfitColor(
+                            transaction.profit
+                          )}`}
+                        >
+                          +${transaction.profit.toFixed(2)}
+                        </div>
+                      ) : (
+                        <div className="text-gray-500 font-mono text-xs">-</div>
+                      )}
+                      {transaction.status === "profit_goal_reached" && (
+                        <div className="text-xs text-yellow-400 flex items-center gap-1 mt-1">
+                          <Target className="w-3 h-3" />
+                          <span>Goal Reached</span>
+                        </div>
+                      )}
+                      {transaction.action === "OPEN" && (
+                        <div className="text-xs text-blue-400 flex items-center gap-1 mt-1">
+                          <TrendingUp className="w-3 h-3" />
+                          <span>Active</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Time */}
+                    <div className="col-span-2">
+                      <div className="text-gray-400 text-xs">
+                        {transaction.timestamp}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
       </div>
 
@@ -709,6 +828,11 @@ export const LiveTransactionLog: React.FC = () => {
             </>
           )}
         </p>
+        {!showOnMobile && (
+          <p className="text-xs text-gray-500 mt-1 md:hidden">
+            Tap "Show Details" to view transaction history
+          </p>
+        )}
       </div>
     </div>
   );
