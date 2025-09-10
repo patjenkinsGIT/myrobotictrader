@@ -8,10 +8,11 @@ import {
 import { useEffect } from "react";
 import { initGA } from "./utils/analytics";
 
-// SEO Component
 import { SEOHead } from "./components/SEOHead";
+import { StaticSEO } from "./components/StaticSEO";
+import { OGImageGenerator } from "./components/OGImageGenerator";
+import { SEODebugger } from "./components/SEODebugger";
 
-// Your existing components
 import { Hero } from "./components/Hero";
 import { MyStory } from "./components/MyStory";
 import { TradingResults } from "./components/TradingResults";
@@ -20,12 +21,10 @@ import { CallToAction } from "./components/CallToAction";
 import { FAQ } from "./components/FAQ";
 import { Footer } from "./components/Footer";
 
-// Your page components
 import { ResourcesPage } from "./pages/ResourcesPage";
 import { PrivacyPage } from "./pages/PrivacyPage";
 import { BusinessCardLanding } from "./components/BusinessCardLanding";
 
-// SEO configurations for different pages with structured data
 const seoConfigs = {
   home: {
     title:
@@ -38,13 +37,15 @@ const seoConfigs = {
       "MyRoboticTrader - Set It and Forget It Crypto Trading | Build New Revenue Streams",
     ogDescription:
       "Discover how I built multiple revenue streams with AI-Enhanced autonomous robotic crypto trading. Real results, proven system.",
-    ogImage: "https://myrobotictrader.com/robot-og.png",
+    ogImage:
+      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/og-image.png",
     twitterTitle:
       "MyRoboticTrader - Set It and Forget It Crypto Trading | Build New Revenue Streams",
     twitterDescription:
       "Discover how I built multiple revenue streams with AI-Enhanced autonomous robotic crypto trading. Real results, proven system.",
-    twitterImage: "https://myrobotictrader.com/robot-twitter.png",
-    canonicalUrl: "https://myrobotictrader.com/",
+    twitterImage:
+      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/twitter-image.png",
+    canonicalUrl: "https://rd6xolh11t0gmjdo-default.preview.taskade.app/",
     pageType: "home" as const,
   },
   resources: {
@@ -57,12 +58,15 @@ const seoConfigs = {
     ogTitle: "Free AI-Enhanced Trading Resources & Masterclass",
     ogDescription:
       "Access free AI trading guides, video courses, and resources to master automated cryptocurrency trading and build revenue streams.",
-    ogImage: "https://myrobotictrader.com/robot-og.png",
+    ogImage:
+      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/og-image.png",
     twitterTitle: "Free Trading Resources - Build Your Revenue Stream",
     twitterDescription:
       "Access free AI trading guides and resources to master automated cryptocurrency trading.",
-    twitterImage: "https://myrobotictrader.com/robot-twitter.png",
-    canonicalUrl: "https://myrobotictrader.com/resources",
+    twitterImage:
+      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/twitter-image.png",
+    canonicalUrl:
+      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/resources",
     pageType: "resources" as const,
   },
   privacy: {
@@ -74,12 +78,15 @@ const seoConfigs = {
     ogTitle: "Privacy Policy - MyRoboticTrader AI Trading Platform",
     ogDescription:
       "Our commitment to protecting your privacy and AI trading data with enterprise-grade security measures.",
-    ogImage: "https://myrobotictrader.com/robot-og.png",
+    ogImage:
+      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/og-image.png",
     twitterTitle: "Privacy Policy - Secure AI Trading Platform",
     twitterDescription:
       "Our commitment to protecting your privacy and trading data with enterprise-grade security.",
-    twitterImage: "https://myrobotictrader.com/robot-twitter.png",
-    canonicalUrl: "https://myrobotictrader.com/privacy",
+    twitterImage:
+      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/twitter-image.png",
+    canonicalUrl:
+      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/privacy",
     pageType: "privacy" as const,
   },
   card: {
@@ -93,20 +100,23 @@ const seoConfigs = {
       "Live AI Trading Results - Thanks for Tapping! Building Revenue Streams",
     ogDescription:
       "See live AI-enhanced robotic trading results. Real revenue streams being built automatically from Patrick's trading system!",
-    ogImage: "https://myrobotictrader.com/robot-og.png",
+    ogImage:
+      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/og-image.png",
     twitterTitle: "Live Trading Results - Building Revenue Streams",
     twitterDescription:
       "See live AI-enhanced robotic trading results building sustainable revenue streams automatically!",
-    twitterImage: "https://myrobotictrader.com/robot-twitter.png",
-    canonicalUrl: "https://myrobotictrader.com/card",
+    twitterImage:
+      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/twitter-image.png",
+    canonicalUrl: "https://rd6xolh11t0gmjdo-default.preview.taskade.app/card",
     pageType: "card" as const,
   },
 };
 
-// Component to handle SEO for each route - CORRECTED LINE 107
-const SEOWrapper: React.FC<{
+interface SEOWrapperProps {
   children: React.ReactNode;
-}> = ({ children }) => {
+}
+
+function SEOWrapper({ children }: SEOWrapperProps) {
   const location = useLocation();
 
   const getSEOConfig = () => {
@@ -128,10 +138,9 @@ const SEOWrapper: React.FC<{
       {children}
     </>
   );
-};
+}
 
-// Create a HomePage component from your existing layout
-const HomePage: React.FC = () => {
+function HomePage() {
   return (
     <>
       <Hero />
@@ -140,20 +149,19 @@ const HomePage: React.FC = () => {
       <Features />
       <CallToAction />
       <FAQ />
-      {/* Footer moved outside - will be added globally */}
     </>
   );
-};
+}
 
 function App() {
-  // Add this useEffect inside your App component:
   useEffect(() => {
-    // Initialize Google Analytics when the app loads
     initGA();
   }, []);
 
   return (
     <div className="App min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      <StaticSEO />
+      <OGImageGenerator />
       <Router>
         <SEOWrapper>
           <Routes>
@@ -161,14 +169,11 @@ function App() {
             <Route path="/resources" element={<ResourcesPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/card" element={<BusinessCardLanding />} />
-            {/* Future routes */}
-            {/* <Route path="/coinbase" element={<CoinbasePage />} /> */}
-            {/* <Route path="/cointracker" element={<CoinTrackerPage />} /> */}
           </Routes>
-          {/* Footer appears on ALL pages */}
           <Footer />
         </SEOWrapper>
       </Router>
+      <SEODebugger />
     </div>
   );
 }
