@@ -56,9 +56,9 @@ export const StaticSEO: React.FC = () => {
         },
         {
           property: "og:image",
-          content:
-            "https://rd6xolh11t0gmjdo-default.preview.taskade.app/og-image.png",
+          content: "https://5defe27d.myrobotictrader.pages.dev/og-image.png",
         },
+
         { property: "og:image:width", content: "1200" },
         { property: "og:image:height", content: "630" },
         { property: "og:image:type", content: "image/png" },

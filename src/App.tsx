@@ -65,8 +65,7 @@ const seoConfigs = {
       "Access free AI trading guides and resources to master automated cryptocurrency trading.",
     twitterImage:
       "https://rd6xolh11t0gmjdo-default.preview.taskade.app/twitter-image.png",
-    canonicalUrl:
-      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/resources",
+    canonicalUrl: "https://rd6xolh11t0gmjdo-default.preview.taskade.app/",
     pageType: "resources" as const,
   },
   privacy: {
