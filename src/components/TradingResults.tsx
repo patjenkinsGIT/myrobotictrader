@@ -10,7 +10,10 @@ import {
 import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
 import { calculateTimeSinceStart } from "../utils/tradingTime";
 import { LiveTransactionLog } from "./LiveTransactionLog";
-import { useGoogleSheetsData } from "../hooks/useGoogleSheetsData";
+import {
+  useGoogleSheetsData,
+  TradingDataPoint,
+} from "../hooks/useGoogleSheetsData";
 
 export const TradingResults: React.FC = () => {
   // Use the same data source as LiveTransactionLog
@@ -19,7 +22,7 @@ export const TradingResults: React.FC = () => {
   // Get dynamic time since start
   const timeSinceStart = calculateTimeSinceStart();
 
-  // Use the fetched data or fallback
+  // Fallback to default values if data is still loading
   const currentData = tradingStats || {
     totalProfit: 4054.46,
     totalTrades: 854,
@@ -39,20 +42,22 @@ export const TradingResults: React.FC = () => {
       { month: "Sep", profit: 85.93 },
     ],
     isLiveData: false,
+    lastUpdated: new Date().toISOString(),
   };
 
-  // Use pre-calculated values from Google Sheets
-  const dailyAvg = currentData.dailyAvg?.toFixed(0) || "0";
+  // FIXED: Use the dailyAvg from the data structure
+  const dailyAvg = currentData.dailyAvg.toFixed(0);
 
   // Split monthly data for better mobile display with smooth transition
   const allMonthlyData = currentData.monthlyData;
   const recentMonths = allMonthlyData.slice(-6); // Last 6 months for chart
   const olderMonths = allMonthlyData.slice(0, -5).reverse(); // Previous months for table (newest first)
 
-  // Find best month with name - but use the pre-calculated value for display
-  const bestMonthData = allMonthlyData.reduce((best, current) =>
-    current.profit > best.profit ? current : best
-  );
+  // FIXED: Find best month using the bestMonthProfit value
+  const bestMonthData =
+    allMonthlyData.find(
+      (month: TradingDataPoint) => month.profit === currentData.bestMonthProfit
+    ) || allMonthlyData[0];
 
   // Get full month name
   const getFullMonthName = (shortMonth: string) => {
@@ -130,7 +135,7 @@ export const TradingResults: React.FC = () => {
               : "Stats Updated Monthly!"}
           </p>
 
-          {/* Live Data Indicator - Updated to use currentData */}
+          {/* Live Data Indicator - Centered and prominent */}
           {currentData.isLiveData && (
             <div className="mt-6 flex justify-center">
               <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-lg p-4 border border-green-400/30 shadow-lg shadow-green-500/10">
@@ -225,10 +230,10 @@ export const TradingResults: React.FC = () => {
           </div>
         </div>
 
-        {/* Live Transaction Log */}
+        {/* Live Transaction Log - NOW WORKING! */}
         <LiveTransactionLog />
 
-        {/* Second row - Monthly Average, Daily Average, Best Month */}
+        {/* Second row - Monthly Average, Daily Average, Best Month - ENHANCED WITH HERO CARD STYLING */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-emerald-500/15">
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
@@ -261,7 +266,7 @@ export const TradingResults: React.FC = () => {
 
             <div className="relative text-center">
               <div className="text-2xl font-bold text-indigo-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-indigo-300 group-hover:to-purple-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
-                ${dailyAvg}
+                ${currentData.dailyAvg.toFixed(2)}
               </div>
               <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
                 Daily Average
@@ -281,9 +286,7 @@ export const TradingResults: React.FC = () => {
 
             <div className="relative text-center">
               <div className="text-2xl font-bold text-amber-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-amber-300 group-hover:to-orange-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
-                $
-                {currentData.bestMonthProfit?.toFixed(2) ||
-                  bestMonthData.profit.toFixed(2)}
+                ${currentData.bestMonthProfit.toFixed(2)}
               </div>
               <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
                 Best Month
@@ -303,8 +306,9 @@ export const TradingResults: React.FC = () => {
           </p>
         </div>
 
-        {/* Recent Months Chart */}
+        {/* Recent Months Chart - IMPROVED MOBILE LAYOUT */}
         <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8 mb-8 relative">
+          {/* Robot accent - subtle and thematic */}
           <div className="absolute top-4 right-4 opacity-10 pointer-events-none hidden md:block">
             <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-2xl animate-pulse">
               R
@@ -320,10 +324,10 @@ export const TradingResults: React.FC = () => {
               className="flex items-end justify-center gap-2 md:gap-6 mb-4 md:mb-6 min-w-max mx-auto px-2"
               style={{ height: "200px" }}
             >
-              {recentMonths.map((month) => {
+              {recentMonths.map((month: TradingDataPoint) => {
                 const maxBarHeight = 140;
                 const maxProfit = Math.max(
-                  ...recentMonths.map((m) => m.profit)
+                  ...recentMonths.map((m: TradingDataPoint) => m.profit)
                 );
                 const height = Math.max(
                   (month.profit / maxProfit) * maxBarHeight,
@@ -375,12 +379,12 @@ export const TradingResults: React.FC = () => {
               📈 {currentData.totalTrades} trades • $
               {currentData.avgProfitPerTrade.toFixed(2)} avg profit/trade • Best
               month: {getFullMonthName(bestMonthData.month)} with $
-              {bestMonthData.profit.toFixed(2)}
+              {currentData.bestMonthProfit.toFixed(2)}
             </p>
           </div>
         </div>
 
-        {/* Previous Months Table */}
+        {/* Previous Months Table (with smooth transition from chart) */}
         {olderMonths.length > 0 && (
           <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8 mb-8">
             <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6 text-center">
@@ -400,7 +404,7 @@ export const TradingResults: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {olderMonths.map((month, index) => (
+                  {olderMonths.map((month: TradingDataPoint, index: number) => (
                     <tr
                       key={month.month}
                       className={`border-b border-white/5 ${
@@ -423,11 +427,16 @@ export const TradingResults: React.FC = () => {
               <p className="text-gray-400 text-sm">
                 Showing {olderMonths.length} previous months • Total: $
                 {olderMonths
-                  .reduce((sum, month) => sum + month.profit, 0)
+                  .reduce(
+                    (sum: number, month: TradingDataPoint) =>
+                      sum + month.profit,
+                    0
+                  )
                   .toFixed(2)}
               </p>
             </div>
 
+            {/* CTA BUTTON - FIXED TO ENSURE PROPER LINK */}
             <div className="text-center mt-8">
               <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl p-6 border border-purple-400/30 shadow-lg shadow-purple-500/20">
                 <h4 className="text-xl font-bold text-white mb-3">
