@@ -141,6 +141,28 @@ export const TradingResults: React.FC = () => {
     );
   };
 
+  // Add this function in your component
+  const formatCurrency = (
+    value: number | string | null | undefined
+  ): string => {
+    const numValue = Number(value);
+    if (isNaN(numValue)) {
+      return "0.00";
+    }
+    return numValue.toFixed(2);
+  };
+
+  // Then use it in your JSX
+  <div className="relative text-center">
+    <div className="text-2xl font-bold text-indigo-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-indigo-300 group-hover:to-purple-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
+      ${formatCurrency(dailyAvg)}
+    </div>
+    <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
+      Daily Average
+    </div>
+    <div className="text-indigo-300 text-sm mt-1">Steady Growth</div>
+  </div>;
+
   return (
     <section className="py-16 px-4 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-r from-green-900/20 to-blue-900/20"></div>
@@ -308,7 +330,7 @@ export const TradingResults: React.FC = () => {
 
             <div className="relative text-center">
               <div className="text-2xl font-bold text-indigo-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-indigo-300 group-hover:to-purple-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
-                ${dailyAvg}
+                ${formatCurrency(dailyAvg)}
               </div>
               <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
                 Daily Average
