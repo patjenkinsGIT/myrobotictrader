@@ -152,17 +152,6 @@ export const TradingResults: React.FC = () => {
     return numValue.toFixed(2);
   };
 
-  // Then use it in your JSX
-  <div className="relative text-center">
-    <div className="text-2xl font-bold text-indigo-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-indigo-300 group-hover:to-purple-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
-      ${formatCurrency(dailyAvg)}
-    </div>
-    <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
-      Daily Average
-    </div>
-    <div className="text-indigo-300 text-sm mt-1">Steady Growth</div>
-  </div>;
-
   return (
     <section className="py-16 px-4 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-r from-green-900/20 to-blue-900/20"></div>
@@ -323,11 +312,9 @@ export const TradingResults: React.FC = () => {
 
           <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-indigo-500/15">
             <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 to-purple-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
-
             <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-indigo-500/40">
               <TrendingUp className="w-full h-full text-white" />
             </div>
-
             <div className="relative text-center">
               <div className="text-2xl font-bold text-indigo-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-indigo-300 group-hover:to-purple-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
                 ${formatCurrency(dailyAvg)}
@@ -337,7 +324,7 @@ export const TradingResults: React.FC = () => {
               </div>
               <div className="text-indigo-300 text-sm mt-1">Steady Growth</div>
             </div>
-
+            ;
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
 
