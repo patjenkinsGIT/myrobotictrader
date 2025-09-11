@@ -14,11 +14,14 @@ export interface TradingStats {
   monthlyData: TradingDataPoint[];
   lastUpdated: string;
   isLiveData: boolean;
+  // Add back the missing fields
+  dailyAvg: number;
+  bestMonthProfit: number;
 }
 
 export const useGoogleSheetsData = () => {
   const [tradingStats, setTradingStats] = useState<TradingStats | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Use the same environment variables as LiveTransactionLog
@@ -105,6 +108,8 @@ export const useGoogleSheetsData = () => {
     let totalProfit = 0;
     let totalTrades = 0;
     let avgProfitPerTrade = 0;
+    let dailyAvg = 0;
+    let bestMonthProfit = 0;
 
     // Parse monthly data (rows 1-9, skipping header row 0)
     for (let i = 1; i < rows.length; i++) {
@@ -152,14 +157,15 @@ export const useGoogleSheetsData = () => {
     }
 
     // Extract summary stats from the right side (columns F-G)
-    // Look for specific values in the sheet
     rows.forEach((row) => {
       if (row[4] === "Avg Profit / Trade") {
         avgProfitPerTrade = parseFloat(row[6]?.replace(/[$,]/g, "") || "0");
       }
       if (row[4] === "Daily Avg") {
+        dailyAvg = parseFloat(row[6]?.replace(/[$,]/g, "") || "0");
       }
       if (row[4] === "Best Month") {
+        bestMonthProfit = parseFloat(row[6]?.replace(/[$,]/g, "") || "0");
       }
     });
 
@@ -172,6 +178,8 @@ export const useGoogleSheetsData = () => {
       totalTrades,
       avgProfitPerTrade,
       monthlyAverage,
+      dailyAvg,
+      bestMonthProfit,
       monthlyDataCount: monthlyData.length,
     });
 
@@ -181,6 +189,8 @@ export const useGoogleSheetsData = () => {
       avgProfitPerTrade,
       monthlyAverage,
       monthlyData,
+      dailyAvg,
+      bestMonthProfit,
       lastUpdated: new Date().toISOString(),
       isLiveData: true,
     };
@@ -193,6 +203,8 @@ export const useGoogleSheetsData = () => {
       totalTrades: 854,
       avgProfitPerTrade: 4.75,
       monthlyAverage: 450.5,
+      dailyAvg: 16.55,
+      bestMonthProfit: 817.31,
       monthlyData: [
         { month: "Jan", profit: 477.17 },
         { month: "Feb", profit: 686.72 },
@@ -211,7 +223,6 @@ export const useGoogleSheetsData = () => {
 
   return {
     tradingStats,
-    isLoading,
     error,
     refreshStats: fetchTradingStats,
   };
