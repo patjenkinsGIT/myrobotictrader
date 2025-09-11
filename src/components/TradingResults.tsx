@@ -88,9 +88,16 @@ export const TradingResults: React.FC = () => {
 
   const currentData = tradingStats;
   const dailyAvg = currentData.dailyAvg.toFixed(0);
-  const allMonthlyData = currentData.monthlyData;
+
+  // FIXED: Properly filter and sort monthly data for the chart
+  const allMonthlyData = currentData.monthlyData || [];
+
+  // Get the last 6 months of actual monthly data (not stats)
   const recentMonths = allMonthlyData.slice(-6);
-  const olderMonths = allMonthlyData.slice(0, -5).reverse();
+
+  // Get older months for the table (everything except the last 6)
+  const olderMonths = allMonthlyData.slice(0, -6).reverse();
+
   const bestMonthData =
     allMonthlyData.find(
       (month: TradingDataPoint) => month.profit === currentData.bestMonthProfit
@@ -313,7 +320,7 @@ export const TradingResults: React.FC = () => {
           </p>
         </div>
 
-        {/* Recent Months Chart */}
+        {/* FIXED: Recent Months Chart - Now shows actual monthly data */}
         <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8 mb-8 relative">
           <div className="absolute top-4 right-4 opacity-10 pointer-events-none hidden md:block">
             <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-2xl animate-pulse">
@@ -330,48 +337,54 @@ export const TradingResults: React.FC = () => {
               className="flex items-end justify-center gap-2 md:gap-6 mb-4 md:mb-6 min-w-max mx-auto px-2"
               style={{ height: "200px" }}
             >
-              {recentMonths.map((month: TradingDataPoint) => {
-                const maxBarHeight = 140;
-                const maxProfit = Math.max(
-                  ...recentMonths.map((m: TradingDataPoint) => m.profit)
-                );
-                const height = Math.max(
-                  (month.profit / maxProfit) * maxBarHeight,
-                  12
-                );
-                const isHighest = month.profit === maxProfit;
+              {recentMonths.length > 0 ? (
+                recentMonths.map((month: TradingDataPoint) => {
+                  const maxBarHeight = 140;
+                  const maxProfit = Math.max(
+                    ...recentMonths.map((m: TradingDataPoint) => m.profit)
+                  );
+                  const height = Math.max(
+                    (month.profit / maxProfit) * maxBarHeight,
+                    12
+                  );
+                  const isHighest = month.profit === maxProfit;
 
-                return (
-                  <div
-                    key={month.month}
-                    className="flex flex-col items-center min-w-0"
-                  >
+                  return (
                     <div
-                      className={`text-xs md:text-sm mb-1 md:mb-2 font-semibold ${
-                        isHighest ? "text-yellow-300" : "text-gray-200"
-                      }`}
+                      key={month.month}
+                      className="flex flex-col items-center min-w-0"
                     >
-                      ${Math.round(month.profit)}
+                      <div
+                        className={`text-xs md:text-sm mb-1 md:mb-2 font-semibold ${
+                          isHighest ? "text-yellow-300" : "text-gray-200"
+                        }`}
+                      >
+                        ${Math.round(month.profit)}
+                      </div>
+                      <div
+                        className={`w-8 md:w-16 rounded-t-lg transition-all duration-1000 ease-out ${
+                          isHighest
+                            ? "bg-gradient-to-t from-yellow-500 to-yellow-300 shadow-lg shadow-yellow-400/40"
+                            : "bg-gradient-to-t from-emerald-500 to-green-400 shadow-lg shadow-emerald-400/30"
+                        }`}
+                        style={{ height: `${height}px`, minHeight: "12px" }}
+                      ></div>
+                      <div className="text-xs md:text-sm text-gray-200 mt-2 md:mt-3 font-medium text-center">
+                        <span className="md:hidden">
+                          {getShortMonthName(month.month)}
+                        </span>
+                        <span className="hidden md:inline">
+                          {getFullMonthName(month.month)}
+                        </span>
+                      </div>
                     </div>
-                    <div
-                      className={`w-8 md:w-16 rounded-t-lg transition-all duration-1000 ease-out ${
-                        isHighest
-                          ? "bg-gradient-to-t from-yellow-500 to-yellow-300 shadow-lg shadow-yellow-400/40"
-                          : "bg-gradient-to-t from-emerald-500 to-green-400 shadow-lg shadow-emerald-400/30"
-                      }`}
-                      style={{ height: `${height}px`, minHeight: "12px" }}
-                    ></div>
-                    <div className="text-xs md:text-sm text-gray-200 mt-2 md:mt-3 font-medium text-center">
-                      <span className="md:hidden">
-                        {getShortMonthName(month.month)}
-                      </span>
-                      <span className="hidden md:inline">
-                        {getFullMonthName(month.month)}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                })
+              ) : (
+                <div className="text-center text-gray-400 py-8">
+                  <p>No monthly data available for chart</p>
+                </div>
+              )}
             </div>
           </div>
 
