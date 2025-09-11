@@ -324,7 +324,6 @@ export const TradingResults: React.FC = () => {
               </div>
               <div className="text-indigo-300 text-sm mt-1">Steady Growth</div>
             </div>
-            ;
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
 
