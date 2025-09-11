@@ -111,37 +111,26 @@ export const useGoogleSheetsData = () => {
   // FIXED: Fallback data that ensures all values are present
   const getFallbackTradingStats = (): TradingStats => {
     const monthlyData: TradingDataPoint[] = [
-      { month: "Jan", profit: 1250.0 },
-      { month: "Feb", profit: 1890.5 },
-      { month: "Mar", profit: 2100.75 },
-      { month: "Apr", profit: 1750.25 },
-      { month: "May", profit: 1650.0 },
-      { month: "Jun", profit: 1950.75 },
-      { month: "Jul", profit: 2200.5 },
-      { month: "Aug", profit: 1857.25 },
+      { month: "Jan", profit: 477.23 },
+      { month: "Feb", profit: 686.71 },
+      { month: "Mar", profit: 261.97 },
+      { month: "Apr", profit: 552.58 },
+      { month: "May", profit: 376.3 },
+      { month: "Jun", profit: 382.97 },
+      { month: "Jul", profit: 817.31 },
+      { month: "Aug", profit: 350.32 },
+      { month: "Sep", profit: 450.0 }, // Adding Sep for 9 months
     ];
 
     const totalProfit = monthlyData.reduce(
       (sum, month) => sum + month.profit,
       0
     );
-    const totalTrades = 1247;
-    const avgProfitPerTrade = totalProfit / totalTrades;
-    const monthlyAverage = totalProfit / monthlyData.length;
-
-    // FIXED: Crypto trades 365 days a year, not 240 like stocks
-    // Calculate actual days since trading started (January 8, 2025)
-    const startDate = new Date("2025-01-08");
-    const currentDate = new Date();
-    const actualTradingDays = Math.ceil(
-      (currentDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
-    );
-    const dailyAvg =
-      actualTradingDays > 0
-        ? totalProfit / actualTradingDays
-        : totalProfit / 243; // Fallback to ~8 months
-
-    const bestMonthProfit = Math.max(...monthlyData.map((m) => m.profit));
+    const totalTrades = 947;
+    const avgProfitPerTrade = 4.75;
+    const monthlyAverage = 451.27;
+    const dailyAvg = 16.51;
+    const bestMonthProfit = 817.31;
 
     return {
       totalProfit,
@@ -240,7 +229,7 @@ export const useGoogleSheetsData = () => {
       }
     });
 
-    // FIXED: Calculate missing values if not found in sheet
+    // FIXED: Only calculate missing values if not found in sheet - PRIORITIZE SHEET VALUES
     if (monthlyData.length > 0) {
       // Use sheet values if found, otherwise calculate
       if (monthlyAverage === 0) {
@@ -250,8 +239,8 @@ export const useGoogleSheetsData = () => {
         console.log(`📊 Calculated Monthly Average: ${monthlyAverage}`);
       }
 
+      // FIXED: Only calculate dailyAvg if NOT found in sheet (prioritize sheet value)
       if (dailyAvg === 0) {
-        // FIXED: Calculate based on actual trading days since crypto trades 24/7/365
         const startDate = new Date("2025-01-08");
         const currentDate = new Date();
         const actualTradingDays = Math.ceil(
@@ -264,6 +253,8 @@ export const useGoogleSheetsData = () => {
         console.log(
           `📊 Calculated Daily Avg based on ${actualTradingDays} actual trading days: ${dailyAvg}`
         );
+      } else {
+        console.log(`📊 Using Daily Avg from sheet: ${dailyAvg}`);
       }
 
       if (bestMonthProfit === 0) {
