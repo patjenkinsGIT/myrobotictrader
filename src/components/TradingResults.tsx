@@ -90,7 +90,7 @@ export const TradingResults: React.FC = () => {
   const currentData = tradingStats;
 
   // Use the dailyAvg from the data structure
-  const dailyAvg = currentData.dailyAvg.toFixed(0);
+  const dailyAvg = currentData.dailyAvg.toFixed(2);
 
   // CRITICAL FIX: Properly handle monthly data
   const allMonthlyData = currentData.monthlyData || [];
