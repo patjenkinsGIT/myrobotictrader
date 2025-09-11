@@ -162,8 +162,12 @@ export const useGoogleSheetsData = () => {
       }
     });
 
+    // FIXED: Calculate monthlyAverage properly from actual monthly data
     const monthlyAverage =
-      monthlyData.length > 0 ? totalProfit / monthlyData.length : 0;
+      monthlyData.length > 0
+        ? monthlyData.reduce((sum, month) => sum + month.profit, 0) /
+          monthlyData.length
+        : 0;
 
     console.log("📊 Parsed stats:", {
       totalProfit,
@@ -189,24 +193,37 @@ export const useGoogleSheetsData = () => {
   };
 
   const getFallbackStats = (): TradingStats => {
+    const monthlyData = [
+      { month: "Jan", profit: 477.17 },
+      { month: "Feb", profit: 686.72 },
+      { month: "Mar", profit: 261.93 },
+      { month: "Apr", profit: 552.58 },
+      { month: "May", profit: 376.29 },
+      { month: "Jun", profit: 382.98 },
+      { month: "Jul", profit: 817.31 },
+      { month: "Aug", profit: 413.54 },
+      { month: "Sep", profit: 85.93 },
+    ];
+
+    const totalProfit = 4054.46;
+    const totalTrades = 854;
+
+    // FIXED: Calculate these values properly from the data
+    const avgProfitPerTrade = totalProfit / totalTrades; // 4.75
+    const monthlyAverage =
+      monthlyData.reduce((sum, month) => sum + month.profit, 0) /
+      monthlyData.length; // 450.5
+    const dailyAvg = 16.55;
+    const bestMonthProfit = Math.max(...monthlyData.map((m) => m.profit)); // 817.31
+
     return {
-      totalProfit: 4054.46,
-      totalTrades: 854,
-      avgProfitPerTrade: 4.75,
-      monthlyAverage: 450.5,
-      dailyAvg: 16.55,
-      bestMonthProfit: 817.31,
-      monthlyData: [
-        { month: "Jan", profit: 477.17 },
-        { month: "Feb", profit: 686.72 },
-        { month: "Mar", profit: 261.93 },
-        { month: "Apr", profit: 552.58 },
-        { month: "May", profit: 376.29 },
-        { month: "Jun", profit: 382.98 },
-        { month: "Jul", profit: 817.31 },
-        { month: "Aug", profit: 413.54 },
-        { month: "Sep", profit: 85.93 },
-      ],
+      totalProfit,
+      totalTrades,
+      avgProfitPerTrade,
+      monthlyAverage,
+      dailyAvg,
+      bestMonthProfit,
+      monthlyData,
       lastUpdated: new Date().toISOString(),
       isLiveData: SHEET_ID && API_KEY ? true : false,
     };
