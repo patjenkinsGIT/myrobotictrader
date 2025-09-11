@@ -86,23 +86,29 @@ export const TradingResults: React.FC = () => {
     );
   }
 
+  // We have valid data - proceed with rendering
   const currentData = tradingStats;
+
+  // Use the dailyAvg from the data structure
   const dailyAvg = currentData.dailyAvg.toFixed(0);
 
-  // FIXED: Properly filter and sort monthly data for the chart
+  // CRITICAL FIX: Properly handle monthly data
   const allMonthlyData = currentData.monthlyData || [];
 
-  // Get the last 6 months of actual monthly data (not stats)
+  // Get last 6 months for chart (most recent months)
   const recentMonths = allMonthlyData.slice(-6);
 
-  // Get older months for the table (everything except the last 6)
-  const olderMonths = allMonthlyData.slice(0, -6).reverse();
+  // Get older months for table (everything before the last 6 months)
+  const olderMonths =
+    allMonthlyData.length > 6 ? allMonthlyData.slice(0, -6).reverse() : [];
 
+  // Find best month using the bestMonthProfit value
   const bestMonthData =
     allMonthlyData.find(
       (month: TradingDataPoint) => month.profit === currentData.bestMonthProfit
     ) || allMonthlyData[0];
 
+  // Get full month name
   const getFullMonthName = (shortMonth: string) => {
     const monthMap: { [key: string]: string } = {
       Jan: "January",
@@ -121,10 +127,12 @@ export const TradingResults: React.FC = () => {
     return monthMap[shortMonth] || shortMonth;
   };
 
+  // Get short month name for mobile (3 letters)
   const getShortMonthName = (shortMonth: string) => {
     return shortMonth.substring(0, 3);
   };
 
+  // CTA tracking handler
   const handleJoinMasterclass = () => {
     trackCTAClick("join_free_masterclass", "trading_results_section");
     trackOutboundLink(
@@ -153,6 +161,7 @@ export const TradingResults: React.FC = () => {
             My Trading Results
           </h2>
 
+          {/* Sub-headline with bouncing graph */}
           <div className="mb-6">
             <p className="text-xl text-purple-200 font-medium mb-4">
               Don't just take my word for it - here are my actual trading
@@ -175,6 +184,7 @@ export const TradingResults: React.FC = () => {
               : "Stats Updated Monthly!"}
           </p>
 
+          {/* Live Data Indicator - Centered and prominent */}
           {currentData.isLiveData && (
             <div className="mt-6 flex justify-center">
               <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-lg p-4 border border-green-400/30 shadow-lg shadow-green-500/10">
@@ -195,13 +205,15 @@ export const TradingResults: React.FC = () => {
           )}
         </div>
 
-        {/* First row - Stats Cards */}
+        {/* First row - BRIGHTENED CARDS like Hero style */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-green-500/15">
             <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
+
             <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-green-500/40">
               <DollarSign className="w-full h-full text-white" />
             </div>
+
             <div className="relative text-center">
               <div className="text-3xl font-bold text-green-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-green-300 group-hover:to-emerald-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
                 ${currentData.totalProfit.toLocaleString()}
@@ -213,14 +225,17 @@ export const TradingResults: React.FC = () => {
                 {timeSinceStart}
               </div>
             </div>
+
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
 
           <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-blue-500/15">
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
+
             <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-blue-500/40">
               <Target className="w-full h-full text-white" />
             </div>
+
             <div className="relative text-center">
               <div className="text-3xl font-bold text-blue-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-300 group-hover:to-cyan-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
                 {currentData.totalTrades.toLocaleString()}
@@ -232,14 +247,17 @@ export const TradingResults: React.FC = () => {
                 Consistent & Automated
               </div>
             </div>
+
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
 
           <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/15">
             <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
+
             <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-purple-500/40">
               <Zap className="w-full h-full text-white" />
             </div>
+
             <div className="relative text-center">
               <div className="text-3xl font-bold text-purple-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-300 group-hover:to-pink-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
                 ${currentData.avgProfitPerTrade.toFixed(2)}
@@ -249,6 +267,7 @@ export const TradingResults: React.FC = () => {
               </div>
               <div className="text-purple-300 text-sm mt-1">Steady Gains</div>
             </div>
+
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
         </div>
@@ -256,13 +275,15 @@ export const TradingResults: React.FC = () => {
         {/* Live Transaction Log */}
         <LiveTransactionLog />
 
-        {/* Second row - Additional Stats */}
+        {/* Second row - Monthly Average, Daily Average, Best Month */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-emerald-500/15">
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
+
             <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-emerald-500/40">
               <Calendar className="w-full h-full text-white" />
             </div>
+
             <div className="relative text-center">
               <div className="text-2xl font-bold text-emerald-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-emerald-300 group-hover:to-teal-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
                 ${currentData.monthlyAverage.toFixed(2)}
@@ -274,14 +295,17 @@ export const TradingResults: React.FC = () => {
                 Consistent Performance
               </div>
             </div>
+
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
 
           <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-indigo-500/15">
             <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 to-purple-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
+
             <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-indigo-500/40">
               <TrendingUp className="w-full h-full text-white" />
             </div>
+
             <div className="relative text-center">
               <div className="text-2xl font-bold text-indigo-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-indigo-300 group-hover:to-purple-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
                 ${dailyAvg}
@@ -291,14 +315,17 @@ export const TradingResults: React.FC = () => {
               </div>
               <div className="text-indigo-300 text-sm mt-1">Steady Growth</div>
             </div>
+
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
 
           <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-amber-500/15">
             <div className="absolute inset-0 bg-gradient-to-br from-amber-500 to-orange-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
+
             <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-amber-500/40">
               <Zap className="w-full h-full text-white" />
             </div>
+
             <div className="relative text-center">
               <div className="text-2xl font-bold text-amber-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-amber-300 group-hover:to-orange-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
                 ${currentData.bestMonthProfit.toFixed(2)}
@@ -310,6 +337,7 @@ export const TradingResults: React.FC = () => {
                 {getFullMonthName(bestMonthData.month)} 2025
               </div>
             </div>
+
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
         </div>
@@ -320,7 +348,7 @@ export const TradingResults: React.FC = () => {
           </p>
         </div>
 
-        {/* FIXED: Recent Months Chart - Now shows actual monthly data */}
+        {/* Recent Months Chart */}
         <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8 mb-8 relative">
           <div className="absolute top-4 right-4 opacity-10 pointer-events-none hidden md:block">
             <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-2xl animate-pulse">
@@ -337,54 +365,53 @@ export const TradingResults: React.FC = () => {
               className="flex items-end justify-center gap-2 md:gap-6 mb-4 md:mb-6 min-w-max mx-auto px-2"
               style={{ height: "200px" }}
             >
-              {recentMonths.length > 0 ? (
-                recentMonths.map((month: TradingDataPoint) => {
-                  const maxBarHeight = 140;
-                  const maxProfit = Math.max(
-                    ...recentMonths.map((m: TradingDataPoint) => m.profit)
-                  );
-                  const height = Math.max(
-                    (month.profit / maxProfit) * maxBarHeight,
-                    12
-                  );
-                  const isHighest = month.profit === maxProfit;
+              {recentMonths.map((month: TradingDataPoint) => {
+                const maxBarHeight = 140;
+                const maxProfit = Math.max(
+                  ...recentMonths.map((m: TradingDataPoint) => m.profit)
+                );
+                const height = Math.max(
+                  (month.profit / maxProfit) * maxBarHeight,
+                  12
+                );
+                const isHighest = month.profit === maxProfit;
 
-                  return (
+                return (
+                  <div
+                    key={month.month}
+                    className="flex flex-col items-center min-w-0"
+                  >
                     <div
-                      key={month.month}
-                      className="flex flex-col items-center min-w-0"
+                      className={`text-xs md:text-sm mb-1 md:mb-2 font-semibold ${
+                        isHighest ? "text-yellow-300" : "text-gray-200"
+                      }`}
                     >
-                      <div
-                        className={`text-xs md:text-sm mb-1 md:mb-2 font-semibold ${
-                          isHighest ? "text-yellow-300" : "text-gray-200"
-                        }`}
-                      >
-                        ${Math.round(month.profit)}
-                      </div>
-                      <div
-                        className={`w-8 md:w-16 rounded-t-lg transition-all duration-1000 ease-out ${
-                          isHighest
-                            ? "bg-gradient-to-t from-yellow-500 to-yellow-300 shadow-lg shadow-yellow-400/40"
-                            : "bg-gradient-to-t from-emerald-500 to-green-400 shadow-lg shadow-emerald-400/30"
-                        }`}
-                        style={{ height: `${height}px`, minHeight: "12px" }}
-                      ></div>
-                      <div className="text-xs md:text-sm text-gray-200 mt-2 md:mt-3 font-medium text-center">
-                        <span className="md:hidden">
-                          {getShortMonthName(month.month)}
-                        </span>
-                        <span className="hidden md:inline">
-                          {getFullMonthName(month.month)}
-                        </span>
-                      </div>
+                      ${Math.round(month.profit)}
                     </div>
-                  );
-                })
-              ) : (
-                <div className="text-center text-gray-400 py-8">
-                  <p>No monthly data available for chart</p>
-                </div>
-              )}
+
+                    <div
+                      className={`w-8 md:w-16 rounded-t-lg transition-all duration-1000 ease-out ${
+                        isHighest
+                          ? "bg-gradient-to-t from-yellow-500 to-yellow-300 shadow-lg shadow-yellow-400/40"
+                          : "bg-gradient-to-t from-emerald-500 to-green-400 shadow-lg shadow-emerald-400/30"
+                      }`}
+                      style={{
+                        height: `${height}px`,
+                        minHeight: "12px",
+                      }}
+                    ></div>
+
+                    <div className="text-xs md:text-sm text-gray-200 mt-2 md:mt-3 font-medium text-center">
+                      <span className="md:hidden">
+                        {getShortMonthName(month.month)}
+                      </span>
+                      <span className="hidden md:inline">
+                        {getFullMonthName(month.month)}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -450,6 +477,7 @@ export const TradingResults: React.FC = () => {
               </p>
             </div>
 
+            {/* CTA BUTTON */}
             <div className="text-center mt-8">
               <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl p-6 border border-purple-400/30 shadow-lg shadow-purple-500/20">
                 <h4 className="text-xl font-bold text-white mb-3">
