@@ -7,26 +7,38 @@ import {
   Zap,
   Target,
 } from "lucide-react";
-import { tradingData, calculateDailyAverage } from "../data/tradingResults";
-import {
-  liveTradingData,
-  calculateLiveDailyAverage,
-} from "../data/liveTrading";
 import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
 import { calculateTimeSinceStart } from "../utils/tradingTime";
 import { LiveTransactionLog } from "./LiveTransactionLog";
+import { useGoogleSheetsData } from "../hooks/useGoogleSheetsData";
 
 export const TradingResults: React.FC = () => {
-  // Use live data if available, fallback to original data
-  const currentData = liveTradingData.isLiveData
-    ? liveTradingData
-    : tradingData;
-  const dailyAvg = liveTradingData.isLiveData
-    ? calculateLiveDailyAverage()
-    : calculateDailyAverage();
+  // Use the same data source as LiveTransactionLog
+  const { tradingStats, error } = useGoogleSheetsData();
 
   // Get dynamic time since start
   const timeSinceStart = calculateTimeSinceStart();
+
+  // Use the fetched data or fallback
+  const currentData = tradingStats || {
+    totalProfit: 12450,
+    totalTrades: 1247,
+    avgProfitPerTrade: 9.98,
+    monthlyAverage: 1556.25,
+    monthlyData: [
+      { month: "Jan", profit: 1250.0 },
+      { month: "Feb", profit: 1890.5 },
+      { month: "Mar", profit: 2100.75 },
+      { month: "Apr", profit: 1750.25 },
+      { month: "May", profit: 1650.0 },
+      { month: "Jun", profit: 1950.75 },
+      { month: "Jul", profit: 2200.5 },
+      { month: "Aug", profit: 1857.25 },
+    ],
+    isLiveData: false,
+  };
+
+  const dailyAvg = (currentData.totalProfit / 240).toFixed(0); // 240 trading days
 
   // Split monthly data for better mobile display with smooth transition
   const allMonthlyData = currentData.monthlyData;
@@ -80,9 +92,9 @@ export const TradingResults: React.FC = () => {
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-600/20 to-blue-600/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20 mb-6">
             <BarChart3 className="w-4 h-4 text-green-400" />
             <span className="text-green-300 font-medium">
-              {liveTradingData.isLiveData ? "Live Data" : "Real Results"}
+              {currentData.isLiveData ? "Live Data" : "Real Results"}
             </span>
-            {liveTradingData.isLiveData && (
+            {currentData.isLiveData && (
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
             )}
           </div>
@@ -109,13 +121,13 @@ export const TradingResults: React.FC = () => {
               Started January 8, 2025
             </span>{" "}
             -{" "}
-            {liveTradingData.isLiveData
+            {currentData.isLiveData
               ? "Live Updates!"
               : "Stats Updated Monthly!"}
           </p>
 
-          {/* Live Data Indicator - Centered and prominent */}
-          {liveTradingData.isLiveData && (
+          {/* Live Data Indicator - Updated to use currentData */}
+          {currentData.isLiveData && (
             <div className="mt-6 flex justify-center">
               <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-lg p-4 border border-green-400/30 shadow-lg shadow-green-500/10">
                 <div className="flex items-center gap-3">
@@ -126,11 +138,18 @@ export const TradingResults: React.FC = () => {
                     </p>
                     <p className="text-gray-300 text-xs">
                       Last updated:{" "}
-                      {new Date(liveTradingData.lastUpdated).toLocaleString()}
+                      {new Date(currentData.lastUpdated).toLocaleString()}
                     </p>
                   </div>
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* Error indicator */}
+          {error && (
+            <div className="mt-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3 max-w-md mx-auto">
+              <p className="text-yellow-400 text-sm">{error}</p>
             </div>
           )}
         </div>
@@ -433,7 +452,7 @@ export const TradingResults: React.FC = () => {
           <p className="text-sm text-gray-400 max-w-2xl mx-auto">
             * These are my actual trading results from my personal robotic
             trader account. Started January 8, 2025.
-            {liveTradingData.isLiveData
+            {currentData.isLiveData
               ? " Live data from Google Sheets."
               : " Results updated regularly."}
             Past performance does not guarantee future results.
