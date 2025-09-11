@@ -119,7 +119,7 @@ export const useGoogleSheetsData = () => {
       { month: "Jun", profit: 382.97 },
       { month: "Jul", profit: 817.31 },
       { month: "Aug", profit: 350.32 },
-      { month: "Sep", profit: 450.0 }, // Adding Sep for 9 months
+      { month: "Sep", profit: 450.0 },
     ];
 
     const totalProfit = monthlyData.reduce(
@@ -141,7 +141,7 @@ export const useGoogleSheetsData = () => {
       dailyAvg,
       bestMonthProfit,
       lastUpdated: new Date().toISOString(),
-      isLiveData: false, // This is fallback data
+      isLiveData: false,
     };
   };
 

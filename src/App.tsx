@@ -8,10 +8,12 @@ import {
 import { useEffect } from "react";
 import { initGA } from "./utils/analytics";
 
+// SEO Components - CRITICAL FOR LINK SHARING
 import { SEOHead } from "./components/SEOHead";
 import { StaticSEO } from "./components/StaticSEO";
 import { OGImageGenerator } from "./components/OGImageGenerator";
 
+// Your existing components
 import { Hero } from "./components/Hero";
 import { MyStory } from "./components/MyStory";
 import { TradingResults } from "./components/TradingResults";
@@ -20,10 +22,12 @@ import { CallToAction } from "./components/CallToAction";
 import { FAQ } from "./components/FAQ";
 import { Footer } from "./components/Footer";
 
+// Your page components
 import { ResourcesPage } from "./pages/ResourcesPage";
 import { PrivacyPage } from "./pages/PrivacyPage";
 import { BusinessCardLanding } from "./components/BusinessCardLanding";
 
+// SEO configurations for different pages with structured data
 const seoConfigs = {
   home: {
     title:
@@ -64,7 +68,8 @@ const seoConfigs = {
       "Access free AI trading guides and resources to master automated cryptocurrency trading.",
     twitterImage:
       "https://rd6xolh11t0gmjdo-default.preview.taskade.app/twitter-image.png",
-    canonicalUrl: "https://rd6xolh11t0gmjdo-default.preview.taskade.app/",
+    canonicalUrl:
+      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/resources",
     pageType: "resources" as const,
   },
   privacy: {
@@ -110,11 +115,10 @@ const seoConfigs = {
   },
 };
 
-interface SEOWrapperProps {
+// Component to handle SEO for each route
+const SEOWrapper: React.FC<{
   children: React.ReactNode;
-}
-
-function SEOWrapper({ children }: SEOWrapperProps) {
+}> = ({ children }) => {
   const location = useLocation();
 
   const getSEOConfig = () => {
@@ -136,9 +140,10 @@ function SEOWrapper({ children }: SEOWrapperProps) {
       {children}
     </>
   );
-}
+};
 
-function HomePage() {
+// Create a HomePage component from your existing layout
+const HomePage: React.FC = () => {
   return (
     <>
       <Hero />
@@ -149,7 +154,7 @@ function HomePage() {
       <FAQ />
     </>
   );
-}
+};
 
 function App() {
   useEffect(() => {
@@ -160,6 +165,7 @@ function App() {
     <div className="App min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <StaticSEO />
       <OGImageGenerator />
+
       <Router>
         <SEOWrapper>
           <Routes>
