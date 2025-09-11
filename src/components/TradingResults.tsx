@@ -6,6 +6,8 @@ import {
   BarChart3,
   Zap,
   Target,
+  AlertCircle,
+  RefreshCw,
 } from "lucide-react";
 import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
 import { calculateTimeSinceStart } from "../utils/tradingTime";
@@ -16,44 +18,91 @@ import {
 } from "../hooks/useGoogleSheetsData";
 
 export const TradingResults: React.FC = () => {
-  // Use the same data source as LiveTransactionLog
-  const { tradingStats, error } = useGoogleSheetsData();
+  // Use the Google Sheets data hook
+  const { tradingStats, isLoading, error, refreshStats } =
+    useGoogleSheetsData();
 
   // Get dynamic time since start
   const timeSinceStart = calculateTimeSinceStart();
 
-  // Fallback to default values if data is still loading
-  const currentData = tradingStats || {
-    totalProfit: 4054.46,
-    totalTrades: 854,
-    avgProfitPerTrade: 4.75,
-    monthlyAverage: 450.5,
-    dailyAvg: 16.55,
-    bestMonthProfit: 817.31,
-    monthlyData: [
-      { month: "Jan", profit: 477.17 },
-      { month: "Feb", profit: 686.72 },
-      { month: "Mar", profit: 261.93 },
-      { month: "Apr", profit: 552.58 },
-      { month: "May", profit: 376.29 },
-      { month: "Jun", profit: 382.98 },
-      { month: "Jul", profit: 817.31 },
-      { month: "Aug", profit: 413.54 },
-      { month: "Sep", profit: 85.93 },
-    ],
-    isLiveData: false,
-    lastUpdated: new Date().toISOString(),
-  };
+  // REMOVED: No fallback data - show error state instead
+  if (isLoading) {
+    return (
+      <section className="py-16 px-4 relative overflow-hidden">
+        <div className="relative max-w-6xl mx-auto text-center">
+          <div className="flex items-center justify-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-400 mr-3"></div>
+            <span className="text-gray-300 text-lg">
+              Loading live trading data...
+            </span>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
-  // FIXED: Use the dailyAvg from the data structure
-  //removed temp as may not be needed --- const dailyAvg = currentData.dailyAvg.toFixed(0);
+  if (error || !tradingStats) {
+    return (
+      <section className="py-16 px-4 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-red-900/20 to-orange-900/20"></div>
+        <div className="relative max-w-6xl mx-auto text-center">
+          <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-8 mb-8">
+            <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-4" />
+            <h3 className="text-xl font-bold text-white mb-4">
+              Unable to Load Live Trading Data
+            </h3>
+            <p className="text-red-300 mb-6">
+              {error || "Failed to connect to Google Sheets"}
+            </p>
+            <button
+              onClick={refreshStats}
+              className="inline-flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300"
+            >
+              <RefreshCw className="w-4 h-4" />
+              Retry Connection
+            </button>
+          </div>
+
+          {/* Debug info */}
+          <div className="bg-gray-900/50 rounded-lg p-4 text-left max-w-2xl mx-auto">
+            <h4 className="text-white font-semibold mb-2">
+              Debug Information:
+            </h4>
+            <div className="text-gray-300 text-sm space-y-1">
+              <p>
+                • Sheet ID:{" "}
+                {import.meta.env.VITE_GOOGLE_SHEET_ID
+                  ? "✅ Configured"
+                  : "❌ Missing"}
+              </p>
+              <p>
+                • API Key:{" "}
+                {import.meta.env.VITE_GOOGLE_API_KEY
+                  ? "✅ Configured"
+                  : "❌ Missing"}
+              </p>
+              <p>• Expected Tab: "Calculations"</p>
+              <p>• Expected Range: A:G</p>
+              <p>• Error: {error}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // We have valid data - proceed with rendering
+  const currentData = tradingStats;
+
+  // Use the dailyAvg from the data structure
+  const dailyAvg = currentData.dailyAvg.toFixed(0);
 
   // Split monthly data for better mobile display with smooth transition
   const allMonthlyData = currentData.monthlyData;
   const recentMonths = allMonthlyData.slice(-6); // Last 6 months for chart
   const olderMonths = allMonthlyData.slice(0, -5).reverse(); // Previous months for table (newest first)
 
-  // FIXED: Find best month using the bestMonthProfit value
+  // Find best month using the bestMonthProfit value
   const bestMonthData =
     allMonthlyData.find(
       (month: TradingDataPoint) => month.profit === currentData.bestMonthProfit
@@ -101,7 +150,7 @@ export const TradingResults: React.FC = () => {
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-600/20 to-blue-600/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20 mb-6">
             <BarChart3 className="w-4 h-4 text-green-400" />
             <span className="text-green-300 font-medium">
-              {currentData.isLiveData ? "Live Data" : "Real Results"}
+              {currentData.isLiveData ? "LIVE DATA" : "REAL RESULTS"}
             </span>
             {currentData.isLiveData && (
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
@@ -152,13 +201,6 @@ export const TradingResults: React.FC = () => {
                   </div>
                 </div>
               </div>
-            </div>
-          )}
-
-          {/* Error indicator */}
-          {error && (
-            <div className="mt-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3 max-w-md mx-auto">
-              <p className="text-yellow-400 text-sm">{error}</p>
             </div>
           )}
         </div>
@@ -230,10 +272,10 @@ export const TradingResults: React.FC = () => {
           </div>
         </div>
 
-        {/* Live Transaction Log - NOW WORKING! */}
+        {/* Live Transaction Log */}
         <LiveTransactionLog />
 
-        {/* Second row - Monthly Average, Daily Average, Best Month - ENHANCED WITH HERO CARD STYLING */}
+        {/* Second row - Monthly Average, Daily Average, Best Month */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-emerald-500/15">
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
@@ -266,7 +308,7 @@ export const TradingResults: React.FC = () => {
 
             <div className="relative text-center">
               <div className="text-2xl font-bold text-indigo-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-indigo-300 group-hover:to-purple-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
-                ${currentData.dailyAvg.toFixed(2)}
+                ${dailyAvg}
               </div>
               <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
                 Daily Average
@@ -306,9 +348,8 @@ export const TradingResults: React.FC = () => {
           </p>
         </div>
 
-        {/* Recent Months Chart - IMPROVED MOBILE LAYOUT */}
+        {/* Recent Months Chart */}
         <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8 mb-8 relative">
-          {/* Robot accent - subtle and thematic */}
           <div className="absolute top-4 right-4 opacity-10 pointer-events-none hidden md:block">
             <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-2xl animate-pulse">
               R
@@ -384,7 +425,7 @@ export const TradingResults: React.FC = () => {
           </div>
         </div>
 
-        {/* Previous Months Table (with smooth transition from chart) */}
+        {/* Previous Months Table */}
         {olderMonths.length > 0 && (
           <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8 mb-8">
             <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6 text-center">
@@ -436,7 +477,7 @@ export const TradingResults: React.FC = () => {
               </p>
             </div>
 
-            {/* CTA BUTTON - FIXED TO ENSURE PROPER LINK */}
+            {/* CTA BUTTON */}
             <div className="text-center mt-8">
               <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl p-6 border border-purple-400/30 shadow-lg shadow-purple-500/20">
                 <h4 className="text-xl font-bold text-white mb-3">
