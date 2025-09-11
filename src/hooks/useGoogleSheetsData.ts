@@ -128,7 +128,19 @@ export const useGoogleSheetsData = () => {
     const totalTrades = 1247;
     const avgProfitPerTrade = totalProfit / totalTrades;
     const monthlyAverage = totalProfit / monthlyData.length;
-    const dailyAvg = totalProfit / 240; // Assuming 240 trading days
+
+    // FIXED: Crypto trades 365 days a year, not 240 like stocks
+    // Calculate actual days since trading started (January 8, 2025)
+    const startDate = new Date("2025-01-08");
+    const currentDate = new Date();
+    const actualTradingDays = Math.ceil(
+      (currentDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
+    const dailyAvg =
+      actualTradingDays > 0
+        ? totalProfit / actualTradingDays
+        : totalProfit / 243; // Fallback to ~8 months
+
     const bestMonthProfit = Math.max(...monthlyData.map((m) => m.profit));
 
     return {
@@ -154,6 +166,7 @@ export const useGoogleSheetsData = () => {
     let avgProfitPerTrade = 0;
     let dailyAvg = 0;
     let bestMonthProfit = 0;
+    let monthlyAverage = 0;
 
     // Parse monthly data (rows 1-9, skipping header row 0)
     for (let i = 1; i < rows.length; i++) {
@@ -204,45 +217,60 @@ export const useGoogleSheetsData = () => {
       }
     }
 
-    // Extract summary stats from the right side (columns F-G)
+    // FIXED: Look for calculated fields in rows 46-49, columns A:B
     rows.forEach((row, index) => {
-      if (row[4] === "Avg Profit / Trade") {
-        avgProfitPerTrade = parseFloat(row[6]?.replace(/[$,]/g, "") || "0");
+      if (row[0] === "Avg Profit / Trade") {
+        avgProfitPerTrade = parseFloat(row[1]?.replace(/[$,]/g, "") || "0");
         console.log(
           `📈 Found Avg Profit/Trade in row ${index}:`,
           avgProfitPerTrade
         );
       }
-      if (row[4] === "Daily Avg") {
-        dailyAvg = parseFloat(row[6]?.replace(/[$,]/g, "") || "0");
+      if (row[0] === "Monthly Avg") {
+        monthlyAverage = parseFloat(row[1]?.replace(/[$,]/g, "") || "0");
+        console.log(`📊 Found Monthly Avg in row ${index}:`, monthlyAverage);
+      }
+      if (row[0] === "Daily Avg") {
+        dailyAvg = parseFloat(row[1]?.replace(/[$,]/g, "") || "0");
         console.log(`📊 Found Daily Avg in row ${index}:`, dailyAvg);
       }
-      if (row[4] === "Best Month") {
-        bestMonthProfit = parseFloat(row[6]?.replace(/[$,]/g, "") || "0");
+      if (row[0] === "Best Month") {
+        bestMonthProfit = parseFloat(row[1]?.replace(/[$,]/g, "") || "0");
         console.log(`🏆 Found Best Month in row ${index}:`, bestMonthProfit);
       }
     });
 
     // FIXED: Calculate missing values if not found in sheet
     if (monthlyData.length > 0) {
-      // Calculate monthlyAverage from actual data
-      const monthlyAverage =
-        monthlyData.reduce((sum, month) => sum + month.profit, 0) /
-        monthlyData.length;
-
-      // Calculate dailyAvg if not found (assume 30 days per month)
-      if (dailyAvg === 0) {
-        dailyAvg = monthlyAverage / 30;
-        console.log(`📊 Calculated Daily Avg: ${dailyAvg}`);
+      // Use sheet values if found, otherwise calculate
+      if (monthlyAverage === 0) {
+        monthlyAverage =
+          monthlyData.reduce((sum, month) => sum + month.profit, 0) /
+          monthlyData.length;
+        console.log(`📊 Calculated Monthly Average: ${monthlyAverage}`);
       }
 
-      // Calculate bestMonthProfit if not found
+      if (dailyAvg === 0) {
+        // FIXED: Calculate based on actual trading days since crypto trades 24/7/365
+        const startDate = new Date("2025-01-08");
+        const currentDate = new Date();
+        const actualTradingDays = Math.ceil(
+          (currentDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+        );
+        dailyAvg =
+          actualTradingDays > 0
+            ? totalProfit / actualTradingDays
+            : monthlyAverage / 30;
+        console.log(
+          `📊 Calculated Daily Avg based on ${actualTradingDays} actual trading days: ${dailyAvg}`
+        );
+      }
+
       if (bestMonthProfit === 0) {
         bestMonthProfit = Math.max(...monthlyData.map((m) => m.profit));
         console.log(`🏆 Calculated Best Month: ${bestMonthProfit}`);
       }
 
-      // Calculate avgProfitPerTrade if not found
       if (avgProfitPerTrade === 0 && totalProfit > 0 && totalTrades > 0) {
         avgProfitPerTrade = totalProfit / totalTrades;
         console.log(`📈 Calculated Avg Profit/Trade: ${avgProfitPerTrade}`);
