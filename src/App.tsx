@@ -11,7 +11,6 @@ import { initGA } from "./utils/analytics";
 import { SEOHead } from "./components/SEOHead";
 import { StaticSEO } from "./components/StaticSEO";
 import { OGImageGenerator } from "./components/OGImageGenerator";
-import { SEODebugger } from "./components/SEODebugger";
 
 import { Hero } from "./components/Hero";
 import { MyStory } from "./components/MyStory";
@@ -172,7 +171,6 @@ function App() {
           <Footer />
         </SEOWrapper>
       </Router>
-      <SEODebugger />
     </div>
   );
 }
