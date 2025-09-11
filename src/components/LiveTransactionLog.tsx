@@ -617,7 +617,7 @@ export const LiveTransactionLog: React.FC = () => {
                 No transactions available
               </div>
             ) : (
-              transactions.slice(0, 10).map((transaction) => (
+              transactions.map((transaction) => (
                 <div
                   key={transaction.id}
                   className={`bg-white/5 rounded-lg p-3 border border-white/10 ${
