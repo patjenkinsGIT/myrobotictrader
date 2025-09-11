@@ -46,7 +46,7 @@ export const TradingResults: React.FC = () => {
   };
 
   // FIXED: Use the dailyAvg from the data structure
-  const dailyAvg = currentData.dailyAvg.toFixed(0);
+  //removed temp as may not be needed --- const dailyAvg = currentData.dailyAvg.toFixed(0);
 
   // Split monthly data for better mobile display with smooth transition
   const allMonthlyData = currentData.monthlyData;
