@@ -14,7 +14,6 @@ export interface TradingStats {
   monthlyData: TradingDataPoint[];
   lastUpdated: string;
   isLiveData: boolean;
-  // Add the pre-calculated values from your sheet
   dailyAvg: number;
   bestMonthProfit: number;
 }
@@ -30,7 +29,7 @@ export const useGoogleSheetsData = () => {
   const API_KEY =
     import.meta.env.VITE_GOOGLE_API_KEY || import.meta.env.GOOGLE_API_KEY;
   const CALCULATIONS_TAB = "Calculations";
-  const CALCULATIONS_RANGE = "A:G"; // Get all columns A through G
+  const CALCULATIONS_RANGE = "A:G";
 
   const fetchTradingStats = useCallback(async () => {
     try {
@@ -47,7 +46,6 @@ export const useGoogleSheetsData = () => {
         return;
       }
 
-      // Fetch from Calculations tab
       const calculationsUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${CALCULATIONS_TAB}!${CALCULATIONS_RANGE}?key=${API_KEY}`;
 
       try {
@@ -100,7 +98,6 @@ export const useGoogleSheetsData = () => {
     fetchTradingStats();
   }, [fetchTradingStats]);
 
-  // Parse the Calculations tab data based on your screenshot
   const parseCalculationsData = (rows: string[][]): TradingStats => {
     console.log("🔍 Parsing Calculations data:", rows);
 
@@ -115,9 +112,7 @@ export const useGoogleSheetsData = () => {
     for (let i = 1; i < rows.length; i++) {
       const row = rows[i];
 
-      // Skip the "Grand Total" row and empty rows
       if (!row[0] || row[0].includes("Grand Total")) {
-        // If this is the Grand Total row, extract totals
         if (row[0] && row[0].includes("Grand Total")) {
           totalProfit = parseFloat(row[1]?.replace(/[$,]/g, "") || "0");
           totalTrades = parseInt(row[2]?.replace(/[,]/g, "") || "0");
@@ -125,12 +120,10 @@ export const useGoogleSheetsData = () => {
         continue;
       }
 
-      // Parse month data (A: Month, B: Profit, C: Trades)
       const monthStr = row[0]; // "2025-01"
       const profit = parseFloat(row[1]?.replace(/[$,]/g, "") || "0");
 
       if (monthStr && profit > 0) {
-        // Convert "2025-01" to "Jan"
         const monthNum = monthStr.split("-")[1];
         const monthNames = [
           "",
@@ -169,7 +162,6 @@ export const useGoogleSheetsData = () => {
       }
     });
 
-    // Calculate monthly average from actual data
     const monthlyAverage =
       monthlyData.length > 0 ? totalProfit / monthlyData.length : 0;
 
@@ -196,7 +188,6 @@ export const useGoogleSheetsData = () => {
     };
   };
 
-  // Fallback data (same as your current static data)
   const getFallbackStats = (): TradingStats => {
     return {
       totalProfit: 4054.46,
