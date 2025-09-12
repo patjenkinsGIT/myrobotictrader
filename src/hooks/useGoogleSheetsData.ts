@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
+import { tradingDataCache } from "../utils/smartCache";
 
-// Shared interface for both components
 export interface TradingDataPoint {
   month: string;
   profit: number;
+  trades: number;
 }
 
 export interface TradingStats {
@@ -11,143 +12,74 @@ export interface TradingStats {
   totalTrades: number;
   avgProfitPerTrade: number;
   monthlyAverage: number;
-  monthlyData: TradingDataPoint[];
-  lastUpdated: string;
-  isLiveData: boolean;
   dailyAvg: number;
   bestMonthProfit: number;
+  monthlyData: TradingDataPoint[];
+  isLiveData: boolean;
+  lastUpdated: string;
 }
 
+// Enhanced hook with smart caching
 export const useGoogleSheetsData = () => {
   const [tradingStats, setTradingStats] = useState<TradingStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [cacheInfo, setCacheInfo] = useState({
+    isFresh: false,
+    timeUntilNextRefresh: 0,
+    isRateLimited: false,
+  });
 
-  // FIXED: Check all possible environment variable names
-  const SHEET_ID =
-    import.meta.env.VITE_GOOGLE_SHEET_ID ||
-    import.meta.env.GOOGLE_SHEET_ID ||
-    (typeof window !== "undefined" && (window as any).VITE_GOOGLE_SHEET_ID) ||
-    (typeof window !== "undefined" && (window as any).GOOGLE_SHEET_ID);
-
-  const API_KEY =
-    import.meta.env.VITE_GOOGLE_API_KEY ||
-    import.meta.env.GOOGLE_API_KEY ||
-    (typeof window !== "undefined" && (window as any).VITE_GOOGLE_API_KEY) ||
-    (typeof window !== "undefined" && (window as any).GOOGLE_API_KEY);
-
+  // Environment variables
+  const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
+  const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
   const CALCULATIONS_TAB = "Calculations";
   const CALCULATIONS_RANGE = "A:G";
 
-  const fetchTradingStats = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-
-      console.log("🔄 Fetching trading stats from Calculations tab...");
-      console.log("📊 Sheet ID available:", !!SHEET_ID);
-      console.log("🔑 API Key available:", !!API_KEY);
-
-      // If no credentials, use fallback data for development
-      if (!SHEET_ID || !API_KEY) {
-        console.warn("⚠️ No Google Sheets credentials - using fallback data");
-        const fallbackStats = getFallbackTradingStats();
-        setTradingStats(fallbackStats);
-        setError("Using demo data - configure Google Sheets for live data");
-        return;
-      }
-
-      const calculationsUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${CALCULATIONS_TAB}!${CALCULATIONS_RANGE}?key=${API_KEY}`;
-      console.log("🌐 Making request to Google Sheets...");
-
-      const response = await fetch(calculationsUrl);
-      console.log("📡 Response status:", response.status, response.statusText);
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error(
-          `❌ Google Sheets API error: ${response.status} ${response.statusText}`,
-          errorText
-        );
-
-        // Use fallback data on API error
-        const fallbackStats = getFallbackTradingStats();
-        setTradingStats(fallbackStats);
-        setError(`API Error: ${response.status} - Using demo data`);
-        return;
-      }
-
-      const data = await response.json();
-      console.log("📥 Raw Google Sheets response:", data);
-
-      if (!data.values || data.values.length === 0) {
-        console.warn("⚠️ No data found in Calculations tab");
-        const fallbackStats = getFallbackTradingStats();
-        setTradingStats(fallbackStats);
-        setError("No data in sheet - Using demo data");
-        return;
-      }
-
-      const stats = parseCalculationsData(data.values);
-      setTradingStats(stats);
-      console.log(
-        "✅ Successfully fetched live trading stats from Google Sheets"
-      );
-    } catch (err) {
-      console.error("❌ Failed to fetch trading stats:", err);
-      // Use fallback data on network error
-      const fallbackStats = getFallbackTradingStats();
-      setTradingStats(fallbackStats);
-      setError(`Network error - Using demo data`);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [SHEET_ID, API_KEY, CALCULATIONS_TAB, CALCULATIONS_RANGE]);
-
-  useEffect(() => {
-    fetchTradingStats();
-  }, [fetchTradingStats]);
-
-  // FIXED: Fallback data that ensures all values are present
-  const getFallbackTradingStats = (): TradingStats => {
+  // Mock data for fallback
+  const getMockTradingStats = (): TradingStats => {
     const monthlyData: TradingDataPoint[] = [
-      { month: "Jan", profit: 477.23 },
-      { month: "Feb", profit: 686.71 },
-      { month: "Mar", profit: 261.97 },
-      { month: "Apr", profit: 552.58 },
-      { month: "May", profit: 376.3 },
-      { month: "Jun", profit: 382.97 },
-      { month: "Jul", profit: 817.31 },
-      { month: "Aug", profit: 350.32 },
-      { month: "Sep", profit: 450.0 },
+      { month: "Jan", profit: 477.23, trades: 89 },
+      { month: "Feb", profit: 686.71, trades: 124 },
+      { month: "Mar", profit: 261.97, trades: 67 },
+      { month: "Apr", profit: 552.58, trades: 98 },
+      { month: "May", profit: 376.3, trades: 82 },
+      { month: "Jun", profit: 382.97, trades: 91 },
+      { month: "Jul", profit: 817.31, trades: 156 },
+      { month: "Aug", profit: 350.32, trades: 78 },
     ];
 
     const totalProfit = monthlyData.reduce(
       (sum, month) => sum + month.profit,
       0
     );
-    const totalTrades = 947;
-    const avgProfitPerTrade = 4.75;
-    const monthlyAverage = 451.27;
-    const dailyAvg = 16.51;
-    const bestMonthProfit = 817.31;
+    const totalTrades = monthlyData.reduce(
+      (sum, month) => sum + month.trades,
+      0
+    );
+    const avgProfitPerTrade = totalTrades > 0 ? totalProfit / totalTrades : 0;
+    const monthlyAverage =
+      monthlyData.length > 0 ? totalProfit / monthlyData.length : 0;
+    const dailyAvg =
+      getDaysSinceStart() > 0 ? totalProfit / getDaysSinceStart() : 0;
+    const bestMonthProfit = Math.max(...monthlyData.map((m) => m.profit));
 
     return {
       totalProfit,
       totalTrades,
       avgProfitPerTrade,
       monthlyAverage,
-      monthlyData,
       dailyAvg,
       bestMonthProfit,
-      lastUpdated: new Date().toISOString(),
+      monthlyData,
       isLiveData: false,
+      lastUpdated: new Date().toISOString(),
     };
   };
 
+  // Parse Google Sheets data
   const parseCalculationsData = (rows: string[][]): TradingStats => {
     console.log("🔍 Parsing Calculations data - Total rows:", rows.length);
-    console.log("📋 First few rows:", rows.slice(0, 5));
 
     let monthlyData: TradingDataPoint[] = [];
     let totalProfit = 0;
@@ -160,7 +92,6 @@ export const useGoogleSheetsData = () => {
     // Parse monthly data (rows 1-9, skipping header row 0)
     for (let i = 1; i < rows.length; i++) {
       const row = rows[i];
-      console.log(`📊 Processing row ${i}:`, row);
 
       if (!row[0] || row[0].includes("Grand Total")) {
         if (row[0] && row[0].includes("Grand Total")) {
@@ -178,6 +109,7 @@ export const useGoogleSheetsData = () => {
 
       const monthStr = row[0]; // "2025-01"
       const profit = parseFloat(row[1]?.replace(/[$,]/g, "") || "0");
+      const trades = parseInt(row[2]?.replace(/[,]/g, "") || "0");
 
       if (monthStr && profit > 0) {
         const monthNum = monthStr.split("-")[1];
@@ -201,12 +133,15 @@ export const useGoogleSheetsData = () => {
         monthlyData.push({
           month: monthName,
           profit: profit,
+          trades: trades,
         });
-        console.log(`📅 Added month data: ${monthName} = $${profit}`);
+        console.log(
+          `📅 Added month data: ${monthName} = $${profit} (${trades} trades)`
+        );
       }
     }
 
-    // FIXED: Look for calculated fields in rows 46-49, columns A:B
+    // Look for calculated fields in the sheet
     rows.forEach((row, index) => {
       if (row[0] === "Avg Profit / Trade") {
         avgProfitPerTrade = parseFloat(row[1]?.replace(/[$,]/g, "") || "0");
@@ -229,9 +164,8 @@ export const useGoogleSheetsData = () => {
       }
     });
 
-    // FIXED: Only calculate missing values if not found in sheet - PRIORITIZE SHEET VALUES
+    // Calculate missing values if not found in sheet
     if (monthlyData.length > 0) {
-      // Use sheet values if found, otherwise calculate
       if (monthlyAverage === 0) {
         monthlyAverage =
           monthlyData.reduce((sum, month) => sum + month.profit, 0) /
@@ -239,13 +173,8 @@ export const useGoogleSheetsData = () => {
         console.log(`📊 Calculated Monthly Average: ${monthlyAverage}`);
       }
 
-      // FIXED: Only calculate dailyAvg if NOT found in sheet (prioritize sheet value)
       if (dailyAvg === 0) {
-        const startDate = new Date("2025-01-08");
-        const currentDate = new Date();
-        const actualTradingDays = Math.ceil(
-          (currentDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
-        );
+        const actualTradingDays = getDaysSinceStart();
         dailyAvg =
           actualTradingDays > 0
             ? totalProfit / actualTradingDays
@@ -253,8 +182,6 @@ export const useGoogleSheetsData = () => {
         console.log(
           `📊 Calculated Daily Avg based on ${actualTradingDays} actual trading days: ${dailyAvg}`
         );
-      } else {
-        console.log(`📊 Using Daily Avg from sheet: ${dailyAvg}`);
       }
 
       if (bestMonthProfit === 0) {
@@ -282,16 +209,139 @@ export const useGoogleSheetsData = () => {
       console.log("📊 Final parsed stats:", finalStats);
       return finalStats;
     } else {
-      // If no monthly data found, return fallback
       console.warn("⚠️ No monthly data found, using fallback");
-      return getFallbackTradingStats();
+      return getMockTradingStats();
     }
   };
+
+  // Fetch trading stats with smart caching
+  const fetchTradingStats = useCallback(
+    async (forceRefresh = false) => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        console.log("🔄 Fetching trading stats with smart caching...");
+        console.log("📊 Sheet ID available:", !!SHEET_ID);
+        console.log("🔑 API Key available:", !!API_KEY);
+
+        // If no credentials, use mock data
+        if (!SHEET_ID || !API_KEY) {
+          console.warn("⚠️ No Google Sheets credentials - using mock data");
+          const mockStats = getMockTradingStats();
+          setTradingStats(mockStats);
+          setError("Using demo data - configure Google Sheets for live data");
+          return;
+        }
+
+        // Use smart caching for the API call
+        const cacheKey = `${SHEET_ID}_${CALCULATIONS_TAB}_${CALCULATIONS_RANGE}`;
+        let data;
+
+        if (!forceRefresh) {
+          data = tradingDataCache.get(cacheKey);
+        }
+
+        if (!data) {
+          // Cache miss or force refresh - fetch fresh data
+          const response = await fetch(
+            `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${CALCULATIONS_TAB}!${CALCULATIONS_RANGE}?key=${API_KEY}`
+          );
+          const rawData = await response.json();
+
+          if (!rawData.values || rawData.values.length === 0) {
+            throw new Error("No data found in Calculations tab");
+          }
+
+          data = parseCalculationsData(rawData.values);
+          tradingDataCache.set(cacheKey, data);
+        }
+
+        setTradingStats(data);
+      } catch (error) {
+        console.error("❌ Error fetching trading stats:", error);
+        setError(
+          error instanceof Error ? error.message : "Failed to fetch data"
+        );
+
+        // Fallback to mock data on error
+        const mockStats = getMockTradingStats();
+        setTradingStats(mockStats);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [
+      SHEET_ID,
+      API_KEY,
+      CALCULATIONS_TAB,
+      CALCULATIONS_RANGE,
+      parseCalculationsData,
+    ]
+  );
+
+  // Update cache info
+  const updateCacheInfo = useCallback(() => {
+    const cacheKey = `sheets_${SHEET_ID}_${CALCULATIONS_TAB}!${CALCULATIONS_RANGE}`;
+    const timeUntilNext = tradingDataCache.getTimeUntilNextRequest(cacheKey);
+
+    setCacheInfo({
+      isFresh: timeUntilNext === 0,
+      timeUntilNextRefresh: timeUntilNext,
+      isRateLimited: false, // Our simple cache doesn't track rate limiting
+    });
+  }, [SHEET_ID, CALCULATIONS_TAB, CALCULATIONS_RANGE]);
+
+  // Refresh stats (respects cache)
+  const refreshStats = useCallback(() => {
+    console.log("🔄 Refreshing trading stats (respects cache)...");
+    fetchTradingStats(false);
+  }, [fetchTradingStats]);
+
+  // Force refresh (bypasses cache)
+  const forceRefresh = useCallback(() => {
+    console.log("🔄 Force refreshing trading stats (bypasses cache)...");
+    fetchTradingStats(true);
+  }, [fetchTradingStats]);
+
+  // Initial load
+  useEffect(() => {
+    fetchTradingStats();
+  }, [fetchTradingStats]);
+
+  // Update cache info periodically
+  useEffect(() => {
+    updateCacheInfo();
+    const interval = setInterval(updateCacheInfo, 60000); // Update every minute
+    return () => clearInterval(interval);
+  }, [updateCacheInfo]);
+
+  // Auto-refresh every 30 minutes (but will use cache if within 4 hours)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      console.log("⏰ Auto-refresh check (will use cache if valid)");
+      fetchTradingStats(false); // Don't show loading for auto-refresh
+    }, 30 * 60 * 1000); // 30 minutes
+
+    return () => clearInterval(interval);
+  }, [fetchTradingStats]);
 
   return {
     tradingStats,
     isLoading,
     error,
-    refreshStats: fetchTradingStats,
+    refreshStats,
+    forceRefresh,
+    cacheInfo,
+    cacheStats: tradingDataCache.getStats(),
   };
 };
+
+// Helper function to calculate days since trading started
+function getDaysSinceStart(): number {
+  const startDate = new Date("2025-01-08");
+  const now = new Date();
+  const diffTime = Math.abs(now.getTime() - startDate.getTime());
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return diffDays;
+}
