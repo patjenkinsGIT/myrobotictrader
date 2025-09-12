@@ -219,15 +219,28 @@ export const useGoogleSheetsData = () => {
         setIsLoading(true);
         setError(null);
 
-        // Move environment variables inside the function
-        const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
-        const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
+        // Try multiple ways to access the environment variables
+        const SHEET_ID =
+          import.meta.env.VITE_GOOGLE_SHEET_ID ||
+          import.meta.env?.VITE_GOOGLE_SHEET_ID ||
+          (globalThis as any).VITE_GOOGLE_SHEET_ID;
 
-        console.log("🔍 Environment Debug:", {
-          SHEET_ID,
-          API_KEY: API_KEY ? "Present" : "Missing",
+        const API_KEY =
+          import.meta.env.VITE_GOOGLE_API_KEY ||
+          import.meta.env?.VITE_GOOGLE_API_KEY ||
+          (globalThis as any).VITE_GOOGLE_API_KEY;
+
+        console.log("🔍 Environment Debug - Detailed:", {
+          SHEET_ID: SHEET_ID,
+          API_KEY: API_KEY,
+          SHEET_ID_type: typeof SHEET_ID,
+          API_KEY_type: typeof API_KEY,
           SHEET_ID_exists: !!SHEET_ID,
           API_KEY_exists: !!API_KEY,
+          import_meta_env: import.meta.env,
+          all_vite_vars: Object.keys(import.meta.env).filter((key) =>
+            key.startsWith("VITE_")
+          ),
         });
 
         console.log("🔄 Fetching trading stats with smart caching...");
