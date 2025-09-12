@@ -214,6 +214,14 @@ export const useGoogleSheetsData = () => {
     }
   };
 
+  // Add this right at the start of fetchTradingStats function
+  console.log("🔍 Environment Debug:", {
+    SHEET_ID: import.meta.env.VITE_GOOGLE_SHEET_ID,
+    API_KEY: import.meta.env.VITE_GOOGLE_API_KEY ? "Present" : "Missing",
+    SHEET_ID_exists: !!import.meta.env.VITE_GOOGLE_SHEET_ID,
+    API_KEY_exists: !!import.meta.env.VITE_GOOGLE_API_KEY,
+  });
+
   // Fetch trading stats with smart caching
   const fetchTradingStats = useCallback(
     async (forceRefresh = false) => {
