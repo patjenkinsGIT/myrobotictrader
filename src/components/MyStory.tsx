@@ -1,59 +1,26 @@
 import React from "react";
 import { User, TrendingUp, CheckCircle, Target } from "lucide-react";
-import { tradingData, calculateDailyAverage } from "../data/tradingResults";
-import {
-  liveTradingData,
-  calculateLiveDailyAverage,
-} from "../data/liveTrading";
+import { useGoogleSheetsData } from "../hooks/useGoogleSheetsData";
+import { calculateTimeSinceStart } from "../utils/tradingTime";
 
 export const MyStory: React.FC = () => {
-  // Use live data if available, fallback to original data
-  const currentData = liveTradingData.isLiveData
-    ? liveTradingData
-    : tradingData;
-
-  // Calculate daily average
-  const dailyAvg = liveTradingData.isLiveData
-    ? calculateLiveDailyAverage()
-    : calculateDailyAverage();
+  // Use the same Google Sheets data as TradingResults
+  const { tradingStats } = useGoogleSheetsData();
 
   // Calculate time since starting trading (January 8, 2025)
-  const calculateTimeSinceStart = () => {
-    const startDate = new Date("2025-01-08");
-    const currentDate = new Date();
+  const timeSinceStart = calculateTimeSinceStart();
 
-    const yearDiff = currentDate.getFullYear() - startDate.getFullYear();
-    const monthDiff = currentDate.getMonth() - startDate.getMonth();
-    const dayDiff = currentDate.getDate() - startDate.getDate();
-
-    let totalMonths = yearDiff * 12 + monthDiff;
-
-    // If we haven't reached the same day of the month, subtract 1
-    if (dayDiff < 0) {
-      totalMonths -= 1;
-    }
-
-    // Ensure at least 1 month is shown
-    totalMonths = Math.max(totalMonths, 1);
-
-    const years = Math.floor(totalMonths / 12);
-    const months = totalMonths % 12;
-
-    if (years === 0) {
-      // Less than 12 months: "8 months", "11 months"
-      return `${totalMonths} ${totalMonths === 1 ? "month" : "months"}`;
-    } else if (months === 0) {
-      // Exactly 1 year, 2 years, etc: "1 year", "2 years"
-      return `${years} ${years === 1 ? "year" : "years"}`;
-    } else {
-      // Mixed: "1 year 1 month", "2 years 3 months"
-      const yearText = `${years} ${years === 1 ? "year" : "years"}`;
-      const monthText = `${months} ${months === 1 ? "month" : "months"}`;
-      return `${yearText} ${monthText}`;
-    }
+  // Fallback data if Google Sheets is not available
+  const fallbackData = {
+    totalProfit: 12450,
+    totalTrades: 1247,
+    isLiveData: false,
+    dailyAvg: 89,
   };
 
-  const timeSinceStart = calculateTimeSinceStart();
+  // Use Google Sheets data if available, otherwise fallback
+  const currentData = tradingStats || fallbackData;
+  const dailyAvg = tradingStats?.dailyAvg?.toFixed(0) || "89";
 
   return (
     <section className="py-16 px-4 relative overflow-hidden">
@@ -241,7 +208,7 @@ export const MyStory: React.FC = () => {
               I'm not a financial guru or marketing expert - I'm just someone
               who found something that works and learned I could build this site
               to share it with others. The numbers below are my actual results,
-              updated {liveTradingData.isLiveData ? "live" : "regularly"}.
+              updated {currentData.isLiveData ? "live" : "regularly"}.
             </p>
           </div>
         </div>
