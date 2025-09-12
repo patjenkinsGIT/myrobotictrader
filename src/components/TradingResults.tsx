@@ -8,6 +8,9 @@ import {
   Target,
   AlertCircle,
   RefreshCw,
+  Clock,
+  Database,
+  Wifi,
 } from "lucide-react";
 import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
 import { calculateTimeSinceStart } from "../utils/tradingTime";
@@ -18,9 +21,28 @@ import {
 } from "../hooks/useGoogleSheetsData";
 
 export const TradingResults: React.FC = () => {
-  const { tradingStats, isLoading, error, refreshStats } =
-    useGoogleSheetsData();
+  const {
+    tradingStats,
+    isLoading,
+    error,
+    refreshStats,
+    cacheInfo,
+    cacheStats,
+  } = useGoogleSheetsData();
   const timeSinceStart = calculateTimeSinceStart();
+
+  // Format time until next refresh
+  const formatTimeUntilRefresh = (ms: number) => {
+    if (ms <= 0) return "Available now";
+
+    const hours = Math.floor(ms / (1000 * 60 * 60));
+    const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+
+    if (hours > 0) {
+      return `${hours}h ${minutes}m`;
+    }
+    return `${minutes}m`;
+  };
 
   if (isLoading) {
     return (
@@ -79,6 +101,8 @@ export const TradingResults: React.FC = () => {
               <p>• Expected Tab: "Calculations"</p>
               <p>• Expected Range: A:G</p>
               <p>• Error: {error}</p>
+              <p>• Cache Status: {cacheInfo.isFresh ? "Fresh" : "Stale"}</p>
+              <p>• Rate Limited: {cacheInfo.isRateLimited ? "Yes" : "No"}</p>
             </div>
           </div>
         </div>
@@ -195,11 +219,11 @@ export const TradingResults: React.FC = () => {
               : "Stats Updated Monthly!"}
           </p>
 
-          {/* Live Data Indicator - Centered and prominent */}
+          {/* Enhanced Live Data Indicator with Cache Status */}
           {currentData.isLiveData && (
             <div className="mt-6 flex justify-center">
               <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-lg p-4 border border-green-400/30 shadow-lg shadow-green-500/10">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 mb-2">
                   <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
                   <div className="text-center">
                     <p className="text-green-300 font-semibold text-sm">
@@ -209,6 +233,27 @@ export const TradingResults: React.FC = () => {
                       Last updated:{" "}
                       {new Date(currentData.lastUpdated).toLocaleString()}
                     </p>
+                  </div>
+                </div>
+
+                {/* Cache Status Indicator */}
+                <div className="flex items-center justify-center gap-4 text-xs text-gray-400 border-t border-green-400/20 pt-2">
+                  <div className="flex items-center gap-1">
+                    <Database className="w-3 h-3" />
+                    <span>Cache: {cacheInfo.isFresh ? "Fresh" : "Stale"}</span>
+                  </div>
+                  {cacheInfo.isRateLimited && (
+                    <div className="flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      <span>
+                        Next refresh:{" "}
+                        {formatTimeUntilRefresh(cacheInfo.timeUntilNextRefresh)}
+                      </span>
+                    </div>
+                  )}
+                  <div className="flex items-center gap-1">
+                    <Wifi className="w-3 h-3" />
+                    <span>Cached entries: {cacheStats.totalEntries}</span>
                   </div>
                 </div>
               </div>
