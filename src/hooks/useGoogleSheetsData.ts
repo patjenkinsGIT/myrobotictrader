@@ -30,9 +30,7 @@ export const useGoogleSheetsData = () => {
     isRateLimited: false,
   });
 
-  // Environment variables
-  const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
-  const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
+  // Constants (moved env vars inside function)
   const CALCULATIONS_TAB = "Calculations";
   const CALCULATIONS_RANGE = "A:G";
 
@@ -214,20 +212,23 @@ export const useGoogleSheetsData = () => {
     }
   };
 
-  // Add this right at the start of fetchTradingStats function
-  console.log("🔍 Environment Debug:", {
-    SHEET_ID: import.meta.env.VITE_GOOGLE_SHEET_ID,
-    API_KEY: import.meta.env.VITE_GOOGLE_API_KEY ? "Present" : "Missing",
-    SHEET_ID_exists: !!import.meta.env.VITE_GOOGLE_SHEET_ID,
-    API_KEY_exists: !!import.meta.env.VITE_GOOGLE_API_KEY,
-  });
-
   // Fetch trading stats with smart caching
   const fetchTradingStats = useCallback(
     async (forceRefresh = false) => {
       try {
         setIsLoading(true);
         setError(null);
+
+        // Move environment variables inside the function
+        const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
+        const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
+
+        console.log("🔍 Environment Debug:", {
+          SHEET_ID,
+          API_KEY: API_KEY ? "Present" : "Missing",
+          SHEET_ID_exists: !!SHEET_ID,
+          API_KEY_exists: !!API_KEY,
+        });
 
         console.log("🔄 Fetching trading stats with smart caching...");
         console.log("📊 Sheet ID available:", !!SHEET_ID);
@@ -279,17 +280,12 @@ export const useGoogleSheetsData = () => {
         setIsLoading(false);
       }
     },
-    [
-      SHEET_ID,
-      API_KEY,
-      CALCULATIONS_TAB,
-      CALCULATIONS_RANGE,
-      parseCalculationsData,
-    ]
+    [] // Removed dependencies since env vars are now inside the function
   );
 
   // Update cache info
   const updateCacheInfo = useCallback(() => {
+    const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
     const cacheKey = `sheets_${SHEET_ID}_${CALCULATIONS_TAB}!${CALCULATIONS_RANGE}`;
     const timeUntilNext = tradingDataCache.getTimeUntilNextRequest(cacheKey);
 
@@ -298,7 +294,7 @@ export const useGoogleSheetsData = () => {
       timeUntilNextRefresh: timeUntilNext,
       isRateLimited: false, // Our simple cache doesn't track rate limiting
     });
-  }, [SHEET_ID, CALCULATIONS_TAB, CALCULATIONS_RANGE]);
+  }, [CALCULATIONS_TAB, CALCULATIONS_RANGE]);
 
   // Refresh stats (respects cache)
   const refreshStats = useCallback(() => {
