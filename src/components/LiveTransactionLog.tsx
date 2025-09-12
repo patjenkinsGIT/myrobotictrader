@@ -20,11 +20,11 @@ interface Transaction {
   status: "completed" | "pending" | "failed";
 }
 
-// Mock transaction data for demonstration
+// Mock transaction data for fallback
 const mockTransactions: Transaction[] = [
   {
     id: "1",
-    timestamp: new Date(Date.now() - 1000 * 60 * 15).toISOString(), // 15 minutes ago
+    timestamp: new Date(Date.now() - 1000 * 60 * 15).toISOString(),
     type: "sell",
     symbol: "BTC/USDT",
     amount: 0.025,
@@ -34,7 +34,7 @@ const mockTransactions: Transaction[] = [
   },
   {
     id: "2",
-    timestamp: new Date(Date.now() - 1000 * 60 * 45).toISOString(), // 45 minutes ago
+    timestamp: new Date(Date.now() - 1000 * 60 * 45).toISOString(),
     type: "buy",
     symbol: "ETH/USDT",
     amount: 0.5,
@@ -44,7 +44,7 @@ const mockTransactions: Transaction[] = [
   },
   {
     id: "3",
-    timestamp: new Date(Date.now() - 1000 * 60 * 120).toISOString(), // 2 hours ago
+    timestamp: new Date(Date.now() - 1000 * 60 * 120).toISOString(),
     type: "sell",
     symbol: "ETH/USDT",
     amount: 0.5,
@@ -54,7 +54,7 @@ const mockTransactions: Transaction[] = [
   },
   {
     id: "4",
-    timestamp: new Date(Date.now() - 1000 * 60 * 180).toISOString(), // 3 hours ago
+    timestamp: new Date(Date.now() - 1000 * 60 * 180).toISOString(),
     type: "sell",
     symbol: "ADA/USDT",
     amount: 1000,
@@ -64,7 +64,7 @@ const mockTransactions: Transaction[] = [
   },
   {
     id: "5",
-    timestamp: new Date(Date.now() - 1000 * 60 * 240).toISOString(), // 4 hours ago
+    timestamp: new Date(Date.now() - 1000 * 60 * 240).toISOString(),
     type: "buy",
     symbol: "BTC/USDT",
     amount: 0.025,
@@ -80,18 +80,92 @@ export const LiveTransactionLog: React.FC = () => {
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
   const [isLoading, setIsLoading] = useState(true);
 
+  // Parse Google Sheets transaction data
+  const parseTransactionData = (rows: string[][]): Transaction[] => {
+    console.log("🔍 Parsing Last25Results data - Total rows:", rows.length);
+
+    if (!rows || rows.length <= 1) {
+      console.warn("⚠️ No transaction data found");
+      return mockTransactions;
+    }
+
+    const transactions: Transaction[] = [];
+
+    // Skip header row (index 0), process data rows
+    for (let i = 1; i < rows.length && i <= 26; i++) {
+      // Last 25 + header
+      const row = rows[i];
+
+      if (!row || row.length < 6) continue; // Skip incomplete rows
+
+      try {
+        // Adjust these column indices based on your actual sheet structure
+        const transaction: Transaction = {
+          id: `tx_${i}`,
+          timestamp: row[0] || new Date().toISOString(), // Date column
+          type: (row[1]?.toLowerCase() === "buy" ? "buy" : "sell") as
+            | "buy"
+            | "sell", // Type column
+          symbol: row[2] || "UNKNOWN", // Symbol column
+          amount: parseFloat(row[3]) || 0, // Amount column
+          price: parseFloat(row[4]) || 0, // Price column
+          profit: parseFloat(row[5]) || 0, // Profit column
+          status: "completed" as const, // Assume completed for now
+        };
+
+        transactions.push(transaction);
+        console.log(
+          `📅 Added transaction: ${transaction.type} ${transaction.symbol} - $${transaction.profit}`
+        );
+      } catch (error) {
+        console.warn(`⚠️ Failed to parse row ${i}:`, error);
+      }
+    }
+
+    console.log(`✅ Parsed ${transactions.length} transactions`);
+    return transactions.length > 0 ? transactions : mockTransactions;
+  };
+
   const fetchTransactions = async (): Promise<Transaction[]> => {
-    // Simulate API call delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    // Get environment variables
+    const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
+    const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
+    const TRANSACTIONS_TAB = "Last25Results";
+    const TRANSACTIONS_RANGE = "A:F"; // Adjust range based on your columns
 
-    // In a real implementation, this would fetch from your trading API
-    // For now, we'll use mock data with some randomization
-    const randomizedTransactions = mockTransactions.map((tx) => ({
-      ...tx,
-      profit: tx.profit + (Math.random() - 0.5) * 2, // Add some variance
-    }));
+    console.log("🔄 Fetching transactions from Google Sheets...");
+    console.log("📊 Sheet ID available:", !!SHEET_ID);
+    console.log("🔑 API Key available:", !!API_KEY);
 
-    return randomizedTransactions;
+    // If no credentials, use mock data
+    if (!SHEET_ID || !API_KEY) {
+      console.warn(
+        "⚠️ No Google Sheets credentials - using mock transaction data"
+      );
+      return mockTransactions;
+    }
+
+    try {
+      const response = await fetch(
+        `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${TRANSACTIONS_TAB}!${TRANSACTIONS_RANGE}?key=${API_KEY}`
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const rawData = await response.json();
+
+      if (!rawData.values || rawData.values.length === 0) {
+        console.warn("⚠️ No data found in Last25Results tab");
+        return mockTransactions;
+      }
+
+      return parseTransactionData(rawData.values);
+    } catch (error) {
+      console.error("❌ Error fetching transaction data:", error);
+      return mockTransactions;
+    }
   };
 
   const loadTransactions = async () => {
@@ -99,7 +173,7 @@ export const LiveTransactionLog: React.FC = () => {
       setIsLoading(true);
 
       // Use smart cache with shorter TTL for transaction data
-      const cacheKey = "live-transactions";
+      const cacheKey = "live-transactions-last25";
       let data = tradingDataCache.get(cacheKey);
 
       if (!data) {
@@ -108,7 +182,7 @@ export const LiveTransactionLog: React.FC = () => {
         tradingDataCache.set(cacheKey, data);
       }
 
-      setTransactions(data);
+      setTransactions(data as Transaction[]);
       setIsConnected(true);
       setLastUpdate(new Date());
     } catch (error) {
@@ -116,7 +190,7 @@ export const LiveTransactionLog: React.FC = () => {
       setIsConnected(false);
 
       // Try to get cached data
-      const cachedData = tradingDataCache.get("live-transactions");
+      const cachedData = tradingDataCache.get("live-transactions-last25");
       if (cachedData) {
         setTransactions(cachedData as Transaction[]);
       } else {
@@ -201,7 +275,7 @@ export const LiveTransactionLog: React.FC = () => {
             <h3 className="text-xl font-bold text-white">
               Live Transaction Log
             </h3>
-            <p className="text-gray-400 text-sm">Real-time trading activity</p>
+            <p className="text-gray-400 text-sm">Last 25 trading results</p>
           </div>
         </div>
 
