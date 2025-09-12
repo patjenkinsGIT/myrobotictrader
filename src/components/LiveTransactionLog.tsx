@@ -19,6 +19,11 @@ export const LiveTransactionLog: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [showOnMobile, setShowOnMobile] = useState(false);
+  const [isCacheHit, setIsCacheHit] = useState(false);
+
+  // Constants
+  const SHEET_TAB = "Last25Results";
+  const SHEET_RANGE = "A:G";
 
   // Format price to display properly
   const formatPrice = useCallback((price: string): string => {
@@ -301,14 +306,13 @@ export const LiveTransactionLog: React.FC = () => {
       try {
         if (showLoading) setIsLoading(true);
         setError(null);
+        setIsCacheHit(false);
 
         console.log("🔄 Loading transaction data from Last25Results tab...");
 
-        // Get environment variables inside the function
+        // Move environment variables inside the function
         const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
         const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
-        const SHEET_TAB = "Last25Results";
-        const SHEET_RANGE = "A:G";
 
         // Check if we have Google Sheets configuration
         if (SHEET_ID && API_KEY) {
@@ -322,14 +326,18 @@ export const LiveTransactionLog: React.FC = () => {
           let cachedData = tradingDataCache.get(cacheKey);
 
           if (cachedData) {
-            console.log("✅ Using cached transaction data");
+            console.log(
+              "✅ 🚀 USING CACHED TRANSACTION DATA - No API call needed!"
+            );
             setTransactions(cachedData as LiveTransaction[]);
             setLastUpdated(new Date());
+            setIsCacheHit(true);
             setIsLoading(false);
             return;
           }
 
-          // Cache miss - fetch fresh data
+          console.log("❌ Cache miss - fetching fresh data from Google Sheets");
+
           const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_TAB}!${SHEET_RANGE}?key=${API_KEY}`;
 
           try {
@@ -356,11 +364,13 @@ export const LiveTransactionLog: React.FC = () => {
                 `✅ Successfully fetched ${liveTransactions.length} transactions from Last25Results`
               );
 
-              // Cache the data
+              // Cache the fresh data
               tradingDataCache.set(cacheKey, liveTransactions);
+              console.log("✅ 💾 CACHED FRESH DATA for future requests");
 
               setTransactions(liveTransactions);
               setLastUpdated(new Date());
+              setIsCacheHit(false);
               return;
             } else {
               console.warn("⚠️ No data found in Last25Results tab");
@@ -389,15 +399,17 @@ export const LiveTransactionLog: React.FC = () => {
         console.log(`✅ Loaded ${fallbackData.length} fallback transactions`);
         setTransactions(fallbackData);
         setLastUpdated(new Date());
+        setIsCacheHit(false);
       } catch (err) {
         console.error("❌ Failed to fetch transactions:", err);
         setError("Failed to load transactions. Using sample data.");
         setTransactions(getFallbackData());
+        setIsCacheHit(false);
       } finally {
         setIsLoading(false);
       }
     },
-    [parseGoogleSheetsData, getFallbackData]
+    [SHEET_TAB, SHEET_RANGE, parseGoogleSheetsData, getFallbackData]
   );
 
   // Fetch on mount - NO AUTO-REFRESH
@@ -475,6 +487,22 @@ export const LiveTransactionLog: React.FC = () => {
       : "bg-blue-500/20 text-blue-300";
   };
 
+  // Get cache status for display
+  const getCacheStatus = () => {
+    const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
+    const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
+
+    if (!SHEET_ID || !API_KEY || error) {
+      return { text: "SAMPLE", color: "text-gray-300" };
+    }
+
+    if (isCacheHit) {
+      return { text: "CACHED", color: "text-blue-300" };
+    }
+
+    return { text: "LIVE", color: "text-green-300" };
+  };
+
   if (isLoading && transactions.length === 0) {
     return (
       <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-6 mb-8">
@@ -487,6 +515,8 @@ export const LiveTransactionLog: React.FC = () => {
       </div>
     );
   }
+
+  const cacheStatus = getCacheStatus();
 
   return (
     <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-6 mb-8">
@@ -525,11 +555,17 @@ export const LiveTransactionLog: React.FC = () => {
             )}
           </button>
 
-          {/* Live indicator */}
+          {/* Smart Cache indicator */}
           <div className="flex items-center gap-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-full px-3 py-1 border border-green-400/30">
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span className="text-green-300 text-xs md:text-sm font-medium">
-              LIVE + CACHED
+            <div
+              className={`w-2 h-2 rounded-full ${
+                isCacheHit ? "bg-blue-400" : "bg-green-400"
+              } animate-pulse`}
+            ></div>
+            <span
+              className={`text-xs md:text-sm font-medium ${cacheStatus.color}`}
+            >
+              {cacheStatus.text}
             </span>
           </div>
         </div>
@@ -605,7 +641,12 @@ export const LiveTransactionLog: React.FC = () => {
         <Clock className="w-3 h-3 md:w-4 md:h-4 text-gray-400" />
         <span className="text-xs text-gray-400">
           Last updated: {lastUpdated.toLocaleTimeString()}
-          <span className="text-green-400 ml-2">• Smart Cache Active</span>
+          {isCacheHit && (
+            <span className="text-blue-400 ml-2">• Smart Cache Hit</span>
+          )}
+          {!isCacheHit && cacheStatus.text === "LIVE" && (
+            <span className="text-green-400 ml-2">• Fresh Data Cached</span>
+          )}
         </span>
       </div>
 
