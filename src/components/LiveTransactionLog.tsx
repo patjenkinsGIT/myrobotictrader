@@ -122,8 +122,6 @@ export const LiveTransactionLog: React.FC = () => {
     (rows: string[][]): LiveTransaction[] => {
       if (!rows || rows.length === 0) return [];
 
-      console.log(`🔍 Parsing ${rows.length} rows from Last25Results tab`);
-
       return rows
         .map((row, index) => {
           // Skip header row
@@ -136,7 +134,6 @@ export const LiveTransactionLog: React.FC = () => {
 
           // Skip empty rows
           if (!coin || !profit) {
-            console.log(`⏭️ Skipping empty row ${index + 1}`);
             return null;
           }
 
@@ -155,7 +152,6 @@ export const LiveTransactionLog: React.FC = () => {
             status: parseStatus(status?.toString() || ""),
           };
 
-          console.log(`✅ Parsed transaction ${index + 1}:`, transaction);
           return transaction;
         })
         .filter(
@@ -168,8 +164,6 @@ export const LiveTransactionLog: React.FC = () => {
 
   // Fallback data with both OPEN and CLOSED transactions
   const getFallbackData = useCallback((): LiveTransaction[] => {
-    console.log("📦 Using fallback transaction data");
-
     const mockRows: string[][] = [
       ["Coin", "Action", "Price", "Quantity", "Status", "Profit", "Timestamp"], // Header
       // Recent CLOSED transactions
@@ -308,27 +302,17 @@ export const LiveTransactionLog: React.FC = () => {
         setError(null);
         setIsCacheHit(false);
 
-        console.log("🔄 Loading transaction data from Last25Results tab...");
-
         // Move environment variables inside the function
         const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
         const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 
         // Check if we have Google Sheets configuration
         if (SHEET_ID && API_KEY) {
-          console.log(
-            `📊 Fetching from Google Sheets: ${SHEET_ID.substring(0, 10)}...`
-          );
-          console.log(`📋 Tab: ${SHEET_TAB}, Range: ${SHEET_RANGE}`);
-
           // Use smart cache for transaction data
           const cacheKey = `${SHEET_ID}_${SHEET_TAB}_${SHEET_RANGE}`;
           let cachedData = tradingDataCache.get(cacheKey);
 
           if (cachedData) {
-            console.log(
-              "✅ 🚀 USING CACHED TRANSACTION DATA - No API call needed!"
-            );
             setTransactions(cachedData as LiveTransaction[]);
             setLastUpdated(new Date());
             setIsCacheHit(true);
@@ -336,72 +320,53 @@ export const LiveTransactionLog: React.FC = () => {
             return;
           }
 
-          console.log("❌ Cache miss - fetching fresh data from Google Sheets");
-
           const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_TAB}!${SHEET_RANGE}?key=${API_KEY}`;
 
           try {
             const response = await fetch(url);
 
             if (!response.ok) {
-              const errorText = await response.text();
-              console.error(
-                `❌ Google Sheets API error: ${response.status} ${response.statusText}`,
-                errorText
-              );
+              console.error(`Google Sheets API error: ${response.status}`);
               throw new Error(
                 `Google Sheets API error: ${response.status} ${response.statusText}`
               );
             }
 
             const data = await response.json();
-            console.log("📥 Raw Google Sheets response:", data);
 
             if (data.values && data.values.length > 0) {
               const liveTransactions = parseGoogleSheetsData(data.values);
 
-              console.log(
-                `✅ Successfully fetched ${liveTransactions.length} transactions from Last25Results`
-              );
-
               // Cache the fresh data
               tradingDataCache.set(cacheKey, liveTransactions);
-              console.log("✅ 💾 CACHED FRESH DATA for future requests");
 
               setTransactions(liveTransactions);
               setLastUpdated(new Date());
               setIsCacheHit(false);
               return;
             } else {
-              console.warn("⚠️ No data found in Last25Results tab");
               setError(
                 "No data found in Last25Results tab. Using sample data."
               );
             }
           } catch (apiError) {
-            console.error("❌ Google Sheets API error:", apiError);
+            console.error("Google Sheets API error:", apiError);
             setError(
               `Failed to load from Last25Results tab: ${
                 apiError instanceof Error ? apiError.message : "Unknown error"
               }`
             );
           }
-        } else {
-          console.log("⚠️ Google Sheets credentials not configured");
-          console.log(`SHEET_ID: ${SHEET_ID ? "Set" : "Not set"}`);
-          console.log(`API_KEY: ${API_KEY ? "Set" : "Not set"}`);
         }
 
         // Use fallback data
-        console.log("🔄 Using fallback data...");
         await new Promise((resolve) => setTimeout(resolve, 1000));
         const fallbackData = getFallbackData();
-        console.log(`✅ Loaded ${fallbackData.length} fallback transactions`);
         setTransactions(fallbackData);
         setLastUpdated(new Date());
         setIsCacheHit(false);
       } catch (err) {
-        console.error("❌ Failed to fetch transactions:", err);
+        console.error("Failed to fetch transactions:", err);
         setError("Failed to load transactions. Using sample data.");
         setTransactions(getFallbackData());
         setIsCacheHit(false);
