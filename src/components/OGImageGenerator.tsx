@@ -74,8 +74,6 @@ export const OGImageGenerator: React.FC = () => {
       ctx.textAlign = "center";
       ctx.fillText("R", 600, 560);
 
-      console.log("✅ OG Image generated successfully");
-
       // Convert canvas to blob and create object URL
       canvas.toBlob(
         (blob) => {
@@ -92,14 +90,10 @@ export const OGImageGenerator: React.FC = () => {
 
             if (ogImage) {
               ogImage.setAttribute("content", url);
-              console.log("✅ OG image meta tag updated with generated image");
             }
 
             if (twitterImage) {
               twitterImage.setAttribute("content", url);
-              console.log(
-                "✅ Twitter image meta tag updated with generated image"
-              );
             }
           }
         },

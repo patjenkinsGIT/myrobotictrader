@@ -4,10 +4,6 @@ import React, { useEffect } from "react";
 // to ensure social media crawlers can read them before React hydration
 export const StaticSEO: React.FC = () => {
   useEffect(() => {
-    console.log(
-      "🚀 StaticSEO: Setting up immediate meta tags for social sharing..."
-    );
-
     // Set up critical meta tags immediately for social media crawlers
     const setImmediateMeta = () => {
       const head = document.head;
@@ -136,10 +132,6 @@ export const StaticSEO: React.FC = () => {
         "href",
         "https://rd6xolh11t0gmjdo-default.preview.taskade.app/"
       );
-
-      console.log(
-        "✅ StaticSEO: Immediate meta tags set for social media crawlers"
-      );
     };
 
     // Set meta tags immediately
@@ -205,8 +197,6 @@ export const StaticSEO: React.FC = () => {
         script.textContent = JSON.stringify(data, null, 2);
         document.head.appendChild(script);
       });
-
-      console.log("✅ StaticSEO: Structured data added for rich snippets");
     };
 
     addStructuredData();

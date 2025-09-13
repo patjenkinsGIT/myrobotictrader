@@ -28,11 +28,8 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
   pageType = "home",
 }) => {
   useEffect(() => {
-    console.log("🔧 SEO Component: Updating meta tags for:", title);
-
     // Update document title
     document.title = title;
-    console.log("✅ Title updated:", document.title);
 
     // Function to update or create meta tag
     const updateMetaTag = (
@@ -53,9 +50,6 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
           metaTag.setAttribute("name", name);
         }
         document.head.appendChild(metaTag);
-        console.log("➕ Created new meta tag:", name);
-      } else {
-        console.log("🔄 Updated existing meta tag:", name);
       }
       metaTag.setAttribute("content", content);
     };
@@ -70,9 +64,6 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
         linkTag = document.createElement("link");
         linkTag.setAttribute("rel", rel);
         document.head.appendChild(linkTag);
-        console.log("➕ Created new link tag:", rel);
-      } else {
-        console.log("🔄 Updated existing link tag:", rel);
       }
       linkTag.setAttribute("href", href);
     };
@@ -100,9 +91,6 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
     // Canonical URL
     updateLinkTag("canonical", canonicalUrl);
 
-    // ADD STRUCTURED DATA DIRECTLY HERE
-    console.log("🚀 Adding structured data schemas...");
-
     // Remove existing structured data
     const existingScripts = document.querySelectorAll(
       'script[type="application/ld+json"]'
@@ -119,7 +107,6 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
       script.id = `structured-data-${id}`;
       script.textContent = JSON.stringify(schemaData, null, 2);
       document.head.appendChild(script);
-      console.log(`✅ Added structured data: ${id}`);
     };
 
     // Base website schema
@@ -302,10 +289,6 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
     addStructuredData(organizationSchema, "organization");
     addStructuredData(personSchema, "person");
     addStructuredData(faqSchema, "faq");
-
-    console.log(
-      "✅ SEO Component: All meta tags and structured data updated successfully"
-    );
   }, [
     title,
     description,

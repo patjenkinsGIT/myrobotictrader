@@ -43,17 +43,6 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
 }) => {
   const timeSinceStart = calculateTimeSinceStart();
 
-  // Debug logging to help identify the issue
-  console.log("TradingResults Debug:", {
-    tradingStats,
-    isLoading,
-    error,
-    cacheInfo,
-    cacheStats,
-    hasTradingStats: !!tradingStats,
-    tradingStatsType: typeof tradingStats,
-  });
-
   // Format time until next refresh
   const formatTimeUntilRefresh = (ms: number) => {
     if (ms <= 0) return "Available now";

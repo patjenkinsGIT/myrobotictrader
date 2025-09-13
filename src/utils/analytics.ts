@@ -29,8 +29,6 @@ export const initGA = () => {
     page_title: document.title,
     page_location: window.location.href,
   });
-
-  console.log("✅ Google Analytics initialized with ID:", GA_MEASUREMENT_ID);
 };
 
 // Track custom events
@@ -46,9 +44,6 @@ export const trackEvent = (
       event_label: label,
       value: value,
     });
-    console.log("📊 Event tracked:", { action, category, label, value });
-  } else {
-    console.warn("⚠️ Google Analytics not loaded");
   }
 };
 
