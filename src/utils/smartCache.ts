@@ -22,7 +22,7 @@ interface CacheInfo {
   misses: number;
 }
 
-export class SmartCache<K = string, V = any> {
+class SmartCache<K = string, V = any> {
   private data = new Map<K, { value: V; time: number }>();
   private stats: CacheStats = {
     hits: 0,
@@ -38,6 +38,9 @@ export class SmartCache<K = string, V = any> {
     staleEntries: 0,
   };
 
+  // Default TTL: 4 hours (4 * 60 * 60 * 1000 milliseconds)
+  private defaultTTL = 4 * 60 * 60 * 1000;
+
   set(key: K, value: V): void {
     this.data.set(key, { value, time: Date.now() });
     this.stats.sets++;
@@ -45,11 +48,23 @@ export class SmartCache<K = string, V = any> {
     this.stats.totalEntries = this.data.size;
   }
 
-  get(key: K): V | undefined {
+  get(key: K, ttl?: number): V | undefined {
     const item = this.data.get(key);
     if (item) {
-      this.stats.hits++;
-      return item.value;
+      const timeToLive = ttl || this.defaultTTL;
+      const isExpired = Date.now() - item.time > timeToLive;
+
+      if (!isExpired) {
+        // Data is still fresh - return it
+        this.stats.hits++;
+        return item.value;
+      } else {
+        // Data expired - remove it and return undefined
+        this.data.delete(key);
+        this.stats.expiredEntries++;
+        this.stats.misses++;
+        return undefined;
+      }
     } else {
       this.stats.misses++;
       return undefined;
@@ -88,6 +103,43 @@ export class SmartCache<K = string, V = any> {
     return this.data.has(key);
   }
 
+  // Check if a key exists and is not expired
+  hasValid(key: K, ttl?: number): boolean {
+    const item = this.data.get(key);
+    if (!item) return false;
+
+    const timeToLive = ttl || this.defaultTTL;
+    const isExpired = Date.now() - item.time > timeToLive;
+
+    if (isExpired) {
+      // Clean up expired entry
+      this.data.delete(key);
+      this.stats.expiredEntries++;
+      return false;
+    }
+
+    return true;
+  }
+
+  // Get the age of a cached item in milliseconds
+  getAge(key: K): number | undefined {
+    const item = this.data.get(key);
+    if (!item) return undefined;
+    return Date.now() - item.time;
+  }
+
+  // Get time remaining until expiration (in milliseconds)
+  getTimeUntilExpiration(key: K, ttl?: number): number {
+    const item = this.data.get(key);
+    if (!item) return 0;
+
+    const timeToLive = ttl || this.defaultTTL;
+    const age = Date.now() - item.time;
+    const remaining = timeToLive - age;
+
+    return Math.max(0, remaining);
+  }
+
   getStats(): CacheStats {
     return {
       ...this.stats,
@@ -101,8 +153,8 @@ export class SmartCache<K = string, V = any> {
     return {
       totalEntries: this.data.size,
       rateLimitedKeys: [],
-      expiredEntries: 0,
-      staleEntries: 0,
+      expiredEntries: this.stats.expiredEntries,
+      staleEntries: this.stats.staleEntries,
       memoryUsage: this.calculateMemoryUsage(),
       hits: this.stats.hits,
       misses: this.stats.misses,
@@ -110,15 +162,37 @@ export class SmartCache<K = string, V = any> {
   }
 
   cleanup(): void {
-    // Basic cleanup - in a real implementation this would remove expired entries
-    // For now, just update stats
+    // Remove all expired entries
+    const now = Date.now();
+    let removedCount = 0;
+
+    for (const [key, item] of this.data.entries()) {
+      const isExpired = now - item.time > this.defaultTTL;
+      if (isExpired) {
+        this.data.delete(key);
+        removedCount++;
+      }
+    }
+
+    this.stats.expiredEntries += removedCount;
     this.stats.entryCount = this.data.size;
     this.stats.totalEntries = this.data.size;
   }
 
-  getTimeUntilNextRequest(_key: K): number {
-    // Return 0 for now - in a real implementation this would calculate rate limit timing
-    return 0;
+  getTimeUntilNextRequest(key: K): number {
+    // For rate limiting - return time until next request is allowed
+    // For now, just return time until cache expiration
+    return this.getTimeUntilExpiration(key);
+  }
+
+  // Set default TTL for all cache operations
+  setDefaultTTL(ttl: number): void {
+    this.defaultTTL = ttl;
+  }
+
+  // Get current default TTL
+  getDefaultTTL(): number {
+    return this.defaultTTL;
   }
 
   private calculateMemoryUsage(): number {
@@ -131,10 +205,20 @@ export class SmartCache<K = string, V = any> {
   }
 }
 
-export function createSmartCache<K = string, V = any>(): SmartCache<K, V> {
-  return new SmartCache<K, V>();
+function createSmartCache<K = string, V = any>(
+  defaultTTL?: number
+): SmartCache<K, V> {
+  const cache = new SmartCache<K, V>();
+  if (defaultTTL) {
+    cache.setDefaultTTL(defaultTTL);
+  }
+  return cache;
 }
 
-export const tradingDataCache = createSmartCache<string, any>();
+// Create trading data cache with 4-hour TTL (4 * 60 * 60 * 1000 = 14,400,000 ms)
+export const tradingDataCache = createSmartCache<string, any>(
+  4 * 60 * 60 * 1000
+);
 
+export { SmartCache, createSmartCache };
 export default SmartCache;
