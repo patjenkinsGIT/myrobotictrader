@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import { useEffect } from "react";
 import { initGA } from "./utils/analytics";
+import { useGoogleSheetsData } from "./hooks/useGoogleSheetsData";
 
 // SEO Components - CRITICAL FOR LINK SHARING
 import { SEOHead } from "./components/SEOHead";
@@ -116,9 +117,7 @@ const seoConfigs = {
 };
 
 // Component to handle SEO for each route
-const SEOWrapper: React.FC<{
-  children: React.ReactNode;
-}> = ({ children }) => {
+const SEOWrapper = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
 
   const getSEOConfig = () => {
@@ -142,12 +141,17 @@ const SEOWrapper: React.FC<{
   );
 };
 
-// Create a HomePage component from your existing layout
-const HomePage: React.FC = () => {
+// Create a HomePage component with shared data
+const HomePage = () => {
+  // 🎯 SINGLE HOOK CALL - This is the only place we call useGoogleSheetsData
+  const { tradingStats } = useGoogleSheetsData();
+
   return (
     <>
       <Hero />
-      <MyStory />
+      {/* 🎯 PASS DATA AS PROPS - MyStory gets data via props, no duplicate API calls */}
+      <MyStory tradingStats={tradingStats} />
+      {/* 🎯 KEEP HOOK - TradingResults keeps its own hook for full functionality */}
       <TradingResults />
       <Features />
       <CallToAction />

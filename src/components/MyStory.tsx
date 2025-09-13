@@ -1,12 +1,13 @@
 import React from "react";
 import { User, TrendingUp, CheckCircle, Target } from "lucide-react";
-import { useGoogleSheetsData } from "../hooks/useGoogleSheetsData";
+import { TradingStats } from "../hooks/useGoogleSheetsData";
 import { calculateTimeSinceStart } from "../utils/tradingTime";
 
-export const MyStory: React.FC = () => {
-  // Use the same Google Sheets data as TradingResults
-  const { tradingStats } = useGoogleSheetsData();
+interface MyStoryProps {
+  tradingStats: TradingStats | null;
+}
 
+export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
   // Calculate time since starting trading (January 8, 2025)
   const timeSinceStart = calculateTimeSinceStart();
 
