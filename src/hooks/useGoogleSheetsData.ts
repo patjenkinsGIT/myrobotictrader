@@ -289,13 +289,38 @@ export const useGoogleSheetsData = () => {
 
         // Use smart caching for the API call
         const cacheKey = `${SHEET_ID}_${CALCULATIONS_TAB}_${CALCULATIONS_RANGE}`;
+
+        // 🔍 ADD CACHE DEBUG LOGGING HERE:
+        if (import.meta.env.DEV) {
+          console.log("🔑 Cache Key Debug:", {
+            SHEET_ID,
+            CALCULATIONS_TAB,
+            CALCULATIONS_RANGE,
+            cacheKey,
+            existingCacheData: tradingDataCache.get(cacheKey),
+            forceRefresh,
+          });
+        }
+
         let data;
 
         if (!forceRefresh) {
           data = tradingDataCache.get(cacheKey);
+
+          if (import.meta.env.DEV) {
+            console.log("💾 Cache lookup result:", {
+              found: !!data,
+              dataType: typeof data,
+              dataPreview: data ? "Data exists" : "No data found",
+            });
+          }
         }
 
         if (!data) {
+          if (import.meta.env.DEV) {
+            console.log("🌐 Cache MISS - Making fresh API call");
+          }
+
           // Cache miss or force refresh - fetch fresh data
           const response = await fetch(
             `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${CALCULATIONS_TAB}!${CALCULATIONS_RANGE}?key=${API_KEY}`
@@ -308,6 +333,14 @@ export const useGoogleSheetsData = () => {
 
           data = parseCalculationsData(rawData.values);
           tradingDataCache.set(cacheKey, data);
+
+          if (import.meta.env.DEV) {
+            console.log("💾 Data cached with key:", cacheKey);
+          }
+        } else {
+          if (import.meta.env.DEV) {
+            console.log("✅ Cache HIT - Using cached data");
+          }
         }
 
         setTradingStats(data);
