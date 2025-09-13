@@ -75,18 +75,10 @@ class SmartCache<K = string, V = any> {
             if (now - parsed.time <= this.defaultTTL) {
               this.data.set(cacheKey, parsed);
               restoredCount++;
-              console.log(
-                `📥 Restored from localStorage: ${String(
-                  cacheKey
-                )} (age: ${Math.round((now - parsed.time) / 1000)}s)`
-              );
             } else {
               // Remove expired data from localStorage
               localStorage.removeItem(key);
               this.stats.expiredEntries++;
-              console.log(
-                `⏰ Removed expired localStorage entry: ${String(cacheKey)}`
-              );
             }
           }
         }
@@ -94,14 +86,6 @@ class SmartCache<K = string, V = any> {
 
       this.stats.entryCount = this.data.size;
       this.stats.totalEntries = this.data.size;
-
-      if (restoredCount > 0) {
-        console.log(
-          `✅ SmartCache initialized with ${restoredCount} cached entries from localStorage`
-        );
-      } else {
-        console.log(`🆕 SmartCache initialized with empty cache`);
-      }
     } catch (error) {
       console.warn("Error loading cache from localStorage:", error);
     }
@@ -113,7 +97,6 @@ class SmartCache<K = string, V = any> {
     try {
       const storageKey = `${this.localStoragePrefix}_${String(key)}`;
       localStorage.setItem(storageKey, JSON.stringify(item));
-      console.log(`💾 Saved to localStorage: ${String(key)}`);
     } catch (error) {
       console.warn("Error saving to localStorage:", error);
     }
@@ -125,7 +108,6 @@ class SmartCache<K = string, V = any> {
     try {
       const storageKey = `${this.localStoragePrefix}_${String(key)}`;
       localStorage.removeItem(storageKey);
-      console.log(`🗑️ Removed from localStorage: ${String(key)}`);
     } catch (error) {
       console.warn("Error removing from localStorage:", error);
     }
@@ -141,10 +123,6 @@ class SmartCache<K = string, V = any> {
     this.stats.sets++;
     this.stats.entryCount = this.data.size;
     this.stats.totalEntries = this.data.size;
-
-    console.log(
-      `💾 Cached data for key: ${String(key)} (memory + localStorage)`
-    );
   }
 
   get(key: K, ttl?: number): V | undefined {
@@ -156,10 +134,6 @@ class SmartCache<K = string, V = any> {
       if (!isExpired) {
         // Data is still fresh - return it
         this.stats.hits++;
-        const ageInSeconds = Math.round((Date.now() - item.time) / 1000);
-        console.log(
-          `✅ Cache HIT for key: ${String(key)} (age: ${ageInSeconds}s)`
-        );
         return item.value;
       } else {
         // Data expired - remove it and return undefined
@@ -167,12 +141,10 @@ class SmartCache<K = string, V = any> {
         this.removeFromLocalStorage(key);
         this.stats.expiredEntries++;
         this.stats.misses++;
-        console.log(`⏰ Cache EXPIRED for key: ${String(key)}`);
         return undefined;
       }
     } else {
       this.stats.misses++;
-      console.log(`❌ Cache MISS for key: ${String(key)}`);
       return undefined;
     }
   }
@@ -184,7 +156,6 @@ class SmartCache<K = string, V = any> {
       this.stats.deletes++;
       this.stats.entryCount = this.data.size;
       this.stats.totalEntries = this.data.size;
-      console.log(`🗑️ Deleted cache entry: ${String(key)}`);
     }
     return deleted;
   }
@@ -203,7 +174,6 @@ class SmartCache<K = string, V = any> {
 
     this.stats.entryCount = 0;
     this.stats.totalEntries = 0;
-    console.log("🧹 Cache cleared (memory and localStorage)");
   }
 
   size(): number {
@@ -298,10 +268,6 @@ class SmartCache<K = string, V = any> {
     this.stats.expiredEntries += removedCount;
     this.stats.entryCount = this.data.size;
     this.stats.totalEntries = this.data.size;
-
-    if (removedCount > 0) {
-      console.log(`🧹 Cleaned up ${removedCount} expired cache entries`);
-    }
   }
 
   getTimeUntilNextRequest(key: K): number {
