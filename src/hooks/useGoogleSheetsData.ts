@@ -81,8 +81,11 @@ export const useGoogleSheetsData = () => {
     };
   };
 
-  // Parse Google Sheets data
-  const parseCalculationsData = (rows: string[][]): TradingStats => {
+  // FIXED: Parse Google Sheets data with proper timestamp handling
+  const parseCalculationsData = (
+    rows: string[][],
+    fetchTimestamp: string
+  ): TradingStats => {
     if (import.meta.env.DEV) {
       console.log("🔍 Parsing Calculations data - Total rows:", rows.length);
     }
@@ -229,7 +232,7 @@ export const useGoogleSheetsData = () => {
         monthlyData,
         dailyAvg,
         bestMonthProfit,
-        lastUpdated: new Date().toISOString(),
+        lastUpdated: fetchTimestamp, // ✅ FIXED: Use the actual fetch timestamp
         isLiveData: true,
       };
 
@@ -306,9 +309,11 @@ export const useGoogleSheetsData = () => {
         });
 
         let data;
+        let isFromCache = false;
 
         if (!forceRefresh) {
           data = tradingDataCache.get(cacheKey);
+          isFromCache = !!data;
 
           if (import.meta.env.DEV) {
             console.log("💾 Cache lookup result:", {
@@ -324,6 +329,10 @@ export const useGoogleSheetsData = () => {
             console.log("🌐 Cache MISS - Making fresh API call");
           }
 
+          // ✅ FIXED: Capture the actual fetch timestamp
+          const fetchTimestamp = new Date().toISOString();
+          console.log("⏰ API call made at:", fetchTimestamp);
+
           // Cache miss or force refresh - fetch fresh data
           const response = await fetch(
             `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${CALCULATIONS_TAB}!${CALCULATIONS_RANGE}?key=${API_KEY}`
@@ -334,13 +343,15 @@ export const useGoogleSheetsData = () => {
             throw new Error("No data found in Calculations tab");
           }
 
-          data = parseCalculationsData(rawData.values);
+          // ✅ FIXED: Pass the fetch timestamp to preserve it
+          data = parseCalculationsData(rawData.values, fetchTimestamp);
           tradingDataCache.set(cacheKey, data);
 
           console.log("💾 Data stored in cache:", {
             cacheKey,
             cacheSize: tradingDataCache.size(),
             allKeys: tradingDataCache.keys(),
+            fetchTime: fetchTimestamp,
           });
 
           if (import.meta.env.DEV) {
@@ -348,9 +359,19 @@ export const useGoogleSheetsData = () => {
           }
         } else {
           if (import.meta.env.DEV) {
-            console.log("✅ Cache HIT - Using cached data");
+            console.log(
+              "✅ Cache HIT - Using cached data from:",
+              data.lastUpdated
+            );
           }
         }
+
+        // ✅ FIXED: Update cache info properly
+        setCacheInfo({
+          isFresh: isFromCache,
+          timeUntilNextRefresh: 0,
+          isRateLimited: false,
+        });
 
         setTradingStats(data);
       } catch (error) {
@@ -372,13 +393,13 @@ export const useGoogleSheetsData = () => {
   // Update cache info
   const updateCacheInfo = useCallback(() => {
     const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
-    const cacheKey = `sheets_${SHEET_ID}_${CALCULATIONS_TAB}!${CALCULATIONS_RANGE}`;
-    const timeUntilNext = tradingDataCache.getTimeUntilNextRequest(cacheKey);
+    const cacheKey = `${SHEET_ID}_${CALCULATIONS_TAB}_${CALCULATIONS_RANGE}`;
+    const cachedData = tradingDataCache.get(cacheKey);
 
     setCacheInfo({
-      isFresh: timeUntilNext === 0,
-      timeUntilNextRefresh: timeUntilNext,
-      isRateLimited: false, // Our simple cache doesn't track rate limiting
+      isFresh: !!cachedData,
+      timeUntilNextRefresh: 0,
+      isRateLimited: false,
     });
   }, [CALCULATIONS_TAB, CALCULATIONS_RANGE]);
 
