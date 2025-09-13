@@ -21,6 +21,12 @@ export interface TradingStats {
 
 // Enhanced hook with smart caching
 export const useGoogleSheetsData = () => {
+  // 🎯 DEBUG: Add this to see which component is calling the hook
+  console.log(
+    "🎯 Hook called from:",
+    new Error().stack?.split("\n")[2]?.trim()
+  );
+
   const [tradingStats, setTradingStats] = useState<TradingStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -331,7 +337,6 @@ export const useGoogleSheetsData = () => {
           data = parseCalculationsData(rawData.values);
           tradingDataCache.set(cacheKey, data);
 
-          // ADD THIS RIGHT HERE:
           console.log("💾 Data stored in cache:", {
             cacheKey,
             cacheSize: tradingDataCache.size(),
