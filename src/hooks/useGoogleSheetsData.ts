@@ -21,12 +21,6 @@ export interface TradingStats {
 
 // Enhanced hook with smart caching
 export const useGoogleSheetsData = () => {
-  // 🎯 DEBUG: Add this to see which component is calling the hook
-  console.log(
-    "🎯 Hook called from:",
-    new Error().stack?.split("\n")[2]?.trim()
-  );
-
   const [tradingStats, setTradingStats] = useState<TradingStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -36,7 +30,7 @@ export const useGoogleSheetsData = () => {
     isRateLimited: false,
   });
 
-  // Constants (moved env vars inside function)
+  // Constants
   const CALCULATIONS_TAB = "Calculations";
   const CALCULATIONS_RANGE = "A:G";
 
@@ -81,15 +75,11 @@ export const useGoogleSheetsData = () => {
     };
   };
 
-  // FIXED: Parse Google Sheets data with proper timestamp handling
+  // Parse Google Sheets data with proper timestamp handling
   const parseCalculationsData = (
     rows: string[][],
     fetchTimestamp: string
   ): TradingStats => {
-    if (import.meta.env.DEV) {
-      console.log("🔍 Parsing Calculations data - Total rows:", rows.length);
-    }
-
     let monthlyData: TradingDataPoint[] = [];
     let totalProfit = 0;
     let totalTrades = 0;
@@ -106,14 +96,6 @@ export const useGoogleSheetsData = () => {
         if (row[0] && row[0].includes("Grand Total")) {
           totalProfit = parseFloat(row[1]?.replace(/[$,]/g, "") || "0");
           totalTrades = parseInt(row[2]?.replace(/[,]/g, "") || "0");
-          if (import.meta.env.DEV) {
-            console.log(
-              "💰 Found Grand Total - Profit:",
-              totalProfit,
-              "Trades:",
-              totalTrades
-            );
-          }
         }
         continue;
       }
@@ -146,43 +128,22 @@ export const useGoogleSheetsData = () => {
           profit: profit,
           trades: trades,
         });
-
-        if (import.meta.env.DEV) {
-          console.log(
-            `📅 Added month data: ${monthName} = $${profit} (${trades} trades)`
-          );
-        }
       }
     }
 
     // Look for calculated fields in the sheet
-    rows.forEach((row, index) => {
+    rows.forEach((row) => {
       if (row[0] === "Avg Profit / Trade") {
         avgProfitPerTrade = parseFloat(row[1]?.replace(/[$,]/g, "") || "0");
-        if (import.meta.env.DEV) {
-          console.log(
-            `📈 Found Avg Profit/Trade in row ${index}:`,
-            avgProfitPerTrade
-          );
-        }
       }
       if (row[0] === "Monthly Avg") {
         monthlyAverage = parseFloat(row[1]?.replace(/[$,]/g, "") || "0");
-        if (import.meta.env.DEV) {
-          console.log(`📊 Found Monthly Avg in row ${index}:`, monthlyAverage);
-        }
       }
       if (row[0] === "Daily Avg") {
         dailyAvg = parseFloat(row[1]?.replace(/[$,]/g, "") || "0");
-        if (import.meta.env.DEV) {
-          console.log(`📊 Found Daily Avg in row ${index}:`, dailyAvg);
-        }
       }
       if (row[0] === "Best Month") {
         bestMonthProfit = parseFloat(row[1]?.replace(/[$,]/g, "") || "0");
-        if (import.meta.env.DEV) {
-          console.log(`🏆 Found Best Month in row ${index}:`, bestMonthProfit);
-        }
       }
     });
 
@@ -192,9 +153,6 @@ export const useGoogleSheetsData = () => {
         monthlyAverage =
           monthlyData.reduce((sum, month) => sum + month.profit, 0) /
           monthlyData.length;
-        if (import.meta.env.DEV) {
-          console.log(`📊 Calculated Monthly Average: ${monthlyAverage}`);
-        }
       }
 
       if (dailyAvg === 0) {
@@ -203,28 +161,17 @@ export const useGoogleSheetsData = () => {
           actualTradingDays > 0
             ? totalProfit / actualTradingDays
             : monthlyAverage / 30;
-        if (import.meta.env.DEV) {
-          console.log(
-            `📊 Calculated Daily Avg based on ${actualTradingDays} actual trading days: ${dailyAvg}`
-          );
-        }
       }
 
       if (bestMonthProfit === 0) {
         bestMonthProfit = Math.max(...monthlyData.map((m) => m.profit));
-        if (import.meta.env.DEV) {
-          console.log(`🏆 Calculated Best Month: ${bestMonthProfit}`);
-        }
       }
 
       if (avgProfitPerTrade === 0 && totalProfit > 0 && totalTrades > 0) {
         avgProfitPerTrade = totalProfit / totalTrades;
-        if (import.meta.env.DEV) {
-          console.log(`📈 Calculated Avg Profit/Trade: ${avgProfitPerTrade}`);
-        }
       }
 
-      const finalStats = {
+      return {
         totalProfit,
         totalTrades,
         avgProfitPerTrade,
@@ -232,168 +179,89 @@ export const useGoogleSheetsData = () => {
         monthlyData,
         dailyAvg,
         bestMonthProfit,
-        lastUpdated: fetchTimestamp, // ✅ FIXED: Use the actual fetch timestamp
+        lastUpdated: fetchTimestamp,
         isLiveData: true,
       };
-
-      if (import.meta.env.DEV) {
-        console.log("📊 Final parsed stats:", finalStats);
-      }
-      return finalStats;
     } else {
-      if (import.meta.env.DEV) {
-        console.warn("⚠️ No monthly data found, using fallback");
-      }
       return getMockTradingStats();
     }
   };
 
   // Fetch trading stats with smart caching
-  const fetchTradingStats = useCallback(
-    async (forceRefresh = false) => {
-      try {
-        setIsLoading(true);
-        setError(null);
+  const fetchTradingStats = useCallback(async (forceRefresh = false) => {
+    try {
+      setIsLoading(true);
+      setError(null);
 
-        // Try multiple ways to access the environment variables
-        const SHEET_ID =
-          import.meta.env.VITE_GOOGLE_SHEET_ID ||
-          import.meta.env?.VITE_GOOGLE_SHEET_ID ||
-          (globalThis as any).VITE_GOOGLE_SHEET_ID;
+      const SHEET_ID =
+        import.meta.env.VITE_GOOGLE_SHEET_ID ||
+        import.meta.env?.VITE_GOOGLE_SHEET_ID ||
+        (globalThis as any).VITE_GOOGLE_SHEET_ID;
 
-        const API_KEY =
-          import.meta.env.VITE_GOOGLE_API_KEY ||
-          import.meta.env?.VITE_GOOGLE_API_KEY ||
-          (globalThis as any).VITE_GOOGLE_API_KEY;
+      const API_KEY =
+        import.meta.env.VITE_GOOGLE_API_KEY ||
+        import.meta.env?.VITE_GOOGLE_API_KEY ||
+        (globalThis as any).VITE_GOOGLE_API_KEY;
 
-        if (import.meta.env.DEV) {
-          console.log("🔍 Environment Debug - Detailed:", {
-            SHEET_ID: SHEET_ID,
-            API_KEY: API_KEY,
-            SHEET_ID_type: typeof SHEET_ID,
-            API_KEY_type: typeof API_KEY,
-            SHEET_ID_exists: !!SHEET_ID,
-            API_KEY_exists: !!API_KEY,
-            import_meta_env: import.meta.env,
-            all_vite_vars: Object.keys(import.meta.env).filter((key) =>
-              key.startsWith("VITE_")
-            ),
-          });
-
-          console.log("🔄 Fetching trading stats with smart caching...");
-          console.log("📊 Sheet ID available:", !!SHEET_ID);
-          console.log("🔑 API Key available:", !!API_KEY);
-        }
-
-        // If no credentials, use mock data
-        if (!SHEET_ID || !API_KEY) {
-          if (import.meta.env.DEV) {
-            console.warn("⚠️ No Google Sheets credentials - using mock data");
-          }
-          const mockStats = getMockTradingStats();
-          setTradingStats(mockStats);
-          setError("Using demo data - configure Google Sheets for live data");
-          return;
-        }
-
-        // Use smart caching for the API call
-        const cacheKey = `${SHEET_ID}_${CALCULATIONS_TAB}_${CALCULATIONS_RANGE}`;
-
-        // TEMPORARY DEBUG - ALWAYS SHOW (remove DEV check)
-        console.log("🔑 Cache Debug:", {
-          SHEET_ID,
-          cacheKey,
-          existingCacheData: !!tradingDataCache.get(cacheKey),
-          cacheSize: tradingDataCache.size(),
-          allCacheKeys: tradingDataCache.keys(),
-        });
-
-        let data;
-        let isFromCache = false;
-
-        if (!forceRefresh) {
-          data = tradingDataCache.get(cacheKey);
-          isFromCache = !!data;
-
-          if (import.meta.env.DEV) {
-            console.log("💾 Cache lookup result:", {
-              found: !!data,
-              dataType: typeof data,
-              dataPreview: data ? "Data exists" : "No data found",
-            });
-          }
-        }
-
-        if (!data) {
-          if (import.meta.env.DEV) {
-            console.log("🌐 Cache MISS - Making fresh API call");
-          }
-
-          // ✅ FIXED: Capture the actual fetch timestamp
-          const fetchTimestamp = new Date().toISOString();
-          console.log("⏰ API call made at:", fetchTimestamp);
-
-          // Cache miss or force refresh - fetch fresh data
-          const response = await fetch(
-            `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${CALCULATIONS_TAB}!${CALCULATIONS_RANGE}?key=${API_KEY}`
-          );
-          const rawData = await response.json();
-
-          if (!rawData.values || rawData.values.length === 0) {
-            throw new Error("No data found in Calculations tab");
-          }
-
-          // ✅ FIXED: Pass the fetch timestamp to preserve it
-          data = parseCalculationsData(rawData.values, fetchTimestamp);
-          tradingDataCache.set(cacheKey, data);
-
-          console.log("💾 Data stored in cache:", {
-            cacheKey,
-            cacheSize: tradingDataCache.size(),
-            allKeys: tradingDataCache.keys(),
-            fetchTime: fetchTimestamp,
-          });
-
-          if (import.meta.env.DEV) {
-            console.log("💾 Data cached with key:", cacheKey);
-          }
-        } else {
-          if (import.meta.env.DEV) {
-            console.log(
-              "✅ Cache HIT - Using cached data from:",
-              data.lastUpdated
-            );
-          }
-        }
-
-        // ✅ FIXED: Update cache info properly
-        setCacheInfo({
-          isFresh: isFromCache,
-          timeUntilNextRefresh: 0,
-          isRateLimited: false,
-        });
-
-        setTradingStats(data);
-      } catch (error) {
-        console.error("❌ Error fetching trading stats:", error);
-        setError(
-          error instanceof Error ? error.message : "Failed to fetch data"
-        );
-
-        // Fallback to mock data on error
+      // If no credentials, use mock data
+      if (!SHEET_ID || !API_KEY) {
         const mockStats = getMockTradingStats();
         setTradingStats(mockStats);
-      } finally {
-        setIsLoading(false);
+        setError("Using demo data - configure Google Sheets for live data");
+        return;
       }
-    },
-    [] // Removed dependencies since env vars are now inside the function
-  );
+
+      // Use smart caching for the API call
+      const cacheKey = `${SHEET_ID}_${CALCULATIONS_TAB}_${CALCULATIONS_RANGE}`;
+
+      let data;
+      let isFromCache = false;
+
+      if (!forceRefresh) {
+        data = tradingDataCache.get(cacheKey);
+        isFromCache = !!data;
+      }
+
+      if (!data) {
+        // Cache miss or force refresh - fetch fresh data
+        const fetchTimestamp = new Date().toISOString();
+
+        const response = await fetch(
+          `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${CALCULATIONS_TAB}!${CALCULATIONS_RANGE}?key=${API_KEY}`
+        );
+        const rawData = await response.json();
+
+        if (!rawData.values || rawData.values.length === 0) {
+          throw new Error("No data found in Calculations tab");
+        }
+
+        data = parseCalculationsData(rawData.values, fetchTimestamp);
+        tradingDataCache.set(cacheKey, data);
+      }
+
+      setCacheInfo({
+        isFresh: isFromCache,
+        timeUntilNextRefresh: 0,
+        isRateLimited: false,
+      });
+
+      setTradingStats(data);
+    } catch (error) {
+      console.error("Error fetching trading stats:", error);
+      setError(error instanceof Error ? error.message : "Failed to fetch data");
+
+      // Fallback to mock data on error
+      const mockStats = getMockTradingStats();
+      setTradingStats(mockStats);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   // Update cache info
   const updateCacheInfo = useCallback(() => {
     const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
-    const cacheKey = `${SHEET_ID}_${CALCULATIONS_TAB}_${CALCULATIONS_RANGE}`; // ✅ Match the format used in fetchTradingStats
+    const cacheKey = `${SHEET_ID}_${CALCULATIONS_TAB}_${CALCULATIONS_RANGE}`;
     const cachedData = tradingDataCache.get(cacheKey);
 
     setCacheInfo({
@@ -405,17 +273,11 @@ export const useGoogleSheetsData = () => {
 
   // Refresh stats (respects cache)
   const refreshStats = useCallback(() => {
-    if (import.meta.env.DEV) {
-      console.log("🔄 Refreshing trading stats (respects cache)...");
-    }
     fetchTradingStats(false);
   }, [fetchTradingStats]);
 
   // Force refresh (bypasses cache)
   const forceRefresh = useCallback(() => {
-    if (import.meta.env.DEV) {
-      console.log("🔄 Force refreshing trading stats (bypasses cache)...");
-    }
     fetchTradingStats(true);
   }, [fetchTradingStats]);
 
@@ -427,18 +289,15 @@ export const useGoogleSheetsData = () => {
   // Update cache info periodically
   useEffect(() => {
     updateCacheInfo();
-    const interval = setInterval(updateCacheInfo, 60000); // Update every minute
+    const interval = setInterval(updateCacheInfo, 60000);
     return () => clearInterval(interval);
   }, [updateCacheInfo]);
 
-  // Auto-refresh every 30 minutes (but will use cache if within 4 hours)
+  // Auto-refresh every 30 minutes
   useEffect(() => {
     const interval = setInterval(() => {
-      if (import.meta.env.DEV) {
-        console.log("⏰ Auto-refresh check (will use cache if valid)");
-      }
-      fetchTradingStats(false); // Don't show loading for auto-refresh
-    }, 30 * 60 * 1000); // 30 minutes
+      fetchTradingStats(false);
+    }, 30 * 60 * 1000);
 
     return () => clearInterval(interval);
   }, [fetchTradingStats]);
