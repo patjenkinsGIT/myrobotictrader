@@ -290,17 +290,14 @@ export const useGoogleSheetsData = () => {
         // Use smart caching for the API call
         const cacheKey = `${SHEET_ID}_${CALCULATIONS_TAB}_${CALCULATIONS_RANGE}`;
 
-        // 🔍 ADD CACHE DEBUG LOGGING HERE:
-        if (import.meta.env.DEV) {
-          console.log("🔑 Cache Key Debug:", {
-            SHEET_ID,
-            CALCULATIONS_TAB,
-            CALCULATIONS_RANGE,
-            cacheKey,
-            existingCacheData: tradingDataCache.get(cacheKey),
-            forceRefresh,
-          });
-        }
+        // TEMPORARY DEBUG - ALWAYS SHOW (remove DEV check)
+        console.log("🔑 Cache Debug:", {
+          SHEET_ID,
+          cacheKey,
+          existingCacheData: !!tradingDataCache.get(cacheKey),
+          cacheSize: tradingDataCache.size(),
+          allCacheKeys: tradingDataCache.keys(),
+        });
 
         let data;
 
