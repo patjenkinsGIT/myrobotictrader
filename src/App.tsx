@@ -158,11 +158,10 @@ const HomePage = () => {
     try {
       if (refreshStats && typeof refreshStats === "function") {
         refreshStats();
-      } else {
-        console.log("🔄 Refresh requested - no refresh function available");
       }
+      // ❌ Removed the console.log here
     } catch (error) {
-      console.error("Error in refresh function:", error);
+      console.error("Error in refresh function:", error); // ✅ Kept essential error logging
     }
   }, [refreshStats]);
 
