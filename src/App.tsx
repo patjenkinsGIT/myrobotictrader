@@ -152,22 +152,7 @@ const HomePage = () => {
       {/* 🎯 PASS DATA AS PROPS - MyStory gets data via props, no duplicate API calls */}
       <MyStory tradingStats={tradingStats} />
       {/* 🎯 KEEP HOOK - TradingResults keeps its own hook for full functionality */}
-      <TradingResults
-        tradingStats={undefined}
-        isLoading={false}
-        error={null}
-        refreshStats={function (): void {
-          throw new Error("Function not implemented.");
-        }}
-        cacheInfo={{
-          isFresh: false,
-          isRateLimited: false,
-          timeUntilNextRefresh: 0,
-        }}
-        cacheStats={{
-          totalEntries: 0,
-        }}
-      />
+      <TradingResults />
       <Features />
       <CallToAction />
       <FAQ />
