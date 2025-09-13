@@ -331,6 +331,13 @@ export const useGoogleSheetsData = () => {
           data = parseCalculationsData(rawData.values);
           tradingDataCache.set(cacheKey, data);
 
+          // ADD THIS RIGHT HERE:
+          console.log("💾 Data stored in cache:", {
+            cacheKey,
+            cacheSize: tradingDataCache.size(),
+            allKeys: tradingDataCache.keys(),
+          });
+
           if (import.meta.env.DEV) {
             console.log("💾 Data cached with key:", cacheKey);
           }
