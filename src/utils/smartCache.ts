@@ -40,12 +40,111 @@ class SmartCache<K = string, V = any> {
 
   // Default TTL: 4 hours (4 * 60 * 60 * 1000 milliseconds)
   private defaultTTL = 4 * 60 * 60 * 1000;
+  private localStoragePrefix: string;
+  private persistToLocalStorage: boolean;
+
+  constructor(
+    localStoragePrefix = "smart_cache",
+    persistToLocalStorage = true
+  ) {
+    this.localStoragePrefix = localStoragePrefix;
+    this.persistToLocalStorage = persistToLocalStorage;
+
+    // Load existing data from localStorage on initialization
+    if (this.persistToLocalStorage) {
+      this.loadFromLocalStorage();
+    }
+  }
+
+  private loadFromLocalStorage(): void {
+    try {
+      const keys = Object.keys(localStorage);
+      const prefix = `${this.localStoragePrefix}_`;
+      let restoredCount = 0;
+
+      for (const key of keys) {
+        if (key.startsWith(prefix)) {
+          const cacheKey = key.substring(prefix.length) as K;
+          const storedData = localStorage.getItem(key);
+
+          if (storedData) {
+            const parsed = JSON.parse(storedData);
+            const now = Date.now();
+
+            // Check if data is still valid
+            if (now - parsed.time <= this.defaultTTL) {
+              this.data.set(cacheKey, parsed);
+              restoredCount++;
+              console.log(
+                `📥 Restored from localStorage: ${String(
+                  cacheKey
+                )} (age: ${Math.round((now - parsed.time) / 1000)}s)`
+              );
+            } else {
+              // Remove expired data from localStorage
+              localStorage.removeItem(key);
+              this.stats.expiredEntries++;
+              console.log(
+                `⏰ Removed expired localStorage entry: ${String(cacheKey)}`
+              );
+            }
+          }
+        }
+      }
+
+      this.stats.entryCount = this.data.size;
+      this.stats.totalEntries = this.data.size;
+
+      if (restoredCount > 0) {
+        console.log(
+          `✅ SmartCache initialized with ${restoredCount} cached entries from localStorage`
+        );
+      } else {
+        console.log(`🆕 SmartCache initialized with empty cache`);
+      }
+    } catch (error) {
+      console.warn("Error loading cache from localStorage:", error);
+    }
+  }
+
+  private saveToLocalStorage(key: K, item: { value: V; time: number }): void {
+    if (!this.persistToLocalStorage) return;
+
+    try {
+      const storageKey = `${this.localStoragePrefix}_${String(key)}`;
+      localStorage.setItem(storageKey, JSON.stringify(item));
+      console.log(`💾 Saved to localStorage: ${String(key)}`);
+    } catch (error) {
+      console.warn("Error saving to localStorage:", error);
+    }
+  }
+
+  private removeFromLocalStorage(key: K): void {
+    if (!this.persistToLocalStorage) return;
+
+    try {
+      const storageKey = `${this.localStoragePrefix}_${String(key)}`;
+      localStorage.removeItem(storageKey);
+      console.log(`🗑️ Removed from localStorage: ${String(key)}`);
+    } catch (error) {
+      console.warn("Error removing from localStorage:", error);
+    }
+  }
 
   set(key: K, value: V): void {
-    this.data.set(key, { value, time: Date.now() });
+    const item = { value, time: Date.now() };
+    this.data.set(key, item);
+
+    // Save to localStorage
+    this.saveToLocalStorage(key, item);
+
     this.stats.sets++;
     this.stats.entryCount = this.data.size;
     this.stats.totalEntries = this.data.size;
+
+    console.log(
+      `💾 Cached data for key: ${String(key)} (memory + localStorage)`
+    );
   }
 
   get(key: K, ttl?: number): V | undefined {
@@ -57,16 +156,23 @@ class SmartCache<K = string, V = any> {
       if (!isExpired) {
         // Data is still fresh - return it
         this.stats.hits++;
+        const ageInSeconds = Math.round((Date.now() - item.time) / 1000);
+        console.log(
+          `✅ Cache HIT for key: ${String(key)} (age: ${ageInSeconds}s)`
+        );
         return item.value;
       } else {
         // Data expired - remove it and return undefined
         this.data.delete(key);
+        this.removeFromLocalStorage(key);
         this.stats.expiredEntries++;
         this.stats.misses++;
+        console.log(`⏰ Cache EXPIRED for key: ${String(key)}`);
         return undefined;
       }
     } else {
       this.stats.misses++;
+      console.log(`❌ Cache MISS for key: ${String(key)}`);
       return undefined;
     }
   }
@@ -74,17 +180,30 @@ class SmartCache<K = string, V = any> {
   delete(key: K): boolean {
     const deleted = this.data.delete(key);
     if (deleted) {
+      this.removeFromLocalStorage(key);
       this.stats.deletes++;
       this.stats.entryCount = this.data.size;
       this.stats.totalEntries = this.data.size;
+      console.log(`🗑️ Deleted cache entry: ${String(key)}`);
     }
     return deleted;
   }
 
   clear(): void {
+    // Clear in-memory cache
+    const keys = Array.from(this.data.keys());
     this.data.clear();
+
+    // Clear localStorage entries
+    if (this.persistToLocalStorage) {
+      for (const key of keys) {
+        this.removeFromLocalStorage(key);
+      }
+    }
+
     this.stats.entryCount = 0;
     this.stats.totalEntries = 0;
+    console.log("🧹 Cache cleared (memory and localStorage)");
   }
 
   size(): number {
@@ -114,6 +233,7 @@ class SmartCache<K = string, V = any> {
     if (isExpired) {
       // Clean up expired entry
       this.data.delete(key);
+      this.removeFromLocalStorage(key);
       this.stats.expiredEntries++;
       return false;
     }
@@ -170,6 +290,7 @@ class SmartCache<K = string, V = any> {
       const isExpired = now - item.time > this.defaultTTL;
       if (isExpired) {
         this.data.delete(key);
+        this.removeFromLocalStorage(key);
         removedCount++;
       }
     }
@@ -177,6 +298,10 @@ class SmartCache<K = string, V = any> {
     this.stats.expiredEntries += removedCount;
     this.stats.entryCount = this.data.size;
     this.stats.totalEntries = this.data.size;
+
+    if (removedCount > 0) {
+      console.log(`🧹 Cleaned up ${removedCount} expired cache entries`);
+    }
   }
 
   getTimeUntilNextRequest(key: K): number {
@@ -206,18 +331,22 @@ class SmartCache<K = string, V = any> {
 }
 
 function createSmartCache<K = string, V = any>(
-  defaultTTL?: number
+  defaultTTL?: number,
+  localStoragePrefix = "smart_cache",
+  persistToLocalStorage = true
 ): SmartCache<K, V> {
-  const cache = new SmartCache<K, V>();
+  const cache = new SmartCache<K, V>(localStoragePrefix, persistToLocalStorage);
   if (defaultTTL) {
     cache.setDefaultTTL(defaultTTL);
   }
   return cache;
 }
 
-// Create trading data cache with 4-hour TTL (4 * 60 * 60 * 1000 = 14,400,000 ms)
+// Create trading data cache with 4-hour TTL and localStorage persistence
 export const tradingDataCache = createSmartCache<string, any>(
-  4 * 60 * 60 * 1000
+  4 * 60 * 60 * 1000, // 4 hours TTL
+  "trading_data_cache", // localStorage prefix
+  true // enable localStorage persistence
 );
 
 export { SmartCache, createSmartCache };
