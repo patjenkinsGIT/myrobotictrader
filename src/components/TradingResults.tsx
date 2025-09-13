@@ -15,20 +15,32 @@ import {
 import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
 import { calculateTimeSinceStart } from "../utils/tradingTime";
 import { LiveTransactionLog } from "./LiveTransactionLog";
-import {
-  useGoogleSheetsData,
-  TradingDataPoint,
-} from "../hooks/useGoogleSheetsData";
+import { TradingDataPoint } from "../hooks/useGoogleSheetsData";
 
-export const TradingResults: React.FC = () => {
-  const {
-    tradingStats,
-    isLoading,
-    error,
-    refreshStats,
-    cacheInfo,
-    cacheStats,
-  } = useGoogleSheetsData();
+// Define the props interface for TradingResults
+interface TradingResultsProps {
+  tradingStats: any;
+  isLoading: boolean;
+  error: string | null;
+  refreshStats: () => void;
+  cacheInfo: {
+    isFresh: boolean;
+    isRateLimited: boolean;
+    timeUntilNextRefresh: number;
+  };
+  cacheStats: {
+    totalEntries: number;
+  };
+}
+
+export const TradingResults: React.FC<TradingResultsProps> = ({
+  tradingStats,
+  isLoading,
+  error,
+  refreshStats,
+  cacheInfo,
+  cacheStats,
+}) => {
   const timeSinceStart = calculateTimeSinceStart();
 
   // Format time until next refresh
