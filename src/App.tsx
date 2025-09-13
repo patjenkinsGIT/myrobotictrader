@@ -141,32 +141,53 @@ const SEOWrapper = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-// Create a HomePage component with shared data
+// FIXED VERSION - Replace the problematic refreshStats with this:
 const HomePage = () => {
-  // 🎯 SINGLE HOOK CALL - This is the only place we call useGoogleSheetsData
-  const { tradingStats } = useGoogleSheetsData();
+  // 🎯 SINGLE HOOK CALL - Get ALL the data from the hook
+  const {
+    tradingStats,
+    isLoading,
+    error,
+    refreshStats,
+    cacheInfo,
+    cacheStats,
+  } = useGoogleSheetsData();
+
+  // Create a safe refresh function as backup
+  const safeRefreshStats = React.useCallback(() => {
+    try {
+      if (refreshStats && typeof refreshStats === "function") {
+        refreshStats();
+      } else {
+        console.log("🔄 Refresh requested - no refresh function available");
+      }
+    } catch (error) {
+      console.error("Error in refresh function:", error);
+    }
+  }, [refreshStats]);
 
   return (
     <>
       <Hero />
-      {/* 🎯 PASS DATA AS PROPS - MyStory gets data via props, no duplicate API calls */}
       <MyStory tradingStats={tradingStats} />
-      {/* 🎯 KEEP HOOK - TradingResults keeps its own hook for full functionality */}
+      {/* 🎯 FIXED - Use actual data from the hook */}
       <TradingResults
-        tradingStats={undefined}
-        isLoading={false}
-        error={null}
-        refreshStats={function (): void {
-          throw new Error("Function not implemented.");
-        }}
-        cacheInfo={{
-          isFresh: false,
-          isRateLimited: false,
-          timeUntilNextRefresh: 0,
-        }}
-        cacheStats={{
-          totalEntries: 0,
-        }}
+        tradingStats={tradingStats}
+        isLoading={isLoading}
+        error={error}
+        refreshStats={refreshStats || safeRefreshStats}
+        cacheInfo={
+          cacheInfo || {
+            isFresh: false,
+            isRateLimited: false,
+            timeUntilNextRefresh: 0,
+          }
+        }
+        cacheStats={
+          cacheStats || {
+            totalEntries: 0,
+          }
+        }
       />
       <Features />
       <CallToAction />
