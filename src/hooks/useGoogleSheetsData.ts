@@ -393,7 +393,7 @@ export const useGoogleSheetsData = () => {
   // Update cache info
   const updateCacheInfo = useCallback(() => {
     const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
-    const cacheKey = `${SHEET_ID}_${CALCULATIONS_TAB}_${CALCULATIONS_RANGE}`;
+    const cacheKey = `${SHEET_ID}_${CALCULATIONS_TAB}_${CALCULATIONS_RANGE}`; // ✅ Match the format used in fetchTradingStats
     const cachedData = tradingDataCache.get(cacheKey);
 
     setCacheInfo({
