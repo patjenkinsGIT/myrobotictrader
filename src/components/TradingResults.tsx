@@ -15,21 +15,44 @@ import {
 import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
 import { calculateTimeSinceStart } from "../utils/tradingTime";
 import { LiveTransactionLog } from "./LiveTransactionLog";
-import {
-  useGoogleSheetsData,
-  TradingDataPoint,
-} from "../hooks/useGoogleSheetsData";
+import { TradingDataPoint } from "../hooks/useGoogleSheetsData";
 
-export const TradingResults: React.FC = () => {
-  const {
+// Define the props interface for TradingResults - make all props optional to handle undefined cases
+interface TradingResultsProps {
+  tradingStats?: any;
+  isLoading?: boolean;
+  error?: string | null;
+  refreshStats?: () => void;
+  cacheInfo?: {
+    isFresh: boolean;
+    isRateLimited: boolean;
+    timeUntilNextRefresh: number;
+  };
+  cacheStats?: {
+    totalEntries: number;
+  };
+}
+
+export const TradingResults: React.FC<TradingResultsProps> = ({
+  tradingStats,
+  isLoading = false,
+  error = null,
+  refreshStats = () => console.log("Refresh not implemented"),
+  cacheInfo = { isFresh: false, isRateLimited: false, timeUntilNextRefresh: 0 },
+  cacheStats = { totalEntries: 0 },
+}) => {
+  const timeSinceStart = calculateTimeSinceStart();
+
+  // Debug logging to help identify the issue
+  console.log("TradingResults Debug:", {
     tradingStats,
     isLoading,
     error,
-    refreshStats,
     cacheInfo,
     cacheStats,
-  } = useGoogleSheetsData();
-  const timeSinceStart = calculateTimeSinceStart();
+    hasTradingStats: !!tradingStats,
+    tradingStatsType: typeof tradingStats,
+  });
 
   // Format time until next refresh
   const formatTimeUntilRefresh = (ms: number) => {
@@ -59,7 +82,14 @@ export const TradingResults: React.FC = () => {
     );
   }
 
-  if (error || !tradingStats) {
+  // More specific error checking - handle undefined tradingStats
+  const hasError = error && error.trim() !== "";
+  const hasValidData =
+    tradingStats &&
+    typeof tradingStats === "object" &&
+    tradingStats.totalProfit !== undefined;
+
+  if (hasError || !hasValidData) {
     return (
       <section className="py-16 px-4 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-red-900/20 to-orange-900/20"></div>
@@ -70,7 +100,9 @@ export const TradingResults: React.FC = () => {
               Unable to Load Live Trading Data
             </h3>
             <p className="text-red-300 mb-6">
-              {error || "Failed to connect to Google Sheets"}
+              {hasError
+                ? error
+                : "Trading data is not available. This could be due to API configuration issues or data loading problems."}
             </p>
             <button
               onClick={refreshStats}
@@ -100,9 +132,19 @@ export const TradingResults: React.FC = () => {
               </p>
               <p>• Expected Tab: "Calculations"</p>
               <p>• Expected Range: A:G</p>
-              <p>• Error: {error}</p>
-              <p>• Cache Status: {cacheInfo.isFresh ? "Fresh" : "Stale"}</p>
-              <p>• Rate Limited: {cacheInfo.isRateLimited ? "Yes" : "No"}</p>
+              <p>• Error: {error || "No specific error message"}</p>
+              <p>• Cache Status: {cacheInfo?.isFresh ? "Fresh" : "Stale"}</p>
+              <p>• Rate Limited: {cacheInfo?.isRateLimited ? "Yes" : "No"}</p>
+              <p>• Has Trading Stats: {hasValidData ? "Yes" : "No"}</p>
+              <p>• Trading Stats Type: {typeof tradingStats}</p>
+              <p>
+                • Trading Stats Value:{" "}
+                {tradingStats === undefined
+                  ? "undefined"
+                  : tradingStats === null
+                  ? "null"
+                  : "has value"}
+              </p>
             </div>
           </div>
         </div>
@@ -114,7 +156,7 @@ export const TradingResults: React.FC = () => {
   const currentData = tradingStats;
 
   // Use the dailyAvg from the data structure
-  const dailyAvg = currentData.dailyAvg.toFixed(2);
+  const dailyAvg = currentData.dailyAvg?.toFixed(2) || "0.00";
 
   // CRITICAL FIX: Properly handle monthly data
   const allMonthlyData = currentData.monthlyData || [];
@@ -272,7 +314,7 @@ export const TradingResults: React.FC = () => {
 
             <div className="relative text-center">
               <div className="text-3xl font-bold text-green-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-green-300 group-hover:to-emerald-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
-                ${currentData.totalProfit.toLocaleString()}
+                ${currentData.totalProfit?.toLocaleString() || "0"}
               </div>
               <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
                 Total Profits
@@ -294,7 +336,7 @@ export const TradingResults: React.FC = () => {
 
             <div className="relative text-center">
               <div className="text-3xl font-bold text-blue-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-300 group-hover:to-cyan-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
-                {currentData.totalTrades.toLocaleString()}
+                {currentData.totalTrades?.toLocaleString() || "0"}
               </div>
               <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
                 Total Trades
@@ -316,7 +358,7 @@ export const TradingResults: React.FC = () => {
 
             <div className="relative text-center">
               <div className="text-3xl font-bold text-purple-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-300 group-hover:to-pink-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
-                ${currentData.avgProfitPerTrade.toFixed(2)}
+                ${currentData.avgProfitPerTrade?.toFixed(2) || "0.00"}
               </div>
               <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
                 Avg Per Trade
@@ -342,7 +384,7 @@ export const TradingResults: React.FC = () => {
 
             <div className="relative text-center">
               <div className="text-2xl font-bold text-emerald-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-emerald-300 group-hover:to-teal-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
-                ${currentData.monthlyAverage.toFixed(2)}
+                ${currentData.monthlyAverage?.toFixed(2) || "0.00"}
               </div>
               <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
                 Monthly Average
@@ -381,13 +423,14 @@ export const TradingResults: React.FC = () => {
 
             <div className="relative text-center">
               <div className="text-2xl font-bold text-amber-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-amber-300 group-hover:to-orange-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
-                ${currentData.bestMonthProfit.toFixed(2)}
+                ${currentData.bestMonthProfit?.toFixed(2) || "0.00"}
               </div>
               <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
                 Best Month
               </div>
               <div className="text-amber-300 text-sm mt-1">
-                {getFullMonthName(bestMonthData.month)} 2025
+                {bestMonthData ? getFullMonthName(bestMonthData.month) : "N/A"}{" "}
+                2025
               </div>
             </div>
 
@@ -402,81 +445,84 @@ export const TradingResults: React.FC = () => {
         </div>
 
         {/* Recent Months Chart */}
-        <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8 mb-8 relative">
-          <div className="absolute top-4 right-4 opacity-10 pointer-events-none hidden md:block">
-            <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-2xl animate-pulse">
-              R
+        {recentMonths.length > 0 && (
+          <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8 mb-8 relative">
+            <div className="absolute top-4 right-4 opacity-10 pointer-events-none hidden md:block">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-2xl animate-pulse">
+                R
+              </div>
             </div>
-          </div>
 
-          <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6 text-center">
-            Recent Performance (Last 6 Months)
-          </h3>
+            <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6 text-center">
+              Recent Performance (Last 6 Months)
+            </h3>
 
-          <div className="w-full overflow-x-auto">
-            <div
-              className="flex items-end justify-center gap-2 md:gap-6 mb-4 md:mb-6 min-w-max mx-auto px-2"
-              style={{ height: "200px" }}
-            >
-              {recentMonths.map((month: TradingDataPoint) => {
-                const maxBarHeight = 140;
-                const maxProfit = Math.max(
-                  ...recentMonths.map((m: TradingDataPoint) => m.profit)
-                );
-                const height = Math.max(
-                  (month.profit / maxProfit) * maxBarHeight,
-                  12
-                );
-                const isHighest = month.profit === maxProfit;
+            <div className="w-full overflow-x-auto">
+              <div
+                className="flex items-end justify-center gap-2 md:gap-6 mb-4 md:mb-6 min-w-max mx-auto px-2"
+                style={{ height: "200px" }}
+              >
+                {recentMonths.map((month: TradingDataPoint) => {
+                  const maxBarHeight = 140;
+                  const maxProfit = Math.max(
+                    ...recentMonths.map((m: TradingDataPoint) => m.profit)
+                  );
+                  const height = Math.max(
+                    (month.profit / maxProfit) * maxBarHeight,
+                    12
+                  );
+                  const isHighest = month.profit === maxProfit;
 
-                return (
-                  <div
-                    key={month.month}
-                    className="flex flex-col items-center min-w-0"
-                  >
+                  return (
                     <div
-                      className={`text-xs md:text-sm mb-1 md:mb-2 font-semibold ${
-                        isHighest ? "text-yellow-300" : "text-gray-200"
-                      }`}
+                      key={month.month}
+                      className="flex flex-col items-center min-w-0"
                     >
-                      ${Math.round(month.profit)}
-                    </div>
+                      <div
+                        className={`text-xs md:text-sm mb-1 md:mb-2 font-semibold ${
+                          isHighest ? "text-yellow-300" : "text-gray-200"
+                        }`}
+                      >
+                        ${Math.round(month.profit)}
+                      </div>
 
-                    <div
-                      className={`w-8 md:w-16 rounded-t-lg transition-all duration-1000 ease-out ${
-                        isHighest
-                          ? "bg-gradient-to-t from-yellow-500 to-yellow-300 shadow-lg shadow-yellow-400/40"
-                          : "bg-gradient-to-t from-emerald-500 to-green-400 shadow-lg shadow-emerald-400/30"
-                      }`}
-                      style={{
-                        height: `${height}px`,
-                        minHeight: "12px",
-                      }}
-                    ></div>
+                      <div
+                        className={`w-8 md:w-16 rounded-t-lg transition-all duration-1000 ease-out ${
+                          isHighest
+                            ? "bg-gradient-to-t from-yellow-500 to-yellow-300 shadow-lg shadow-yellow-400/40"
+                            : "bg-gradient-to-t from-emerald-500 to-green-400 shadow-lg shadow-emerald-400/30"
+                        }`}
+                        style={{
+                          height: `${height}px`,
+                          minHeight: "12px",
+                        }}
+                      ></div>
 
-                    <div className="text-xs md:text-sm text-gray-200 mt-2 md:mt-3 font-medium text-center">
-                      <span className="md:hidden">
-                        {getShortMonthName(month.month)}
-                      </span>
-                      <span className="hidden md:inline">
-                        {getFullMonthName(month.month)}
-                      </span>
+                      <div className="text-xs md:text-sm text-gray-200 mt-2 md:mt-3 font-medium text-center">
+                        <span className="md:hidden">
+                          {getShortMonthName(month.month)}
+                        </span>
+                        <span className="hidden md:inline">
+                          {getFullMonthName(month.month)}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="text-center">
+              <p className="text-emerald-300 font-semibold text-sm md:text-lg">
+                📈 {currentData.totalTrades || 0} trades • $
+                {currentData.avgProfitPerTrade?.toFixed(2) || "0.00"} avg
+                profit/trade • Best month:{" "}
+                {bestMonthData ? getFullMonthName(bestMonthData.month) : "N/A"}{" "}
+                with ${currentData.bestMonthProfit?.toFixed(2) || "0.00"}
+              </p>
             </div>
           </div>
-
-          <div className="text-center">
-            <p className="text-emerald-300 font-semibold text-sm md:text-lg">
-              📈 {currentData.totalTrades} trades • $
-              {currentData.avgProfitPerTrade.toFixed(2)} avg profit/trade • Best
-              month: {getFullMonthName(bestMonthData.month)} with $
-              {currentData.bestMonthProfit.toFixed(2)}
-            </p>
-          </div>
-        </div>
+        )}
 
         {/* Previous Months Table */}
         {olderMonths.length > 0 && (
