@@ -113,13 +113,14 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
 
               <p>
                 <span className="text-green-300 font-semibold">
-                  But this one is truly automated! I attended, and still attend
-                  the live webinar, and something felt completely different. The
-                  authenticity was refreshing. They answered every question
-                  thoroughly. They're live every week, genuinely encouraging
-                  people to come back and ask more questions. You can see the
-                  actual developer talking about the product - he's there every
-                  single week.{" "}
+                  But this one is truly automated! I attended their live
+                  webinar, and something immediately felt different. The
+                  authenticity was refreshing - they answered every question
+                  thoroughly without any sales pressure. I was so impressed that
+                  I still attend regularly. They're live every week, genuinely
+                  encouraging people to come back with more questions. What
+                  really sold me was seeing the actual developer presenting the
+                  product himself - he shows up every single week.{" "}
                 </span>{" "}
               </p>
 
@@ -131,10 +132,10 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
                   was choose my currencies, decide how much to invest in each
                   one, and set what I wanted to keep or reinvest from my
                   profits. The autonomous trader handles all the money
-                  management. I was up and running that same evening with only a
-                  couple hours of paper trading, seeing a few trades was all I
-                  needed to see. I turned on the real trader IMMEDIATELY and
-                  haven't looked back!{" "}
+                  management. I was so confident after the demo that I was up
+                  and running that same evening. After just a couple hours of
+                  paper trading and seeing a few successful trades, I switched
+                  to real money immediately and haven't looked back!{" "}
                 </span>{" "}
               </p>
 
