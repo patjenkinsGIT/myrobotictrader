@@ -82,23 +82,29 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
             <div className="space-y-6 text-lg text-gray-200 leading-relaxed">
               <p>
                 I've been following the markets since 2014, and I genuinely love
-                investing. But like many people, I've tried a lot of different
-                approaches over the years.
+                investing. I did okay with my stock investments, but tracking
+                individual stocks became incredibly tedious. I got frustrated
+                with mutual funds because of their fees and average returns -
+                even index funds weren't delivering what I hoped for. Target
+                date funds? Don't get me started on those.{" "}
               </p>
 
               <p>
                 <span className="text-blue-300 font-semibold">
-                  Over the years, I invested tens of thousands in various
-                  courses and systems
+                  I've always wanted to make extra income in addition to my
+                  9-to-5 job, so over the years I invested tens of thousands in
+                  various courses and systems{" "}
                 </span>{" "}
                 - email marketing, affiliate marketing, Amazon wholesale, you
-                name it. Some taught me valuable skills, but honestly, most
-                didn't deliver what they promised.
+                name it. Some methods seemed unreliable, and honestly, part of
+                the problem was probably me not putting in full effort or
+                knowing how to position myself properly.{" "}
               </p>
 
               <p>
-                So when I discovered this robotic trading system while
-                researching new opportunities,
+                So when I discovered this autonomous trading system while
+                researching new opportunities, I thought "here's just another
+                system promising easy money."{" "}
                 <span className="text-yellow-300 font-semibold">
                   {" "}
                   I was naturally skeptical.
@@ -107,8 +113,13 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
 
               <p>
                 <span className="text-green-300 font-semibold">
-                  But then I attended their live webinar, and something felt
-                  different.
+                  But this one is truly automated! I attended their live
+                  webinar, and something felt completely different. The
+                  authenticity was refreshing. They answered every question
+                  thoroughly. They're live every week, genuinely encouraging
+                  people to come back and ask more questions. You can see the
+                  actual developer talking about the product - he's there every
+                  single week.{" "}
                 </span>{" "}
                 The authenticity was refreshing. They answered every question
                 thoroughly. They're live every week, genuinely encouraging
@@ -119,11 +130,15 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
 
               <p>
                 <span className="text-blue-300 font-semibold">
-                  When I watched the first few trades execute during the live
-                  demo, I knew I had to try this for myself.
+                  When I watched the trades execute during the live demo, I
+                  realized this was the first time I'd seen a system that could
+                  make real profits without me doing ANYTHING. All I had to do
+                  was choose my currencies, decide how much to invest in each
+                  one, and set what I wanted to keep or reinvest from my
+                  profits. The autonomous trader handles all the money
+                  management.{" "}
                 </span>{" "}
-                I started on January 8, 2025, and moved from paper trading to
-                real money pretty quickly once I saw how it worked.
+                I started on January 8, 2025, and after{" "}
               </p>
 
               <p>
@@ -135,17 +150,19 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
                 <span className="text-green-300 font-semibold">
                   ${currentData.totalProfit.toLocaleString()} in total profits
                 </span>
-                , I'm honestly much more relaxed about my financial future. The
-                results speak for themselves.
+                , I'm honestly sleeping better at night. For the first time in
+                years, I'm not constantly worried about my financial future.
               </p>
 
               <p>
                 <span className="text-yellow-300 font-semibold">
                   As I approach retirement, this really is the closest thing to
-                  true passive income I've experienced.
+                  true passive income I've experienced. I wish this had been
+                  available years ago, but I'm grateful that I found it when I
+                  did and I'm super happy that I can share my experience here. I
+                  really want others to have the opportunity to experience
+                  trading on a level that everyone can use. This is a true gift.{" "}
                 </span>{" "}
-                I wish I had discovered this system years ago, but I'm grateful
-                I found it when I did.
               </p>
             </div>
 
