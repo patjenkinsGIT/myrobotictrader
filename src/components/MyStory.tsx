@@ -113,19 +113,14 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
 
               <p>
                 <span className="text-green-300 font-semibold">
-                  But this one is truly automated! I attended their live
-                  webinar, and something felt completely different. The
+                  But this one is truly automated! I attended, and still attend
+                  the live webinar, and something felt completely different. The
                   authenticity was refreshing. They answered every question
                   thoroughly. They're live every week, genuinely encouraging
                   people to come back and ask more questions. You can see the
                   actual developer talking about the product - he's there every
                   single week.{" "}
                 </span>{" "}
-                The authenticity was refreshing. They answered every question
-                thoroughly. They're live every week, genuinely encouraging
-                people to come back and ask more questions. You can see the
-                actual developer talking about the product - he's there every
-                single week.
               </p>
 
               <p>
