@@ -18,7 +18,7 @@ import { LiveTransactionLog } from "./LiveTransactionLog";
 import { TradingDataPoint } from "../hooks/useGoogleSheetsData";
 
 // Import your robot trading image
-import robotTradingImage from "../public/robot-trading.png";
+import robotTradingImage from "./public/robot-trading.png";
 
 // Define the props interface for TradingResults - make all props optional to handle undefined cases
 interface TradingResultsProps {
