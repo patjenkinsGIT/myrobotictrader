@@ -111,9 +111,10 @@ export const Footer: React.FC = function () {
             <div className="bg-white/5 rounded-lg p-4 border border-white/10">
               <h4 className="text-gray-300 font-semibold mb-2">Risk Warning</h4>
               <p className="leading-relaxed">
-                Crypto trading involves substantial risk. Past performance
-                doesn't guarantee future results. Only trade with funds you can
-                afford to lose. Consider your risk tolerance carefully.
+                Crypto trading involves risk. Past performance doesn't guarantee
+                future results. Only trade with funds you can afford to lose.
+                Consider your risk tolerance carefully. Always do your own
+                research (DOR).
               </p>
             </div>
 
