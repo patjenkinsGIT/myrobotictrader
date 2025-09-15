@@ -17,9 +17,6 @@ import { calculateTimeSinceStart } from "../utils/tradingTime";
 import { LiveTransactionLog } from "./LiveTransactionLog";
 import { TradingDataPoint } from "../hooks/useGoogleSheetsData";
 
-// Import your robot trading image
-import robotTradingImage from "../assets/robot-trading.png";
-
 // Define the props interface for TradingResults - make all props optional to handle undefined cases
 interface TradingResultsProps {
   tradingStats?: any;
@@ -439,11 +436,11 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
         {/* Recent Months Chart */}
         {recentMonths.length > 0 && (
           <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8 mb-8 relative">
-            {/* REPLACED: Robot Trading Image instead of bouncing R */}
+            {/* Robot Trading Image from public folder - NO IMPORT NEEDED */}
             <div className="absolute top-4 right-4 opacity-20 pointer-events-none hidden md:block">
               <div className="w-16 h-16 rounded-full overflow-hidden bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-purple-400/30 flex items-center justify-center animate-pulse shadow-lg shadow-purple-500/20">
                 <img
-                  src={robotTradingImage}
+                  src="/robot-trading.png"
                   alt="Robot Trading"
                   className="w-12 h-12 object-contain filter brightness-110"
                 />
