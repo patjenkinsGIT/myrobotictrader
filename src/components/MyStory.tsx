@@ -131,13 +131,15 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
                   was choose my currencies, decide how much to invest in each
                   one, and set what I wanted to keep or reinvest from my
                   profits. The autonomous trader handles all the money
-                  management.{" "}
+                  management. I was up and running that same evening with only a
+                  couple hours of paper trading, seeing a few trades was all I
+                  needed to see. I turned on the real trader IMMEDIATELY and
+                  haven't looked back!{" "}
                 </span>{" "}
-                I started on January 8, 2025, and after{" "}
               </p>
 
               <p>
-                After{" "}
+                I started with my very first trade on January 8, 2025, and after{" "}
                 <span className="text-purple-300 font-semibold">
                   {timeSinceStart}
                 </span>{" "}
