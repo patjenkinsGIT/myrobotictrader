@@ -493,7 +493,7 @@ export const LiveTransactionLog: React.FC = () => {
           </div>
           <div>
             <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-white">
-              TRADE ACTIVITY FEED
+              TRADING SCOREBOARD
             </h3>
             <p className="text-xs md:text-sm text-gray-400">
               Last {transactions.length} Transactions
