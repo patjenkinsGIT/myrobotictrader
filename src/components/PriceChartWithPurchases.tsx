@@ -1,7 +1,18 @@
 // src/components/PriceChartWithPurchases.tsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { TrendingDown } from "lucide-react";
-import { useLiveTransactions } from "../hooks/useLiveTransactions";
+import { tradingDataCache } from "../utils/smartCache";
+
+interface LiveTransaction {
+  id: string;
+  coin: string;
+  action: "CLOSE" | "OPEN";
+  price: string;
+  quantity: string;
+  profit: number;
+  timestamp: string;
+  status: "completed" | "profit_goal_reached";
+}
 
 interface ChartDataPoint {
   timestamp: Date;
@@ -13,15 +24,203 @@ interface ChartDataPoint {
 }
 
 export const PriceChartWithPurchases: React.FC = () => {
-  const { transactions, isLoading, error } = useLiveTransactions();
+  const [transactions, setTransactions] = useState<LiveTransaction[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedCoin, setSelectedCoin] = useState<string>("BONK");
   const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
 
-  // Process transaction data and generate price chart
+  // Constants - same as LiveTransactionLog
+  const SHEET_TAB = "Last25Results";
+  const SHEET_RANGE = "A:G";
+
+  // Format price to display properly - same as LiveTransactionLog
+  const formatPrice = useCallback((price: string): string => {
+    if (!price) return "$0.00";
+    if (price.includes("$")) return price;
+
+    const cleanPrice = price.replace(/[,$]/g, "");
+    const numPrice = parseFloat(cleanPrice);
+
+    if (isNaN(numPrice)) return price;
+
+    if (numPrice < 0.00001) {
+      return `$${numPrice.toFixed(8)}`;
+    } else if (numPrice < 0.001) {
+      return `$${numPrice.toFixed(5)}`;
+    } else if (numPrice < 1) {
+      return `$${numPrice.toFixed(4)}`;
+    } else if (numPrice < 100) {
+      return `$${numPrice.toFixed(2)}`;
+    } else {
+      return `$${numPrice.toLocaleString()}`;
+    }
+  }, []);
+
+  // Format quantity - same as LiveTransactionLog
+  const formatQuantity = useCallback((quantity: string): string => {
+    if (!quantity) return "0";
+
+    const cleanQuantity = quantity.replace(/[,$]/g, "");
+    const numQuantity = parseFloat(cleanQuantity);
+
+    if (isNaN(numQuantity)) return quantity;
+
+    if (numQuantity >= 1000000) {
+      return `${(numQuantity / 1000000).toFixed(1)}M`;
+    } else if (numQuantity >= 1000) {
+      return `${(numQuantity / 1000).toFixed(1)}K`;
+    } else if (numQuantity < 1) {
+      return numQuantity.toFixed(3);
+    } else {
+      return numQuantity.toLocaleString();
+    }
+  }, []);
+
+  // Format timestamp - same as LiveTransactionLog
+  const formatTimestamp = useCallback((timestamp: string): string => {
+    if (!timestamp) return "Unknown";
+
+    if (timestamp.toLowerCase().includes("today")) {
+      return timestamp;
+    }
+
+    try {
+      const date = new Date(timestamp);
+      if (!isNaN(date.getTime())) {
+        const now = new Date();
+        if (date.toDateString() === now.toDateString()) {
+          return `Today ${date.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}`;
+        } else {
+          return (
+            date.toLocaleDateString() +
+            " " +
+            date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+          );
+        }
+      }
+    } catch (e) {
+      // If parsing fails, return original
+    }
+
+    return timestamp;
+  }, []);
+
+  // Parse status - same as LiveTransactionLog
+  const parseStatus = useCallback(
+    (status: string): "completed" | "profit_goal_reached" => {
+      if (!status) return "completed";
+      return status.toLowerCase().includes("profit goal reached")
+        ? "profit_goal_reached"
+        : "completed";
+    },
+    []
+  );
+
+  // Parse Google Sheets data - same as LiveTransactionLog
+  const parseGoogleSheetsData = useCallback(
+    (rows: string[][]): LiveTransaction[] => {
+      if (!rows || rows.length === 0) return [];
+
+      return rows
+        .map((row, index) => {
+          if (index === 0 && row[0]?.toLowerCase() === "coin") {
+            return null;
+          }
+
+          const [coin, action, price, quantity, status, profit, timestamp] =
+            row;
+
+          if (!coin || !profit) {
+            return null;
+          }
+
+          const parsedProfit =
+            parseFloat(profit.toString().replace(/[$,]/g, "")) || 0;
+
+          const transaction = {
+            id: `tx_${Date.now()}_${index}`,
+            coin: coin?.toString().trim() || "",
+            action: (action?.toString().trim() as "CLOSE" | "OPEN") || "CLOSE",
+            price: formatPrice(price?.toString() || ""),
+            quantity: formatQuantity(quantity?.toString() || ""),
+            profit: parsedProfit,
+            timestamp: formatTimestamp(timestamp?.toString() || ""),
+            status: parseStatus(status?.toString() || ""),
+          };
+
+          return transaction;
+        })
+        .filter(
+          (tx): tx is LiveTransaction =>
+            tx !== null && tx.coin.length > 0 && tx.profit !== undefined
+        );
+    },
+    [formatPrice, formatQuantity, formatTimestamp, parseStatus]
+  );
+
+  // Fetch transactions - same approach as LiveTransactionLog
+  const fetchTransactions = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
+      const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
+
+      if (SHEET_ID && API_KEY) {
+        const cacheKey = `${SHEET_ID}_${SHEET_TAB}_${SHEET_RANGE}`;
+        let cachedData = tradingDataCache.get(cacheKey);
+
+        if (cachedData) {
+          setTransactions(cachedData as LiveTransaction[]);
+          setIsLoading(false);
+          return;
+        }
+
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_TAB}!${SHEET_RANGE}?key=${API_KEY}`;
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+          throw new Error(
+            `Google Sheets API error: ${response.status} ${response.statusText}`
+          );
+        }
+
+        const data = await response.json();
+
+        if (data.values && data.values.length > 0) {
+          const liveTransactions = parseGoogleSheetsData(data.values);
+          tradingDataCache.set(cacheKey, liveTransactions);
+          setTransactions(liveTransactions);
+          return;
+        } else {
+          setError("No data found in Last25Results tab");
+        }
+      } else {
+        setError("Google Sheets configuration missing");
+      }
+    } catch (err) {
+      console.error("Failed to fetch transactions:", err);
+      setError("Failed to load live transaction data");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [SHEET_TAB, SHEET_RANGE, parseGoogleSheetsData]);
+
+  // Fetch on mount
+  useEffect(() => {
+    fetchTransactions();
+  }, [fetchTransactions]);
+
+  // Process transaction data for chart
   useEffect(() => {
     if (transactions.length === 0) return;
 
-    // Filter transactions for selected coin and sort by timestamp
     const coinTransactions = transactions
       .filter((tx) => tx.coin === selectedCoin)
       .sort(
@@ -35,23 +234,7 @@ export const PriceChartWithPurchases: React.FC = () => {
       `Processing ${coinTransactions.length} transactions for ${selectedCoin}`
     );
 
-    // Generate chart data with realistic price movements
     const chartPoints: ChartDataPoint[] = [];
-
-    // Get price range from actual transactions
-    const prices = coinTransactions.map((tx) => {
-      const price = parseFloat(tx.price.replace("$", "").replace(",", ""));
-      console.log(`Transaction price: ${tx.price} -> ${price}`);
-      return price;
-    });
-
-    const minPrice = Math.min(...prices);
-    const maxPrice = Math.max(...prices);
-    const priceRange = maxPrice - minPrice;
-
-    console.log(
-      `Price range: ${minPrice} to ${maxPrice} (range: ${priceRange})`
-    );
 
     // Add all transaction points
     coinTransactions.forEach((tx) => {
@@ -70,7 +253,6 @@ export const PriceChartWithPurchases: React.FC = () => {
       });
     });
 
-    // Sort by timestamp
     chartPoints.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
     console.log(`Generated ${chartPoints.length} chart points`);
     setChartData(chartPoints);
@@ -81,6 +263,17 @@ export const PriceChartWithPurchases: React.FC = () => {
     0,
     8
   );
+
+  // Set default coin to most traded one
+  useEffect(() => {
+    if (
+      availableCoins.length > 0 &&
+      selectedCoin === "BONK" &&
+      !availableCoins.includes("BONK")
+    ) {
+      setSelectedCoin(availableCoins[0]);
+    }
+  }, [availableCoins, selectedCoin]);
 
   if (isLoading) {
     return (
@@ -112,7 +305,7 @@ export const PriceChartWithPurchases: React.FC = () => {
     );
   }
 
-  // Calculate chart dimensions and scaling - FIXED SCALING
+  // Calculate chart dimensions and scaling
   const chartWidth = 900;
   const chartHeight = 500;
   const padding = 80;
@@ -120,27 +313,18 @@ export const PriceChartWithPurchases: React.FC = () => {
   const prices = chartData.map((d) => d.price);
   const minPrice = Math.min(...prices);
   const maxPrice = Math.max(...prices);
-  const priceRange = maxPrice - minPrice || 0.000001; // Prevent division by zero
+  const priceRange = maxPrice - minPrice || 0.000001;
 
-  // Add 10% padding to price range for better visualization
+  // Add 10% padding to price range
   const paddedMinPrice = minPrice - priceRange * 0.1;
   const paddedMaxPrice = maxPrice + priceRange * 0.1;
   const paddedPriceRange = paddedMaxPrice - paddedMinPrice;
 
   const minTime = Math.min(...chartData.map((d) => d.timestamp.getTime()));
   const maxTime = Math.max(...chartData.map((d) => d.timestamp.getTime()));
-  const timeRange = maxTime - minTime || 1; // Prevent division by zero
+  const timeRange = maxTime - minTime || 1;
 
-  console.log("Chart scaling:", {
-    minPrice,
-    maxPrice,
-    priceRange,
-    paddedMinPrice,
-    paddedMaxPrice,
-    paddedPriceRange,
-  });
-
-  // Scale functions - FIXED
+  // Scale functions
   const scaleX = (timestamp: Date) => {
     const ratio = (timestamp.getTime() - minTime) / timeRange;
     return padding + ratio * (chartWidth - 2 * padding);
@@ -156,7 +340,6 @@ export const PriceChartWithPurchases: React.FC = () => {
     .map((point, index) => {
       const x = scaleX(point.timestamp);
       const y = scaleY(point.price);
-      console.log(`Point ${index}: price=${point.price}, x=${x}, y=${y}`);
       return `${index === 0 ? "M" : "L"} ${x} ${y}`;
     })
     .join(" ");
@@ -168,10 +351,6 @@ export const PriceChartWithPurchases: React.FC = () => {
   );
   const sellPoints = transactionPoints.filter(
     (d) => d.transactionType === "CLOSE"
-  );
-
-  console.log(
-    `Buy points: ${buyPoints.length}, Sell points: ${sellPoints.length}`
   );
 
   return (
@@ -202,7 +381,7 @@ export const PriceChartWithPurchases: React.FC = () => {
         </div>
       </div>
 
-      {/* Chart Container - IMPROVED */}
+      {/* Chart Container */}
       <div className="relative bg-black/20 rounded-xl p-4 overflow-x-auto">
         <div className="min-w-[900px]">
           <svg
@@ -211,7 +390,7 @@ export const PriceChartWithPurchases: React.FC = () => {
             className="w-full h-auto"
             viewBox={`0 0 ${chartWidth} ${chartHeight}`}
           >
-            {/* Grid lines */}
+            {/* Grid and gradients */}
             <defs>
               <pattern
                 id="grid"
