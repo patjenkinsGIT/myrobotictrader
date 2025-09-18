@@ -34,15 +34,27 @@ interface CoinAnalysis {
   recentActivity: LiveTransaction[];
 }
 
-export const PriceChartWithPurchases: React.FC = () => {
+interface PriceChartWithPurchasesProps {
+  selectedCoin?: string;
+  onCoinSelect?: (coin: string) => void;
+}
+
+export const PriceChartWithPurchases: React.FC<
+  PriceChartWithPurchasesProps
+> = ({ selectedCoin: externalSelectedCoin, onCoinSelect }) => {
   const [transactions, setTransactions] = useState<LiveTransaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedCoin, setSelectedCoin] = useState<string>("BONK");
+  const [internalSelectedCoin, setInternalSelectedCoin] =
+    useState<string>("BONK");
   const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
   const [coinAnalysis, setCoinAnalysis] = useState<CoinAnalysis[]>([]);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [isCacheHit, setIsCacheHit] = useState(false);
+
+  // Use external selectedCoin if provided, otherwise use internal state
+  const selectedCoin = externalSelectedCoin || internalSelectedCoin;
+  const setSelectedCoin = onCoinSelect || setInternalSelectedCoin;
 
   const SHEET_TAB = "Last25Results";
   const SHEET_RANGE = "A:G";

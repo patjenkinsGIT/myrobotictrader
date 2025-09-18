@@ -32,10 +32,22 @@ interface CoinAnalysis {
   pricePoints: PricePoint[];
 }
 
-export const StrategicPurchaseAnalysis: React.FC = () => {
+interface StrategicPurchaseAnalysisProps {
+  selectedCoin?: string;
+  onCoinSelect?: (coin: string) => void;
+}
+
+export const StrategicPurchaseAnalysis: React.FC<
+  StrategicPurchaseAnalysisProps
+> = ({ selectedCoin: externalSelectedCoin, onCoinSelect }) => {
   const { transactions, isLoading, error } = useLiveTransactions();
-  const [selectedCoin, setSelectedCoin] = useState<string>("ALL");
+  const [internalSelectedCoin, setInternalSelectedCoin] =
+    useState<string>("BONK");
   const [analysisData, setAnalysisData] = useState<CoinAnalysis[]>([]);
+
+  // Use external selectedCoin if provided, otherwise use internal state
+  const selectedCoin = externalSelectedCoin || internalSelectedCoin;
+  const setSelectedCoin = onCoinSelect || setInternalSelectedCoin;
 
   // Process transaction data for analysis
   useEffect(() => {
@@ -88,35 +100,25 @@ export const StrategicPurchaseAnalysis: React.FC = () => {
     analysis.sort((a, b) => b.totalTrades - a.totalTrades);
     setAnalysisData(analysis);
 
-    // Set default selected coin to the most traded one
-    if (analysis.length > 0 && selectedCoin === "ALL") {
+    // Set default selected coin to the first available coin if not already set
+    if (analysis.length > 0 && !analysis.find((a) => a.coin === selectedCoin)) {
       setSelectedCoin(analysis[0].coin);
     }
-  }, [transactions, selectedCoin]);
+  }, [transactions, selectedCoin, setSelectedCoin]);
 
   const getSelectedCoinData = () => {
-    if (selectedCoin === "ALL") {
+    const coinData = analysisData.find((data) => data.coin === selectedCoin);
+    if (!coinData) {
       return {
-        coin: "ALL COINS",
-        totalTrades: transactions.length,
+        coin: selectedCoin,
+        totalTrades: 0,
         avgPurchasePrice: 0,
-        avgProfit:
-          transactions.reduce((sum, tx) => sum + tx.profit, 0) /
-          transactions.length,
-        successRate: 100,
-        pricePoints: transactions.slice(0, 15).map((tx) => ({
-          timestamp: tx.timestamp,
-          price: parseFloat(tx.price.replace("$", "").replace(",", "")) || 0,
-          isPurchase: true,
-          coin: tx.coin,
-          profit: tx.profit,
-          quantity: tx.quantity,
-        })),
+        avgProfit: 0,
+        successRate: 0,
+        pricePoints: [],
       };
     }
-    return (
-      analysisData.find((data) => data.coin === selectedCoin) || analysisData[0]
-    );
+    return coinData;
   };
 
   const selectedData = getSelectedCoinData();
@@ -160,7 +162,10 @@ export const StrategicPurchaseAnalysis: React.FC = () => {
 
       <div className="relative max-w-6xl mx-auto">
         {/* Price Chart Component */}
-        <PriceChartWithPurchases />
+        <PriceChartWithPurchases
+          selectedCoin={selectedCoin}
+          onCoinSelect={setSelectedCoin}
+        />
 
         {/* Dynamic Key Metrics Row - Now Below Chart */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
