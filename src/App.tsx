@@ -144,14 +144,8 @@ const SEOWrapper = ({ children }: { children: React.ReactNode }) => {
 // FIXED VERSION - Replace the problematic refreshStats with this:
 const HomePage = () => {
   // 🎯 SINGLE HOOK CALL - Get ALL the data from the hook
-  const {
-    tradingStats,
-    isLoading,
-    error,
-    refreshStats,
-    cacheInfo,
-    cacheStats,
-  } = useGoogleSheetsData();
+  const { tradingStats, isLoading, error, refreshStats, cacheInfo } =
+    useGoogleSheetsData();
 
   // Create a safe refresh function as backup
   const safeRefreshStats = React.useCallback(() => {
@@ -180,11 +174,6 @@ const HomePage = () => {
             isFresh: false,
             isRateLimited: false,
             timeUntilNextRefresh: 0,
-          }
-        }
-        cacheStats={
-          cacheStats || {
-            totalEntries: 0,
           }
         }
       />
