@@ -1,6 +1,6 @@
 // src/components/StrategicPurchaseAnalysis.tsx
 import React, { useState, useEffect } from "react";
-import { PriceChartWithPurchases } from "./PricheChartWithPurchases";
+import { PriceChartWithPurchases } from "./PriceChartWithPurchases";
 import {
   TrendingUp,
   TrendingDown,
@@ -408,4 +408,3 @@ export const StrategicPurchaseAnalysis: React.FC = () => {
     </section>
   );
 };
-// Force rebuild Thu Sep 18 11:20:44 EDT 2025
