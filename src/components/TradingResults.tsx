@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   TrendingUp,
   DollarSign,
@@ -41,6 +41,11 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
   cacheInfo = { isFresh: false, isRateLimited: false, timeUntilNextRefresh: 0 },
   cacheStats = { totalEntries: 0 },
 }) => {
+  // Manual refresh state management
+  const [lastManualRefresh, setLastManualRefresh] = useState<number>(0);
+  const [isManualRefreshing, setIsManualRefreshing] = useState<boolean>(false);
+  const MANUAL_REFRESH_COOLDOWN = 2 * 60 * 1000; // 2 minutes cooldown
+
   const timeSinceStart = calculateTimeSinceStart();
 
   // Format time until next refresh
@@ -56,14 +61,46 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
     return `${minutes}m`;
   };
 
-  if (isLoading) {
+  // Enhanced manual refresh handler with cooldown protection
+  const handleManualRefresh = async () => {
+    const now = Date.now();
+    const timeSinceLastRefresh = now - lastManualRefresh;
+
+    // Check cooldown
+    if (timeSinceLastRefresh < MANUAL_REFRESH_COOLDOWN) {
+      const remainingTime = Math.ceil(
+        (MANUAL_REFRESH_COOLDOWN - timeSinceLastRefresh) / 1000
+      );
+      alert(`Please wait ${remainingTime} seconds before refreshing again`);
+      return;
+    }
+
+    setIsManualRefreshing(true);
+
+    try {
+      // Call the existing refresh function
+      await refreshStats();
+
+      setLastManualRefresh(now);
+      console.log("Manual refresh completed successfully");
+    } catch (error) {
+      console.error("Manual refresh failed:", error);
+      alert("Refresh failed. Please try again.");
+    } finally {
+      setIsManualRefreshing(false);
+    }
+  };
+
+  if (isLoading || isManualRefreshing) {
     return (
       <section className="py-16 px-4 relative overflow-hidden">
         <div className="relative max-w-6xl mx-auto text-center">
           <div className="flex items-center justify-center py-12">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-400 mr-3"></div>
             <span className="text-gray-300 text-lg">
-              Loading live trading data...
+              {isManualRefreshing
+                ? "Refreshing trading data..."
+                : "Loading live trading data..."}
             </span>
           </div>
         </div>
@@ -94,11 +131,20 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
                 : "Trading data is not available. This could be due to API configuration issues or data loading problems."}
             </p>
             <button
-              onClick={refreshStats}
-              className="inline-flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300"
+              onClick={handleManualRefresh}
+              disabled={isManualRefreshing}
+              className={`inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold transition-all duration-300 ${
+                isManualRefreshing
+                  ? "bg-gray-600 text-gray-400 cursor-not-allowed"
+                  : "bg-red-500 hover:bg-red-600 text-white"
+              }`}
             >
-              <RefreshCw className="w-4 h-4" />
-              Retry Connection
+              <RefreshCw
+                className={`w-4 h-4 ${
+                  isManualRefreshing ? "animate-spin" : ""
+                }`}
+              />
+              {isManualRefreshing ? "Retrying..." : "Retry Connection"}
             </button>
           </div>
 
@@ -250,7 +296,7 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
               : "Stats Updated Monthly!"}
           </p>
 
-          {/* Enhanced Live Data Indicator with Cache Status */}
+          {/* Enhanced Live Data Indicator with Cache Status and Manual Refresh */}
           {currentData.isLiveData && (
             <div className="mt-6 flex justify-center">
               <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-lg p-4 border border-green-400/30 shadow-lg shadow-green-500/10">
@@ -267,7 +313,7 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
                   </div>
                 </div>
 
-                {/* Cache Status Indicator */}
+                {/* Enhanced Cache Status with Manual Refresh Button */}
                 <div className="flex items-center justify-center gap-4 text-xs text-gray-400 border-t border-green-400/20 pt-2">
                   <div className="flex items-center gap-1">
                     <Database className="w-3 h-3" />
@@ -286,6 +332,34 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
                     <Wifi className="w-3 h-3" />
                     <span>Cached entries: {cacheStats.totalEntries}</span>
                   </div>
+
+                  {/* Manual Refresh Button */}
+                  <button
+                    onClick={handleManualRefresh}
+                    disabled={isManualRefreshing}
+                    className={`
+                      flex items-center gap-1 px-3 py-1 text-xs rounded-md transition-all duration-200
+                      ${
+                        isManualRefreshing
+                          ? "bg-gray-600 text-gray-400 cursor-not-allowed"
+                          : "bg-blue-500 hover:bg-blue-600 text-white hover:scale-105 active:scale-95"
+                      }
+                    `}
+                    title={
+                      isManualRefreshing
+                        ? "Refreshing..."
+                        : "Force refresh data (bypasses cache)"
+                    }
+                  >
+                    <RefreshCw
+                      className={`w-3 h-3 ${
+                        isManualRefreshing ? "animate-spin" : ""
+                      }`}
+                    />
+                    <span>
+                      {isManualRefreshing ? "Refreshing..." : "Refresh Now"}
+                    </span>
+                  </button>
                 </div>
               </div>
             </div>
