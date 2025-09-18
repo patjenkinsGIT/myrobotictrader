@@ -159,7 +159,10 @@ export const StrategicPurchaseAnalysis: React.FC = () => {
       <div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 to-indigo-900/20"></div>
 
       <div className="relative max-w-6xl mx-auto">
-        {/* Key Metrics Row */}
+        {/* Price Chart Component */}
+        <PriceChartWithPurchases />
+
+        {/* Dynamic Key Metrics Row - Now Below Chart */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/15">
             <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-indigo-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
@@ -236,10 +239,7 @@ export const StrategicPurchaseAnalysis: React.FC = () => {
           </div>
         </div>
 
-        {/* Price Chart Component */}
-        <PriceChartWithPurchases />
-
-        {/* Dynamic Strategic Purchase Timeline */}
+        {/* Dynamic Strategic Purchase Timeline - Updates based on chart selection */}
         <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8 mb-8 relative">
           <div className="absolute top-4 right-4 opacity-20 pointer-events-none hidden md:block">
             <div className="w-16 h-16 rounded-full overflow-hidden bg-gradient-to-br from-purple-500/20 to-indigo-500/20 backdrop-blur-sm border border-purple-400/30 flex items-center justify-center animate-pulse shadow-lg shadow-purple-500/20">
@@ -252,54 +252,67 @@ export const StrategicPurchaseAnalysis: React.FC = () => {
           </h3>
 
           <div className="space-y-4 max-h-96 overflow-y-auto scrollbar-hide">
-            {selectedData.pricePoints.map((point, index) => (
-              <div
-                key={`${point.coin}-${point.timestamp}-${index}`}
-                className="flex items-center justify-between bg-white/5 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 border border-white/10"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center shadow-lg shadow-green-500/30">
-                    <ArrowDown className="w-5 h-5 text-white" />
+            {selectedData.pricePoints.length > 0 ? (
+              selectedData.pricePoints.map((point, index) => (
+                <div
+                  key={`${point.coin}-${point.timestamp}-${index}`}
+                  className="flex items-center justify-between bg-white/5 rounded-xl p-4 hover:bg-white/10 transition-all duration-300 border border-white/10"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center shadow-lg shadow-green-500/30">
+                      <ArrowDown className="w-5 h-5 text-white" />
+                    </div>
+
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-bold text-white text-lg">
+                          {point.coin}
+                        </span>
+                        <span className="text-green-400 font-mono text-sm bg-green-500/20 px-2 py-1 rounded">
+                          BUY
+                        </span>
+                      </div>
+                      <div className="text-gray-400 text-sm flex items-center gap-2">
+                        <Clock className="w-3 h-3" />
+                        {point.timestamp}
+                      </div>
+                    </div>
                   </div>
 
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="font-bold text-white text-lg">
-                        {point.coin}
-                      </span>
-                      <span className="text-green-400 font-mono text-sm bg-green-500/20 px-2 py-1 rounded">
-                        BUY
-                      </span>
+                  <div className="text-right">
+                    <div className="text-white font-mono text-lg mb-1">
+                      $
+                      {point.price < 1
+                        ? point.price.toFixed(4)
+                        : point.price.toLocaleString()}
                     </div>
-                    <div className="text-gray-400 text-sm flex items-center gap-2">
-                      <Clock className="w-3 h-3" />
-                      {point.timestamp}
+                    <div className="text-green-400 font-semibold">
+                      +${point.profit?.toFixed(2)} profit
+                    </div>
+                    <div className="text-gray-400 text-xs">
+                      Qty: {point.quantity}
                     </div>
                   </div>
                 </div>
-
-                <div className="text-right">
-                  <div className="text-white font-mono text-lg mb-1">
-                    $
-                    {point.price < 1
-                      ? point.price.toFixed(4)
-                      : point.price.toLocaleString()}
-                  </div>
-                  <div className="text-green-400 font-semibold">
-                    +${point.profit?.toFixed(2)} profit
-                  </div>
-                  <div className="text-gray-400 text-xs">
-                    Qty: {point.quantity}
-                  </div>
-                </div>
+              ))
+            ) : (
+              <div className="text-center py-8">
+                <Activity className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-400">
+                  No recent transactions found for {selectedData.coin}
+                </p>
+                <p className="text-gray-500 text-sm mt-2">
+                  Select a different coin from the chart above to see its
+                  activity
+                </p>
               </div>
-            ))}
+            )}
           </div>
 
           <div className="text-center mt-6 pt-4 border-t border-white/10">
             <p className="text-purple-300 font-semibold text-sm md:text-lg">
-              🎯 Strategic dip buying • 🤖 AI-powered timing • 💰 100%
-              profitable trades
+              🎯 Strategic dip buying • 🤖 AI-powered timing • 💰{" "}
+              {selectedData.successRate}% profitable trades
             </p>
           </div>
         </div>
