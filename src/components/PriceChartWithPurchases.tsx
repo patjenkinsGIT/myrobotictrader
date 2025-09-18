@@ -375,20 +375,25 @@ export const PriceChartWithPurchases: React.FC = () => {
       {/* Chart Container - Main focus */}
       <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8">
         <div className="text-center mb-6">
-          <h3 className="text-xl md:text-2xl font-bold text-white mb-4">
-            Strategic Purchase Chart - {selectedCoin}
-          </h3>
-          <div className="flex justify-center items-center gap-4 text-sm text-gray-300 mb-4">
-            <div className="flex items-center gap-2">
+          <div className="flex justify-center items-center gap-2 mb-4">
+            <h3 className="text-xl md:text-2xl font-bold text-white">
+              Strategic Purchase Chart - {selectedCoin}
+            </h3>
+            <div className="flex items-center gap-2 bg-black/20 rounded-full px-3 py-1">
               <div
                 className={`w-2 h-2 rounded-full ${
                   isCacheHit ? "bg-blue-400" : "bg-green-400"
                 } animate-pulse`}
               ></div>
-              <span className={cacheStatus.color}>{cacheStatus.text} DATA</span>
+              <span className={`text-xs font-medium ${cacheStatus.color}`}>
+                {cacheStatus.text}
+              </span>
             </div>
-            <span>Updated: {lastUpdated.toLocaleTimeString()}</span>
           </div>
+          <p className="text-sm text-gray-400">
+            Updated: {lastUpdated.toLocaleTimeString()} • Live data from Google
+            Sheets
+          </p>
         </div>
 
         <div className="relative bg-black/20 rounded-xl p-4 overflow-x-auto">

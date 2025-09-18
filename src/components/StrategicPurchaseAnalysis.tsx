@@ -11,8 +11,6 @@ import {
   Clock,
   ArrowDown,
   ArrowUp,
-  Sparkles,
-  Brain,
 } from "lucide-react";
 import { useLiveTransactions } from "../hooks/useLiveTransactions";
 
@@ -161,52 +159,6 @@ export const StrategicPurchaseAnalysis: React.FC = () => {
       <div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 to-indigo-900/20"></div>
 
       <div className="relative max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600/20 to-indigo-600/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20 mb-6">
-            <Brain className="w-4 h-4 text-purple-400" />
-            <span className="text-purple-300 font-medium">
-              STRATEGIC ANALYSIS
-            </span>
-            <Sparkles className="w-4 h-4 text-purple-400" />
-          </div>
-
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
-            Strategic Purchase Analysis
-          </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-6">
-            See how my robotic trader strategically buys on price dips and
-            wiggles to maximize profits
-          </p>
-
-          {/* Coin Selector */}
-          <div className="flex flex-wrap justify-center gap-2 mb-8">
-            <button
-              onClick={() => setSelectedCoin("ALL")}
-              className={`px-4 py-2 rounded-full font-medium transition-all duration-300 ${
-                selectedCoin === "ALL"
-                  ? "bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-lg shadow-purple-500/30"
-                  : "bg-white/10 text-gray-300 hover:bg-white/20"
-              }`}
-            >
-              All Coins ({transactions.length})
-            </button>
-            {analysisData.slice(0, 6).map((data) => (
-              <button
-                key={data.coin}
-                onClick={() => setSelectedCoin(data.coin)}
-                className={`px-4 py-2 rounded-full font-medium transition-all duration-300 ${
-                  selectedCoin === data.coin
-                    ? "bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-lg shadow-purple-500/30"
-                    : "bg-white/10 text-gray-300 hover:bg-white/20"
-                }`}
-              >
-                {data.coin} ({data.totalTrades})
-              </button>
-            ))}
-          </div>
-        </div>
-
         {/* Key Metrics Row */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/15">
