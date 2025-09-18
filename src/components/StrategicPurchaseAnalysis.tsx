@@ -1,5 +1,6 @@
 // src/components/StrategicPurchaseAnalysis.tsx
 import React, { useState, useEffect } from "react";
+import { PriceChartWithPurchases } from "./PricheChartWithPurchases";
 import {
   TrendingUp,
   TrendingDown,
@@ -282,6 +283,7 @@ export const StrategicPurchaseAnalysis: React.FC = () => {
             </div>
           </div>
         </div>
+        <PriceChartWithPurchases />
 
         {/* Strategic Purchase Timeline */}
         <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8 mb-8 relative">
