@@ -38,8 +38,8 @@ class SmartCache<K = string, V = any> {
     staleEntries: 0,
   };
 
-  // Default TTL: 4 hours (4 * 60 * 60 * 1000 milliseconds)
-  private defaultTTL = 4 * 60 * 60 * 1000;
+  // Default TTL: 30 minutes (30 * 60 * 1000 milliseconds)
+  private defaultTTL = 30 * 60 * 1000;
   private localStoragePrefix: string;
   private persistToLocalStorage: boolean;
 
@@ -308,9 +308,9 @@ function createSmartCache<K = string, V = any>(
   return cache;
 }
 
-// Create trading data cache with 4-hour TTL and localStorage persistence
+// Create trading data cache with 30-minute TTL and localStorage persistence
 export const tradingDataCache = createSmartCache<string, any>(
-  4 * 60 * 60 * 1000, // 4 hours TTL
+  30 * 60 * 1000, // 30 minutes TTL - balances freshness with API protection
   "trading_data_cache", // localStorage prefix
   true // enable localStorage persistence
 );
