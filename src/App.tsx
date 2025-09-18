@@ -19,6 +19,7 @@ import { Hero } from "./components/Hero";
 import { MyStory } from "./components/MyStory";
 import { TradingResults } from "./components/TradingResults";
 import { Features } from "./components/Features";
+import { StrategicPurchaseAnalysis } from "./components/StrategicPurchaseAnalysis";
 import { CallToAction } from "./components/CallToAction";
 import { FAQ } from "./components/FAQ";
 import { Footer } from "./components/Footer";
@@ -177,6 +178,7 @@ const HomePage = () => {
           }
         }
       />
+      <StrategicPurchaseAnalysis />
       <Features />
       <CallToAction />
       <FAQ />
