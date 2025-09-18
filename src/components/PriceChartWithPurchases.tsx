@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { TrendingDown } from "lucide-react";
 import { tradingDataCache } from "../utils/smartCache";
+import { useWebSocketPrice } from "../hooks/useWebSocketPrice";
+import { LivePriceIndicator } from "./LivePriceIndicator";
 
 interface LiveTransaction {
   id: string;
@@ -39,6 +41,17 @@ interface PriceChartWithPurchasesProps {
   onCoinSelect?: (coin: string) => void;
 }
 
+interface PriceData {
+  symbol: string;
+  price: number;
+  change24h: number;
+  changePercent24h: number;
+  volume24h: number;
+  timestamp: number;
+  high24h: number;
+  low24h: number;
+}
+
 export const PriceChartWithPurchases: React.FC<
   PriceChartWithPurchasesProps
 > = ({ selectedCoin: externalSelectedCoin, onCoinSelect }) => {
@@ -55,6 +68,16 @@ export const PriceChartWithPurchases: React.FC<
   // Use external selectedCoin if provided, otherwise use internal state
   const selectedCoin = externalSelectedCoin || internalSelectedCoin;
   const setSelectedCoin = onCoinSelect || setInternalSelectedCoin;
+
+  // WebSocket hook for live prices
+  const {
+    prices,
+    isConnected,
+    connectionStatus,
+    subscribe,
+    unsubscribe,
+    reconnect,
+  } = useWebSocketPrice();
 
   const SHEET_TAB = "Last25Results";
   const SHEET_RANGE = "A:G";
@@ -256,7 +279,7 @@ export const PriceChartWithPurchases: React.FC<
     if (analysis.length > 0 && !analysis.find((a) => a.coin === selectedCoin)) {
       setSelectedCoin(analysis[0].coin);
     }
-  }, [transactions, selectedCoin]);
+  }, [transactions, selectedCoin, setSelectedCoin]);
 
   useEffect(() => {
     if (transactions.length === 0) return;
@@ -285,6 +308,20 @@ export const PriceChartWithPurchases: React.FC<
     chartPoints.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
     setChartData(chartPoints);
   }, [transactions, selectedCoin]);
+
+  // Subscribe to price updates when coins change
+  useEffect(() => {
+    const coins = coinAnalysis.map((coin) => coin.coin);
+    if (coins.length > 0) {
+      subscribe(coins);
+    }
+
+    return () => {
+      if (coins.length > 0) {
+        unsubscribe(coins);
+      }
+    };
+  }, [coinAnalysis, subscribe, unsubscribe]);
 
   const availableCoins = coinAnalysis.slice(0, 8);
   const cacheStatus = getCacheStatus();
@@ -325,9 +362,9 @@ export const PriceChartWithPurchases: React.FC<
   const chartWidth = 900;
   const chartHeight = 500;
   const padding = 80;
-  const prices = chartData.map((d) => d.price);
-  const minPrice = Math.min(...prices);
-  const maxPrice = Math.max(...prices);
+  const chartPrices = chartData.map((d) => d.price);
+  const minPrice = Math.min(...chartPrices);
+  const maxPrice = Math.max(...chartPrices);
   const priceRange = maxPrice - minPrice || 0.000001;
   const paddedMinPrice = minPrice - priceRange * 0.1;
   const paddedMaxPrice = maxPrice + priceRange * 0.1;
@@ -364,34 +401,71 @@ export const PriceChartWithPurchases: React.FC<
 
   return (
     <div className="space-y-8">
-      {/* Coin Selector - Simple and focused */}
-      <div className="flex flex-wrap justify-center gap-2">
-        {availableCoins.map((coinData) => (
-          <button
-            key={coinData.coin}
-            onClick={() => setSelectedCoin(coinData.coin)}
-            className={`px-4 py-3 rounded-full font-medium transition-all duration-300 ${
-              selectedCoin === coinData.coin
-                ? "bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-lg shadow-purple-500/30"
-                : "bg-white/10 text-gray-300 hover:bg-white/20"
-            }`}
-          >
-            <div className="text-sm font-bold">{coinData.coin}</div>
-            <div className="text-xs opacity-75">
-              {coinData.totalTrades} trades • ${coinData.totalProfit.toFixed(0)}
-            </div>
-          </button>
-        ))}
+      {/* Enhanced Coin Selector with Live Prices */}
+      <div className="flex flex-wrap justify-center gap-3">
+        {availableCoins.map((coinData) => {
+          const livePrice = prices?.[coinData.coin] as PriceData | undefined;
+          const isPositive = livePrice
+            ? livePrice.changePercent24h >= 0
+            : false;
+
+          return (
+            <button
+              key={coinData.coin}
+              onClick={() => setSelectedCoin(coinData.coin)}
+              className={`px-5 py-4 rounded-xl font-medium transition-all duration-300 ${
+                selectedCoin === coinData.coin
+                  ? "bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-lg shadow-purple-500/30 scale-105"
+                  : "bg-white/10 text-gray-300 hover:bg-white/20 hover:scale-102"
+              }`}
+            >
+              <div className="text-sm font-bold">{coinData.coin}</div>
+              <div className="text-xs opacity-75">
+                {coinData.totalTrades} trades • $
+                {coinData.totalProfit.toFixed(0)}
+              </div>
+
+              {/* Live Price */}
+              {livePrice && livePrice.price > 0 && (
+                <div
+                  className={`text-xs mt-1 ${
+                    isPositive ? "text-green-300" : "text-red-300"
+                  }`}
+                >
+                  $
+                  {livePrice.price < 0.001
+                    ? livePrice.price.toFixed(6)
+                    : livePrice.price.toFixed(4)}
+                  <span className="ml-1">
+                    ({isPositive ? "+" : ""}
+                    {livePrice.changePercent24h.toFixed(2)}%)
+                  </span>
+                </div>
+              )}
+            </button>
+          );
+        })}
       </div>
 
       {/* Chart Container - Main focus */}
       <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8">
         <div className="text-center mb-6">
-          <div className="flex justify-center items-center gap-2 mb-4">
+          <div className="flex justify-center items-center gap-3 mb-6">
             <h3 className="text-xl md:text-2xl font-bold text-white">
               Strategic Purchase Chart - {selectedCoin}
             </h3>
-            <div className="flex items-center gap-2 bg-black/20 rounded-full px-3 py-1">
+
+            {/* Live Price Indicator */}
+            <LivePriceIndicator
+              symbol={selectedCoin}
+              priceData={prices?.[selectedCoin] as PriceData | undefined}
+              isConnected={isConnected}
+              connectionStatus={connectionStatus}
+              onReconnect={reconnect}
+              compact={true}
+            />
+
+            <div className="flex items-center gap-2 bg-black/20 rounded-full px-4 py-2">
               <div
                 className={`w-2 h-2 rounded-full ${
                   isCacheHit ? "bg-blue-400" : "bg-green-400"
@@ -402,6 +476,7 @@ export const PriceChartWithPurchases: React.FC<
               </span>
             </div>
           </div>
+
           <p className="text-sm text-gray-400">
             Updated: {lastUpdated.toLocaleTimeString()} • Live data from Google
             Sheets
