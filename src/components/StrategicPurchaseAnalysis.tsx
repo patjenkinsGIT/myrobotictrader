@@ -283,9 +283,11 @@ export const StrategicPurchaseAnalysis: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Price Chart Component */}
         <PriceChartWithPurchases />
 
-        {/* Strategic Purchase Timeline */}
+        {/* Dynamic Strategic Purchase Timeline */}
         <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8 mb-8 relative">
           <div className="absolute top-4 right-4 opacity-20 pointer-events-none hidden md:block">
             <div className="w-16 h-16 rounded-full overflow-hidden bg-gradient-to-br from-purple-500/20 to-indigo-500/20 backdrop-blur-sm border border-purple-400/30 flex items-center justify-center animate-pulse shadow-lg shadow-purple-500/20">
