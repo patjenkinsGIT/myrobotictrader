@@ -189,52 +189,51 @@ export const BitcoinCorrelation: React.FC<BitcoinCorrelationProps> = ({
               </tr>
             </thead>
             <tbody>
-              {correlationData.slice(-6).map((data) => {
-                const matchingMonth = monthlyTradingData.find(
-                  (m) => m.month === data.month
-                );
-                const profit = matchingMonth ? matchingMonth.profit : 0;
-
-                return (
-                  <tr key={data.month} className="border-t border-white/5">
-                    <td className="p-4 text-white font-medium">{data.month}</td>
-                    <td className="p-4 text-right">
-                      <span className="text-green-400 font-semibold">
-                        +${profit.toFixed(0)}
+              {correlationData.slice(-6).map((data) => (
+                <tr key={data.month} className="border-t border-white/5">
+                  <td className="p-4 text-white font-medium">{data.month}</td>
+                  <td className="p-4 text-right">
+                    <span className="text-green-400 font-semibold">
+                      +$
+                      {(() => {
+                        const month = monthlyTradingData.find(
+                          (m) => m.month === data.month
+                        );
+                        return month ? month.profit.toFixed(0) : "0";
+                      })()}
+                    </span>
+                  </td>
+                  <td className="p-4 text-right">
+                    <span
+                      className={`font-semibold ${
+                        data.bitcoinReturn >= 0
+                          ? "text-green-400"
+                          : "text-red-400"
+                      }`}
+                    >
+                      {data.bitcoinReturn >= 0 ? "+" : ""}
+                      {data.bitcoinReturn}%
+                    </span>
+                  </td>
+                  <td className="p-4 text-center">
+                    {data.status === "independent" && (
+                      <span className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded-full text-xs">
+                        Independent
                       </span>
-                    </td>
-                    <td className="p-4 text-right">
-                      <span
-                        className={`font-semibold ${
-                          data.bitcoinReturn >= 0
-                            ? "text-green-400"
-                            : "text-red-400"
-                        }`}
-                      >
-                        {data.bitcoinReturn >= 0 ? "+" : ""}
-                        {data.bitcoinReturn}%
+                    )}
+                    {data.status === "inverse" && (
+                      <span className="px-2 py-1 bg-green-500/20 text-green-300 rounded-full text-xs">
+                        Inverse
                       </span>
-                    </td>
-                    <td className="p-4 text-center">
-                      {data.status === "independent" && (
-                        <span className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded-full text-xs">
-                          Independent
-                        </span>
-                      )}
-                      {data.status === "inverse" && (
-                        <span className="px-2 py-1 bg-green-500/20 text-green-300 rounded-full text-xs">
-                          Inverse
-                        </span>
-                      )}
-                      {data.status === "correlated" && (
-                        <span className="px-2 py-1 bg-yellow-500/20 text-yellow-300 rounded-full text-xs">
-                          Correlated
-                        </span>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
+                    )}
+                    {data.status === "correlated" && (
+                      <span className="px-2 py-1 bg-yellow-500/20 text-yellow-300 rounded-full text-xs">
+                        Correlated
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
