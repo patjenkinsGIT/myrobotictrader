@@ -408,3 +408,4 @@ export const StrategicPurchaseAnalysis: React.FC = () => {
     </section>
   );
 };
+// Force rebuild Thu Sep 18 11:20:44 EDT 2025
