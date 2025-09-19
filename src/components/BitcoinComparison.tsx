@@ -1,3 +1,4 @@
+// src/components/BitcoinComparison.tsx
 import React from "react";
 import {
   TrendingUp,
@@ -6,6 +7,7 @@ import {
   Shield,
   AlertTriangle,
   Bitcoin,
+  Zap,
 } from "lucide-react";
 import useBitcoinCorrelation from "../hooks/useBitcoinCorrelation";
 
@@ -34,12 +36,13 @@ export const BitcoinComparison: React.FC<BitcoinComparisonProps> = ({
   if (isLoading && !currentBitcoin) {
     return (
       <section className="py-16 px-4 relative overflow-hidden">
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-gradient-to-r from-orange-900/20 to-yellow-900/20 rounded-2xl border border-orange-500/20 p-6">
-            <div className="flex items-center justify-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-400"></div>
-              <span className="ml-3 text-gray-300">
-                Loading Bitcoin comparison...
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-yellow-500/10 to-red-500/10"></div>
+        <div className="relative max-w-6xl mx-auto">
+          <div className="bg-gradient-to-br from-orange-500/20 via-yellow-500/15 to-amber-500/20 rounded-3xl border border-orange-400/30 p-8 backdrop-blur-sm">
+            <div className="flex items-center justify-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-4 border-orange-400/30 border-t-orange-400"></div>
+              <span className="ml-4 text-orange-100 text-lg font-medium">
+                Loading Bitcoin comparison data...
               </span>
             </div>
           </div>
@@ -48,196 +51,198 @@ export const BitcoinComparison: React.FC<BitcoinComparisonProps> = ({
     );
   }
 
-  const winRate = totalMonths > 0 ? (independentMonths / totalMonths) * 100 : 0;
+  const independenceRate =
+    totalMonths > 0 ? (independentMonths / totalMonths) * 100 : 0;
   const currentBtcChange = currentBitcoin?.change30d || 0;
-  const lastMonth = monthlyTradingData[monthlyTradingData.length - 1];
-
-  // Simple status messages people can understand
-  const getSimpleStatus = (yourProfit: number, bitcoinChange: number) => {
-    if (yourProfit > 0 && bitcoinChange < 0) {
-      return {
-        text: "✅ You made money while Bitcoin lost money",
-        color: "text-green-400",
-        bgColor: "bg-green-500/10",
-      };
-    }
-    if (yourProfit > 0 && bitcoinChange > 0) {
-      return {
-        text: "🚀 Both you and Bitcoin made money",
-        color: "text-green-400",
-        bgColor: "bg-green-500/10",
-      };
-    }
-    if (yourProfit > 0) {
-      return {
-        text: "💰 You stayed profitable",
-        color: "text-green-400",
-        bgColor: "bg-green-500/10",
-      };
-    }
-    return {
-      text: "📊 Market comparison",
-      color: "text-gray-400",
-      bgColor: "bg-gray-500/10",
-    };
-  };
-
-  const status = lastMonth
-    ? getSimpleStatus(lastMonth.profit, currentBtcChange)
-    : null;
 
   return (
-    <section className="py-16 px-4 relative overflow-hidden">
-      <div className="max-w-6xl mx-auto">
-        <div className="bg-gradient-to-r from-orange-900/20 to-yellow-900/20 rounded-2xl border border-orange-500/20 p-6">
-          {/* Header */}
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-yellow-500 p-3 shadow-lg shadow-orange-500/40">
-              <Bitcoin className="w-full h-full text-white" />
+    <section className="py-20 px-4 relative overflow-hidden">
+      {/* Enhanced animated background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-yellow-500/10 to-red-500/10"></div>
+      <div className="absolute inset-0 bg-gradient-to-tr from-purple-600/5 via-blue-500/5 to-cyan-400/5"></div>
+
+      {/* Floating particles effect */}
+      <div className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-br from-orange-400/20 to-yellow-400/20 rounded-full blur-xl animate-pulse"></div>
+      <div className="absolute bottom-20 right-16 w-40 h-40 bg-gradient-to-br from-cyan-400/15 to-blue-500/15 rounded-full blur-xl animate-pulse delay-1000"></div>
+
+      <div className="relative max-w-6xl mx-auto">
+        <div className="group bg-gradient-to-br from-orange-500/20 via-yellow-500/15 to-amber-500/20 rounded-3xl border border-orange-400/30 p-8 backdrop-blur-sm hover:border-orange-300/50 transition-all duration-500 shadow-2xl shadow-orange-500/10 hover:shadow-orange-400/20">
+          {/* Enhanced Header */}
+          <div className="flex items-center gap-4 mb-8">
+            <div className="relative group">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-400 via-yellow-400 to-amber-400 p-4 shadow-xl shadow-orange-500/30 group-hover:shadow-orange-400/50 transition-all duration-300 group-hover:scale-110">
+                <Bitcoin className="w-full h-full text-white drop-shadow-sm" />
+              </div>
+              <div className="absolute -inset-1 bg-gradient-to-br from-orange-400 to-yellow-400 rounded-2xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
             </div>
             <div>
-              <h3 className="text-2xl font-bold text-white">
-                Bitcoin vs My Results
+              <h3 className="text-3xl font-bold bg-gradient-to-r from-orange-200 via-yellow-200 to-amber-200 bg-clip-text text-transparent mb-2">
+                Why This Strategy Works
               </h3>
-              <p className="text-orange-300">
-                Live Bitcoin Price: $
-                {currentBitcoin?.price?.toLocaleString() || "Loading..."}
+              <p className="text-orange-200 text-lg font-medium">
+                Your profits while Bitcoin struggled
               </p>
             </div>
           </div>
 
-          {/* Simple Comparison */}
-          <div className="bg-gradient-to-r from-gray-900/80 to-gray-800/80 backdrop-blur-sm rounded-xl border border-white/10 p-6 mb-6">
-            <div className="grid md:grid-cols-3 gap-6">
-              {/* Your Performance */}
-              <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-green-500/20 flex items-center justify-center">
-                  <TrendingUp className="w-8 h-8 text-green-400" />
+          {/* Enhanced Status Card */}
+          <div className="bg-gradient-to-br from-gray-900/90 via-slate-800/90 to-gray-900/90 backdrop-blur-md rounded-2xl border border-white/20 p-8 mb-8 shadow-2xl hover:shadow-3xl transition-all duration-500 group-hover:border-white/30">
+            <div className="grid md:grid-cols-3 gap-8">
+              {/* Your Performance - Enhanced */}
+              <div className="text-center group/card">
+                <div className="relative">
+                  <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-emerald-400 via-green-400 to-teal-400 p-5 shadow-xl shadow-green-500/30 group-hover/card:shadow-green-400/50 transition-all duration-300 group-hover/card:scale-110 group-hover/card:rotate-3">
+                    <TrendingUp className="w-full h-full text-white drop-shadow-sm" />
+                  </div>
+                  <div className="absolute -inset-1 bg-gradient-to-br from-emerald-400 to-green-400 rounded-2xl blur opacity-0 group-hover/card:opacity-30 transition-opacity duration-300"></div>
                 </div>
-                <div className="text-2xl font-bold text-green-400">
-                  +${lastMonth?.profit?.toFixed(0) || "0"}
+                <div className="text-3xl font-bold bg-gradient-to-r from-emerald-300 to-green-300 bg-clip-text text-transparent mb-2 group-hover/card:scale-105 transition-transform duration-300">
+                  +$
+                  {monthlyTradingData[
+                    monthlyTradingData.length - 1
+                  ]?.profit?.toFixed(0) || "0"}
                 </div>
-                <div className="text-sm text-gray-300">My Trading Profit</div>
-                <div className="text-xs text-gray-400 mt-1">Last Month</div>
-              </div>
-
-              {/* VS */}
-              <div className="flex flex-col items-center justify-center">
-                <div className="text-4xl font-bold text-white opacity-50 mb-2">
-                  VS
-                </div>
-                <div className="text-xs text-gray-400 text-center">
-                  Same time period
+                <div className="text-emerald-200 font-medium">
+                  Your Last Month
                 </div>
               </div>
 
-              {/* Bitcoin Performance */}
-              <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-orange-500/20 flex items-center justify-center">
-                  {currentBtcChange >= 0 ? (
-                    <TrendingUp className="w-8 h-8 text-green-400" />
-                  ) : (
-                    <TrendingDown className="w-8 h-8 text-red-400" />
-                  )}
+              {/* VS - Enhanced */}
+              <div className="flex items-center justify-center">
+                <div className="relative">
+                  <div className="text-6xl font-bold bg-gradient-to-r from-purple-300 via-pink-300 to-cyan-300 bg-clip-text text-transparent animate-pulse">
+                    VS
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-cyan-400 blur-xl opacity-20 animate-pulse"></div>
+                </div>
+              </div>
+
+              {/* Bitcoin Performance - Enhanced */}
+              <div className="text-center group/card">
+                <div className="relative">
+                  <div
+                    className={`w-20 h-20 mx-auto mb-4 rounded-2xl p-5 shadow-xl transition-all duration-300 group-hover/card:scale-110 group-hover/card:rotate-3 ${
+                      currentBtcChange >= 0
+                        ? "bg-gradient-to-br from-emerald-400 via-green-400 to-teal-400 shadow-green-500/30 group-hover/card:shadow-green-400/50"
+                        : "bg-gradient-to-br from-red-400 via-rose-400 to-pink-400 shadow-red-500/30 group-hover/card:shadow-red-400/50"
+                    }`}
+                  >
+                    {currentBtcChange >= 0 ? (
+                      <TrendingUp className="w-full h-full text-white drop-shadow-sm" />
+                    ) : (
+                      <TrendingDown className="w-full h-full text-white drop-shadow-sm" />
+                    )}
+                  </div>
+                  <div
+                    className={`absolute -inset-1 rounded-2xl blur opacity-0 group-hover/card:opacity-30 transition-opacity duration-300 ${
+                      currentBtcChange >= 0
+                        ? "bg-gradient-to-br from-emerald-400 to-green-400"
+                        : "bg-gradient-to-br from-red-400 to-rose-400"
+                    }`}
+                  ></div>
                 </div>
                 <div
-                  className={`text-2xl font-bold ${
-                    currentBtcChange >= 0 ? "text-green-400" : "text-red-400"
+                  className={`text-3xl font-bold mb-2 group-hover/card:scale-105 transition-transform duration-300 ${
+                    currentBtcChange >= 0
+                      ? "bg-gradient-to-r from-emerald-300 to-green-300 bg-clip-text text-transparent"
+                      : "bg-gradient-to-r from-red-300 to-rose-300 bg-clip-text text-transparent"
                   }`}
                 >
                   {currentBtcChange >= 0 ? "+" : ""}
                   {currentBtcChange.toFixed(1)}%
                 </div>
-                <div className="text-sm text-gray-300">Bitcoin Change</div>
-                <div className="text-xs text-gray-400 mt-1">Past 30 Days</div>
+                <div
+                  className={`font-medium ${
+                    currentBtcChange >= 0 ? "text-emerald-200" : "text-red-200"
+                  }`}
+                >
+                  Bitcoin (30 days)
+                </div>
               </div>
             </div>
 
-            {/* Status Message - Simple Language */}
-            {status && (
-              <div
-                className={`mt-6 p-4 rounded-lg border ${status.bgColor} border-green-500/20`}
-              >
-                <div className={`flex items-center gap-2 ${status.color}`}>
-                  <Shield className="w-5 h-5" />
-                  <span className="font-semibold text-lg">{status.text}</span>
+            {/* Enhanced Status Message */}
+            <div className="mt-8 p-6 bg-gradient-to-r from-emerald-500/20 via-green-500/20 to-teal-500/20 rounded-2xl border border-emerald-400/30 backdrop-blur-sm hover:border-emerald-300/50 transition-all duration-300">
+              <div className="flex items-center gap-3 text-emerald-200">
+                <div className="p-2 bg-gradient-to-br from-emerald-400 to-green-400 rounded-full shadow-lg">
+                  <Shield className="w-6 h-6 text-white" />
                 </div>
-              </div>
-            )}
-          </div>
-
-          {/* Why This Matters - Simple Explanation */}
-          <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-            <div className="flex items-center gap-3 mb-4">
-              <Target className="w-6 h-6 text-blue-400" />
-              <h4 className="text-lg font-semibold text-white">
-                Why This Comparison Matters
-              </h4>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <div className="text-3xl font-bold text-blue-400 mb-2">
-                  {winRate.toFixed(0)}%
-                </div>
-                <p className="text-gray-300 text-sm mb-3">
-                  Success Rate - Months I made money regardless of what Bitcoin
-                  did
-                </p>
-                <div className="text-xs text-gray-400">
-                  {independentMonths} winning months out of {totalMonths} total
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 text-green-300">
-                  <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                  <span className="text-sm">
-                    My strategy works in any market
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 text-blue-300">
-                  <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                  <span className="text-sm">
-                    Not dependent on Bitcoin going up
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 text-purple-300">
-                  <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
-                  <span className="text-sm">
-                    Consistent profits regardless of market direction
-                  </span>
-                </div>
+                <span className="font-semibold text-lg">
+                  {currentBtcChange < 0 &&
+                  monthlyTradingData[monthlyTradingData.length - 1]?.profit > 0
+                    ? "✨ You made money while Bitcoin lost money"
+                    : independenceRate > 70
+                    ? "🚀 Consistent profits regardless of market conditions"
+                    : "💪 Strong performance in all market conditions"}
+                </span>
               </div>
             </div>
           </div>
 
-          {/* Simple Monthly Table */}
-          <div className="mt-6 bg-white/5 rounded-xl border border-white/10 overflow-hidden">
-            <div className="p-4 border-b border-white/10">
-              <h4 className="text-lg font-semibold text-white">
-                Month by Month: Me vs Bitcoin
+          {/* Enhanced Statistics Grid */}
+          <div className="grid md:grid-cols-2 gap-8 mb-8">
+            <div className="group/stat bg-gradient-to-br from-blue-500/20 via-cyan-500/15 to-teal-500/20 rounded-2xl p-8 border border-blue-400/30 backdrop-blur-sm hover:border-blue-300/50 transition-all duration-500 hover:scale-105 shadow-xl hover:shadow-2xl">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="p-3 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-xl shadow-lg group-hover/stat:shadow-blue-400/50 transition-all duration-300 group-hover/stat:scale-110">
+                  <Target className="w-8 h-8 text-white" />
+                </div>
+                <h4 className="text-xl font-bold bg-gradient-to-r from-blue-200 to-cyan-200 bg-clip-text text-transparent">
+                  Strategy Independence
+                </h4>
+              </div>
+              <div className="text-4xl font-bold bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent mb-3 group-hover/stat:scale-105 transition-transform duration-300">
+                {independenceRate.toFixed(0)}%
+              </div>
+              <p className="text-blue-200 font-medium">
+                {independentMonths} of {totalMonths} months show independent
+                performance from Bitcoin
+              </p>
+            </div>
+
+            <div className="group/stat bg-gradient-to-br from-emerald-500/20 via-green-500/15 to-teal-500/20 rounded-2xl p-8 border border-emerald-400/30 backdrop-blur-sm hover:border-emerald-300/50 transition-all duration-500 hover:scale-105 shadow-xl hover:shadow-2xl">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="p-3 bg-gradient-to-br from-emerald-400 to-green-400 rounded-xl shadow-lg group-hover/stat:shadow-emerald-400/50 transition-all duration-300 group-hover/stat:scale-110">
+                  <Shield className="w-8 h-8 text-white" />
+                </div>
+                <h4 className="text-xl font-bold bg-gradient-to-r from-emerald-200 to-green-200 bg-clip-text text-transparent">
+                  Market Protection
+                </h4>
+              </div>
+              <div className="text-4xl font-bold bg-gradient-to-r from-emerald-300 to-green-300 bg-clip-text text-transparent mb-3 group-hover/stat:scale-105 transition-transform duration-300">
+                Low Risk
+              </div>
+              <p className="text-emerald-200 font-medium">
+                Strategy performs well regardless of Bitcoin direction
+              </p>
+            </div>
+          </div>
+
+          {/* Enhanced Comparison Table */}
+          <div className="bg-gradient-to-br from-slate-900/95 via-gray-800/95 to-slate-900/95 rounded-2xl border border-white/20 overflow-hidden shadow-2xl backdrop-blur-md hover:border-white/30 transition-all duration-500">
+            <div className="p-6 border-b border-white/20 bg-gradient-to-r from-purple-500/10 to-blue-500/10">
+              <h4 className="text-2xl font-bold bg-gradient-to-r from-purple-200 via-blue-200 to-cyan-200 bg-clip-text text-transparent mb-2">
+                Monthly Performance Comparison
               </h4>
-              <p className="text-sm text-gray-400">
-                See how my results compare to Bitcoin each month
+              <p className="text-purple-200 font-medium">
+                Your results vs Bitcoin monthly returns
               </p>
             </div>
 
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-white/5">
+                <thead className="bg-gradient-to-r from-purple-500/20 to-blue-500/20">
                   <tr>
-                    <th className="text-left p-4 text-sm font-medium text-gray-300">
+                    <th className="text-left p-6 text-lg font-bold text-purple-200">
                       Month
                     </th>
-                    <th className="text-right p-4 text-sm font-medium text-gray-300">
-                      My Profit
+                    <th className="text-right p-6 text-lg font-bold text-emerald-200">
+                      Your Profit
                     </th>
-                    <th className="text-right p-4 text-sm font-medium text-gray-300">
-                      Bitcoin Change
+                    <th className="text-right p-6 text-lg font-bold text-orange-200">
+                      Bitcoin Return
                     </th>
-                    <th className="text-center p-4 text-sm font-medium text-gray-300">
-                      Result
+                    <th className="text-center p-6 text-lg font-bold text-cyan-200">
+                      Status
                     </th>
                   </tr>
                 </thead>
@@ -249,37 +254,46 @@ export const BitcoinComparison: React.FC<BitcoinComparisonProps> = ({
                     const profit = matchingMonth ? matchingMonth.profit : 0;
 
                     return (
-                      <tr key={data.month} className="border-t border-white/5">
-                        <td className="p-4 text-white font-medium">
+                      <tr
+                        key={data.month}
+                        className="border-t border-white/10 hover:bg-gradient-to-r hover:from-purple-500/5 hover:to-blue-500/5 transition-all duration-300 group/row"
+                      >
+                        <td className="p-6 text-white font-bold text-lg group-hover/row:text-purple-200 transition-colors duration-300">
                           {data.month}
                         </td>
-                        <td className="p-4 text-right">
-                          <span className="text-green-400 font-semibold">
+                        <td className="p-6 text-right">
+                          <span className="text-2xl font-bold bg-gradient-to-r from-emerald-300 to-green-300 bg-clip-text text-transparent group-hover/row:scale-105 transition-transform duration-300 inline-block">
                             +${profit.toFixed(0)}
                           </span>
                         </td>
-                        <td className="p-4 text-right">
+                        <td className="p-6 text-right">
                           <span
-                            className={`font-semibold ${
+                            className={`text-2xl font-bold group-hover/row:scale-105 transition-transform duration-300 inline-block ${
                               data.bitcoinReturn >= 0
-                                ? "text-green-400"
-                                : "text-red-400"
+                                ? "bg-gradient-to-r from-emerald-300 to-green-300 bg-clip-text text-transparent"
+                                : "bg-gradient-to-r from-red-300 to-rose-300 bg-clip-text text-transparent"
                             }`}
                           >
                             {data.bitcoinReturn >= 0 ? "+" : ""}
                             {data.bitcoinReturn}%
                           </span>
                         </td>
-                        <td className="p-4 text-center">
-                          <span className="text-xs text-gray-300">
-                            {profit > 0 && data.bitcoinReturn < 0
-                              ? "✅ Won while BTC lost"
-                              : profit > 0 && data.bitcoinReturn > 0
-                              ? "🚀 Both won"
-                              : profit > 0
-                              ? "💰 I won"
-                              : "📊 Mixed"}
-                          </span>
+                        <td className="p-6 text-center">
+                          {data.status === "independent" && (
+                            <span className="px-4 py-2 bg-gradient-to-r from-blue-500/30 to-cyan-500/30 text-blue-200 rounded-full text-sm font-bold border border-blue-400/50 hover:border-blue-300/70 transition-all duration-300 hover:scale-105">
+                              Independent
+                            </span>
+                          )}
+                          {data.status === "inverse" && (
+                            <span className="px-4 py-2 bg-gradient-to-r from-emerald-500/30 to-green-500/30 text-emerald-200 rounded-full text-sm font-bold border border-emerald-400/50 hover:border-emerald-300/70 transition-all duration-300 hover:scale-105">
+                              Opposite Direction
+                            </span>
+                          )}
+                          {data.status === "correlated" && (
+                            <span className="px-4 py-2 bg-gradient-to-r from-yellow-500/30 to-orange-500/30 text-yellow-200 rounded-full text-sm font-bold border border-yellow-400/50 hover:border-yellow-300/70 transition-all duration-300 hover:scale-105">
+                              Similar
+                            </span>
+                          )}
                         </td>
                       </tr>
                     );
@@ -289,22 +303,26 @@ export const BitcoinComparison: React.FC<BitcoinComparisonProps> = ({
             </div>
           </div>
 
-          {/* Bottom Message */}
-          <div className="mt-6 p-4 bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-xl border border-purple-500/20">
+          {/* Enhanced Bottom Explanation */}
+          <div className="mt-8 p-8 bg-gradient-to-br from-purple-500/20 via-blue-500/15 to-cyan-500/20 rounded-2xl border border-purple-400/30 backdrop-blur-sm hover:border-purple-300/50 transition-all duration-500 shadow-xl hover:shadow-2xl group/cta">
             <div className="text-center">
-              <h4 className="text-lg font-semibold text-white mb-2">
-                The Bottom Line
-              </h4>
-              <p className="text-gray-300 mb-4">
-                Most people only make money when Bitcoin goes up. My robotic
-                trading system makes money consistently, whether Bitcoin is
-                going up, down, or sideways. That's the power of a proven
-                strategy.
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <div className="p-3 bg-gradient-to-br from-purple-400 to-blue-400 rounded-full shadow-lg group-hover/cta:shadow-purple-400/50 transition-all duration-300 group-hover/cta:scale-110">
+                  <Zap className="w-6 h-6 text-white" />
+                </div>
+                <h4 className="text-2xl font-bold bg-gradient-to-r from-purple-200 via-blue-200 to-cyan-200 bg-clip-text text-transparent">
+                  Why This Matters
+                </h4>
+              </div>
+              <p className="text-purple-100 mb-6 text-lg font-medium leading-relaxed">
+                Most crypto traders only profit during bull markets. This
+                strategy generates consistent returns regardless of Bitcoin's
+                performance, proving skill over market luck.
               </p>
               {error && (
-                <div className="flex items-center justify-center gap-2 text-yellow-400 text-sm">
-                  <AlertTriangle className="w-4 h-4" />
-                  <span>Bitcoin data temporarily unavailable</span>
+                <div className="flex items-center justify-center gap-3 text-yellow-300 font-medium">
+                  <AlertTriangle className="w-5 h-5" />
+                  <span>Bitcoin data from fallback source</span>
                 </div>
               )}
             </div>
