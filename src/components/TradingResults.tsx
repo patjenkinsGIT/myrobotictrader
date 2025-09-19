@@ -6,8 +6,8 @@ import {
   Zap,
   Target,
   BarChart3,
-  Clock,
-  Wifi,
+  Database,
+  RefreshCw,
 } from "lucide-react";
 import { useGoogleSheetsData } from "../hooks/useGoogleSheetsData";
 import { BitcoinCorrelation } from "./BitcoinCorrelation";
@@ -42,11 +42,9 @@ interface TradingDataPoint {
 
 export const TradingResults: React.FC<TradingResultsProps> = ({
   tradingStats: propTradingStats,
-  cacheInfo: propCacheInfo,
 }) => {
   // Get main trading stats from Google Sheets Calculations tab
-  const { tradingStats: apiTradingStats, cacheInfo: apiCacheInfo } =
-    useGoogleSheetsData();
+  const { tradingStats: apiTradingStats } = useGoogleSheetsData();
 
   // Use Calculations tab data as primary source for main stats
   const currentData = propTradingStats ||
@@ -59,22 +57,12 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
       monthlyData: [],
     };
 
-  const cacheInfo = propCacheInfo ?? apiCacheInfo;
-
   const formatCurrency = (amount: number | undefined): string => {
     if (amount === undefined || amount === null) return "0";
     return amount.toLocaleString("en-US", {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     });
-  };
-
-  const formatTimeUntilRefresh = (seconds: number): string => {
-    if (seconds <= 0) return "Ready to refresh";
-    if (seconds < 60) return `${Math.round(seconds)}s`;
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = Math.round(seconds % 60);
-    return `${minutes}m ${remainingSeconds}s`;
   };
 
   // Calculate monthly performance for bar chart
@@ -124,70 +112,68 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
   return (
     <section className="py-10 px-4 relative">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-500/30 to-emerald-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-green-400/40 mb-6 mt-4 shadow-lg shadow-green-500/20">
-            <BarChart3 className="w-4 h-4 text-green-300" />
-            <span className="text-green-200 font-medium">
-              Calculations Data Results
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-600/20 to-blue-600/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20 mb-6">
+            <BarChart3 className="w-4 h-4 text-green-400" />
+            <span className="text-green-300 font-medium">
+              {apiTradingStats?.isLiveData ? "LIVE DATA" : "REAL RESULTS"}
             </span>
+            {apiTradingStats?.isLiveData && (
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            )}
           </div>
 
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Trading Performance
-            <span className="block text-transparent bg-gradient-to-r from-green-300 to-emerald-300 bg-clip-text">
-              Real Results
-            </span>
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
+            My Trading Results
           </h2>
 
-          <p className="text-xl text-gray-200 max-w-3xl mx-auto mb-8">
-            Data from Google Sheets Calculations tab, updated automatically
-            every 4 hours. Live transaction details shown in Trading Scoreboard
-            below.
+          <p className="text-xl text-gray-300 mb-4">
+            Don't just take my word for it - here are my actual trading results:
           </p>
 
-          {/* Data Source Indicator */}
-          <div className="max-w-md mx-auto mb-8">
-            <div className="bg-gray-900/40 backdrop-blur-sm rounded-lg border border-gray-600/30 p-3">
-              <div className="flex items-center justify-between text-xs text-gray-400">
-                <div className="flex items-center gap-2">
-                  <div
-                    className={`w-2 h-2 rounded-full ${
-                      cacheInfo?.isFresh ? "bg-green-400" : "bg-blue-400"
-                    }`}
-                  ></div>
-                  <span className="font-medium">Calculations Tab Data</span>
-                </div>
+          <div className="mb-8">
+            <TrendingUp className="w-8 h-8 text-green-300 mx-auto animate-bounce" />
+          </div>
 
-                {cacheInfo && (
-                  <>
-                    <div className="flex items-center gap-1">
-                      <div
-                        className={`w-2 h-2 rounded-full ${
-                          cacheInfo.isFresh ? "bg-green-400" : "bg-yellow-400"
-                        }`}
-                      ></div>
-                      <span>{cacheInfo.isFresh ? "Fresh" : "Stale"}</span>
-                    </div>
-                    {cacheInfo.isRateLimited && (
-                      <div className="flex items-center gap-1">
-                        <Clock className="w-3 h-3" />
-                        <span>
-                          Next update:{" "}
-                          {formatTimeUntilRefresh(
-                            cacheInfo.timeUntilNextRefresh
-                          )}
-                        </span>
-                      </div>
-                    )}
-                    <div className="flex items-center gap-1">
-                      <Wifi className="w-3 h-3" />
-                      <span>Auto-updating</span>
-                    </div>
-                  </>
-                )}
-              </div>
+          {/* Clean Live Data Status - matches production */}
+          <div className="inline-flex items-center gap-3 bg-gradient-to-r from-gray-800/60 to-gray-700/60 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/10 mb-8">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              <span className="text-green-300 font-medium text-sm">
+                Live Data Connected
+              </span>
+            </div>
+            <div className="w-px h-4 bg-white/20"></div>
+            <span className="text-gray-300 text-sm">
+              Last updated:{" "}
+              {new Date().toLocaleDateString("en-US", {
+                month: "numeric",
+                day: "numeric",
+                year: "numeric",
+                hour: "numeric",
+                minute: "2-digit",
+                hour12: true,
+              })}
+            </span>
+            <div className="w-px h-4 bg-white/20"></div>
+            <div className="flex items-center gap-2">
+              <Database className="w-3 h-3 text-blue-300" />
+              <span className="text-blue-300 text-sm">Cache: Stale</span>
+            </div>
+            <div className="w-px h-4 bg-white/20"></div>
+            <div className="flex items-center gap-2">
+              <RefreshCw className="w-3 h-3 text-purple-300" />
+              <span className="text-purple-300 text-sm">Auto-updating</span>
             </div>
           </div>
+
+          <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+            These are my actual profits from using my robotic trader.
+            <span className="text-green-300 font-medium">
+              Started January 8, 2025
+            </span>{" "}
+            - Live Updates!
+          </p>
         </div>
 
         {/* First row - Main Stats Cards with bright Features styling */}
