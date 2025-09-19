@@ -1,13 +1,21 @@
 import React from "react";
 import {
   TrendingUp,
-  TrendingDown,
+  DollarSign,
+  Calendar,
+  BarChart3,
+  Zap,
   Target,
-  Shield,
-  AlertTriangle,
-  Bitcoin,
+  AlertCircle,
+  RefreshCw,
+  Clock,
+  Database,
+  Wifi,
 } from "lucide-react";
-import useBitcoinCorrelation from "../hooks/useBitcoinCorrelation";
+import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
+import { calculateTimeSinceStart } from "../utils/tradingTime";
+import { LiveTransactionLog } from "./LiveTransactionLog";
+import { BitcoinCorrelation } from "./BitcoinCorrelation";
 
 interface MonthlyTradingData {
   month: string;
@@ -15,251 +23,339 @@ interface MonthlyTradingData {
   trades?: number;
 }
 
-interface BitcoinCorrelationProps {
-  monthlyTradingData: MonthlyTradingData[];
+interface TradingStats {
+  totalProfit: number;
+  totalTrades: number;
+  avgProfitPerTrade: number;
+  monthlyAverage: number;
+  dailyAvg: number;
+  bestMonthProfit: number;
+  monthlyData: MonthlyTradingData[];
+  lastUpdated: string;
+  isLiveData: boolean;
 }
 
-export const BitcoinCorrelation: React.FC<BitcoinCorrelationProps> = ({
-  monthlyTradingData,
+interface TradingResultsProps {
+  tradingStats?: TradingStats;
+  isLoading?: boolean;
+  error?: string | null;
+  refreshStats?: () => void;
+  cacheInfo?: {
+    isFresh: boolean;
+    isRateLimited: boolean;
+    timeUntilNextRefresh: number;
+  };
+}
+
+const TradingResults: React.FC<TradingResultsProps> = ({
+  tradingStats,
+  isLoading = false,
+  error = null,
+  refreshStats = () => console.log("Refresh not implemented"),
+  cacheInfo = { isFresh: false, isRateLimited: false, timeUntilNextRefresh: 0 },
 }) => {
-  const {
-    currentBitcoin,
-    correlationData,
-    independentMonths,
-    totalMonths,
-    isLoading,
-    error,
-    // refreshData - removed since it's not used in this component
-  } = useBitcoinCorrelation(monthlyTradingData);
+  const timeSinceStart = calculateTimeSinceStart();
 
-  if (isLoading && !currentBitcoin) {
+  // Acknowledge cacheInfo parameter (even though we don't use it)
+  void cacheInfo;
+
+  if (isLoading) {
     return (
-      <div className="bg-gradient-to-r from-orange-900/20 to-yellow-900/20 rounded-2xl border border-orange-500/20 p-6 mb-8">
-        <div className="flex items-center justify-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-400"></div>
-          <span className="ml-3 text-gray-300">
-            Loading Bitcoin correlation data...
-          </span>
-        </div>
-      </div>
-    );
-  }
-
-  const independenceRate =
-    totalMonths > 0 ? (independentMonths / totalMonths) * 100 : 0;
-  const currentBtcChange = currentBitcoin?.change30d || 0;
-
-  return (
-    <div className="bg-gradient-to-r from-orange-900/20 to-yellow-900/20 rounded-2xl border border-orange-500/20 p-6 mb-8">
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-yellow-500 p-3 shadow-lg shadow-orange-500/40">
-          <Bitcoin className="w-full h-full text-white" />
-        </div>
-        <div>
-          <h3 className="text-2xl font-bold text-white">
-            Market Independence Analysis
-          </h3>
-          <p className="text-orange-300">
-            Your Strategy vs Bitcoin Performance
-          </p>
-        </div>
-      </div>
-
-      {/* Current Status Card */}
-      <div className="bg-gradient-to-r from-gray-900/80 to-gray-800/80 backdrop-blur-sm rounded-xl border border-white/10 p-6 mb-6">
-        <div className="grid md:grid-cols-3 gap-6">
-          {/* Your Recent Performance */}
-          <div className="text-center">
-            <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-green-500/20 flex items-center justify-center">
-              <TrendingUp className="w-8 h-8 text-green-400" />
-            </div>
-            <div className="text-2xl font-bold text-green-400">
-              +$
-              {monthlyTradingData[
-                monthlyTradingData.length - 1
-              ]?.profit?.toFixed(0) || "0"}
-            </div>
-            <div className="text-sm text-gray-300">Your Last Month</div>
-          </div>
-
-          {/* VS */}
-          <div className="flex items-center justify-center">
-            <div className="text-4xl font-bold text-white opacity-50">VS</div>
-          </div>
-
-          {/* Bitcoin Performance */}
-          <div className="text-center">
-            <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-red-500/20 flex items-center justify-center">
-              {currentBtcChange >= 0 ? (
-                <TrendingUp className="w-8 h-8 text-green-400" />
-              ) : (
-                <TrendingDown className="w-8 h-8 text-red-400" />
-              )}
-            </div>
-            <div
-              className={`text-2xl font-bold ${
-                currentBtcChange >= 0 ? "text-green-400" : "text-red-400"
-              }`}
-            >
-              {currentBtcChange >= 0 ? "+" : ""}
-              {currentBtcChange.toFixed(1)}%
-            </div>
-            <div className="text-sm text-gray-300">Bitcoin (30 days)</div>
-          </div>
-        </div>
-
-        {/* Status Message */}
-        <div className="mt-6 p-4 bg-green-500/10 rounded-lg border border-green-500/20">
-          <div className="flex items-center gap-2 text-green-300">
-            <Shield className="w-5 h-5" />
-            <span className="font-semibold">
-              {currentBtcChange < 0 &&
-              monthlyTradingData[monthlyTradingData.length - 1]?.profit > 0
-                ? "✅ Profitable while Bitcoin declined - True alpha generation"
-                : independenceRate > 70
-                ? "✅ Consistently independent performance - Market-neutral strategy"
-                : "📈 Strong performance regardless of market conditions"}
+      <section className="py-16 px-4 relative overflow-hidden">
+        <div className="relative max-w-6xl mx-auto text-center">
+          <div className="flex items-center justify-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-400 mr-3"></div>
+            <span className="text-gray-300 text-lg">
+              Loading live trading data...
             </span>
           </div>
         </div>
-      </div>
+      </section>
+    );
+  }
 
-      {/* Independence Statistics */}
-      <div className="grid md:grid-cols-2 gap-6 mb-6">
-        <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-          <div className="flex items-center gap-3 mb-4">
-            <Target className="w-6 h-6 text-blue-400" />
-            <h4 className="text-lg font-semibold text-white">
-              Market Independence
-            </h4>
+  const hasError = error && error.trim() !== "";
+  const hasValidData =
+    tradingStats &&
+    typeof tradingStats === "object" &&
+    tradingStats.totalProfit !== undefined;
+
+  if (hasError || !hasValidData) {
+    return (
+      <section className="py-16 px-4 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-red-900/20 to-orange-900/20"></div>
+        <div className="relative max-w-6xl mx-auto text-center">
+          <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-8 mb-8">
+            <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-4" />
+            <h3 className="text-xl font-bold text-white mb-4">
+              Unable to Load Live Trading Data
+            </h3>
+            <p className="text-red-300 mb-6">
+              {hasError
+                ? error
+                : "Trading data is not available. This could be due to API configuration issues or data loading problems."}
+            </p>
+            <button
+              onClick={refreshStats}
+              className="inline-flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300"
+            >
+              <RefreshCw className="w-4 h-4" />
+              Retry Connection
+            </button>
           </div>
-          <div className="text-3xl font-bold text-blue-400 mb-2">
-            {independenceRate.toFixed(0)}%
+        </div>
+      </section>
+    );
+  }
+
+  const currentData = tradingStats;
+  const dailyAvg = currentData.dailyAvg?.toFixed(2) || "0.00";
+  const allMonthlyData = currentData.monthlyData || [];
+  const recentMonths = allMonthlyData.slice(-6);
+
+  // Handle empty array case properly - explicit callback with both parameters
+  const maxProfit =
+    allMonthlyData.length > 0
+      ? Math.max(...allMonthlyData.map((m, _) => m.profit))
+      : 0;
+
+  return (
+    <section id="results" className="py-16 px-4 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-r from-green-900/20 to-blue-900/20"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,197,94,0.1),transparent_70%)]"></div>
+
+      <div className="relative max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 bg-green-500/10 text-green-400 px-4 py-2 rounded-full text-sm font-medium mb-6 border border-green-500/20">
+            <Wifi className="w-4 h-4" />
+            <span>LIVE DATA</span>
           </div>
-          <p className="text-gray-300 text-sm">
-            {independentMonths} of {totalMonths} months show independent
-            performance
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            My Trading Results
+          </h2>
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-4">
+            Don't just take my word for it - here are my actual trading results:
           </p>
+
+          <div className="flex items-center justify-center gap-2 text-sm text-gray-400 mb-8">
+            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            <span>
+              These are my actual profits from using my robotic trader.{" "}
+              <span className="text-green-400 font-medium">
+                Started January 8, 2025
+              </span>{" "}
+              - Live Updates!
+            </span>
+          </div>
+
+          <div className="inline-flex items-center gap-4 bg-gray-900/50 text-gray-300 px-4 py-2 rounded-full text-sm border border-white/10">
+            <div className="flex items-center gap-2">
+              <Database className="w-4 h-4 text-green-400" />
+              <span>Live Data Connected</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs">
+              <Clock className="w-3 h-3" />
+              <span>
+                Last updated:{" "}
+                {new Date(currentData.lastUpdated).toLocaleString("en-US", {
+                  month: "numeric",
+                  day: "numeric",
+                  year: "numeric",
+                  hour: "numeric",
+                  minute: "2-digit",
+                  hour12: true,
+                })}
+              </span>
+            </div>
+          </div>
         </div>
 
-        <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-          <div className="flex items-center gap-3 mb-4">
-            <Shield className="w-6 h-6 text-green-400" />
-            <h4 className="text-lg font-semibold text-white">
-              Risk Protection
-            </h4>
+        {/* Main Stats Grid */}
+        <div className="grid md:grid-cols-3 gap-8 mb-12">
+          <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-2xl border border-green-500/20 p-8 text-center">
+            <div className="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-green-500/40">
+              <DollarSign className="w-8 h-8 text-white" />
+            </div>
+            <div className="text-4xl md:text-5xl font-bold text-white mb-2">
+              ${currentData.totalProfit?.toLocaleString() || "0"}
+            </div>
+            <div className="text-lg text-green-300 font-medium mb-1">
+              Total Profits
+            </div>
+            <div className="text-sm text-green-200">
+              {timeSinceStart} ({currentData.monthlyData?.length || 0} months)
+            </div>
           </div>
-          <div className="text-3xl font-bold text-green-400 mb-2">
-            Low Correlation
+
+          <div className="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 backdrop-blur-sm rounded-2xl border border-blue-500/20 p-8 text-center">
+            <div className="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-blue-500/40">
+              <Target className="w-8 h-8 text-white" />
+            </div>
+            <div className="text-4xl md:text-5xl font-bold text-white mb-2">
+              {currentData.totalTrades?.toLocaleString() || "0"}
+            </div>
+            <div className="text-lg text-blue-300 font-medium mb-1">
+              Total Trades
+            </div>
+            <div className="text-sm text-blue-200">Consistent & Automated</div>
           </div>
-          <p className="text-gray-300 text-sm">
-            Strategy performs regardless of Bitcoin direction
-          </p>
-        </div>
-      </div>
 
-      {/* Monthly Comparison Table */}
-      <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
-        <div className="p-4 border-b border-white/10">
-          <h4 className="text-lg font-semibold text-white">
-            Monthly Performance Comparison
-          </h4>
-          <p className="text-sm text-gray-400">
-            Your results vs Bitcoin monthly returns
-          </p>
+          <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl border border-purple-500/20 p-8 text-center">
+            <div className="w-16 h-16 bg-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-purple-500/40">
+              <Zap className="w-8 h-8 text-white" />
+            </div>
+            <div className="text-4xl md:text-5xl font-bold text-white mb-2">
+              ${currentData.avgProfitPerTrade?.toFixed(2) || "0.00"}
+            </div>
+            <div className="text-lg text-purple-300 font-medium mb-1">
+              Avg Per Trade
+            </div>
+            <div className="text-sm text-purple-200">Steady Gains</div>
+          </div>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-white/5">
-              <tr>
-                <th className="text-left p-4 text-sm font-medium text-gray-300">
-                  Month
-                </th>
-                <th className="text-right p-4 text-sm font-medium text-gray-300">
-                  Your Profit
-                </th>
-                <th className="text-right p-4 text-sm font-medium text-gray-300">
-                  Bitcoin Return
-                </th>
-                <th className="text-center p-4 text-sm font-medium text-gray-300">
-                  Status
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {correlationData.slice(-6).map((data) => {
-                // Find matching month data safely
-                const matchingMonth = monthlyTradingData.find(
-                  (m) => m.month === data.month
+        {/* NEW: Bitcoin Correlation Component */}
+        <BitcoinCorrelation monthlyTradingData={allMonthlyData} />
+
+        {/* Live Transaction Log */}
+        <LiveTransactionLog />
+
+        {/* Additional Stats */}
+        <div className="grid md:grid-cols-3 gap-8 mb-12">
+          <div className="bg-gradient-to-r from-gray-500/20 to-slate-500/20 backdrop-blur-sm rounded-2xl border border-gray-500/20 p-8 text-center">
+            <div className="w-16 h-16 bg-gray-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-gray-600/40">
+              <Calendar className="w-8 h-8 text-white" />
+            </div>
+            <div className="text-4xl md:text-5xl font-bold text-white mb-2">
+              ${currentData.monthlyAverage?.toFixed(0) || "0"}
+            </div>
+            <div className="text-lg text-gray-300 font-medium mb-1">
+              Monthly Average
+            </div>
+            <div className="text-sm text-gray-400">Consistent Performance</div>
+          </div>
+
+          <div className="bg-gradient-to-r from-indigo-500/20 to-blue-500/20 backdrop-blur-sm rounded-2xl border border-indigo-500/20 p-8 text-center">
+            <div className="w-16 h-16 bg-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-indigo-500/40">
+              <TrendingUp className="w-8 h-8 text-white" />
+            </div>
+            <div className="text-4xl md:text-5xl font-bold text-white mb-2">
+              ${dailyAvg}
+            </div>
+            <div className="text-lg text-indigo-300 font-medium mb-1">
+              Daily Average
+            </div>
+            <div className="text-sm text-indigo-200">Steady Growth</div>
+          </div>
+
+          <div className="bg-gradient-to-r from-orange-500/20 to-yellow-500/20 backdrop-blur-sm rounded-2xl border border-orange-500/20 p-8 text-center">
+            <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-orange-500/40">
+              <Zap className="w-8 h-8 text-white" />
+            </div>
+            <div className="text-4xl md:text-5xl font-bold text-white mb-2">
+              ${currentData.bestMonthProfit?.toFixed(0) || "0"}
+            </div>
+            <div className="text-lg text-orange-300 font-medium mb-1">
+              Best Month
+            </div>
+            <div className="text-sm text-orange-200">
+              {(() => {
+                if (allMonthlyData.length === 0) return "July";
+                const bestMonth = allMonthlyData.find(
+                  (m, _) => m.profit === maxProfit
                 );
-                const profit = matchingMonth ? matchingMonth.profit : 0;
+                return bestMonth ? bestMonth.month : "July";
+              })()}{" "}
+              2025
+            </div>
+          </div>
+        </div>
 
+        {/* Monthly Performance Chart */}
+        {recentMonths.length > 0 && (
+          <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-8 mb-12">
+            <div className="flex items-center gap-3 mb-8">
+              <BarChart3 className="w-6 h-6 text-blue-400" />
+              <h3 className="text-2xl font-bold text-white">
+                Monthly Performance Trend
+              </h3>
+            </div>
+
+            <div className="space-y-6">
+              {recentMonths.map((month, _) => {
+                const percentage =
+                  maxProfit > 0 ? (month.profit / maxProfit) * 100 : 0;
                 return (
-                  <tr key={data.month} className="border-t border-white/5">
-                    <td className="p-4 text-white font-medium">{data.month}</td>
-                    <td className="p-4 text-right">
-                      <span className="text-green-400 font-semibold">
-                        +${profit.toFixed(0)}
-                      </span>
-                    </td>
-                    <td className="p-4 text-right">
-                      <span
-                        className={`font-semibold ${
-                          data.bitcoinReturn >= 0
-                            ? "text-green-400"
-                            : "text-red-400"
-                        }`}
+                  <div key={month.month} className="flex items-center gap-4">
+                    <div className="w-12 text-sm font-medium text-gray-300">
+                      {month.month}
+                    </div>
+                    <div className="flex-1 bg-gray-700 rounded-full h-6 relative">
+                      <div
+                        className="bg-gradient-to-r from-green-500 to-blue-500 h-6 rounded-full flex items-center justify-end pr-3 transition-all duration-1000"
+                        style={{ width: `${Math.max(percentage, 10)}%` }}
                       >
-                        {data.bitcoinReturn >= 0 ? "+" : ""}
-                        {data.bitcoinReturn}%
-                      </span>
-                    </td>
-                    <td className="p-4 text-center">
-                      {data.status === "independent" && (
-                        <span className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded-full text-xs">
-                          Independent
+                        <span className="text-white text-sm font-medium">
+                          ${month.profit.toFixed(0)}
                         </span>
-                      )}
-                      {data.status === "inverse" && (
-                        <span className="px-2 py-1 bg-green-500/20 text-green-300 rounded-full text-xs">
-                          Inverse
-                        </span>
-                      )}
-                      {data.status === "correlated" && (
-                        <span className="px-2 py-1 bg-yellow-500/20 text-yellow-300 rounded-full text-xs">
-                          Correlated
-                        </span>
-                      )}
-                    </td>
-                  </tr>
+                      </div>
+                    </div>
+                    <div className="w-20 text-sm text-gray-400 text-right">
+                      {percentage.toFixed(0)}% of best
+                    </div>
+                  </div>
                 );
               })}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Bottom CTA */}
-      <div className="mt-6 p-4 bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-xl border border-purple-500/20">
-        <div className="text-center">
-          <h4 className="text-lg font-semibold text-white mb-2">
-            Why This Matters
-          </h4>
-          <p className="text-gray-300 mb-4">
-            Most crypto traders only profit during bull markets. Our strategy
-            generates consistent returns regardless of Bitcoin's performance,
-            proving genuine skill over market luck.
-          </p>
-          {error && (
-            <div className="flex items-center justify-center gap-2 text-yellow-400 text-sm">
-              <AlertTriangle className="w-4 h-4" />
-              <span>Bitcoin data from fallback source</span>
             </div>
-          )}
+          </div>
+        )}
+
+        {/* Call to Action */}
+        <div className="text-center">
+          <div className="bg-gradient-to-r from-green-500/20 to-blue-500/20 backdrop-blur-sm rounded-2xl border border-green-500/20 p-8">
+            <h3 className="text-2xl font-bold text-white mb-4">
+              Ready to Start Your Own Robotic Trading Journey?
+            </h3>
+            <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
+              These results speak for themselves. Join thousands who have
+              already discovered the power of automated cryptocurrency trading.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={() => {
+                  trackCTAClick("Get Started", "trading-results");
+                  trackOutboundLink(
+                    "https://dailyprofits.link/class",
+                    "Get Started - Trading Results"
+                  );
+                  window.open("https://dailyprofits.link/class", "_blank");
+                }}
+                className="bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 shadow-lg shadow-green-500/40 hover:shadow-xl hover:scale-105"
+              >
+                Start Your Journey
+              </button>
+              <button
+                onClick={() => {
+                  trackCTAClick("Learn More", "trading-results");
+                  trackOutboundLink(
+                    "https://dailyprofits.link/gbt",
+                    "Learn More - Trading Results"
+                  );
+                  window.open("https://dailyprofits.link/gbt", "_blank");
+                }}
+                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 border border-white/20 hover:border-white/40"
+              >
+                View Trading Platform
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
+
+// Export the component
+export { TradingResults };
+export default TradingResults;
