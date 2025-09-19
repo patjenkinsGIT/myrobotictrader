@@ -28,6 +28,11 @@ interface TradingStats {
 
 interface TradingResultsProps {
   tradingStats?: TradingStats | null;
+  cacheInfo?: {
+    isFresh: boolean;
+    timeUntilNextRefresh: number;
+    isRateLimited: boolean;
+  };
 }
 
 interface TradingDataPoint {
@@ -37,19 +42,14 @@ interface TradingDataPoint {
 
 export const TradingResults: React.FC<TradingResultsProps> = ({
   tradingStats: propTradingStats,
+  cacheInfo: propCacheInfo,
 }) => {
-  const {
-    tradingStats: apiTradingStats,
-    isLoading,
-    error,
-    refreshStats,
-    cacheInfo,
-    cacheStats,
-  } = useGoogleSheetsData();
+  const { tradingStats: apiTradingStats, cacheInfo: apiCacheInfo } =
+    useGoogleSheetsData();
 
-  // Use API data if available, otherwise fall back to props
-  const currentData = apiTradingStats ||
-    propTradingStats || {
+  // Use props if provided, otherwise fall back to API data
+  const currentData = propTradingStats ||
+    apiTradingStats || {
       totalProfit: 0,
       totalTrades: 0,
       avgProfitPerTrade: 0,
@@ -57,6 +57,8 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
       bestMonthProfit: 0,
       monthlyData: [],
     };
+
+  const cacheInfo = propCacheInfo ?? apiCacheInfo;
 
   const formatCurrency = (amount: number | undefined): string => {
     if (amount === undefined || amount === null) return "0";
@@ -323,7 +325,7 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
 
             <div className="flex justify-center items-end space-x-3 md:space-x-8 h-40 md:h-64 mb-6">
               <div className="flex items-end space-x-2 md:space-x-4 h-full">
-                {recentMonths.map((month: TradingDataPoint, index: number) => {
+                {recentMonths.map((month: TradingDataPoint) => {
                   const maxProfit = Math.max(
                     ...recentMonths.map((m) => m.profit)
                   );
@@ -401,12 +403,10 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
                   </tr>
                 </thead>
                 <tbody>
-                  {olderMonths.map((month: TradingDataPoint, index: number) => (
+                  {olderMonths.map((month: TradingDataPoint) => (
                     <tr
                       key={month.month}
-                      className={`border-b border-white/5 ${
-                        index % 2 === 0 ? "bg-white/5" : "bg-white/2"
-                      }`}
+                      className="border-b border-white/5 bg-white/5"
                     >
                       <td className="py-3 px-4 text-white font-medium">
                         {getFullMonthName(month.month)} 2025
