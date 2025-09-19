@@ -1,93 +1,106 @@
-import React, { useMemo } from "react";
+import React from "react";
 import {
-  DollarSign,
   TrendingUp,
-  Calendar,
+  DollarSign,
+  BarChart3,
   Zap,
   Target,
-  BarChart3,
-  Database,
+  AlertCircle,
   RefreshCw,
+  Database,
 } from "lucide-react";
-import { useGoogleSheetsData } from "../hooks/useGoogleSheetsData";
-import { BitcoinCorrelation } from "./BitcoinCorrelation";
+import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
+import { calculateTimeSinceStart } from "../utils/tradingTime";
 import { LiveTransactionLog } from "./LiveTransactionLog";
-import { trackOutboundLink } from "../utils/analytics";
+import { TradingDataPoint } from "../hooks/useGoogleSheetsData";
 
-interface TradingStats {
-  totalProfit: number;
-  totalTrades: number;
-  avgProfitPerTrade: number;
-  monthlyAverage: number;
-  bestMonthProfit: number;
-  monthlyData: Array<{
-    month: string;
-    profit: number;
-  }>;
-}
-
+// Define the props interface for TradingResults
 interface TradingResultsProps {
-  tradingStats?: TradingStats | null;
+  tradingStats?: any;
+  isLoading?: boolean;
+  error?: string | null;
+  refreshStats?: () => void;
   cacheInfo?: {
     isFresh: boolean;
-    timeUntilNextRefresh: number;
     isRateLimited: boolean;
+    timeUntilNextRefresh: number;
   };
-}
-
-interface TradingDataPoint {
-  month: string;
-  profit: number;
 }
 
 export const TradingResults: React.FC<TradingResultsProps> = ({
-  tradingStats: propTradingStats,
+  tradingStats,
+  isLoading = false,
+  error = null,
+  refreshStats = () => console.log("Refresh not implemented"),
+  // cacheInfo = { isFresh: false, isRateLimited: false, timeUntilNextRefresh: 0 },
 }) => {
-  // Get main trading stats from Google Sheets Calculations tab
-  const { tradingStats: apiTradingStats } = useGoogleSheetsData();
+  const timeSinceStart = calculateTimeSinceStart();
 
-  // Use Calculations tab data as primary source for main stats
-  const currentData = propTradingStats ||
-    apiTradingStats || {
-      totalProfit: 0,
-      totalTrades: 0,
-      avgProfitPerTrade: 0,
-      monthlyAverage: 0,
-      bestMonthProfit: 0,
-      monthlyData: [],
-    };
-
-  const formatCurrency = (amount: number | undefined): string => {
-    if (amount === undefined || amount === null) return "0";
-    return amount.toLocaleString("en-US", {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    });
-  };
-
-  // Calculate monthly performance for bar chart
-  const { recentMonths, olderMonths, bestMonthData } = useMemo(() => {
-    const monthlyData = currentData.monthlyData || [];
-    const recent = monthlyData.slice(-6); // Last 6 months
-    const older = monthlyData.slice(0, -6); // Previous months
-    const best = monthlyData.reduce(
-      (prev, current) => (prev.profit > current.profit ? prev : current),
-      { month: "", profit: 0 }
+  if (isLoading) {
+    return (
+      <section className="py-16 px-4 relative overflow-hidden">
+        <div className="relative max-w-6xl mx-auto text-center">
+          <div className="flex items-center justify-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-400 mr-3"></div>
+            <span className="text-gray-300 text-lg">
+              Loading live trading data...
+            </span>
+          </div>
+        </div>
+      </section>
     );
+  }
 
-    return {
-      recentMonths: recent,
-      olderMonths: older,
-      bestMonthData: best.profit > 0 ? best : null,
-    };
-  }, [currentData.monthlyData]);
+  // More specific error checking
+  const hasError = error && error.trim() !== "";
+  const hasValidData =
+    tradingStats &&
+    typeof tradingStats === "object" &&
+    tradingStats.totalProfit !== undefined;
 
-  const dailyAvg = useMemo(() => {
-    const avg = currentData.monthlyAverage / 30;
-    return formatCurrency(avg);
-  }, [currentData.monthlyAverage]);
+  if (hasError || !hasValidData) {
+    return (
+      <section className="py-16 px-4 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-red-900/20 to-orange-900/20"></div>
+        <div className="relative max-w-6xl mx-auto text-center">
+          <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-8 mb-8">
+            <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-4" />
+            <h3 className="text-xl font-bold text-white mb-4">
+              Unable to Load Live Trading Data
+            </h3>
+            <p className="text-red-300 mb-6">
+              {hasError
+                ? error
+                : "Trading data is not available. This could be due to API configuration issues or data loading problems."}
+            </p>
+            <button
+              onClick={refreshStats}
+              className="inline-flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300"
+            >
+              <RefreshCw className="w-4 h-4" />
+              Retry Connection
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
-  const getFullMonthName = (shortMonth: string): string => {
+  // We have valid data - proceed with rendering
+  const currentData = tradingStats;
+  //const dailyAvg = currentData.dailyAvg?.toFixed(2) || "0.00";
+  const allMonthlyData = currentData.monthlyData || [];
+  const recentMonths = allMonthlyData.slice(-6);
+  //const olderMonths = allMonthlyData.length > 6 ? allMonthlyData.slice(0, -6).reverse() : [];
+
+  // Find best month
+  //const bestMonthData =
+  //  allMonthlyData.find(
+  //   (month: TradingDataPoint) => month.profit === currentData.bestMonthProfit
+  //  ) || allMonthlyData[0];
+
+  // Helper functions
+  const getFullMonthName = (shortMonth: string) => {
     const monthMap: { [key: string]: string } = {
       Jan: "January",
       Feb: "February",
@@ -105,20 +118,39 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
     return monthMap[shortMonth] || shortMonth;
   };
 
-  const getShortMonthName = (shortMonth: string): string => {
+  const getShortMonthName = (shortMonth: string) => {
     return shortMonth.substring(0, 3);
   };
 
+  const handleJoinMasterclass = () => {
+    trackCTAClick("join_free_masterclass", "trading_results_section");
+    trackOutboundLink(
+      "https://dailyprofits.link/class",
+      "Join Free Masterclass Trading Results"
+    );
+  };
+
+  // const formatCurrency = (
+  //   value: number | string | null | undefined
+  //  ): string => {
+  //    const numValue = Number(value);
+  //    if (isNaN(numValue)) return "0.00";
+  //    return numValue.toFixed(2);
+  //  };
+
   return (
-    <section className="py-10 px-4 relative">
-      <div className="max-w-7xl mx-auto">
+    <section className="py-16 px-4 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-r from-green-900/20 to-blue-900/20"></div>
+
+      <div className="relative max-w-6xl mx-auto">
+        {/* Clean Header Section */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-600/20 to-blue-600/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20 mb-6">
             <BarChart3 className="w-4 h-4 text-green-400" />
             <span className="text-green-300 font-medium">
-              {apiTradingStats?.isLiveData ? "LIVE DATA" : "REAL RESULTS"}
+              {currentData.isLiveData ? "LIVE DATA" : "REAL RESULTS"}
             </span>
-            {apiTradingStats?.isLiveData && (
+            {currentData.isLiveData && (
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
             )}
           </div>
@@ -135,7 +167,7 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
             <TrendingUp className="w-8 h-8 text-green-300 mx-auto animate-bounce" />
           </div>
 
-          {/* Clean Live Data Status - matches production */}
+          {/* Clean Live Data Status */}
           <div className="inline-flex items-center gap-3 bg-gradient-to-r from-gray-800/60 to-gray-700/60 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/10 mb-8">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
@@ -176,9 +208,9 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
           </p>
         </div>
 
-        {/* First row - Main Stats Cards with bright Features styling */}
+        {/* Main Stats Row */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {/* Total Profit */}
+          {/* Total Profits */}
           <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-green-500/15">
             <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
 
@@ -188,17 +220,15 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
 
             <div className="relative text-center">
               <div className="text-3xl font-bold text-green-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-green-300 group-hover:to-emerald-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
-                ${formatCurrency(currentData.totalProfit)}
+                ${currentData.totalProfit?.toLocaleString() || "0"}
               </div>
               <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
-                Total Profit
+                Total Profits
               </div>
               <div className="text-green-300 text-sm mt-1">
-                Calculations Tab
+                {timeSinceStart}
               </div>
             </div>
-
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
 
           {/* Total Trades */}
@@ -216,10 +246,10 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
               <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
                 Total Trades
               </div>
-              <div className="text-blue-300 text-sm mt-1">100% Profitable</div>
+              <div className="text-blue-300 text-sm mt-1">
+                Consistent & Automated
+              </div>
             </div>
-
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
 
           {/* Avg Per Trade */}
@@ -239,264 +269,77 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
               </div>
               <div className="text-purple-300 text-sm mt-1">Steady Gains</div>
             </div>
-
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
         </div>
 
         {/* Live Transaction Log */}
         <LiveTransactionLog />
 
-        {/* Bitcoin Correlation Analysis */}
-        <BitcoinCorrelation
-          monthlyTradingData={currentData.monthlyData || []}
-        />
-
-        {/* Second row - Monthly Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          {/* Monthly Average */}
-          <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-emerald-500/15">
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
-
-            <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-emerald-500/40">
-              <Calendar className="w-full h-full text-white" />
-            </div>
-
-            <div className="relative text-center">
-              <div className="text-2xl font-bold text-emerald-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-emerald-300 group-hover:to-teal-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
-                ${currentData.monthlyAverage?.toFixed(2) || "0.00"}
-              </div>
-              <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
-                Monthly Average
-              </div>
-              <div className="text-emerald-300 text-sm mt-1">
-                Consistent Performance
-              </div>
-            </div>
-
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
-          </div>
-
-          {/* Daily Average */}
-          <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-indigo-500/15">
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 to-purple-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
-            <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-indigo-500/40">
-              <TrendingUp className="w-full h-full text-white" />
-            </div>
-            <div className="relative text-center">
-              <div className="text-2xl font-bold text-indigo-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-indigo-300 group-hover:to-purple-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
-                ${dailyAvg}
-              </div>
-              <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
-                Daily Average
-              </div>
-              <div className="text-indigo-300 text-sm mt-1">Steady Growth</div>
-            </div>
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
-          </div>
-
-          {/* Best Month */}
-          <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-amber-500/15">
-            <div className="absolute inset-0 bg-gradient-to-br from-amber-500 to-orange-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
-
-            <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-amber-500/40">
-              <Zap className="w-full h-full text-white" />
-            </div>
-
-            <div className="relative text-center">
-              <div className="text-2xl font-bold text-amber-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-amber-300 group-hover:to-orange-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
-                ${currentData.bestMonthProfit?.toFixed(2) || "0.00"}
-              </div>
-              <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
-                Best Month
-              </div>
-              <div className="text-amber-300 text-sm mt-1">
-                {bestMonthData ? getFullMonthName(bestMonthData.month) : "N/A"}
-              </div>
-            </div>
-
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
-          </div>
-        </div>
-
-        {/* Beautiful Bar Chart - Recent Performance */}
+        {/* Monthly Chart and Stats */}
         {recentMonths.length > 0 && (
-          <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8 mb-8">
-            <div className="flex items-center justify-between mb-4 md:mb-6">
-              <h3 className="text-xl md:text-2xl font-bold text-white text-center flex-1">
-                Recent Performance (Last 6 Months)
-              </h3>
-            </div>
-
-            <div className="flex justify-center items-end space-x-3 md:space-x-8 h-40 md:h-64 mb-6">
-              <div className="flex items-end space-x-2 md:space-x-4 h-full">
-                {recentMonths.map((month: TradingDataPoint) => {
-                  const maxProfit = Math.max(
-                    ...recentMonths.map((m) => m.profit)
-                  );
-                  const height = Math.max((month.profit / maxProfit) * 120, 12);
-                  const isHighest = month.profit === maxProfit;
-
-                  return (
-                    <div
-                      key={month.month}
-                      className="flex flex-col items-center"
-                    >
-                      <div
-                        className={`text-xs md:text-sm font-bold mb-1 md:mb-2 transition-all duration-1000 ease-out ${
-                          isHighest ? "text-yellow-300" : "text-gray-200"
-                        }`}
-                      >
-                        ${Math.round(month.profit)}
-                      </div>
-
-                      <div
-                        className={`w-8 md:w-16 rounded-t-lg transition-all duration-1000 ease-out ${
-                          isHighest
-                            ? "bg-gradient-to-t from-yellow-500 to-yellow-300 shadow-lg shadow-yellow-400/40"
-                            : "bg-gradient-to-t from-emerald-500 to-green-400 shadow-lg shadow-emerald-400/30"
-                        }`}
-                        style={{
-                          height: `${height}px`,
-                          minHeight: "12px",
-                        }}
-                      ></div>
-
-                      <div className="text-xs md:text-sm text-gray-200 mt-2 md:mt-3 font-medium text-center">
-                        <span className="md:hidden">
-                          {getShortMonthName(month.month)}
-                        </span>
-                        <span className="hidden md:inline">
-                          {getFullMonthName(month.month)}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="text-center">
-              <p className="text-emerald-300 font-semibold text-sm md:text-lg">
-                📈 {currentData.totalTrades || 0} trades • $
-                {currentData.avgProfitPerTrade?.toFixed(2) || "0.00"} avg
-                profit/trade • Best month:{" "}
-                {bestMonthData ? getFullMonthName(bestMonthData.month) : "N/A"}
-                with ${currentData.bestMonthProfit?.toFixed(2) || "0.00"}
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* Previous Months Table */}
-        {olderMonths.length > 0 && (
-          <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8 mb-8">
-            <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6 text-center">
-              Previous Months Performance
+          <div className="bg-gradient-to-r from-emerald-900/30 to-teal-900/30 backdrop-blur-sm rounded-2xl border border-emerald-500/20 p-6 mb-8">
+            <h3 className="text-2xl font-bold text-white mb-6 text-center">
+              Monthly Performance Chart
             </h3>
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead>
-                  <tr className="border-b border-white/10">
-                    <th className="text-gray-300 font-semibold py-3 px-4">
-                      Month
-                    </th>
-                    <th className="text-gray-300 font-semibold py-3 px-4 text-right">
-                      Profit
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {olderMonths.map((month: TradingDataPoint) => (
-                    <tr
-                      key={month.month}
-                      className="border-b border-white/5 bg-white/5"
-                    >
-                      <td className="py-3 px-4 text-white font-medium">
-                        {getFullMonthName(month.month)} 2025
-                      </td>
-                      <td className="py-3 px-4 text-right">
-                        <span className="text-emerald-400 font-semibold">
-                          ${month.profit.toFixed(2)}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <div className="flex justify-center items-end gap-2 md:gap-4 h-64 mb-4">
+              {recentMonths.map((month: TradingDataPoint) => {
+                const maxProfit = Math.max(
+                  ...recentMonths.map((m: TradingDataPoint) => m.profit)
+                );
+                const height = Math.max((month.profit / maxProfit) * 200, 12);
+                const isHighest = month.profit === maxProfit;
 
-            <div className="text-center mt-4 pt-4 border-t border-white/10">
-              <p className="text-gray-400 text-sm">
-                Showing {olderMonths.length} previous months • Total: $
-                {olderMonths
-                  .reduce((sum, month) => sum + month.profit, 0)
-                  .toFixed(2)}
-              </p>
+                return (
+                  <div key={month.month} className="flex flex-col items-center">
+                    <div
+                      className={`text-xs mb-2 font-semibold transition-colors duration-300 ${
+                        isHighest ? "text-yellow-300" : "text-gray-200"
+                      }`}
+                    >
+                      ${Math.round(month.profit)}
+                    </div>
+
+                    <div
+                      className={`w-8 md:w-16 rounded-t-lg transition-all duration-1000 ease-out ${
+                        isHighest
+                          ? "bg-gradient-to-t from-yellow-500 to-yellow-300 shadow-lg shadow-yellow-400/40"
+                          : "bg-gradient-to-t from-emerald-500 to-green-400 shadow-lg shadow-emerald-400/30"
+                      }`}
+                      style={{ height: `${height}px`, minHeight: "12px" }}
+                    ></div>
+
+                    <div className="text-xs md:text-sm text-gray-200 mt-2 md:mt-3 font-medium text-center">
+                      <span className="md:hidden">
+                        {getShortMonthName(month.month)}
+                      </span>
+                      <span className="hidden md:inline">
+                        {getFullMonthName(month.month)}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
 
-        {/* Call to Action */}
-        <div className="bg-gradient-to-r from-purple-900/50 to-indigo-900/50 backdrop-blur-sm rounded-2xl border border-white/10 p-8 text-center">
-          <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
-            Ready to Experience Autonomous Trading?
-          </h3>
-          <p className="text-gray-200 mb-6 max-w-2xl mx-auto">
-            Join successful traders using set-it-and-forget-it cryptocurrency
-            trading.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        {/* CTA Section */}
+        <div className="text-center">
+          <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 backdrop-blur-sm rounded-2xl border border-purple-500/20 p-8">
+            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
+              Ready to Start Your Own Success Story?
+            </h3>
+            <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
+              Join thousands who are already using AI-enhanced robotic trading
+              to build consistent profits.
+            </p>
             <button
-              onClick={() =>
-                trackOutboundLink(
-                  "https://dailyprofits.link/class",
-                  "Join Free Masterclass - TradingResults"
-                )
-              }
-              className="inline-flex items-center justify-center px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+              onClick={handleJoinMasterclass}
+              className="inline-flex items-center gap-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-500/30"
             >
+              <Target className="w-5 h-5" />
               Join Free Masterclass
-              <svg
-                className="ml-2 w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                />
-              </svg>
-            </button>
-
-            <button
-              onClick={() =>
-                trackOutboundLink(
-                  "https://dailyprofits.link/gbt",
-                  "Start Trading Platform - TradingResults"
-                )
-              }
-              className="inline-flex items-center justify-center px-8 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
-            >
-              Start Trading Platform
-              <svg
-                className="ml-2 w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                />
-              </svg>
             </button>
           </div>
         </div>
