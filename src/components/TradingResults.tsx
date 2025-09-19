@@ -44,10 +44,11 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
   tradingStats: propTradingStats,
   cacheInfo: propCacheInfo,
 }) => {
+  // Get main trading stats from Google Sheets Calculations tab
   const { tradingStats: apiTradingStats, cacheInfo: apiCacheInfo } =
     useGoogleSheetsData();
 
-  // Use props if provided, otherwise fall back to API data
+  // Use Calculations tab data as primary source for main stats
   const currentData = propTradingStats ||
     apiTradingStats || {
       totalProfit: 0,
@@ -126,7 +127,9 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-500/30 to-emerald-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-green-400/40 mb-6 mt-4 shadow-lg shadow-green-500/20">
             <BarChart3 className="w-4 h-4 text-green-300" />
-            <span className="text-green-200 font-medium">Live Results</span>
+            <span className="text-green-200 font-medium">
+              Calculations Data Results
+            </span>
           </div>
 
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
@@ -137,40 +140,54 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
           </h2>
 
           <p className="text-xl text-gray-200 max-w-3xl mx-auto mb-8">
-            Live data updated automatically every 4 hours from actual trading
-            results. These are real profits from my autonomous trading system.
+            Data from Google Sheets Calculations tab, updated automatically
+            every 4 hours. Live transaction details shown in Trading Scoreboard
+            below.
           </p>
 
-          {/* Cache Status */}
-          {cacheInfo && (
-            <div className="max-w-md mx-auto mb-8">
-              <div className="bg-gray-900/40 backdrop-blur-sm rounded-lg border border-gray-600/30 p-3">
-                <div className="flex items-center justify-between text-xs text-gray-400">
-                  <div className="flex items-center gap-1">
-                    <div
-                      className={`w-2 h-2 rounded-full ${
-                        cacheInfo.isFresh ? "bg-green-400" : "bg-yellow-400"
-                      }`}
-                    ></div>
-                    <span>{cacheInfo.isFresh ? "Fresh" : "Stale"}</span>
-                  </div>
-                  {cacheInfo.isRateLimited && (
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
-                      <span>
-                        Next update:{" "}
-                        {formatTimeUntilRefresh(cacheInfo.timeUntilNextRefresh)}
-                      </span>
-                    </div>
-                  )}
-                  <div className="flex items-center gap-1">
-                    <Wifi className="w-3 h-3" />
-                    <span>Auto-updating</span>
-                  </div>
+          {/* Data Source Indicator */}
+          <div className="max-w-md mx-auto mb-8">
+            <div className="bg-gray-900/40 backdrop-blur-sm rounded-lg border border-gray-600/30 p-3">
+              <div className="flex items-center justify-between text-xs text-gray-400">
+                <div className="flex items-center gap-2">
+                  <div
+                    className={`w-2 h-2 rounded-full ${
+                      cacheInfo?.isFresh ? "bg-green-400" : "bg-blue-400"
+                    }`}
+                  ></div>
+                  <span className="font-medium">Calculations Tab Data</span>
                 </div>
+
+                {cacheInfo && (
+                  <>
+                    <div className="flex items-center gap-1">
+                      <div
+                        className={`w-2 h-2 rounded-full ${
+                          cacheInfo.isFresh ? "bg-green-400" : "bg-yellow-400"
+                        }`}
+                      ></div>
+                      <span>{cacheInfo.isFresh ? "Fresh" : "Stale"}</span>
+                    </div>
+                    {cacheInfo.isRateLimited && (
+                      <div className="flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        <span>
+                          Next update:{" "}
+                          {formatTimeUntilRefresh(
+                            cacheInfo.timeUntilNextRefresh
+                          )}
+                        </span>
+                      </div>
+                    )}
+                    <div className="flex items-center gap-1">
+                      <Wifi className="w-3 h-3" />
+                      <span>Auto-updating</span>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
-          )}
+          </div>
         </div>
 
         {/* First row - Main Stats Cards with bright Features styling */}
@@ -191,7 +208,7 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
                 Total Profit
               </div>
               <div className="text-green-300 text-sm mt-1">
-                Autonomous Trading
+                Calculations Tab
               </div>
             </div>
 
@@ -316,12 +333,14 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
           </div>
         </div>
 
-        {/* Beautiful Bar Chart - Recent Performance (Last 6 Months) */}
+        {/* Beautiful Bar Chart - Recent Performance */}
         {recentMonths.length > 0 && (
           <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8 mb-8">
-            <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6 text-center">
-              Recent Performance (Last 6 Months)
-            </h3>
+            <div className="flex items-center justify-between mb-4 md:mb-6">
+              <h3 className="text-xl md:text-2xl font-bold text-white text-center flex-1">
+                Recent Performance (Last 6 Months)
+              </h3>
+            </div>
 
             <div className="flex justify-center items-end space-x-3 md:space-x-8 h-40 md:h-64 mb-6">
               <div className="flex items-end space-x-2 md:space-x-4 h-full">
@@ -329,7 +348,7 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
                   const maxProfit = Math.max(
                     ...recentMonths.map((m) => m.profit)
                   );
-                  const height = Math.max((month.profit / maxProfit) * 120, 12); // Minimum height of 12px
+                  const height = Math.max((month.profit / maxProfit) * 120, 12);
                   const isHighest = month.profit === maxProfit;
 
                   return (
@@ -376,7 +395,7 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
                 📈 {currentData.totalTrades || 0} trades • $
                 {currentData.avgProfitPerTrade?.toFixed(2) || "0.00"} avg
                 profit/trade • Best month:{" "}
-                {bestMonthData ? getFullMonthName(bestMonthData.month) : "N/A"}{" "}
+                {bestMonthData ? getFullMonthName(bestMonthData.month) : "N/A"}
                 with ${currentData.bestMonthProfit?.toFixed(2) || "0.00"}
               </p>
             </div>
