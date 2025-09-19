@@ -18,6 +18,7 @@ import { OGImageGenerator } from "./components/OGImageGenerator";
 import { Hero } from "./components/Hero";
 import { MyStory } from "./components/MyStory";
 import { TradingResults } from "./components/TradingResults";
+import { BitcoinComparison } from "./components/BitcoinComparison";
 import { Features } from "./components/Features";
 import { CallToAction } from "./components/CallToAction";
 import { FAQ } from "./components/FAQ";
@@ -143,16 +144,30 @@ const SEOWrapper = ({ children }: { children: React.ReactNode }) => {
 
 // FIXED VERSION - Replace the problematic refreshStats with this:
 const HomePage = () => {
-  // 🎯 SINGLE HOOK CALL - Get ALL the data from the hook
-  const { tradingStats, cacheInfo } = useGoogleSheetsData();
+  // Fix this line - add the missing variables
+  const { tradingStats, isLoading, error, refreshStats, cacheInfo } =
+    useGoogleSheetsData();
+
+  // Add the missing safeRefreshStats function
+  const safeRefreshStats = React.useCallback(() => {
+    try {
+      if (refreshStats && typeof refreshStats === "function") {
+        refreshStats();
+      }
+    } catch (error) {
+      console.error("Error in refresh function:", error);
+    }
+  }, [refreshStats]);
 
   return (
     <>
       <Hero />
       <MyStory tradingStats={tradingStats} />
-      {/* 🎯 FIXED - Use actual data from the hook */}
       <TradingResults
         tradingStats={tradingStats}
+        isLoading={isLoading}
+        error={error}
+        refreshStats={refreshStats || safeRefreshStats}
         cacheInfo={
           cacheInfo || {
             isFresh: false,
@@ -160,7 +175,10 @@ const HomePage = () => {
             timeUntilNextRefresh: 0,
           }
         }
-      />{" "}
+      />
+      {tradingStats?.monthlyData && !isLoading && (
+        <BitcoinComparison monthlyTradingData={tradingStats.monthlyData} />
+      )}
       <Features />
       <CallToAction />
       <FAQ />
