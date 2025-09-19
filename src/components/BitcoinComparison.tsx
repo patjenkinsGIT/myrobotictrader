@@ -245,7 +245,7 @@ export const BitcoinComparison: React.FC<BitcoinComparisonProps> = ({
                   </tr>
                 </thead>
                 <tbody>
-                  {correlationData.slice(-6).map((data) => {
+                  {correlationData.map((data) => {
                     const matchingMonth = monthlyTradingData.find(
                       (m) => m.month === data.month
                     );
