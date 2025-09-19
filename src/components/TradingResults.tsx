@@ -36,7 +36,7 @@ interface TradingStats {
 }
 
 interface TradingResultsProps {
-  tradingStats?: TradingStats;
+  tradingStats?: TradingStats | null; // Accept both undefined and null
   isLoading?: boolean;
   error?: string | null;
   refreshStats?: () => void;
@@ -77,6 +77,7 @@ const TradingResults: React.FC<TradingResultsProps> = ({
   const hasError = error && error.trim() !== "";
   const hasValidData =
     tradingStats &&
+    tradingStats !== null &&
     typeof tradingStats === "object" &&
     tradingStats.totalProfit !== undefined;
 
