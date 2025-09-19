@@ -19,7 +19,6 @@ import { Hero } from "./components/Hero";
 import { MyStory } from "./components/MyStory";
 import { TradingResults } from "./components/TradingResults";
 import { Features } from "./components/Features";
-import { StrategicPurchaseAnalysis } from "./components/StrategicPurchaseAnalysis";
 import { CallToAction } from "./components/CallToAction";
 import { FAQ } from "./components/FAQ";
 import { Footer } from "./components/Footer";
@@ -145,20 +144,7 @@ const SEOWrapper = ({ children }: { children: React.ReactNode }) => {
 // FIXED VERSION - Replace the problematic refreshStats with this:
 const HomePage = () => {
   // 🎯 SINGLE HOOK CALL - Get ALL the data from the hook
-  const { tradingStats, isLoading, error, refreshStats, cacheInfo } =
-    useGoogleSheetsData();
-
-  // Create a safe refresh function as backup
-  const safeRefreshStats = React.useCallback(() => {
-    try {
-      if (refreshStats && typeof refreshStats === "function") {
-        refreshStats();
-      }
-      // ❌ Removed the console.log here
-    } catch (error) {
-      console.error("Error in refresh function:", error); // ✅ Kept essential error logging
-    }
-  }, [refreshStats]);
+  const { tradingStats, cacheInfo } = useGoogleSheetsData();
 
   return (
     <>
@@ -167,9 +153,6 @@ const HomePage = () => {
       {/* 🎯 FIXED - Use actual data from the hook */}
       <TradingResults
         tradingStats={tradingStats}
-        isLoading={isLoading}
-        error={error}
-        refreshStats={refreshStats || safeRefreshStats}
         cacheInfo={
           cacheInfo || {
             isFresh: false,
@@ -177,8 +160,7 @@ const HomePage = () => {
             timeUntilNextRefresh: 0,
           }
         }
-      />
-      <StrategicPurchaseAnalysis />
+      />{" "}
       <Features />
       <CallToAction />
       <FAQ />
