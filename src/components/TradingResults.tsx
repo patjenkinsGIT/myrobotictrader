@@ -190,6 +190,7 @@ export const BitcoinCorrelation: React.FC<BitcoinCorrelationProps> = ({
             </thead>
             <tbody>
               {correlationData.slice(-6).map((data) => {
+                // Find matching month data safely
                 const matchingMonth = monthlyTradingData.find(
                   (m) => m.month === data.month
                 );
