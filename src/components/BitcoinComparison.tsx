@@ -178,11 +178,11 @@ export const BitcoinComparison: React.FC<BitcoinComparisonProps> = ({
             </div>
           </div>
 
-          {/* Simple Stats - Lightened */}
+          {/* Simple Stats */}
           <div className="grid md:grid-cols-2 gap-6 mb-8">
-            <div className="bg-white/8 rounded-xl p-6 border border-white/15 hover:border-white/25 hover:bg-white/10 transition-all duration-300">
+            <div className="bg-white/8 rounded-xl p-6 border border-white/15 hover:border-white/25 hover:bg-white/10 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg">
+                <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg hover:scale-110 transition-transform duration-300">
                   <Target className="w-5 h-5 text-white" />
                 </div>
                 <h4 className="text-lg font-semibold text-white">
@@ -198,9 +198,9 @@ export const BitcoinComparison: React.FC<BitcoinComparisonProps> = ({
               </p>
             </div>
 
-            <div className="bg-white/8 rounded-xl p-6 border border-white/15 hover:border-white/25 hover:bg-white/10 transition-all duration-300">
+            <div className="bg-white/8 rounded-xl p-6 border border-white/15 hover:border-white/25 hover:bg-white/10 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg">
+                <div className="p-2 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg hover:scale-110 transition-transform duration-300">
                   <Shield className="w-5 h-5 text-white" />
                 </div>
                 <h4 className="text-lg font-semibold text-white">Risk Level</h4>
@@ -245,57 +245,75 @@ export const BitcoinComparison: React.FC<BitcoinComparisonProps> = ({
                   </tr>
                 </thead>
                 <tbody>
-                  {correlationData.map((data) => {
-                    const matchingMonth = monthlyTradingData.find(
-                      (m) => m.month === data.month
-                    );
-                    const profit = matchingMonth ? matchingMonth.profit : 0;
+                  {correlationData
+                    .slice()
+                    .reverse()
+                    .map((data) => {
+                      const matchingMonth = monthlyTradingData.find(
+                        (m) => m.month === data.month
+                      );
+                      const profit = matchingMonth ? matchingMonth.profit : 0;
 
-                    return (
-                      <tr
-                        key={data.month}
-                        className="border-t border-white/10 hover:bg-white/8 transition-colors duration-200"
-                      >
-                        <td className="p-3 md:p-4 text-white font-medium text-sm md:text-base">
-                          {data.month}
-                        </td>
-                        <td className="p-3 md:p-4 text-right">
-                          <span className="text-green-400 font-semibold text-sm md:text-base">
-                            +${profit.toFixed(0)}
-                          </span>
-                        </td>
-                        <td className="p-3 md:p-4 text-right">
-                          <span
-                            className={`font-semibold text-sm md:text-base ${
-                              data.bitcoinReturn >= 0
-                                ? "text-green-400"
-                                : "text-red-400"
-                            }`}
-                          >
-                            {data.bitcoinReturn >= 0 ? "+" : ""}
-                            {data.bitcoinReturn}%
-                          </span>
-                        </td>
-                        <td className="p-3 md:p-4 text-center">
-                          {data.status === "independent" && (
-                            <span className="px-2 md:px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-xs font-medium">
-                              You Won
+                      // Better result interpretation
+                      let resultText = "Both Positive";
+                      let resultColor = "bg-purple-500/20 text-purple-300";
+
+                      if (data.bitcoinReturn < 0 && profit > 0) {
+                        resultText = "I Won, Bitcoin Lost";
+                        resultColor = "bg-green-500/20 text-green-300";
+                      } else if (data.bitcoinReturn > 0 && profit > 0) {
+                        // Compare actual returns - need to estimate my percentage return
+                        const estimatedReturn = (profit / 10000) * 100; // Assuming $10k capital
+                        if (estimatedReturn > data.bitcoinReturn) {
+                          resultText = "I Beat Bitcoin";
+                          resultColor = "bg-blue-500/20 text-blue-300";
+                        } else {
+                          resultText = "Both Positive";
+                          resultColor = "bg-purple-500/20 text-purple-300";
+                        }
+                      } else if (data.bitcoinReturn > 0 && profit <= 0) {
+                        resultText = "Bitcoin Won";
+                        resultColor = "bg-orange-500/20 text-orange-300";
+                      } else {
+                        resultText = "Both Negative";
+                        resultColor = "bg-red-500/20 text-red-300";
+                      }
+
+                      return (
+                        <tr
+                          key={data.month}
+                          className="border-t border-white/10 hover:bg-white/8 transition-colors duration-200"
+                        >
+                          <td className="p-3 md:p-4 text-white font-medium text-sm md:text-base">
+                            {data.month}
+                          </td>
+                          <td className="p-3 md:p-4 text-right">
+                            <span className="text-green-400 font-semibold text-sm md:text-base">
+                              +${profit.toFixed(0)}
                             </span>
-                          )}
-                          {data.status === "inverse" && (
-                            <span className="px-2 md:px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-xs font-medium">
-                              You Won Big
+                          </td>
+                          <td className="p-3 md:p-4 text-right">
+                            <span
+                              className={`font-semibold text-sm md:text-base ${
+                                data.bitcoinReturn >= 0
+                                  ? "text-green-400"
+                                  : "text-red-400"
+                              }`}
+                            >
+                              {data.bitcoinReturn >= 0 ? "+" : ""}
+                              {data.bitcoinReturn}%
                             </span>
-                          )}
-                          {data.status === "correlated" && (
-                            <span className="px-2 md:px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-xs font-medium">
-                              Both Good
+                          </td>
+                          <td className="p-3 md:p-4 text-center">
+                            <span
+                              className={`px-2 md:px-3 py-1 rounded-full text-xs font-medium ${resultColor}`}
+                            >
+                              {resultText}
                             </span>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
+                          </td>
+                        </tr>
+                      );
+                    })}
                 </tbody>
               </table>
             </div>
