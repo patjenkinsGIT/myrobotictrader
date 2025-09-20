@@ -1,3 +1,4 @@
+console.log("MyStory component is rendering!");
 import React from "react";
 import { User, TrendingUp, CheckCircle, Target } from "lucide-react";
 import { TradingStats } from "../hooks/useGoogleSheetsData";
