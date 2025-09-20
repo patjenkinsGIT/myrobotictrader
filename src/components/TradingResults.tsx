@@ -1,3 +1,7 @@
+// At the top of TradingResults component, add:
+<div style={{ border: "3px solid red", margin: "10px" }}>
+  // ... rest of your TradingResults content
+</div>;
 import React from "react";
 import {
   TrendingUp,
