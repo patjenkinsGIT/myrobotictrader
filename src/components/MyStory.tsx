@@ -1,4 +1,3 @@
-console.log("MyStory component is rendering!");
 import React from "react";
 import { User, TrendingUp, CheckCircle, Target } from "lucide-react";
 import { TradingStats } from "../hooks/useGoogleSheetsData";
@@ -9,6 +8,14 @@ interface MyStoryProps {
 }
 
 export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
+  console.log("MyStory component is rendering!");
+  console.log("MyStory Debug - tradingStats:", tradingStats);
+  console.log("MyStory Debug - totalProfit:", tradingStats?.totalProfit);
+  console.log(
+    "MyStory Debug - monthlyData length:",
+    tradingStats?.monthlyData?.length
+  );
+
   // Calculate time since starting trading (January 8, 2025)
   const timeSinceStart = calculateTimeSinceStart();
 
