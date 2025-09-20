@@ -1,4 +1,4 @@
-// Enhanced useGoogleSheetsData.ts - Complete Fixed Version
+// Enhanced useGoogleSheetsData.ts - Complete Dynamic Version
 
 import { useState, useEffect, useCallback } from "react";
 import { tradingDataCache } from "../utils/smartCache";
@@ -149,12 +149,12 @@ export const useGoogleSheetsData = () => {
     []
   );
 
-  // Replace your parseCalculationsData function with this enhanced debug version
+  // DYNAMIC: Parse your actual Calculations data correctly
   const parseCalculationsData = useCallback(
     (rows: string[][], fetchTimestamp: string): TradingStats => {
       console.log("🔍 Parsing Calculations data - Total rows:", rows.length);
 
-      if (!rows || rows.length < 12) {
+      if (!rows || rows.length < 3) {
         console.log("❌ Not enough rows, using mock data");
         return getMockTradingStatsBase();
       }
@@ -162,14 +162,32 @@ export const useGoogleSheetsData = () => {
       // Enhanced logging to see EXACT data structure
       console.log("📊 DETAILED Google Sheets data structure:");
       rows.forEach((row, index) => {
-        if (index < 15) {
+        if (index < rows.length) {
           console.log(`Row ${index} (${row.length} columns):`, row);
         }
       });
 
-      // Check the Grand Total row (row 12, index 11)
-      const grandTotalRow = rows[11];
-      console.log("💰 DETAILED Grand Total Row:", grandTotalRow);
+      // Find the Grand Total row (should be the last row with 7 columns)
+      let grandTotalRow = null;
+      let grandTotalIndex = -1;
+
+      for (let i = rows.length - 1; i >= 0; i--) {
+        const row = rows[i];
+        if (
+          row &&
+          row.length >= 6 &&
+          row[0]?.toString().includes("Grand Total")
+        ) {
+          grandTotalRow = row;
+          grandTotalIndex = i;
+          break;
+        }
+      }
+
+      console.log(
+        "💰 DETAILED Grand Total Row (index " + grandTotalIndex + "):",
+        grandTotalRow
+      );
 
       if (!grandTotalRow || grandTotalRow.length < 6) {
         console.log("❌ Grand Total row not found or incomplete");
@@ -219,11 +237,14 @@ export const useGoogleSheetsData = () => {
       } else {
         console.log("✅ All values parsed successfully!");
       }
-      // Enhanced monthly data parsing with better month name handling
+
+      // DYNAMIC: Enhanced monthly data parsing - handle any number of months
       const monthlyData: TradingDataPoint[] = [];
 
-      console.log("🔍 Parsing monthly data rows:");
-      for (let i = 1; i <= 9; i++) {
+      console.log("🔍 Parsing monthly data rows (DYNAMIC):");
+
+      // Parse ALL rows except the header (row 0) and Grand Total (last row)
+      for (let i = 1; i < grandTotalIndex; i++) {
         const row = rows[i];
         if (row && row.length >= 3) {
           console.log(`  Row ${i} details:`, row);
@@ -237,7 +258,13 @@ export const useGoogleSheetsData = () => {
             `    Raw month: "${monthRaw}", profit: ${profit}, trades: ${trades}`
           );
 
-          if (monthRaw && monthRaw !== "Grand Total" && profit > 0) {
+          // Only process rows with valid month data (skip empty rows and Grand Total)
+          if (
+            monthRaw &&
+            monthRaw !== "Grand Total" &&
+            monthRaw !== "" &&
+            profit > 0
+          ) {
             // Better month name parsing - handle different formats
             let shortMonth = monthRaw;
 
@@ -284,7 +311,10 @@ export const useGoogleSheetsData = () => {
         }
       }
 
-      console.log("📈 Final monthly data array:", monthlyData);
+      console.log(
+        `📈 Final monthly data array (${monthlyData.length} months):`,
+        monthlyData
+      );
 
       return {
         totalProfit,

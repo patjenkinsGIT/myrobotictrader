@@ -1,4 +1,3 @@
-// TradingResults.tsx - Clean Structure Based on Your Specs
 import React from "react";
 import {
   TrendingUp,
@@ -9,13 +8,16 @@ import {
   Target,
   AlertCircle,
   RefreshCw,
+  Clock,
+  Database,
+  Wifi,
 } from "lucide-react";
-import { trackCTAClick } from "../utils/analytics";
+import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
 import { calculateTimeSinceStart } from "../utils/tradingTime";
 import { LiveTransactionLog } from "./LiveTransactionLog";
 import { TradingDataPoint } from "../hooks/useGoogleSheetsData";
 
-// Define the props interface for TradingResults
+// Define the props interface for TradingResults - make all props optional to handle undefined cases
 interface TradingResultsProps {
   tradingStats?: any;
   isLoading?: boolean;
@@ -37,24 +39,19 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
 }) => {
   const timeSinceStart = calculateTimeSinceStart();
 
-  // Helper functions for month names
-  const getFullMonthName = (month: string) => {
-    const months: { [key: string]: string } = {
-      Jan: "January",
-      Feb: "February",
-      Mar: "March",
-      Apr: "April",
-      May: "May",
-      Jun: "June",
-      Jul: "July",
-      Aug: "August",
-      Sep: "September",
-      Oct: "October",
-      Nov: "November",
-      Dec: "December",
-    };
-    return months[month] || month;
+  // Format time until next refresh
+  const formatTimeUntilRefresh = (ms: number) => {
+    if (ms <= 0) return "Available now";
+
+    const hours = Math.floor(ms / (1000 * 60 * 60));
+    const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+
+    if (hours > 0) {
+      return `${hours}h ${minutes}m`;
+    }
+    return `${minutes}m`;
   };
+
   if (isLoading) {
     return (
       <section className="py-16 px-4 relative overflow-hidden">
@@ -70,7 +67,7 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
     );
   }
 
-  // Error handling
+  // More specific error checking - handle undefined tradingStats
   const hasError = error && error.trim() !== "";
   const hasValidData =
     tradingStats &&
@@ -100,6 +97,41 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
               Retry Connection
             </button>
           </div>
+
+          <div className="bg-gray-900/50 rounded-lg p-4 text-left max-w-2xl mx-auto">
+            <h4 className="text-white font-semibold mb-2">
+              Debug Information:
+            </h4>
+            <div className="text-gray-300 text-sm space-y-1">
+              <p>
+                • Sheet ID:{" "}
+                {import.meta.env.VITE_GOOGLE_SHEET_ID
+                  ? "✅ Configured"
+                  : "❌ Missing"}
+              </p>
+              <p>
+                • API Key:{" "}
+                {import.meta.env.VITE_GOOGLE_API_KEY
+                  ? "✅ Configured"
+                  : "❌ Missing"}
+              </p>
+              <p>• Expected Tab: "Calculations"</p>
+              <p>• Expected Range: A:G</p>
+              <p>• Error: {error || "No specific error message"}</p>
+              <p>• Cache Status: {cacheInfo?.isFresh ? "Fresh" : "Stale"}</p>
+              <p>• Rate Limited: {cacheInfo?.isRateLimited ? "Yes" : "No"}</p>
+              <p>• Has Trading Stats: {hasValidData ? "Yes" : "No"}</p>
+              <p>• Trading Stats Type: {typeof tradingStats}</p>
+              <p>
+                • Trading Stats Value:{" "}
+                {tradingStats === undefined
+                  ? "undefined"
+                  : tradingStats === null
+                  ? "null"
+                  : "has value"}
+              </p>
+            </div>
+          </div>
         </div>
       </section>
     );
@@ -107,77 +139,159 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
 
   // We have valid data - proceed with rendering
   const currentData = tradingStats;
+
+  // Use the dailyAvg from the data structure
+  const dailyAvg = currentData.dailyAvg?.toFixed(2) || "0.00";
+
+  // DYNAMIC: Handle any number of months - always show last 6 in chart, rest in table
   const allMonthlyData = currentData.monthlyData || [];
+  const totalMonths = allMonthlyData.length;
 
-  // Get last 6 months for chart (most recent months)
-  const recentMonths = allMonthlyData.slice(-6);
+  // Chart: Always show last 6 months (or all months if less than 6)
+  const recentMonths =
+    totalMonths > 6 ? allMonthlyData.slice(-6) : allMonthlyData;
 
-  // Get older months for table (3 months in descending order)
+  // Previous months table: Everything before the recent 6 months, in descending order
   const olderMonths =
-    allMonthlyData.length > 6
-      ? allMonthlyData.slice(0, -6).slice(-3).reverse()
-      : [];
+    totalMonths > 6 ? allMonthlyData.slice(0, -6).reverse() : [];
 
-  const bestMonthData = allMonthlyData.reduce(
-    (prev: any, current: any) =>
-      prev.profit > current.profit ? prev : current,
-    allMonthlyData[0] || { month: "N/A", profit: 0 }
-  );
+  // Find best month using the bestMonthProfit value
+  const bestMonthData =
+    allMonthlyData.find(
+      (month: TradingDataPoint) => month.profit === currentData.bestMonthProfit
+    ) || allMonthlyData[0];
+
+  // Get full month name
+  const getFullMonthName = (shortMonth: string) => {
+    const monthMap: { [key: string]: string } = {
+      Jan: "January",
+      Feb: "February",
+      Mar: "March",
+      Apr: "April",
+      May: "May",
+      Jun: "June",
+      Jul: "July",
+      Aug: "August",
+      Sep: "September",
+      Oct: "October",
+      Nov: "November",
+      Dec: "December",
+    };
+    return monthMap[shortMonth] || shortMonth;
+  };
+
+  // Get short month name for mobile (3 letters)
+  const getShortMonthName = (shortMonth: string) => {
+    return shortMonth.substring(0, 3);
+  };
+
+  // CTA tracking handler
+  const handleJoinMasterclass = () => {
+    trackCTAClick("join_free_masterclass", "trading_results_section");
+    trackOutboundLink(
+      "https://dailyprofits.link/class",
+      "Join Free Masterclass Trading Results"
+    );
+  };
+
+  // Add this function in your component
+  const formatCurrency = (
+    value: number | string | null | undefined
+  ): string => {
+    const numValue = Number(value);
+    if (isNaN(numValue)) {
+      return "0.00";
+    }
+    return numValue.toFixed(2);
+  };
 
   return (
     <section className="py-16 px-4 relative overflow-hidden">
-      {/* Background effects */}
-      <div className="absolute inset-0 bg-gradient-to-r from-green-900/20 to-emerald-900/20"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-green-900/20 to-blue-900/20"></div>
 
       <div className="relative max-w-6xl mx-auto">
-        {/* MY TRADING RESULTS Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-500/30 to-emerald-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-green-400/40 mb-6 shadow-lg shadow-green-500/20">
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span className="text-green-200 font-medium">LIVE DATA</span>
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-600/20 to-blue-600/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20 mb-6">
+            <BarChart3 className="w-4 h-4 text-green-400" />
+            <span className="text-green-300 font-medium">
+              {currentData.isLiveData ? "LIVE DATA" : "REAL RESULTS"}
+            </span>
+            {currentData.isLiveData && (
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            )}
           </div>
 
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
             My Trading Results
           </h2>
 
-          <p className="text-xl text-gray-200 mb-2">
-            Don't just take my word for it - here are my actual trading results:
-          </p>
-
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <TrendingUp className="w-5 h-5 text-green-400" />
+          {/* Sub-headline with bouncing graph */}
+          <div className="mb-6">
+            <p className="text-xl text-purple-200 font-medium mb-4">
+              Don't just take my word for it - here are my actual trading
+              results:
+            </p>
+            <div>
+              <TrendingUp className="w-8 h-8 text-green-300 mx-auto animate-bounce" />
+            </div>
           </div>
 
-          <p className="text-gray-300 mb-6">
-            These are my actual profits from using my robotic trader.{" "}
-            <span className="text-green-300 font-semibold">
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            These are my actual profits from using my robotic trader.
+            <span className="text-green-400 font-semibold">
+              {" "}
               Started January 8, 2025
             </span>{" "}
-            - Live Updates!
+            -{" "}
+            {currentData.isLiveData
+              ? "Live Updates!"
+              : "Stats Updated Monthly!"}
           </p>
 
-          {/* Live Data Status */}
-          <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 backdrop-blur-sm rounded-xl border border-green-400/20 p-4 inline-block shadow-lg shadow-green-500/10">
-            <div className="flex items-center justify-center gap-3">
-              <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-              <span className="text-green-200 font-medium">
-                Live Data Connected
-              </span>
+          {/* Clean Live Data Indicator with Professional Cache Status */}
+          {currentData.isLiveData && (
+            <div className="mt-6 flex justify-center">
+              <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-lg p-4 border border-green-400/30 shadow-lg shadow-green-500/10">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                  <div className="text-center">
+                    <p className="text-green-300 font-semibold text-sm">
+                      Live Data Connected
+                    </p>
+                    <p className="text-gray-300 text-xs">
+                      Last updated:{" "}
+                      {new Date(currentData.lastUpdated).toLocaleString()}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Professional Cache Status Display */}
+                <div className="flex items-center justify-center gap-4 text-xs text-gray-400 border-t border-green-400/20 pt-2">
+                  <div className="flex items-center gap-1">
+                    <Database className="w-3 h-3" />
+                    <span>Cache: {cacheInfo.isFresh ? "Fresh" : "Stale"}</span>
+                  </div>
+                  {cacheInfo.isRateLimited && (
+                    <div className="flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      <span>
+                        Next update:{" "}
+                        {formatTimeUntilRefresh(cacheInfo.timeUntilNextRefresh)}
+                      </span>
+                    </div>
+                  )}
+                  <div className="flex items-center gap-1">
+                    <Wifi className="w-3 h-3" />
+                    <span>Auto-updating</span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="text-xs text-gray-300 mt-1">
-              Last updated: {new Date().toLocaleString()}
-            </div>
-            <div className="flex items-center justify-center gap-4 text-xs text-gray-400 mt-2">
-              <span>📊 Cache: {cacheInfo.isFresh ? "Fresh" : "Stale"}</span>
-              <span>🔄 Auto-updating</span>
-            </div>
-          </div>
+          )}
         </div>
 
-        {/* FIRST 3 CALCULATION CARDS */}
+        {/* First row - BRIGHTENED CARDS like Hero style */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {/* Total Profits */}
           <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-green-500/15">
             <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
 
@@ -193,12 +307,13 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
                 Total Profits
               </div>
               <div className="text-green-300 text-sm mt-1">
-                {timeSinceStart} • Steady Gains
+                {timeSinceStart}
               </div>
             </div>
+
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
 
-          {/* Total Trades */}
           <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-blue-500/15">
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
 
@@ -217,9 +332,10 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
                 Consistent & Automated
               </div>
             </div>
+
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
 
-          {/* Avg Per Trade */}
           <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/15">
             <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
 
@@ -236,15 +352,16 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
               </div>
               <div className="text-purple-300 text-sm mt-1">Steady Gains</div>
             </div>
+
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
         </div>
 
-        {/* TRADING SCOREBOARD (LiveTransactionLog) */}
+        {/* Live Transaction Log */}
         <LiveTransactionLog />
 
-        {/* LAST 3 CALCULATION CARDS */}
+        {/* Second row - Monthly Average, Daily Average, Best Month */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          {/* Monthly Average */}
           <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-emerald-500/15">
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
 
@@ -253,7 +370,7 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
             </div>
 
             <div className="relative text-center">
-              <div className="text-3xl font-bold text-emerald-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-emerald-300 group-hover:to-teal-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
+              <div className="text-2xl font-bold text-emerald-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-emerald-300 group-hover:to-teal-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
                 ${currentData.monthlyAverage?.toFixed(2) || "0.00"}
               </div>
               <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
@@ -263,41 +380,37 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
                 Consistent Performance
               </div>
             </div>
+
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
 
-          {/* Daily Average */}
           <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-indigo-500/15">
             <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 to-purple-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
-
             <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-indigo-500/40">
-              <BarChart3 className="w-full h-full text-white" />
+              <TrendingUp className="w-full h-full text-white" />
             </div>
-
             <div className="relative text-center">
-              <div className="text-3xl font-bold text-indigo-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-indigo-300 group-hover:to-purple-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
-                ${currentData.dailyAvg?.toFixed(2) || "0.00"}
+              <div className="text-2xl font-bold text-indigo-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-indigo-300 group-hover:to-purple-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
+                ${formatCurrency(dailyAvg)}
               </div>
               <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
                 Daily Average
               </div>
               <div className="text-indigo-300 text-sm mt-1">Steady Growth</div>
             </div>
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
 
-          {/* Best Month */}
           <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-amber-500/15">
             <div className="absolute inset-0 bg-gradient-to-br from-amber-500 to-orange-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
 
             <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-amber-500/40">
-              <TrendingUp className="w-full h-full text-white" />
+              <Zap className="w-full h-full text-white" />
             </div>
 
             <div className="relative text-center">
-              <div className="text-3xl font-bold text-amber-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-amber-300 group-hover:to-orange-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
-                $
-                {currentData.bestMonthProfit?.toFixed(2) ||
-                  bestMonthData.profit?.toFixed(2) ||
-                  "0.00"}
+              <div className="text-2xl font-bold text-amber-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-amber-300 group-hover:to-orange-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
+                ${currentData.bestMonthProfit?.toFixed(2) || "0.00"}
               </div>
               <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
                 Best Month
@@ -307,14 +420,33 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
                 2025
               </div>
             </div>
+
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
         </div>
 
-        {/* RECENT PERFORMANCE BAR CHARTS (6 Months) */}
+        <div className="text-center mb-8">
+          <p className="text-sm text-green-300 bg-green-900/20 backdrop-blur-sm rounded-lg px-4 py-2 inline-block border border-green-500/20">
+            ✓ All profits shown are net amounts after trading fees and rebates
+          </p>
+        </div>
+
+        {/* Recent Months Chart - DYNAMIC: Shows last 6 months */}
         {recentMonths.length > 0 && (
           <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8 mb-8 relative">
+            {/* Robot Trading Image from public folder - NO IMPORT NEEDED */}
+            <div className="absolute top-4 right-4 opacity-20 pointer-events-none hidden md:block">
+              <div className="w-16 h-16 rounded-full overflow-hidden bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-purple-400/30 flex items-center justify-center animate-pulse shadow-lg shadow-purple-500/20">
+                <img
+                  src="/robot-trading.png"
+                  alt="Robot Trading"
+                  className="w-12 h-12 object-contain filter brightness-110"
+                />
+              </div>
+            </div>
+
             <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6 text-center">
-              Recent Performance (Last 6 Months)
+              Recent Performance (Last {recentMonths.length} Months)
             </h3>
 
             <div className="w-full overflow-x-auto">
@@ -352,11 +484,16 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
                             ? "bg-gradient-to-t from-yellow-500 to-yellow-300 shadow-lg shadow-yellow-400/40"
                             : "bg-gradient-to-t from-emerald-500 to-green-400 shadow-lg shadow-emerald-400/30"
                         }`}
-                        style={{ height: `${height}px`, minHeight: "12px" }}
+                        style={{
+                          height: `${height}px`,
+                          minHeight: "12px",
+                        }}
                       ></div>
 
                       <div className="text-xs md:text-sm text-gray-200 mt-2 md:mt-3 font-medium text-center">
-                        <span className="md:hidden">{month.month}</span>
+                        <span className="md:hidden">
+                          {getShortMonthName(month.month)}
+                        </span>
                         <span className="hidden md:inline">
                           {getFullMonthName(month.month)}
                         </span>
@@ -379,7 +516,7 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
           </div>
         )}
 
-        {/* PREVIOUS MONTHS PERFORMANCE (3 Months Desc Order) */}
+        {/* Previous Months Table - DYNAMIC: Shows everything before recent months */}
         {olderMonths.length > 0 && (
           <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8 mb-8">
             <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6 text-center">
@@ -403,49 +540,67 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
                     <tr
                       key={month.month}
                       className={`border-b border-white/5 ${
-                        index % 2 === 0 ? "bg-white/2" : "bg-transparent"
+                        index % 2 === 0 ? "bg-white/5" : ""
                       }`}
                     >
-                      <td className="py-3 px-4 text-gray-200 font-medium">
+                      <td className="text-gray-200 py-3 px-4 font-medium">
                         {getFullMonthName(month.month)} 2025
                       </td>
-                      <td className="py-3 px-4 text-right">
-                        <span className="text-green-300 font-semibold font-mono">
-                          ${month.profit.toFixed(2)}
-                        </span>
+                      <td className="text-emerald-300 py-3 px-4 text-right font-mono font-semibold">
+                        ${month.profit.toFixed(2)}
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
+
+            <div className="text-center mt-4">
+              <p className="text-gray-400 text-sm">
+                Showing {olderMonths.length} previous months • Total: $
+                {olderMonths
+                  .reduce(
+                    (sum: number, month: TradingDataPoint) =>
+                      sum + month.profit,
+                    0
+                  )
+                  .toFixed(2)}
+              </p>
+            </div>
+
+            {/* CTA BUTTON */}
+            <div className="text-center mt-8">
+              <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl p-6 border border-purple-400/30 shadow-lg shadow-purple-500/20">
+                <h4 className="text-xl font-bold text-white mb-3">
+                  Ready to Experience Autonomous Trading?
+                </h4>
+                <p className="text-gray-200 mb-4 max-w-xl mx-auto">
+                  Join successful traders using set-it-and-forget-it
+                  cryptocurrency trading.
+                </p>
+                <a
+                  href="https://dailyprofits.link/class"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={handleJoinMasterclass}
+                  className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-500/30"
+                >
+                  Join Free Masterclass
+                  <TrendingUp className="w-4 h-4" />
+                </a>
+              </div>
+            </div>
           </div>
         )}
 
-        {/* CTA BUTTON */}
-        <div className="text-center">
-          <button
-            onClick={() => trackCTAClick("trading_results_cta")}
-            className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-green-500/30"
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-400 opacity-0 group-hover:opacity-20 rounded-2xl transition-opacity duration-300"></div>
-            <TrendingUp className="w-6 h-6 group-hover:scale-110 transition-transform duration-300" />
-            <span className="relative">
-              Start Your Automated Trading Journey
-            </span>
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-green-400 to-emerald-400 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
-          </button>
-
-          <p className="text-gray-300 text-sm mt-4 max-w-md mx-auto">
-            Join the platform that's generating these results automatically. No
-            manual trading required.
-          </p>
-        </div>
-
-        {/* Disclaimer */}
         <div className="text-center mt-8">
-          <p className="text-sm text-green-300 bg-green-900/20 backdrop-blur-sm rounded-lg px-4 py-2 inline-block border border-green-500/20">
-            ✓ All profits shown are net amounts after trading fees and rebates
+          <p className="text-sm text-gray-400 max-w-2xl mx-auto">
+            * These are my actual trading results from my personal robotic
+            trader account. Started January 8, 2025.
+            {currentData.isLiveData
+              ? " Live data from Google Sheets."
+              : " Results updated regularly."}
+            Past performance does not guarantee future results.
           </p>
         </div>
       </div>
