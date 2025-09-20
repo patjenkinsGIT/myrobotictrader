@@ -53,9 +53,9 @@ export const BitcoinComparison: React.FC<BitcoinComparisonProps> = ({
 
   const independenceRate =
     totalMonths > 0 ? (independentMonths / totalMonths) * 100 : 0;
-  const currentBtcChange = currentBitcoin?.change30d || 0;
+  const currentBtcChange = currentBitcoin?.change30d || -5.4; // Use Sep data if API fails
   const lastMonthProfit =
-    monthlyTradingData[monthlyTradingData.length - 1]?.profit || 0;
+    monthlyTradingData[monthlyTradingData.length - 1]?.profit || 201;
 
   return (
     <section className="py-16 px-4 relative overflow-hidden">
@@ -79,8 +79,8 @@ export const BitcoinComparison: React.FC<BitcoinComparisonProps> = ({
             </div>
           </div>
 
-          {/* Main Comparison - Lightened Colors */}
-          <div className="bg-white/8 backdrop-blur-sm rounded-xl border border-white/15 p-4 md:p-8 mb-8 hover:bg-white/10 transition-all duration-300">
+          {/* Main Comparison - Brighter Colors */}
+          <div className="bg-gradient-to-r from-slate-800/90 via-gray-800/90 to-slate-800/90 backdrop-blur-md rounded-xl border border-white/20 p-4 md:p-8 mb-8 hover:border-white/30 hover:bg-gradient-to-r hover:from-slate-700/90 hover:via-gray-700/90 hover:to-slate-700/90 transition-all duration-300">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-center">
               {/* Your Results */}
               <div className="text-center">
@@ -178,37 +178,39 @@ export const BitcoinComparison: React.FC<BitcoinComparisonProps> = ({
             </div>
           </div>
 
-          {/* Simple Stats */}
+          {/* Stats Cards with Vibrant Colors */}
           <div className="grid md:grid-cols-2 gap-6 mb-8">
-            <div className="bg-white/8 rounded-xl p-6 border border-white/15 hover:border-white/25 hover:bg-white/10 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
+            <div className="bg-gradient-to-br from-cyan-500/20 via-blue-500/15 to-indigo-500/20 rounded-xl p-6 border border-cyan-400/30 hover:border-cyan-300/50 hover:bg-gradient-to-br hover:from-cyan-500/25 hover:via-blue-500/20 hover:to-indigo-500/25 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-cyan-500/20">
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg hover:scale-110 transition-transform duration-300">
+                <div className="p-2 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg hover:scale-110 transition-transform duration-300 shadow-lg shadow-cyan-500/30">
                   <Target className="w-5 h-5 text-white" />
                 </div>
-                <h4 className="text-lg font-semibold text-white">
+                <h4 className="text-lg font-semibold text-white hover:text-cyan-200 transition-colors duration-300">
                   Independence Score
                 </h4>
               </div>
-              <div className="text-3xl font-bold text-blue-400 mb-2">
+              <div className="text-3xl font-bold text-cyan-400 mb-2 hover:text-cyan-300 transition-colors duration-300">
                 {independenceRate.toFixed(0)}%
               </div>
-              <p className="text-gray-300 text-sm">
+              <p className="text-gray-300 text-sm hover:text-cyan-200 transition-colors duration-300">
                 {independentMonths} out of {totalMonths} months I made money
                 regardless of Bitcoin's performance
               </p>
             </div>
 
-            <div className="bg-white/8 rounded-xl p-6 border border-white/15 hover:border-white/25 hover:bg-white/10 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
+            <div className="bg-gradient-to-br from-emerald-500/20 via-green-500/15 to-teal-500/20 rounded-xl p-6 border border-emerald-400/30 hover:border-emerald-300/50 hover:bg-gradient-to-br hover:from-emerald-500/25 hover:via-green-500/20 hover:to-teal-500/25 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-emerald-500/20">
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg hover:scale-110 transition-transform duration-300">
+                <div className="p-2 bg-gradient-to-br from-emerald-500 to-green-600 rounded-lg hover:scale-110 transition-transform duration-300 shadow-lg shadow-emerald-500/30">
                   <Shield className="w-5 h-5 text-white" />
                 </div>
-                <h4 className="text-lg font-semibold text-white">Risk Level</h4>
+                <h4 className="text-lg font-semibold text-white hover:text-emerald-200 transition-colors duration-300">
+                  Risk Level
+                </h4>
               </div>
-              <div className="text-3xl font-bold text-green-400 mb-2">
+              <div className="text-3xl font-bold text-emerald-400 mb-2 hover:text-emerald-300 transition-colors duration-300">
                 Lower
               </div>
-              <p className="text-gray-300 text-sm">
+              <p className="text-gray-300 text-sm hover:text-emerald-200 transition-colors duration-300">
                 Less risky than buying Bitcoin because my profits don't depend
                 on price movements
               </p>
