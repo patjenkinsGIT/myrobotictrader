@@ -8,14 +8,21 @@ interface MyStoryProps {
 }
 
 export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
-  console.log("MyStory component is rendering!");
-  console.log("MyStory Debug - tradingStats:", tradingStats);
+  console.log("MyStory Debug - tradingStats: Object");
   console.log("MyStory Debug - totalProfit:", tradingStats?.totalProfit);
   console.log(
     "MyStory Debug - monthlyData length:",
     tradingStats?.monthlyData?.length
   );
 
+  // Add these new debug logs:
+  console.log("About to render calculation cards");
+  console.log("Data check - totalProfit exists:", !!tradingStats?.totalProfit);
+  console.log("Data check - totalTrades exists:", !!tradingStats?.totalTrades);
+  console.log(
+    "Data check - avgProfitPerTrade exists:",
+    !!tradingStats?.avgProfitPerTrade
+  );
   // Calculate time since starting trading (January 8, 2025)
   const timeSinceStart = calculateTimeSinceStart();
 
