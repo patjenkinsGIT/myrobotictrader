@@ -1,349 +1,432 @@
-// src/components/BitcoinComparison.tsx
 import React from "react";
 import {
+  Shield,
   TrendingUp,
   TrendingDown,
-  Target,
-  Shield,
   AlertTriangle,
-  Bitcoin,
-  CheckCircle,
+  Zap,
+  Target,
 } from "lucide-react";
-import useBitcoinCorrelation from "../hooks/useBitcoinCorrelation";
+import {
+  useGoogleSheetsData,
+  CapitalEfficiencyData,
+} from "../hooks/useGoogleSheetsData";
 
-interface MonthlyTradingData {
-  month: string;
-  profit: number;
-  trades?: number;
+interface AdvantageStatus {
+  text: string;
+  color: string;
+  icon: React.ReactElement;
 }
 
-interface BitcoinComparisonProps {
-  monthlyTradingData: MonthlyTradingData[];
-}
+export const BitcoinComparison: React.FC = () => {
+  const { tradingStats, isLoading, error } = useGoogleSheetsData();
 
-export const BitcoinComparison: React.FC<BitcoinComparisonProps> = ({
-  monthlyTradingData,
-}) => {
-  const {
-    currentBitcoin,
-    correlationData,
-    independentMonths,
-    totalMonths,
-    isLoading,
-    error,
-  } = useBitcoinCorrelation(monthlyTradingData);
-
-  if (isLoading && !currentBitcoin) {
+  if (isLoading) {
     return (
-      <section className="py-16 px-4 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900"></div>
-        <div className="relative max-w-6xl mx-auto">
-          <div className="bg-white/5 rounded-2xl border border-white/10 p-8 backdrop-blur-sm">
-            <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-4 border-purple-400/30 border-t-purple-400"></div>
-              <span className="ml-4 text-gray-300 text-lg">
-                Loading comparison data...
-              </span>
-            </div>
+      <section className="py-16 bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
+        <div className="container mx-auto px-6 text-center">
+          <div className="animate-pulse text-white">
+            Loading capital efficiency comparison...
           </div>
         </div>
       </section>
     );
   }
 
-  const independenceRate =
-    totalMonths > 0 ? (independentMonths / totalMonths) * 100 : 0;
-  const currentBtcChange = currentBitcoin?.change30d || -5.4; // Use Sep data if API fails
-  const lastMonthProfit =
-    monthlyTradingData[monthlyTradingData.length - 1]?.profit || 201;
+  if (error || !tradingStats?.capitalEfficiencyData) {
+    return (
+      <section className="py-16 bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
+        <div className="container mx-auto px-6 text-center text-red-400">
+          Unable to load comparison data
+        </div>
+      </section>
+    );
+  }
+
+  const { capitalEfficiencyData } = tradingStats;
+
+  // Calculate summary metrics
+  const totalAIProfit = capitalEfficiencyData.reduce(
+    (sum: number, month: CapitalEfficiencyData) => sum + month.aiProfit,
+    0
+  );
+  const totalBitcoinLoss = capitalEfficiencyData.reduce(
+    (sum: number, month: CapitalEfficiencyData) =>
+      sum + (month.bitcoinValue - month.totalCapitalAvailable),
+    0
+  );
+  const totalAdvantage = capitalEfficiencyData.reduce(
+    (sum: number, month: CapitalEfficiencyData) => sum + month.advantage,
+    0
+  );
+  const avgDeploymentRatio =
+    capitalEfficiencyData.reduce(
+      (sum: number, month: CapitalEfficiencyData) =>
+        sum + month.deploymentRatio,
+      0
+    ) / capitalEfficiencyData.length;
+  const avgReserveSafety =
+    capitalEfficiencyData.reduce(
+      (sum: number, month: CapitalEfficiencyData) => sum + month.reserveSafety,
+      0
+    ) / capitalEfficiencyData.length;
+
+  const getAdvantageStatus = (
+    advantage: number,
+    deploymentRatio: number
+  ): AdvantageStatus => {
+    if (advantage > 10000)
+      return {
+        text: "I Destroyed Bitcoin",
+        color: "text-yellow-300 bg-yellow-500/10",
+        icon: <Zap className="w-4 h-4" />,
+      };
+    if (advantage > 1000)
+      return {
+        text: "I Crushed It",
+        color: "text-green-300 bg-green-500/10",
+        icon: <TrendingUp className="w-4 h-4" />,
+      };
+    if (advantage > 0)
+      return {
+        text: "I Beat Bitcoin",
+        color: "text-blue-300 bg-blue-500/10",
+        icon: <Target className="w-4 h-4" />,
+      };
+    if (deploymentRatio < 50)
+      return {
+        text: "Capital Protected",
+        color: "text-purple-300 bg-purple-500/10",
+        icon: <Shield className="w-4 h-4" />,
+      };
+    return {
+      text: "Bitcoin Won",
+      color: "text-red-300 bg-red-500/10",
+      icon: <TrendingDown className="w-4 h-4" />,
+    };
+  };
+
+  const formatMonth = (monthStr: string): string => {
+    const [, month] = monthStr.split("-");
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    return months[parseInt(month) - 1] || monthStr;
+  };
 
   return (
-    <section className="py-16 px-4 relative overflow-hidden">
-      {/* Background matching your production design */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900"></div>
+    <section className="py-16 bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
+      <div className="container mx-auto px-6">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-white mb-4">
+            Smart Capital Management vs{" "}
+            <span className="text-red-400">Reckless Full Exposure</span>
+          </h2>
+          <p className="text-xl text-gray-300 max-w-4xl mx-auto">
+            Why our AI only uses a portion of your capital while still crushing
+            Bitcoin's full-exposure strategy
+          </p>
+        </div>
 
-      <div className="relative max-w-6xl mx-auto">
-        <div className="bg-white/5 rounded-2xl border border-white/10 p-8 backdrop-blur-sm hover:border-white/20 transition-all duration-300">
-          {/* Simple Header */}
-          <div className="flex items-center gap-4 mb-8">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 p-3 shadow-lg">
-              <Bitcoin className="w-full h-full text-white" />
-            </div>
-            <div>
-              <h3 className="text-2xl font-bold text-white mb-1">
-                Simple Proof This Works
+        {/* Strategy Overview Cards */}
+        <div className="grid md:grid-cols-2 gap-8 mb-12">
+          {/* Bitcoin Strategy */}
+          <div className="bg-red-500/10 backdrop-blur-sm rounded-xl border border-red-500/20 p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <AlertTriangle className="w-8 h-8 text-red-400" />
+              <h3 className="text-2xl font-bold text-white">
+                Bitcoin "All-In" Strategy
               </h3>
-              <p className="text-purple-200">
-                See how you made money when others lost
-              </p>
+            </div>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center p-3 bg-red-500/5 rounded-lg">
+                <span className="text-gray-300">Capital Deployment:</span>
+                <span className="text-red-400 font-bold">100% Exposed</span>
+              </div>
+              <div className="flex justify-between items-center p-3 bg-red-500/5 rounded-lg">
+                <span className="text-gray-300">Cash Reserves:</span>
+                <span className="text-red-400 font-bold">$0 Available</span>
+              </div>
+              <div className="flex justify-between items-center p-3 bg-red-500/5 rounded-lg">
+                <span className="text-gray-300">Risk Level:</span>
+                <span className="text-red-400 font-bold">Maximum Stress</span>
+              </div>
             </div>
           </div>
 
-          {/* Main Comparison - Brighter Colors */}
-          <div className="bg-gradient-to-r from-slate-800/90 via-gray-800/90 to-slate-800/90 backdrop-blur-md rounded-xl border border-white/20 p-4 md:p-8 mb-8 hover:border-white/30 hover:bg-gradient-to-r hover:from-slate-700/90 hover:via-gray-700/90 hover:to-slate-700/90 transition-all duration-300">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-center">
-              {/* Your Results */}
-              <div className="text-center">
-                <div className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 md:mb-4 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 p-3 md:p-4 shadow-lg">
-                  <TrendingUp className="w-full h-full text-white" />
-                </div>
-                <div className="text-2xl md:text-3xl font-bold text-green-400 mb-1 md:mb-2">
-                  +${lastMonthProfit.toFixed(0)}
-                </div>
-                <div className="text-green-200 font-medium text-sm md:text-base">
-                  You Made This Month
-                </div>
+          {/* AI Strategy */}
+          <div className="bg-green-500/10 backdrop-blur-sm rounded-xl border border-green-500/20 p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <Shield className="w-8 h-8 text-green-400" />
+              <h3 className="text-2xl font-bold text-white">
+                AI Smart Deployment
+              </h3>
+            </div>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center p-3 bg-green-500/5 rounded-lg">
+                <span className="text-gray-300">Capital Deployment:</span>
+                <span className="text-green-400 font-bold">
+                  {avgDeploymentRatio.toFixed(0)}% Average
+                </span>
               </div>
-
-              {/* VS */}
-              <div className="text-center md:block hidden">
-                <div className="text-3xl md:text-4xl font-bold text-purple-300 opacity-60">
-                  VS
-                </div>
+              <div className="flex justify-between items-center p-3 bg-green-500/5 rounded-lg">
+                <span className="text-gray-300">Cash Reserves:</span>
+                <span className="text-green-400 font-bold">
+                  {avgReserveSafety.toFixed(0)}% Protected
+                </span>
               </div>
-
-              {/* Mobile VS */}
-              <div className="text-center md:hidden">
-                <div className="text-lg font-bold text-purple-300 opacity-60 py-2">
-                  VS
-                </div>
-              </div>
-
-              {/* Bitcoin Results - With Price Quote */}
-              <div className="text-center">
-                <div
-                  className={`w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 md:mb-4 rounded-xl p-3 md:p-4 shadow-lg ${
-                    currentBtcChange >= 0
-                      ? "bg-gradient-to-br from-green-500 to-emerald-500"
-                      : "bg-gradient-to-br from-red-500 to-rose-500"
-                  }`}
-                >
-                  {currentBtcChange >= 0 ? (
-                    <TrendingUp className="w-full h-full text-white" />
-                  ) : (
-                    <TrendingDown className="w-full h-full text-white" />
-                  )}
-                </div>
-
-                {/* Bitcoin Price */}
-                <div className="text-lg md:text-xl font-bold text-orange-300 mb-1">
-                  ${currentBitcoin?.price?.toLocaleString() || "65,250"}
-                </div>
-
-                <div
-                  className={`text-2xl md:text-3xl font-bold mb-1 md:mb-2 ${
-                    currentBtcChange >= 0 ? "text-green-400" : "text-red-400"
-                  }`}
-                >
-                  {currentBtcChange >= 0 ? "+" : ""}
-                  {currentBtcChange.toFixed(1)}%
-                </div>
-                <div
-                  className={`font-medium text-sm md:text-base ${
-                    currentBtcChange >= 0 ? "text-green-200" : "text-red-200"
-                  }`}
-                >
-                  Bitcoin Investors Got
-                </div>
+              <div className="flex justify-between items-center p-3 bg-green-500/5 rounded-lg">
+                <span className="text-gray-300">Risk Level:</span>
+                <span className="text-green-400 font-bold">
+                  Sleep Peacefully
+                </span>
               </div>
             </div>
+          </div>
+        </div>
 
-            {/* Simple Explanation - First Person */}
-            <div className="mt-8 p-6 bg-gradient-to-r from-green-500/15 to-emerald-500/15 rounded-xl border border-green-500/25">
-              <div className="flex items-start gap-3">
-                <CheckCircle className="w-6 h-6 text-green-400 mt-1 flex-shrink-0" />
-                <div>
-                  <h4 className="text-green-300 font-semibold text-lg mb-2">
-                    What This Means:
+        {/* Monthly Comparison Table */}
+        <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 overflow-hidden mb-8">
+          <div className="bg-white/5 p-4 border-b border-white/10">
+            <h3 className="text-xl font-bold text-white text-center">
+              Monthly Performance: Smart Deployment vs Reckless Exposure
+            </h3>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-white/5">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase">
+                    Month
+                  </th>
+                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-300 uppercase">
+                    AI Deployment
+                  </th>
+                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-300 uppercase">
+                    AI Reserves
+                  </th>
+                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-300 uppercase">
+                    AI Results
+                  </th>
+                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-300 uppercase">
+                    Bitcoin Results
+                  </th>
+                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-300 uppercase">
+                    Status
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/10">
+                {capitalEfficiencyData.map(
+                  (row: CapitalEfficiencyData, index: number) => {
+                    const status = getAdvantageStatus(
+                      row.advantage,
+                      row.deploymentRatio
+                    );
+
+                    return (
+                      <tr
+                        key={index}
+                        className="hover:bg-white/5 transition-colors"
+                      >
+                        <td className="px-4 py-4 text-white font-medium">
+                          {formatMonth(row.month)}
+                        </td>
+
+                        <td className="px-4 py-4 text-center">
+                          <div className="text-blue-400 font-bold">
+                            ${row.capitalDeployed.toLocaleString()}
+                          </div>
+                          <div className="text-xs text-gray-400">
+                            ({row.deploymentRatio.toFixed(1)}% deployed)
+                          </div>
+                        </td>
+
+                        <td className="px-4 py-4 text-center">
+                          <div className="text-green-400 font-bold">
+                            ${row.cashReserves.toLocaleString()}
+                          </div>
+                          <div className="text-xs text-gray-400">
+                            ({row.reserveSafety.toFixed(1)}% safe)
+                          </div>
+                        </td>
+
+                        <td className="px-4 py-4 text-center">
+                          <div className="text-green-400 font-bold">
+                            +${row.aiProfit.toLocaleString()}
+                          </div>
+                          <div className="text-xs text-gray-400">
+                            ({row.aiReturnDeployed.toFixed(1)}% on deployed)
+                          </div>
+                        </td>
+
+                        <td className="px-4 py-4 text-center">
+                          <div
+                            className={`font-bold ${
+                              row.bitcoinReturn >= 0
+                                ? "text-green-400"
+                                : "text-red-400"
+                            }`}
+                          >
+                            {row.bitcoinReturn >= 0 ? "+" : ""}
+                            {row.bitcoinReturn.toFixed(1)}%
+                          </div>
+                          <div className="text-xs text-gray-400">
+                            ($
+                            {(
+                              row.bitcoinValue - row.totalCapitalAvailable
+                            ).toLocaleString()}{" "}
+                            change)
+                          </div>
+                        </td>
+
+                        <td className="px-4 py-4 text-center">
+                          <div
+                            className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium ${status.color}`}
+                          >
+                            {status.icon}
+                            {status.text}
+                          </div>
+                          <div className="text-xs text-yellow-400 mt-1">
+                            ${row.advantage >= 0 ? "+" : ""}$
+                            {row.advantage.toLocaleString()} advantage
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  }
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Summary Statistics */}
+        <div className="grid md:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 text-center">
+            <Shield className="w-12 h-12 text-green-400 mx-auto mb-4" />
+            <div className="text-3xl font-bold text-white mb-2">
+              {avgReserveSafety.toFixed(0)}%
+            </div>
+            <div className="text-gray-300 mb-2">Average Capital Protected</div>
+            <div className="text-sm text-gray-400">
+              Always ready for opportunities
+            </div>
+          </div>
+
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 text-center">
+            <TrendingUp className="w-12 h-12 text-blue-400 mx-auto mb-4" />
+            <div className="text-3xl font-bold text-white mb-2">
+              ${totalAIProfit.toLocaleString()}
+            </div>
+            <div className="text-gray-300 mb-2">Total AI Profits</div>
+            <div className="text-sm text-gray-400">
+              With conservative deployment
+            </div>
+          </div>
+
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 text-center">
+            <AlertTriangle className="w-12 h-12 text-red-400 mx-auto mb-4" />
+            <div className="text-3xl font-bold text-white mb-2">
+              ${Math.abs(totalBitcoinLoss).toLocaleString()}
+            </div>
+            <div className="text-gray-300 mb-2">Bitcoin Full-Exposure Loss</div>
+            <div className="text-sm text-gray-400">From market volatility</div>
+          </div>
+
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 text-center">
+            <Zap className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
+            <div className="text-3xl font-bold text-white mb-2">
+              ${totalAdvantage.toLocaleString()}
+            </div>
+            <div className="text-gray-300 mb-2">Smart Strategy Advantage</div>
+            <div className="text-sm text-gray-400">Total outperformance</div>
+          </div>
+        </div>
+
+        {/* February Spotlight */}
+        {(() => {
+          const febData = capitalEfficiencyData.find(
+            (month: CapitalEfficiencyData) => month.month === "2025-02"
+          );
+          if (!febData) return null;
+
+          return (
+            <div className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 rounded-xl border border-yellow-500/20 p-8 mb-8">
+              <h3 className="text-2xl font-bold text-white mb-4 text-center">
+                🔥 February 2025: The Perfect Example
+              </h3>
+              <div className="grid md:grid-cols-2 gap-8">
+                <div className="text-center">
+                  <h4 className="text-lg font-bold text-red-400 mb-3">
+                    Bitcoin Full-Exposure
                   </h4>
-                  <p className="text-green-200 text-base leading-relaxed">
-                    {currentBtcChange < 0 && lastMonthProfit > 0
-                      ? `While Bitcoin investors lost ${Math.abs(
-                          currentBtcChange
-                        ).toFixed(
-                          1
-                        )}% of their money this month, I made ${lastMonthProfit.toFixed(
-                          0
-                        )}. This shows my strategy works even when the crypto market is down.`
-                      : currentBtcChange === 0
-                      ? `While Bitcoin stayed flat this month (0% change), I still made ${lastMonthProfit.toFixed(
-                          0
-                        )}. This shows my strategy generates profits regardless of Bitcoin's direction.`
-                      : independenceRate > 70
-                      ? `My profits don't depend on whether Bitcoin goes up or down. This means I can make money in any market condition - that's the power of a truly independent trading strategy.`
-                      : `I'm consistently making money regardless of what Bitcoin does. This proves my strategy works independently of market trends.`}
-                  </p>
+                  <div className="space-y-2">
+                    <div className="text-3xl font-bold text-red-400">
+                      {febData.bitcoinReturn.toFixed(1)}%
+                    </div>
+                    <div className="text-gray-300">Market crash</div>
+                    <div className="text-sm text-gray-400">
+                      100% capital at risk
+                    </div>
+                    <div className="text-sm text-gray-400">
+                      No reserves for recovery
+                    </div>
+                  </div>
+                </div>
+
+                <div className="text-center">
+                  <h4 className="text-lg font-bold text-green-400 mb-3">
+                    AI Smart Deployment
+                  </h4>
+                  <div className="space-y-2">
+                    <div className="text-3xl font-bold text-green-400">
+                      +${febData.aiProfit.toLocaleString()}
+                    </div>
+                    <div className="text-gray-300">
+                      ({febData.aiReturnDeployed.toFixed(1)}% on deployed)
+                    </div>
+                    <div className="text-sm text-gray-400">
+                      Only {febData.deploymentRatio.toFixed(1)}% capital at risk
+                    </div>
+                    <div className="text-sm text-gray-400">
+                      ${febData.cashReserves.toLocaleString()} safe in reserves
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          );
+        })()}
 
-          {/* Stats Cards with Vibrant Colors */}
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
-            <div className="bg-gradient-to-br from-cyan-500/20 via-blue-500/15 to-indigo-500/20 rounded-xl p-6 border border-cyan-400/30 hover:border-cyan-300/50 hover:bg-gradient-to-br hover:from-cyan-500/25 hover:via-blue-500/20 hover:to-indigo-500/25 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-cyan-500/20">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg hover:scale-110 transition-transform duration-300 shadow-lg shadow-cyan-500/30">
-                  <Target className="w-5 h-5 text-white" />
-                </div>
-                <h4 className="text-lg font-semibold text-white hover:text-cyan-200 transition-colors duration-300">
-                  Independence Score
-                </h4>
-              </div>
-              <div className="text-3xl font-bold text-cyan-400 mb-2 hover:text-cyan-300 transition-colors duration-300">
-                {independenceRate.toFixed(0)}%
-              </div>
-              <p className="text-gray-300 text-sm hover:text-cyan-200 transition-colors duration-300">
-                {independentMonths} out of {totalMonths} months I made money
-                regardless of Bitcoin's performance
-              </p>
-            </div>
-
-            <div className="bg-gradient-to-br from-emerald-500/20 via-green-500/15 to-teal-500/20 rounded-xl p-6 border border-emerald-400/30 hover:border-emerald-300/50 hover:bg-gradient-to-br hover:from-emerald-500/25 hover:via-green-500/20 hover:to-teal-500/25 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-emerald-500/20">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-gradient-to-br from-emerald-500 to-green-600 rounded-lg hover:scale-110 transition-transform duration-300 shadow-lg shadow-emerald-500/30">
-                  <Shield className="w-5 h-5 text-white" />
-                </div>
-                <h4 className="text-lg font-semibold text-white hover:text-emerald-200 transition-colors duration-300">
-                  Risk Level
-                </h4>
-              </div>
-              <div className="text-3xl font-bold text-emerald-400 mb-2 hover:text-emerald-300 transition-colors duration-300">
-                Lower
-              </div>
-              <p className="text-gray-300 text-sm hover:text-emerald-200 transition-colors duration-300">
-                Less risky than buying Bitcoin because my profits don't depend
-                on price movements
-              </p>
-            </div>
-          </div>
-
-          {/* Simplified Table - Lightened */}
-          <div className="bg-white/8 rounded-xl border border-white/15 overflow-hidden">
-            <div className="p-4 md:p-6 border-b border-white/15 bg-white/5">
-              <h4 className="text-lg md:text-xl font-bold text-white mb-2">
-                Month-by-Month Comparison
-              </h4>
-              <p className="text-gray-400 text-sm md:text-base">
-                See how I did vs Bitcoin each month
-              </p>
-            </div>
-
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-white/8">
-                  <tr>
-                    <th className="text-left p-3 md:p-4 text-xs md:text-sm font-medium text-gray-300">
-                      Month
-                    </th>
-                    <th className="text-right p-3 md:p-4 text-xs md:text-sm font-medium text-gray-300">
-                      I Made
-                    </th>
-                    <th className="text-right p-3 md:p-4 text-xs md:text-sm font-medium text-gray-300">
-                      Bitcoin
-                    </th>
-                    <th className="text-center p-3 md:p-4 text-xs md:text-sm font-medium text-gray-300">
-                      Result
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {correlationData
-                    .slice()
-                    .reverse()
-                    .map((data) => {
-                      const matchingMonth = monthlyTradingData.find(
-                        (m) => m.month === data.month
-                      );
-                      const profit = matchingMonth ? matchingMonth.profit : 0;
-
-                      // Better result interpretation
-                      let resultText = "Both Positive";
-                      let resultColor = "bg-purple-500/20 text-purple-300";
-
-                      if (data.bitcoinReturn < 0 && profit > 0) {
-                        resultText = "I Won, Bitcoin Lost";
-                        resultColor = "bg-green-500/20 text-green-300";
-                      } else if (data.bitcoinReturn > 0 && profit > 0) {
-                        // Compare actual returns - need to estimate my percentage return
-                        const estimatedReturn = (profit / 10000) * 100; // Assuming $10k capital
-                        if (estimatedReturn > data.bitcoinReturn) {
-                          resultText = "I Beat Bitcoin";
-                          resultColor = "bg-blue-500/20 text-blue-300";
-                        } else {
-                          resultText = "Both Positive";
-                          resultColor = "bg-purple-500/20 text-purple-300";
-                        }
-                      } else if (data.bitcoinReturn > 0 && profit <= 0) {
-                        resultText = "Bitcoin Won";
-                        resultColor = "bg-orange-500/20 text-orange-300";
-                      } else {
-                        resultText = "Both Negative";
-                        resultColor = "bg-red-500/20 text-red-300";
-                      }
-
-                      return (
-                        <tr
-                          key={data.month}
-                          className="border-t border-white/10 hover:bg-white/8 transition-colors duration-200"
-                        >
-                          <td className="p-3 md:p-4 text-white font-medium text-sm md:text-base">
-                            {data.month}
-                          </td>
-                          <td className="p-3 md:p-4 text-right">
-                            <span className="text-green-400 font-semibold text-sm md:text-base">
-                              +${profit.toFixed(0)}
-                            </span>
-                          </td>
-                          <td className="p-3 md:p-4 text-right">
-                            <span
-                              className={`font-semibold text-sm md:text-base ${
-                                data.bitcoinReturn >= 0
-                                  ? "text-green-400"
-                                  : "text-red-400"
-                              }`}
-                            >
-                              {data.bitcoinReturn >= 0 ? "+" : ""}
-                              {data.bitcoinReturn}%
-                            </span>
-                          </td>
-                          <td className="p-3 md:p-4 text-center">
-                            <span
-                              className={`px-2 md:px-3 py-1 rounded-full text-xs font-medium ${resultColor}`}
-                            >
-                              {resultText}
-                            </span>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* Simple Bottom Message - First Person */}
-          <div className="mt-8 p-6 bg-gradient-to-r from-purple-500/15 to-blue-500/15 rounded-xl border border-purple-500/25">
-            <div className="text-center">
-              <h4 className="text-xl font-bold text-white mb-3">
-                Why This Matters to You
-              </h4>
-              <p className="text-purple-100 text-lg leading-relaxed mb-4">
-                Most people who buy Bitcoin only make money when prices go up.
-                But my strategy makes money whether Bitcoin goes up, down, or
-                sideways. That's why it's safer and more reliable for building
-                wealth.
-              </p>
-              <div className="text-sm text-purple-300 font-medium">
-                This isn't about predicting the market - it's about having a
-                system that works in any market.
-              </div>
-              {error && (
-                <div className="flex items-center justify-center gap-2 text-yellow-400 text-sm mt-4">
-                  <AlertTriangle className="w-4 h-4" />
-                  <span>Using backup Bitcoin data</span>
-                </div>
-              )}
-            </div>
+        {/* Bottom CTA */}
+        <div className="text-center p-8 bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-xl border border-purple-500/20">
+          <h3 className="text-2xl font-bold text-white mb-4">
+            Smart Capital Management = Better Sleep + Better Returns
+          </h3>
+          <p className="text-lg text-gray-300 max-w-3xl mx-auto mb-6">
+            While Bitcoin holders risk everything on market timing, our AI
+            Trading system preserves capital and harvests opportunities with
+            surgical precision.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-400">
+            <span>✅ Capital Preservation</span>
+            <span>✅ Active Management</span>
+            <span>✅ 4.1x Efficiency</span>
+            <span>✅ Zero Losing Trades</span>
           </div>
         </div>
       </div>
