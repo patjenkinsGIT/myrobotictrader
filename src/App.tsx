@@ -1,5 +1,5 @@
 import { Hero } from "./components/Hero";
-import { TradingResults } from "./components/TradingResults";
+/* import { TradingResults } from "./components/TradingResults"; */
 import { BitcoinComparison } from "./components/BitcoinComparison";
 import { Features } from "./components/Features";
 import { CallToAction } from "./components/CallToAction";
