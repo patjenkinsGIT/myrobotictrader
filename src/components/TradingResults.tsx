@@ -254,7 +254,7 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
 
             <div className="relative text-center">
               <div className="text-3xl font-bold text-emerald-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-emerald-300 group-hover:to-teal-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
-                ${currentData.monthlyAvg?.toFixed(2) || "0.00"}
+                ${currentData.monthlyAverage?.toFixed(2) || "0.00"}
               </div>
               <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
                 Monthly Average
