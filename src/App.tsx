@@ -17,7 +17,7 @@ function App() {
     <div className="min-h-screen bg-gray-900">
       <SEOHead />
       <Hero />
-      <MyStory tradingStats={tradingStats} />
+      {tradingStats && <MyStory tradingStats={tradingStats} />}
       {/* <TradingResults tradingStats={tradingStats} /> */}
       <LiveTransactionLog />
       <BitcoinComparison />
