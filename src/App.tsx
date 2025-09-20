@@ -139,23 +139,46 @@ const SEOWrapper = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-// HomePage Component - Clean Structure
 const HomePage = () => {
-  const { tradingStats } = useGoogleSheetsData();
+  // Single data source from hook
+  const { tradingStats, isLoading, error, refreshStats, cacheInfo } =
+    useGoogleSheetsData();
+
+  // Safe refresh function with error handling
+  const safeRefreshStats = React.useCallback(() => {
+    try {
+      if (refreshStats && typeof refreshStats === "function") {
+        refreshStats();
+      }
+    } catch (error) {
+      console.error("Error in refresh function:", error);
+    }
+  }, [refreshStats]);
 
   return (
     <>
       <Hero />
       <MyStory tradingStats={tradingStats} />
-      <TradingResults tradingStats={tradingStats} />
-      <BitcoinComparison tradingStats={tradingStats} />
+      <TradingResults
+        tradingStats={tradingStats}
+        isLoading={isLoading}
+        error={error}
+        refreshStats={refreshStats || safeRefreshStats}
+        cacheInfo={
+          cacheInfo || {
+            isFresh: false,
+            isRateLimited: false,
+            timeUntilNextRefresh: 0,
+          }
+        }
+      />
+      <BitcoinComparison />
       <Features />
       <CallToAction />
       <FAQ />
     </>
   );
 };
-
 // Main App Component - Single default export
 function App() {
   useEffect(() => {
