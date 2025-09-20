@@ -149,7 +149,7 @@ export const useGoogleSheetsData = () => {
     []
   );
 
-  // FIXED: Parse your actual Calculations data correctly
+  // Replace your parseCalculationsData function with this enhanced debug version
   const parseCalculationsData = useCallback(
     (rows: string[][], fetchTimestamp: string): TradingStats => {
       console.log("🔍 Parsing Calculations data - Total rows:", rows.length);
@@ -159,33 +159,32 @@ export const useGoogleSheetsData = () => {
         return getMockTradingStatsBase();
       }
 
-      // Log the actual data structure for debugging
-      console.log("📊 Raw Google Sheets data structure:");
+      // Enhanced logging to see EXACT data structure
+      console.log("📊 DETAILED Google Sheets data structure:");
       rows.forEach((row, index) => {
         if (index < 15) {
-          // Show first 15 rows
-          console.log(`Row ${index}:`, row);
+          console.log(`Row ${index} (${row.length} columns):`, row);
         }
       });
 
-      // Based on your Google Sheets, the Grand Total is in row 12 (index 11)
-      // Your sheet structure: Month | Profit By Month | Trades | Avg Profit / Trade | Monthly Avg | Daily Avg | Best Month
-      const grandTotalRow = rows[11]; // Row 12 (0-indexed)
-
-      console.log("💰 Grand Total Row (index 11):", grandTotalRow);
+      // Check the Grand Total row (row 12, index 11)
+      const grandTotalRow = rows[11];
+      console.log("💰 DETAILED Grand Total Row:", grandTotalRow);
 
       if (!grandTotalRow || grandTotalRow.length < 6) {
         console.log("❌ Grand Total row not found or incomplete");
         return getMockTradingStatsBase();
       }
 
-      // Parse the actual values from your Grand Total row
-      // Column B = Total Profit ($4,169.18)
-      // Column C = Total Trades (875)
-      // Column D = Avg Profit Per Trade ($4.76)
-      // Column E = Monthly Average ($463.24)
-      // Column F = Daily Average ($16.35)
-      // Column G = Best Month ($817.31)
+      // Parse each value individually with detailed logging
+      console.log("🔍 Parsing individual Grand Total values:");
+      console.log("  Column 0 (should be 'Grand Total'):", grandTotalRow[0]);
+      console.log("  Column 1 (Total Profit):", grandTotalRow[1]);
+      console.log("  Column 2 (Total Trades):", grandTotalRow[2]);
+      console.log("  Column 3 (Avg Per Trade):", grandTotalRow[3]);
+      console.log("  Column 4 (Monthly Avg):", grandTotalRow[4]);
+      console.log("  Column 5 (Daily Avg):", grandTotalRow[5]);
+      console.log("  Column 6 (Best Month):", grandTotalRow[6]);
 
       const totalProfit =
         parseFloat(grandTotalRow[1]?.toString().replace(/[$,]/g, "")) || 0;
@@ -200,7 +199,7 @@ export const useGoogleSheetsData = () => {
       const bestMonthProfit =
         parseFloat(grandTotalRow[6]?.toString().replace(/[$,]/g, "")) || 0;
 
-      console.log("💰 Parsed Grand Total values:", {
+      console.log("💰 PARSED Grand Total values:", {
         totalProfit,
         totalTrades,
         avgProfitPerTrade,
@@ -209,21 +208,58 @@ export const useGoogleSheetsData = () => {
         bestMonthProfit,
       });
 
-      // Parse monthly data from rows 1-9 (your actual monthly data)
+      // Enhanced monthly data parsing with better month name handling
       const monthlyData: TradingDataPoint[] = [];
 
+      console.log("🔍 Parsing monthly data rows:");
       for (let i = 1; i <= 9; i++) {
-        // Rows 2-10 in your sheet (1-indexed)
         const row = rows[i];
         if (row && row.length >= 3) {
-          const month = row[0]?.toString().trim();
+          console.log(`  Row ${i} details:`, row);
+
+          const monthRaw = row[0]?.toString().trim();
           const profit =
             parseFloat(row[1]?.toString().replace(/[$,]/g, "")) || 0;
           const trades = parseInt(row[2]?.toString().replace(/[,]/g, "")) || 0;
 
-          if (month && month !== "Grand Total" && profit > 0) {
-            // Convert full month names to short names if needed
-            const shortMonth = month.length > 3 ? month.substring(0, 3) : month;
+          console.log(
+            `    Raw month: "${monthRaw}", profit: ${profit}, trades: ${trades}`
+          );
+
+          if (monthRaw && monthRaw !== "Grand Total" && profit > 0) {
+            // Better month name parsing - handle different formats
+            let shortMonth = monthRaw;
+
+            // If it's a date like "2025-01", extract the month part
+            if (monthRaw.includes("-")) {
+              const dateParts = monthRaw.split("-");
+              if (dateParts.length >= 2) {
+                const monthNum = parseInt(dateParts[1]);
+                const monthNames = [
+                  "",
+                  "Jan",
+                  "Feb",
+                  "Mar",
+                  "Apr",
+                  "May",
+                  "Jun",
+                  "Jul",
+                  "Aug",
+                  "Sep",
+                  "Oct",
+                  "Nov",
+                  "Dec",
+                ];
+                shortMonth = monthNames[monthNum] || monthRaw;
+              }
+            }
+            // If it's already a month name, just take first 3 characters
+            else if (monthRaw.length > 3) {
+              shortMonth = monthRaw.substring(0, 3);
+            }
+
+            console.log(`    Converted "${monthRaw}" to "${shortMonth}"`);
+
             monthlyData.push({
               month: shortMonth,
               profit,
@@ -237,7 +273,7 @@ export const useGoogleSheetsData = () => {
         }
       }
 
-      console.log("📈 Final monthly data:", monthlyData);
+      console.log("📈 Final monthly data array:", monthlyData);
 
       return {
         totalProfit,
