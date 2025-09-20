@@ -74,52 +74,76 @@ export const useGoogleSheetsData = () => {
 
       const efficiencyData: CapitalEfficiencyData[] = [];
 
+      console.log("Parsing CapitalEfficiency rows:", rows.length);
+      console.log("First few rows:", rows.slice(0, 3));
+
       // Start from row 2 (index 2) since row 0 is titles and row 1 is headers
       for (let i = 2; i < rows.length; i++) {
         const row = rows[i];
-        if (!row || row.length < 18) continue; // Need all columns
+        if (!row || row.length < 10) continue; // Need minimum columns
 
-        const [
-          month,
-          totalCapitalAvailable,
-          capitalDeployed,
-          cashReserves,
-          deploymentRatio,
-          reserveSafety, // Skip column G (gap)
-          ,
-          ,
-          bitcoinValue,
-          bitcoinReturn, // Skip bitcoinStrategy, fullCapitalDeployed, keep bitcoinValue, bitcoinReturn // Skip riskLevel // Skip column M (gap)
-          ,
-          ,
-          aiPortfolioValue,
-          aiProfit,
-          aiReturnDeployed,
-          aiReturnTotal,
-          advantage,
-        ] = row;
+        console.log(`Row ${i}:`, row);
+
+        // Based on your Google Sheets structure: A=Month, B=Total_Capital, C=Deployed, etc.
+        const month = row[0];
+        const totalCapitalAvailable =
+          parseFloat(row[1]?.toString().replace(/[$,]/g, "")) || 0;
+        const capitalDeployed =
+          parseFloat(row[2]?.toString().replace(/[$,]/g, "")) || 0;
+        const cashReserves =
+          parseFloat(row[3]?.toString().replace(/[$,]/g, "")) || 0;
+        const deploymentRatio =
+          parseFloat(row[4]?.toString().replace(/[%]/g, "")) || 0;
+        const reserveSafety =
+          parseFloat(row[5]?.toString().replace(/[%]/g, "")) || 0;
+
+        // Bitcoin columns (H, I, J, K in your sheet)
+        const bitcoinValue =
+          parseFloat(row[9]?.toString().replace(/[$,]/g, "")) || 0; // Column J
+        const bitcoinReturn =
+          parseFloat(row[10]?.toString().replace(/[%]/g, "")) || 0; // Column K
+
+        // AI columns (N, O, P, Q, R)
+        const aiPortfolioValue =
+          parseFloat(row[13]?.toString().replace(/[$,]/g, "")) || 0; // Column N
+        const aiProfit =
+          parseFloat(row[14]?.toString().replace(/[$,]/g, "")) || 0; // Column O
+        const aiReturnDeployed =
+          parseFloat(row[15]?.toString().replace(/[%]/g, "")) || 0; // Column P
+        const aiReturnTotal =
+          parseFloat(row[16]?.toString().replace(/[%]/g, "")) || 0; // Column Q
+        const advantage =
+          parseFloat(row[17]?.toString().replace(/[$,]/g, "")) || 0; // Column R
 
         // Only process rows with valid data
         if (month && month.toString().startsWith("2025")) {
+          console.log("Adding month:", month, {
+            totalCapitalAvailable,
+            capitalDeployed,
+            bitcoinValue,
+            bitcoinReturn,
+            aiProfit,
+          });
+
           efficiencyData.push({
             month: month.toString(),
-            totalCapitalAvailable:
-              parseFloat(totalCapitalAvailable?.toString()) || 0,
-            capitalDeployed: parseFloat(capitalDeployed?.toString()) || 0,
-            cashReserves: parseFloat(cashReserves?.toString()) || 0,
-            deploymentRatio: parseFloat(deploymentRatio?.toString()) || 0,
-            reserveSafety: parseFloat(reserveSafety?.toString()) || 0,
-            bitcoinValue: parseFloat(bitcoinValue?.toString()) || 0,
-            bitcoinReturn: parseFloat(bitcoinReturn?.toString()) || 0,
-            aiPortfolioValue: parseFloat(aiPortfolioValue?.toString()) || 0,
-            aiProfit: parseFloat(aiProfit?.toString()) || 0,
-            aiReturnDeployed: parseFloat(aiReturnDeployed?.toString()) || 0,
-            aiReturnTotal: parseFloat(aiReturnTotal?.toString()) || 0,
-            advantage: parseFloat(advantage?.toString()) || 0,
+            totalCapitalAvailable,
+            capitalDeployed,
+            cashReserves,
+            deploymentRatio,
+            reserveSafety,
+            bitcoinValue,
+            bitcoinReturn,
+            aiPortfolioValue,
+            aiProfit,
+            aiReturnDeployed,
+            aiReturnTotal,
+            advantage,
           });
         }
       }
 
+      console.log("Final efficiency data:", efficiencyData);
       return efficiencyData;
     },
     []
