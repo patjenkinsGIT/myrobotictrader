@@ -1,4 +1,4 @@
-// Enhanced useGoogleSheetsData.ts - Add this to your existing hook file
+// Enhanced useGoogleSheetsData.ts - Complete Fixed Version
 
 import { useState, useEffect, useCallback } from "react";
 import { tradingDataCache } from "../utils/smartCache";
@@ -149,94 +149,103 @@ export const useGoogleSheetsData = () => {
     []
   );
 
-  // Parse your actual Calculations data to maintain compatibility
+  // FIXED: Parse your actual Calculations data correctly
   const parseCalculationsData = useCallback(
     (rows: string[][], fetchTimestamp: string): TradingStats => {
-      console.log(
-        `Parsing calculations data with ${rows.length} rows at ${fetchTimestamp}`
-      );
+      console.log("🔍 Parsing Calculations data - Total rows:", rows.length);
 
-      if (!rows || rows.length < 2) {
-        // Return mock data if no real data available
+      if (!rows || rows.length < 12) {
+        console.log("❌ Not enough rows, using mock data");
         return getMockTradingStatsBase();
       }
 
-      // Your Calculations tab structure - adapt this to your actual format
-      let totalProfit = 0;
-      let totalTrades = 0;
-      let avgProfitPerTrade = 0;
-      let monthlyAverage = 0;
-      let dailyAvg = 0;
-      let bestMonthProfit = 0;
+      // Log the actual data structure for debugging
+      console.log("📊 Raw Google Sheets data structure:");
+      rows.forEach((row, index) => {
+        if (index < 15) {
+          // Show first 15 rows
+          console.log(`Row ${index}:`, row);
+        }
+      });
 
-      // Parse from your actual sheet structure
-      // Look for the data row (usually row with numbers)
-      for (let i = 1; i < rows.length; i++) {
+      // Based on your Google Sheets, the Grand Total is in row 12 (index 11)
+      // Your sheet structure: Month | Profit By Month | Trades | Avg Profit / Trade | Monthly Avg | Daily Avg | Best Month
+      const grandTotalRow = rows[11]; // Row 12 (0-indexed)
+
+      console.log("💰 Grand Total Row (index 11):", grandTotalRow);
+
+      if (!grandTotalRow || grandTotalRow.length < 6) {
+        console.log("❌ Grand Total row not found or incomplete");
+        return getMockTradingStatsBase();
+      }
+
+      // Parse the actual values from your Grand Total row
+      // Column B = Total Profit ($4,169.18)
+      // Column C = Total Trades (875)
+      // Column D = Avg Profit Per Trade ($4.76)
+      // Column E = Monthly Average ($463.24)
+      // Column F = Daily Average ($16.35)
+      // Column G = Best Month ($817.31)
+
+      const totalProfit =
+        parseFloat(grandTotalRow[1]?.toString().replace(/[$,]/g, "")) || 0;
+      const totalTrades =
+        parseInt(grandTotalRow[2]?.toString().replace(/[,]/g, "")) || 0;
+      const avgProfitPerTrade =
+        parseFloat(grandTotalRow[3]?.toString().replace(/[$,]/g, "")) || 0;
+      const monthlyAverage =
+        parseFloat(grandTotalRow[4]?.toString().replace(/[$,]/g, "")) || 0;
+      const dailyAvg =
+        parseFloat(grandTotalRow[5]?.toString().replace(/[$,]/g, "")) || 0;
+      const bestMonthProfit =
+        parseFloat(grandTotalRow[6]?.toString().replace(/[$,]/g, "")) || 0;
+
+      console.log("💰 Parsed Grand Total values:", {
+        totalProfit,
+        totalTrades,
+        avgProfitPerTrade,
+        monthlyAverage,
+        dailyAvg,
+        bestMonthProfit,
+      });
+
+      // Parse monthly data from rows 1-9 (your actual monthly data)
+      const monthlyData: TradingDataPoint[] = [];
+
+      for (let i = 1; i <= 9; i++) {
+        // Rows 2-10 in your sheet (1-indexed)
         const row = rows[i];
-        if (row && row.length > 4) {
-          // Assuming your format has the summary stats in one row
-          totalProfit =
-            parseFloat(row[0]?.toString().replace(/[$,]/g, "")) || 0;
-          totalTrades = parseFloat(row[1]?.toString()) || 0;
-          avgProfitPerTrade = parseFloat(row[2]?.toString()) || 0;
-          monthlyAverage = parseFloat(row[3]?.toString()) || 0;
-          dailyAvg = parseFloat(row[4]?.toString()) || 0;
-          bestMonthProfit = parseFloat(row[5]?.toString()) || 0;
+        if (row && row.length >= 3) {
+          const month = row[0]?.toString().trim();
+          const profit =
+            parseFloat(row[1]?.toString().replace(/[$,]/g, "")) || 0;
+          const trades = parseInt(row[2]?.toString().replace(/[,]/g, "")) || 0;
 
-          if (totalProfit > 0) break; // Found valid data
+          if (month && month !== "Grand Total" && profit > 0) {
+            // Convert full month names to short names if needed
+            const shortMonth = month.length > 3 ? month.substring(0, 3) : month;
+            monthlyData.push({
+              month: shortMonth,
+              profit,
+              trades,
+            });
+
+            console.log(
+              `📅 Added month data: ${shortMonth} = $${profit.toFixed(2)}`
+            );
+          }
         }
       }
 
-      // Generate monthly data (this maintains compatibility with existing components)
-      const monthlyData: TradingDataPoint[] = [
-        { month: "Jan", profit: 477.23, trades: 89 },
-        { month: "Feb", profit: 686.71, trades: 124 },
-        { month: "Mar", profit: 261.97, trades: 67 },
-        { month: "Apr", profit: 552.58, trades: 98 },
-        { month: "May", profit: 376.3, trades: 82 },
-        { month: "Jun", profit: 382.97, trades: 91 },
-        { month: "Jul", profit: 817.31, trades: 156 },
-        { month: "Aug", profit: 350.32, trades: 78 },
-      ];
-
-      // Use parsed data or fallback to calculated values
-      const finalTotalProfit =
-        totalProfit > 0
-          ? totalProfit
-          : monthlyData.reduce(
-              (sum: number, month: TradingDataPoint) => sum + month.profit,
-              0
-            );
-      const finalTotalTrades =
-        totalTrades > 0
-          ? totalTrades
-          : monthlyData.reduce(
-              (sum: number, month: TradingDataPoint) => sum + month.trades,
-              0
-            );
-      const finalAvgProfitPerTrade =
-        avgProfitPerTrade > 0
-          ? avgProfitPerTrade
-          : finalTotalTrades > 0
-          ? finalTotalProfit / finalTotalTrades
-          : 0;
-      const finalMonthlyAverage =
-        monthlyAverage > 0
-          ? monthlyAverage
-          : monthlyData.length > 0
-          ? finalTotalProfit / monthlyData.length
-          : 0;
+      console.log("📈 Final monthly data:", monthlyData);
 
       return {
-        totalProfit: finalTotalProfit,
-        totalTrades: finalTotalTrades,
-        avgProfitPerTrade: finalAvgProfitPerTrade,
-        monthlyAverage: finalMonthlyAverage,
-        dailyAvg: dailyAvg > 0 ? dailyAvg : finalMonthlyAverage / 30,
-        bestMonthProfit:
-          bestMonthProfit > 0
-            ? bestMonthProfit
-            : Math.max(...monthlyData.map((m: TradingDataPoint) => m.profit)),
+        totalProfit,
+        totalTrades,
+        avgProfitPerTrade,
+        monthlyAverage,
+        dailyAvg,
+        bestMonthProfit,
         monthlyData,
         isLiveData: true,
         lastUpdated: fetchTimestamp,
