@@ -18,8 +18,8 @@ import { OGImageGenerator } from "./components/OGImageGenerator";
 import { Hero } from "./components/Hero";
 import { MyStory } from "./components/MyStory";
 import { TradingResults } from "./components/TradingResults";
+import { BitcoinComparison } from "./components/BitcoinComparison";
 import { Features } from "./components/Features";
-import { StrategicPurchaseAnalysis } from "./components/StrategicPurchaseAnalysis";
 import { CallToAction } from "./components/CallToAction";
 import { FAQ } from "./components/FAQ";
 import { Footer } from "./components/Footer";
@@ -180,7 +180,7 @@ const HomePage = () => {
       />
 
       {/* Additional Components */}
-      <StrategicPurchaseAnalysis />
+      <BitcoinComparison />
       <Features />
       <CallToAction />
       <FAQ />
