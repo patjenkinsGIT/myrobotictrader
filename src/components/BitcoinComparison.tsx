@@ -1,9 +1,22 @@
-// BitcoinComparison.tsx - SIMPLIFIED VERSION - Easy to Understand
+// BitcoinComparison.tsx - CLEAN VERSION - Live Data + Transparency
 import React from "react";
-import { TrendingUp, TrendingDown, Shield, CheckCircle } from "lucide-react";
+import {
+  TrendingUp,
+  TrendingDown,
+  Shield,
+  CheckCircle,
+  AlertTriangle,
+  DollarSign,
+  ExternalLink,
+  Wifi,
+  Database,
+} from "lucide-react";
+import { useLiveBitcoinData } from "../hooks/useLiveBitcoinData";
 
 export const BitcoinComparison: React.FC = () => {
-  // Simple, clear data points that anyone can understand
+  const { bitcoinData, isLoading, refreshData } = useLiveBitcoinData();
+
+  // Your strategy comparison data
   const comparisonData = {
     myStrategy: {
       result: "Made Money",
@@ -15,8 +28,16 @@ export const BitcoinComparison: React.FC = () => {
       status: "success",
     },
     bitcoin: {
-      result: "Lost Money",
-      amount: "-$2,400",
+      result: bitcoinData
+        ? bitcoinData.totalLoss < 0
+          ? "Lost Money"
+          : "Made Money"
+        : "Lost Money",
+      amount: bitcoinData
+        ? `${
+            bitcoinData.totalLoss >= 0 ? "+" : ""
+          }$${bitcoinData.totalLoss.toLocaleString()}`
+        : "-$2,400",
       timeFrame: "Same 8 months",
       consistency: "Up and down",
       worstMonth: "Lost 40%",
@@ -24,6 +45,21 @@ export const BitcoinComparison: React.FC = () => {
       status: "loss",
     },
   };
+
+  if (isLoading) {
+    return (
+      <section className="py-16 px-4 relative overflow-hidden">
+        <div className="relative max-w-6xl mx-auto text-center">
+          <div className="flex items-center justify-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-400 mr-3"></div>
+            <span className="text-gray-300 text-lg">
+              Loading live Bitcoin data...
+            </span>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-16 px-4 relative overflow-hidden">
@@ -46,9 +82,37 @@ export const BitcoinComparison: React.FC = () => {
           </h2>
 
           <p className="text-xl text-gray-200 max-w-3xl mx-auto">
-            Here's what would have happened if you invested the same money in
-            Bitcoin instead of using my robotic trading system:
+            Here's what would have happened if you invested $
+            {bitcoinData?.investmentAmount.toLocaleString() || "10,000"} in
+            Bitcoin on {bitcoinData?.startDate || "January 8, 2025"} instead of
+            using my robotic trading system:
           </p>
+
+          {/* Live Data Indicator */}
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-500/20 to-blue-500/20 backdrop-blur-sm rounded-full px-4 py-2 border border-green-400/40 mt-4 shadow-lg shadow-green-500/20">
+            {bitcoinData?.isLiveData ? (
+              <>
+                <Wifi className="w-4 h-4 text-green-300" />
+                <span className="text-green-200 font-medium">
+                  Live Bitcoin Data
+                </span>
+              </>
+            ) : (
+              <>
+                <Database className="w-4 h-4 text-yellow-300" />
+                <span className="text-yellow-200 font-medium">
+                  Historical Estimates
+                </span>
+              </>
+            )}
+            <button
+              onClick={refreshData}
+              className="text-blue-300 hover:text-blue-200 transition-colors"
+              title="Refresh data"
+            >
+              <ExternalLink className="w-3 h-3" />
+            </button>
+          </div>
         </div>
 
         {/* Simple Comparison Cards */}
@@ -56,17 +120,14 @@ export const BitcoinComparison: React.FC = () => {
           {/* My Strategy - Green/Success */}
           <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 backdrop-blur-sm rounded-2xl border border-green-400/30 p-8 shadow-lg shadow-green-500/20">
             <div className="text-center">
-              {/* Icon */}
               <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-green-500/40">
                 <CheckCircle className="w-10 h-10 text-white" />
               </div>
 
-              {/* Title */}
               <h3 className="text-2xl font-bold text-white mb-4">
                 My Robotic Trading
               </h3>
 
-              {/* Results */}
               <div className="space-y-4">
                 <div className="bg-green-500/20 rounded-xl p-4 border border-green-400/30">
                   <div className="text-3xl font-bold text-green-300 mb-2">
@@ -113,17 +174,14 @@ export const BitcoinComparison: React.FC = () => {
           {/* Bitcoin Strategy - Red/Loss */}
           <div className="bg-gradient-to-br from-red-500/10 to-orange-500/10 backdrop-blur-sm rounded-2xl border border-red-400/30 p-8 shadow-lg shadow-red-500/20">
             <div className="text-center">
-              {/* Icon */}
               <div className="w-20 h-20 bg-gradient-to-br from-red-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-red-500/40">
                 <TrendingDown className="w-10 h-10 text-white" />
               </div>
 
-              {/* Title */}
               <h3 className="text-2xl font-bold text-white mb-4">
                 "Just Buy Bitcoin"
               </h3>
 
-              {/* Results */}
               <div className="space-y-4">
                 <div className="bg-red-500/20 rounded-xl p-4 border border-red-400/30">
                   <div className="text-3xl font-bold text-red-300 mb-2">
@@ -168,6 +226,122 @@ export const BitcoinComparison: React.FC = () => {
           </div>
         </div>
 
+        {/* Live Bitcoin Price Journey */}
+        {bitcoinData && (
+          <div className="bg-gradient-to-r from-red-500/10 to-orange-500/10 backdrop-blur-sm rounded-2xl border border-red-400/20 p-8 shadow-lg shadow-red-500/10 mb-8">
+            <div className="text-center mb-8">
+              <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-red-500/40">
+                <DollarSign className="w-8 h-8 text-white" />
+              </div>
+
+              <h3 className="text-2xl font-bold text-white mb-4">
+                Why Bitcoin Lost You Money
+              </h3>
+
+              <p className="text-lg text-gray-200 mb-6">
+                If you invested{" "}
+                <span className="text-white font-semibold">
+                  ${bitcoinData.investmentAmount.toLocaleString()}
+                </span>{" "}
+                in Bitcoin on{" "}
+                <span className="text-white font-semibold">
+                  {bitcoinData.startDate}
+                </span>{" "}
+                at{" "}
+                <span className="text-white font-semibold">
+                  ${bitcoinData.startPrice.toLocaleString()}
+                </span>
+                , here's what happened:
+              </p>
+
+              {/* Data Source Transparency */}
+              <div className="inline-flex items-center gap-2 bg-white/5 rounded-lg px-3 py-1 text-xs">
+                {bitcoinData.isLiveData ? (
+                  <>
+                    <Wifi className="w-3 h-3 text-green-400" />
+                    <span className="text-green-300">
+                      Live data from {bitcoinData.dataSource}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <AlertTriangle className="w-3 h-3 text-yellow-400" />
+                    <span className="text-yellow-300">
+                      {bitcoinData.dataSource}
+                    </span>
+                  </>
+                )}
+                <span className="text-gray-400">
+                  • Updated:{" "}
+                  {new Date(bitcoinData.lastUpdated).toLocaleTimeString()}
+                </span>
+              </div>
+            </div>
+
+            {/* Live Price Timeline */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+              {bitcoinData.pricePoints.map((point) => (
+                <div
+                  key={point.month}
+                  className={`bg-white/5 rounded-xl p-4 border border-white/10 text-center ${
+                    point.status === "down"
+                      ? "border-red-400/30"
+                      : "border-green-400/30"
+                  }`}
+                >
+                  <div className="text-lg font-bold text-white mb-1">
+                    {point.month}
+                  </div>
+                  <div className="text-sm text-gray-300 mb-2">
+                    ${point.price.toLocaleString()}
+                  </div>
+                  <div
+                    className={`text-sm font-semibold ${
+                      point.status === "down"
+                        ? "text-red-400"
+                        : "text-green-400"
+                    }`}
+                  >
+                    {point.change}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Final Result */}
+            <div className="bg-red-500/20 rounded-xl p-6 border border-red-400/30 text-center">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                  <div className="text-sm text-gray-300 mb-1">Started With</div>
+                  <div className="text-2xl font-bold text-white">
+                    ${bitcoinData.investmentAmount.toLocaleString()}
+                  </div>
+                </div>
+
+                <div>
+                  <div className="text-sm text-gray-300 mb-1">Ended With</div>
+                  <div className="text-2xl font-bold text-red-300">
+                    ${bitcoinData.finalValue.toLocaleString()}
+                  </div>
+                </div>
+
+                <div>
+                  <div className="text-sm text-gray-300 mb-1">Total Loss</div>
+                  <div className="text-2xl font-bold text-red-400">
+                    ${Math.abs(bitcoinData.totalLoss).toLocaleString()}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-4 text-sm text-gray-300">
+                Bitcoin dropped from ${bitcoinData.startPrice.toLocaleString()}{" "}
+                to ${bitcoinData.endPrice.toLocaleString()} during the same
+                period my system made +$4,169
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Simple Summary */}
         <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm rounded-2xl border border-blue-400/20 p-8 shadow-lg shadow-blue-500/10 mb-8">
           <div className="text-center">
@@ -190,7 +364,12 @@ export const BitcoinComparison: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-white/5 rounded-xl p-4 border border-white/10">
                   <div className="text-2xl font-bold text-green-400 mb-2">
-                    $6,569
+                    $
+                    {bitcoinData
+                      ? (
+                          4169 + Math.abs(bitcoinData.totalLoss)
+                        ).toLocaleString()
+                      : "6,569"}
                   </div>
                   <div className="text-sm text-gray-300">Total Difference</div>
                   <div className="text-xs text-gray-400 mt-1">
@@ -219,6 +398,49 @@ export const BitcoinComparison: React.FC = () => {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Transparency Section */}
+        <div className="bg-gradient-to-r from-gray-500/10 to-slate-500/10 backdrop-blur-sm rounded-2xl border border-gray-400/20 p-6 shadow-lg shadow-gray-500/10 mb-8">
+          <div className="text-center">
+            <h4 className="text-lg font-bold text-white mb-4">
+              Data Transparency
+            </h4>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+              <div>
+                <div className="text-gray-300 font-medium mb-2">
+                  Bitcoin Data Source:
+                </div>
+                <div className="text-white">
+                  {bitcoinData?.dataSource || "CoinGecko API"}
+                </div>
+              </div>
+
+              <div>
+                <div className="text-gray-300 font-medium mb-2">
+                  Last Updated:
+                </div>
+                <div className="text-white">
+                  {bitcoinData
+                    ? new Date(bitcoinData.lastUpdated).toLocaleString()
+                    : "Loading..."}
+                </div>
+              </div>
+            </div>
+
+            <p className="text-gray-300 text-xs mt-4">
+              Bitcoin prices are fetched live from CoinGecko API. Historical
+              data represents actual market prices during the comparison period.
+              <a
+                href="/transparency-policy"
+                className="text-blue-400 hover:text-blue-300 ml-1 inline-flex items-center gap-1"
+              >
+                View full transparency policy{" "}
+                <ExternalLink className="w-3 h-3" />
+              </a>
+            </p>
           </div>
         </div>
 
