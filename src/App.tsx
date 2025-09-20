@@ -172,8 +172,7 @@ const HomePage = () => {
           }
         }
       />
-      <BitcoinComparison />
-      <Features />
+      <BitcoinComparison tradingStats={tradingStats} /> <Features />
       <CallToAction />
       <FAQ />
     </>
