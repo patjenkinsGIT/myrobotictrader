@@ -18,7 +18,7 @@ function App() {
       <SEOHead />
       <Hero />
       <MyStory tradingStats={tradingStats} />
-      <TradingResults tradingStats={tradingStats} />
+      {/* <TradingResults tradingStats={tradingStats} /> */}
       <LiveTransactionLog />
       <BitcoinComparison />
       <Features />
