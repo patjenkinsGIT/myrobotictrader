@@ -1,10 +1,10 @@
 import React from "react";
 import { User, TrendingUp, CheckCircle, Target } from "lucide-react";
-import { TradingStats } from "../hooks/useGoogleSheetsData";
+import { EnhancedTradingStats } from "../hooks/useGoogleSheetsData";
 import { calculateTimeSinceStart } from "../utils/tradingTime";
 
 interface MyStoryProps {
-  tradingStats: TradingStats | null;
+  tradingStats: EnhancedTradingStats | null;
 }
 
 export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
