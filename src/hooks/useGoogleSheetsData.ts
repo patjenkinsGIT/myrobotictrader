@@ -199,15 +199,26 @@ export const useGoogleSheetsData = () => {
       const bestMonthProfit =
         parseFloat(grandTotalRow[6]?.toString().replace(/[$,]/g, "")) || 0;
 
-      console.log("💰 PARSED Grand Total values:", {
-        totalProfit,
-        totalTrades,
-        avgProfitPerTrade,
-        monthlyAverage,
-        dailyAvg,
-        bestMonthProfit,
-      });
+      // Enhanced logging with actual values
+      console.log("💰 PARSED Grand Total values with numbers:");
+      console.log("  totalProfit:", totalProfit);
+      console.log("  totalTrades:", totalTrades);
+      console.log("  avgProfitPerTrade:", avgProfitPerTrade);
+      console.log("  monthlyAverage:", monthlyAverage);
+      console.log("  dailyAvg:", dailyAvg);
+      console.log("  bestMonthProfit:", bestMonthProfit);
 
+      // Verify the parsing worked
+      if (totalProfit === 0 || monthlyAverage === 0) {
+        console.log(
+          "❌ WARNING: Some parsed values are 0, check the data format"
+        );
+        console.log("Raw values for debugging:");
+        console.log("  Raw totalProfit:", grandTotalRow[1]);
+        console.log("  Raw monthlyAverage:", grandTotalRow[4]);
+      } else {
+        console.log("✅ All values parsed successfully!");
+      }
       // Enhanced monthly data parsing with better month name handling
       const monthlyData: TradingDataPoint[] = [];
 
