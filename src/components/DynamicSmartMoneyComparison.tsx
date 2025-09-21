@@ -155,7 +155,7 @@ export const DynamicSmartMoneyComparison = () => {
     { id: "chainlink", name: "Chainlink", symbol: "LINK" },
     { id: "avalanche-2", name: "Avalanche", symbol: "AVAX" },
     { id: "polkadot", name: "Polkadot", symbol: "DOT" },
-    { id: "aftermath-staked-sui", name: "SUI", symbol: "SUI" },
+    { id: "sui", name: "SUI", symbol: "SUI" },
   ];
 
   // Fetch crypto data from CoinGecko with retry logic
