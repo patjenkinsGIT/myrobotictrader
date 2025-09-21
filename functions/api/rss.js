@@ -1,5 +1,5 @@
 // /functions/api/rss.js
-// Generates RSS feed with trading results for automated social media posting
+// Updated RSS feed that reads from the RSS Feed tab in Google Sheets
 
 export async function onRequest(context) {
   const corsHeaders = {
@@ -13,11 +13,11 @@ export async function onRequest(context) {
   }
 
   try {
-    // Fetch your actual trading data (integrate with your Google Sheets)
-    const tradingData = await fetchLatestTradingData(context);
+    // Fetch RSS items from Google Sheets RSS Feed tab
+    const rssItems = await fetchRSSItems(context);
 
-    // Generate RSS feed
-    const rssXml = generateRSSFeed(tradingData);
+    // Generate RSS feed from the sheet data
+    const rssXml = generateRSSFeedFromSheet(rssItems);
 
     return new Response(rssXml, {
       headers: {
@@ -34,14 +34,14 @@ export async function onRequest(context) {
   }
 }
 
-// In /functions/api/rss.js, replace the mock function with:
-async function fetchLatestTradingData(context) {
+async function fetchRSSItems(context) {
   const SHEET_ID = context.env.GOOGLE_SHEET_ID;
   const API_KEY = context.env.GOOGLE_API_KEY;
 
   try {
+    // Fetch from RSS Feed tab (columns A through H)
     const response = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Calculations!A:G?key=${API_KEY}`
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/RSS Feed!A:H?key=${API_KEY}`
     );
 
     if (!response.ok) {
@@ -50,111 +50,103 @@ async function fetchLatestTradingData(context) {
 
     const data = await response.json();
 
-    // Parse your data here (reuse logic from your main hook)
-    // For now, return mock data structure:
-    return {
-      latestMonth: {
-        month: "September",
-        profit: 200.65,
-        trades: 36,
-        deploymentRatio: 39,
-      },
-      totalStats: {
-        totalProfit: 4169.18,
-        totalTrades: 875,
-        avgProfitPerTrade: 4.76,
-        successRate: 100,
-      },
-    };
+    if (!data.values || data.values.length < 2) {
+      console.log("No RSS items found in sheet");
+      return [];
+    }
+
+    // Parse RSS items from sheet data
+    const items = [];
+    const rows = data.values;
+
+    // Skip header row (index 0)
+    for (let i = 1; i < rows.length; i++) {
+      const row = rows[i];
+
+      // Check if row has minimum required data
+      if (row && row.length >= 6) {
+        const postType = row[0];
+        const period = row[1];
+        const title = row[2];
+        const description = row[3];
+        const guid = row[4];
+        const published = row[5];
+        const publishDate = row[6] ? new Date(row[6]) : new Date();
+        const priority = row[7] ? parseInt(row[7]) : 3;
+
+        // Only include unpublished items
+        if (published !== true && published !== "TRUE" && published !== "Yes") {
+          items.push({
+            postType,
+            period,
+            title,
+            description,
+            guid,
+            publishDate,
+            priority,
+          });
+        }
+      }
+    }
+
+    // Sort by priority (1 = highest) then by publish date
+    items.sort((a, b) => {
+      if (a.priority !== b.priority) {
+        return a.priority - b.priority;
+      }
+      return new Date(b.publishDate) - new Date(a.publishDate);
+    });
+
+    // Limit to most recent 10 items to keep RSS feed manageable
+    return items.slice(0, 10);
   } catch (error) {
-    console.error("RSS data fetch error:", error);
-    // Return fallback data
-    return {
-      latestMonth: {
-        month: "September",
-        profit: 200.65,
-        trades: 36,
-        deploymentRatio: 39,
+    console.error("Error fetching RSS items from sheet:", error);
+
+    // Return fallback items if sheet fetch fails
+    return [
+      {
+        postType: "fallback",
+        period: "Current",
+        title: "Trading System Active",
+        description:
+          "My autonomous AI trader continues generating consistent profits. See live results at myrobotictrader.com",
+        guid: `fallback-${Date.now()}`,
+        publishDate: new Date(),
+        priority: 1,
       },
-      totalStats: {
-        totalProfit: 4169.18,
-        totalTrades: 875,
-        avgProfitPerTrade: 4.76,
-        successRate: 100,
-      },
-    };
+    ];
   }
 }
 
-function generateRSSFeed(data) {
+function generateRSSFeedFromSheet(items) {
   const baseUrl = "https://myrobotictrader.com";
   const currentDate = new Date();
   const pubDate = currentDate.toUTCString();
 
-  // Generate different types of posts
-  const items = [];
-
-  // Monthly summary post
-  const monthlyPost = {
-    title: `${data.latestMonth.month} Trading Results: $${data.latestMonth.profit} profit`,
-    description: `AI trader generated $${data.latestMonth.profit} profit from ${data.latestMonth.trades} trades in ${data.latestMonth.month}. Deployment ratio: ${data.latestMonth.deploymentRatio}%. Total profit now: $${data.totalStats.totalProfit}`,
-    link: `${baseUrl}#dynamic-comparison`,
-    cardUrl: `${baseUrl}/api/metric-card?month=${data.latestMonth.month.toLowerCase()}&type=monthly`,
-    pubDate: pubDate,
-    guid: `monthly-${data.latestMonth.month.toLowerCase()}-${currentDate.getFullYear()}`,
-  };
-
-  // Milestone post if appropriate
-  if (data.totalStats.totalProfit > 4000) {
-    const milestonePost = {
-      title: `Milestone: Crossed $${Math.floor(
-        data.totalStats.totalProfit / 1000
-      )}K Total Profit`,
-      description: `My autonomous AI trader has now generated over $${data.totalStats.totalProfit} in verified profits across ${data.totalStats.totalTrades} trades. See the live comparison tool.`,
-      link: `${baseUrl}#dynamic-comparison`,
-      cardUrl: `${baseUrl}/api/metric-card?type=milestone`,
-      pubDate: new Date(
-        currentDate.getTime() - 24 * 60 * 60 * 1000
-      ).toUTCString(), // Yesterday
-      guid: `milestone-${Math.floor(data.totalStats.totalProfit / 1000)}k`,
-    };
-    items.push(milestonePost);
-  }
-
-  // Performance comparison post
-  const comparisonPost = {
-    title: `Real Money vs Paper Gains: $${data.totalStats.totalProfit} withdrawn`,
-    description: `While others chase unrealized gains, my AI system has generated $${data.totalStats.totalProfit} in actual withdrawable profits. Compare your crypto strategy against mine.`,
-    link: `${baseUrl}#dynamic-comparison`,
-    cardUrl: `${baseUrl}/api/metric-card?type=comparison`,
-    pubDate: new Date(
-      currentDate.getTime() - 2 * 24 * 60 * 60 * 1000
-    ).toUTCString(), // 2 days ago
-    guid: `comparison-${data.latestMonth.month.toLowerCase()}`,
-  };
-
-  items.push(monthlyPost, comparisonPost);
-
-  // Generate RSS XML
+  // Generate RSS XML items from sheet data
   const rssItems = items
-    .map(
-      (item) => `
+    .map((item) => {
+      const itemPubDate = item.publishDate
+        ? new Date(item.publishDate).toUTCString()
+        : pubDate;
+
+      return `
     <item>
       <title><![CDATA[${item.title}]]></title>
       <description><![CDATA[
         ${item.description}
         
-        📊 View the metric card: ${item.cardUrl}
-        🔗 Try the comparison tool: ${item.link}
+        📊 View live results: ${baseUrl}
+        🔗 Compare strategies: ${baseUrl}#dynamic-comparison
         
         #CryptoTrading #AITrading #PassiveIncome #TradingResults
       ]]></description>
-      <link>${item.link}</link>
+      <link>${baseUrl}#dynamic-comparison</link>
       <guid isPermaLink="false">${item.guid}</guid>
-      <pubDate>${item.pubDate}</pubDate>
-      <enclosure url="${item.cardUrl}" type="text/html" length="0"/>
-    </item>`
-    )
+      <pubDate>${itemPubDate}</pubDate>
+      <category>${item.postType}</category>
+    </item>`;
+    })
     .join("");
 
   return `<?xml version="1.0" encoding="UTF-8"?>
