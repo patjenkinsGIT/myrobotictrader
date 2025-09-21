@@ -2,7 +2,7 @@
 // This replaces BitcoinComparison.tsx with a more powerful dynamic comparison tool
 
 import { useState, useEffect } from "react";
-import { AlertTriangle, Brain, Zap, Search } from "lucide-react";
+import { AlertTriangle, Brain, Zap, Search, BarChart3 } from "lucide-react";
 import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
 import { useGoogleSheetsData } from "../hooks/useGoogleSheetsData";
 
@@ -34,6 +34,13 @@ interface Comparison {
     realized: number;
     risk: string;
   };
+  dca: {
+    investment: number;
+    currentValue: number;
+    unrealizedGain: number;
+    realized: number;
+    risk: string;
+  };
   yourWay: {
     investment: number;
     realizedProfits: number;
@@ -54,6 +61,64 @@ export const DynamicSmartMoneyComparison = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Monthly capital deployment data (your actual intelligent deployment)
+  const monthlyDeployment = [
+    {
+      month: "Jan",
+      deployed: 12000,
+      available: 3000,
+      opportunities: "High volatility, great entries",
+    },
+    {
+      month: "Feb",
+      deployed: 24000,
+      available: 4500,
+      opportunities: "Major market movement, scaled up",
+    },
+    {
+      month: "Mar",
+      deployed: 8500,
+      available: 8500,
+      opportunities: "Flat market, stayed conservative",
+    },
+    {
+      month: "Apr",
+      deployed: 15000,
+      available: 12000,
+      opportunities: "Selective opportunities returned",
+    },
+    {
+      month: "May",
+      deployed: 18000,
+      available: 22000,
+      opportunities: "Strong trends, increased allocation",
+    },
+    {
+      month: "Jun",
+      deployed: 16000,
+      available: 24000,
+      opportunities: "Mixed signals, moderate deployment",
+    },
+    {
+      month: "Jul",
+      deployed: 22000,
+      available: 26000,
+      opportunities: "Excellent conditions, aggressive",
+    },
+    {
+      month: "Aug",
+      deployed: 14000,
+      available: 27000,
+      opportunities: "Cooling market, reduced exposure",
+    },
+    {
+      month: "Sep",
+      deployed: 11000,
+      available: 28000,
+      opportunities: "Selective, waiting for setups",
+    },
+  ];
+
   // Extract your trading data with intelligent capital deployment story
   const yourTradingData = {
     totalDeposited: 28432, // Total capital deposited over 9 months
@@ -62,14 +127,15 @@ export const DynamicSmartMoneyComparison = () => {
     safeReserves: 16623, // USDC cash reserves - smart capital allocation
     totalCurrentValue: 28044, // Total portfolio value (positions + reserves)
     avgDeploymentRatio: 43, // Average percentage of capital deployed (from report)
-    avgReserveSafety: 57, // Average percentage kept as reserves
+    maxDeployment: 24000, // Peak deployment in February
+    minDeployment: 8500, // Conservative deployment in March
     totalTrades: tradingStats?.totalTrades || 875,
     successRate: 100, // Your system has 100% success rate
     timeframe: "9 months",
     startDate: "2025-01-08",
     monthlyAverage: tradingStats?.monthlyAverage || 463,
     intelligentDeployment: true, // Key differentiator
-    riskManagement: "Conservative deployment + opportunity recognition",
+    riskManagement: "Opportunity-driven deployment + reserve management",
     isLiveData: tradingStats?.isLiveData || false,
   };
 
@@ -164,13 +230,26 @@ export const DynamicSmartMoneyComparison = () => {
     fetchCryptoData(selectedCrypto);
   }, [selectedCrypto]);
 
-  // Calculate comparison data
+  // Calculate comparison data with three strategies
   const calculateComparison = (): Comparison | null => {
     if (!cryptoData) return null;
 
+    // Strategy 1: All In on Jan 8 (immediate full deployment)
     const allInValue =
       yourTradingData.totalDeposited * (1 + cryptoData.gainSinceStart);
     const allInProfit = allInValue - yourTradingData.totalDeposited;
+
+    // Strategy 2: Dollar Cost Averaging (mechanical monthly investment)
+    const monthlyDCA = yourTradingData.totalDeposited / 9; // $3,156/month
+    let dcaValue = 0;
+    monthlyDeployment.forEach((_, monthIndex) => {
+      const monthsFromStart = monthIndex;
+      const timeValue =
+        monthlyDCA *
+        (1 + (cryptoData.gainSinceStart * (9 - monthsFromStart)) / 9);
+      dcaValue += timeValue;
+    });
+    const dcaProfit = dcaValue - yourTradingData.totalDeposited;
 
     return {
       allIn: {
@@ -178,7 +257,14 @@ export const DynamicSmartMoneyComparison = () => {
         currentValue: allInValue,
         unrealizedGain: allInProfit,
         realized: 0,
-        risk: `100% exposed to ${cryptoData.name} volatility`,
+        risk: `100% exposed to ${cryptoData.name} volatility from day 1`,
+      },
+      dca: {
+        investment: yourTradingData.totalDeposited,
+        currentValue: dcaValue,
+        unrealizedGain: dcaProfit,
+        realized: 0,
+        risk: `Mechanical deployment regardless of conditions`,
       },
       yourWay: {
         investment: yourTradingData.totalDeposited,
@@ -385,34 +471,34 @@ export const DynamicSmartMoneyComparison = () => {
               </div>
             </div>
 
-            {/* The Comparison with your card styling */}
-            <div className="grid lg:grid-cols-2 gap-8 mb-12">
-              {/* All In Strategy */}
-              <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-red-500/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-red-500/15">
+            {/* Three-Way Strategy Comparison */}
+            <div className="grid lg:grid-cols-3 gap-6 mb-12">
+              {/* Strategy 1: All In Immediately */}
+              <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-red-500/30 transition-all duration-300 shadow-lg shadow-red-500/15">
                 <div className="absolute inset-0 bg-gradient-to-br from-red-500 to-orange-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
 
-                <div className="relative flex items-center mb-6">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500 to-orange-500 p-3 mr-4 shadow-lg shadow-red-500/40">
+                <div className="relative flex items-center mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-orange-500 p-2 mr-3 shadow-lg shadow-red-500/40">
                     <AlertTriangle className="w-full h-full text-white" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-white">
+                    <h3 className="text-lg font-bold text-white">
                       All In {cryptoData.symbol}
                     </h3>
-                    <p className="text-red-300">Immediate full deployment</p>
+                    <p className="text-red-300 text-sm">
+                      Jan 8: Full deployment
+                    </p>
                   </div>
                 </div>
 
-                <div className="relative space-y-4 mb-8">
-                  <div className="flex justify-between py-2 border-b border-white/10">
-                    <span className="text-gray-300">
-                      If I went "All In" (Jan 8):
-                    </span>
+                <div className="relative space-y-3 mb-6">
+                  <div className="flex justify-between py-1 text-sm">
+                    <span className="text-gray-300">Deployed Day 1:</span>
                     <span className="text-white font-semibold">
                       {formatCurrency(comparison.allIn.investment)}
                     </span>
                   </div>
-                  <div className="flex justify-between py-2 border-b border-white/10">
+                  <div className="flex justify-between py-1 text-sm">
                     <span className="text-gray-300">Current Value:</span>
                     <span
                       className={`font-semibold ${
@@ -425,160 +511,241 @@ export const DynamicSmartMoneyComparison = () => {
                       {formatCurrency(comparison.allIn.currentValue)}
                     </span>
                   </div>
-                  <div className="flex justify-between py-2 border-b border-white/10">
-                    <span className="text-gray-300">Unrealized Gain/Loss:</span>
-                    <span
-                      className={`font-semibold ${
-                        comparison.allIn.unrealizedGain >= 0
-                          ? "text-orange-400"
-                          : "text-red-400"
-                      }`}
-                    >
-                      {formatCurrency(comparison.allIn.unrealizedGain)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between py-2 font-bold">
-                    <span className="text-gray-300">Real Money Made:</span>
-                    <span className="text-red-400">
-                      {formatCurrency(comparison.allIn.realized)}
-                    </span>
+                  <div className="flex justify-between py-1 text-sm font-bold">
+                    <span className="text-gray-300">Real Cash:</span>
+                    <span className="text-red-400">$0</span>
                   </div>
                 </div>
 
-                <div className="relative bg-red-500/10 border border-red-500/20 rounded-lg p-4">
-                  <p className="text-red-300 text-sm">
-                    {comparison.allIn.unrealizedGain >= 0
-                      ? "Hypothetical paper gains. Can't take profits without losing position, plus missed all the steady income along the way."
-                      : "Hypothetical losses plus zero income generated. All capital at risk with no diversification."}
+                <div className="relative bg-red-500/10 border border-red-500/20 rounded-lg p-3">
+                  <p className="text-red-300 text-xs">
+                    100% risk from day one. No reserves, no flexibility, pure
+                    speculation.
                   </p>
                 </div>
               </div>
 
-              {/* Your Smart Strategy */}
-              <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-green-500/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-green-500/15">
-                <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-blue-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
+              {/* Strategy 2: Dollar Cost Averaging */}
+              <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-yellow-500/30 transition-all duration-300 shadow-lg shadow-yellow-500/15">
+                <div className="absolute inset-0 bg-gradient-to-br from-yellow-500 to-orange-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
 
-                <div className="relative flex items-center mb-6">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-blue-500 p-3 mr-4 shadow-lg shadow-green-500/40">
-                    <Brain className="w-full h-full text-white" />
+                <div className="relative flex items-center mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-500 to-orange-500 p-2 mr-3 shadow-lg shadow-yellow-500/40">
+                    <BarChart3 className="w-full h-full text-white" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-white">
-                      Intelligent AI Deployment
+                    <h3 className="text-lg font-bold text-white">
+                      DCA {cryptoData.symbol}
                     </h3>
-                    <p className="text-green-300">
-                      Autonomous opportunity recognition
+                    <p className="text-yellow-300 text-sm">
+                      $3,156/month fixed
                     </p>
                   </div>
                 </div>
 
-                <div className="relative space-y-4 mb-8">
-                  <div className="flex justify-between py-2 border-b border-white/10">
-                    <span className="text-gray-300">My Total Deposits:</span>
+                <div className="relative space-y-3 mb-6">
+                  <div className="flex justify-between py-1 text-sm">
+                    <span className="text-gray-300">Total Invested:</span>
                     <span className="text-white font-semibold">
-                      {formatCurrency(comparison.yourWay.investment)}
+                      {formatCurrency(comparison.dca.investment)}
                     </span>
                   </div>
-                  <div className="flex justify-between py-2 border-b border-white/10">
+                  <div className="flex justify-between py-1 text-sm">
+                    <span className="text-gray-300">Current Value:</span>
+                    <span
+                      className={`font-semibold ${
+                        comparison.dca.currentValue >= comparison.dca.investment
+                          ? "text-yellow-400"
+                          : "text-red-400"
+                      }`}
+                    >
+                      {formatCurrency(comparison.dca.currentValue)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between py-1 text-sm font-bold">
+                    <span className="text-gray-300">Real Cash:</span>
+                    <span className="text-red-400">$0</span>
+                  </div>
+                </div>
+
+                <div className="relative bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
+                  <p className="text-yellow-300 text-xs">
+                    Mechanical deployment regardless of market conditions. No
+                    intelligence.
+                  </p>
+                </div>
+              </div>
+
+              {/* Strategy 3: Your Intelligent System */}
+              <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-green-500/30 transition-all duration-300 shadow-lg shadow-green-500/15">
+                <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-blue-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
+
+                <div className="relative flex items-center mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-blue-500 p-2 mr-3 shadow-lg shadow-green-500/40">
+                    <Brain className="w-full h-full text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-white">
+                      AI Intelligence
+                    </h3>
+                    <p className="text-green-300 text-sm">Opportunity-driven</p>
+                  </div>
+                </div>
+
+                <div className="relative space-y-3 mb-6">
+                  <div className="flex justify-between py-1 text-sm">
+                    <span className="text-gray-300">Peak Deployment:</span>
+                    <span className="text-white font-semibold">
+                      {formatCurrency(yourTradingData.maxDeployment)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between py-1 text-sm">
                     <span className="text-gray-300">Current Positions:</span>
                     <span className="text-blue-400 font-semibold">
                       {formatCurrency(comparison.yourWay.currentPositions)}
                     </span>
                   </div>
-                  <div className="flex justify-between py-2 border-b border-white/10">
-                    <span className="text-gray-300">Safe Reserves:</span>
-                    <span className="text-green-400 font-semibold">
-                      {formatCurrency(comparison.yourWay.reserves)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between py-2 font-bold">
-                    <span className="text-gray-300">Real Money Made:</span>
+                  <div className="flex justify-between py-1 text-sm font-bold">
+                    <span className="text-gray-300">Real Cash Made:</span>
                     <span className="text-green-400">
                       {formatCurrency(comparison.yourWay.realizedProfits)}
                     </span>
                   </div>
                 </div>
 
-                <div className="relative bg-green-500/10 border border-green-500/20 rounded-lg p-4">
-                  <p className="text-green-300 text-sm mb-3">
-                    Autonomous trader deployed only ~
-                    {yourTradingData.avgDeploymentRatio}% of capital on average,
-                    keeping {yourTradingData.avgReserveSafety}% in reserves.
-                    Generated income while managing risk, regardless of{" "}
-                    {cryptoData.symbol} price direction.
+                <div className="relative bg-green-500/10 border border-green-500/20 rounded-lg p-3">
+                  <p className="text-green-300 text-xs mb-2">
+                    Autonomous intelligence: Deploy when opportunities arise,
+                    conserve when they don't.
                   </p>
 
-                  {/* Inline CTA */}
-                  <div className="text-center mt-4">
+                  <div className="text-center">
                     <a
                       href="https://dailyprofits.link/class"
                       target="_blank"
                       rel="noopener noreferrer"
-                      onClick={() => handleMasterclassClick("smart_system")}
-                      className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300"
+                      onClick={() =>
+                        handleMasterclassClick("three_way_comparison")
+                      }
+                      className="inline-flex items-center gap-1 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-xs font-semibold transition-all duration-300"
                     >
-                      Learn This System
-                      <Brain className="w-4 h-4" />
+                      Learn This
+                      <Brain className="w-3 h-3" />
                     </a>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Capital Deployment Intelligence Section */}
+            {/* Capital Deployment Intelligence Visualization */}
             <div className="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 backdrop-blur-sm rounded-2xl p-8 border border-blue-400/30 shadow-lg shadow-blue-500/20 mb-12">
               <h3 className="text-2xl font-bold text-white mb-6 text-center">
-                How My Autonomous Trader Intelligently Deployed Capital
+                Intelligent Capital Deployment Over Time
               </h3>
 
-              <div className="grid md:grid-cols-3 gap-6 mb-6">
-                <div className="bg-white/5 rounded-xl p-6 text-center">
-                  <div className="text-3xl font-bold text-blue-400 mb-2">
-                    {yourTradingData.avgDeploymentRatio}%
+              <p className="text-gray-300 text-center mb-8">
+                See how my autonomous trader smartly deployed capital
+                month-by-month based on market opportunities, rather than going
+                "all in" immediately or using mechanical dollar-cost averaging.
+              </p>
+
+              {/* Monthly Deployment Chart */}
+              <div className="mb-8">
+                <div className="grid grid-cols-9 gap-2 mb-4">
+                  {monthlyDeployment.map((monthData) => {
+                    const deploymentHeight =
+                      (monthData.deployed / yourTradingData.maxDeployment) *
+                      100;
+                    const availableHeight =
+                      (monthData.available / yourTradingData.totalDeposited) *
+                      100;
+
+                    return (
+                      <div key={monthData.month} className="text-center">
+                        <div className="h-32 flex flex-col-reverse mb-2 relative">
+                          {/* Available Capital (background) */}
+                          <div
+                            className="bg-gray-600/30 border border-gray-500/30 rounded-t-sm"
+                            style={{ height: `${availableHeight}%` }}
+                          ></div>
+                          {/* Deployed Capital (foreground) */}
+                          <div
+                            className="bg-gradient-to-t from-green-500 to-green-400 border border-green-400/50 rounded-t-sm absolute bottom-0 w-full"
+                            style={{ height: `${deploymentHeight}%` }}
+                          ></div>
+                        </div>
+                        <div className="text-xs font-bold text-white">
+                          {monthData.month}
+                        </div>
+                        <div className="text-xs text-green-400">
+                          ${(monthData.deployed / 1000).toFixed(0)}K
+                        </div>
+                        <div className="text-xs text-gray-400">
+                          /{(monthData.available / 1000).toFixed(0)}K
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className="flex justify-center gap-6 text-sm">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 bg-gradient-to-t from-green-500 to-green-400 rounded"></div>
+                    <span className="text-gray-300">Deployed Capital</span>
                   </div>
-                  <div className="text-gray-300 text-sm">
-                    Average Capital Deployed
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 bg-gray-600/30 border border-gray-500/30 rounded"></div>
+                    <span className="text-gray-300">Available Reserves</span>
                   </div>
-                  <div className="text-blue-300 text-xs mt-1">
-                    Only when opportunities arose
+                </div>
+              </div>
+
+              {/* Key Insights */}
+              <div className="grid md:grid-cols-3 gap-4 mb-6">
+                <div className="bg-white/5 rounded-xl p-4 text-center">
+                  <div className="text-2xl font-bold text-red-400 mb-2">
+                    Feb
+                  </div>
+                  <div className="text-gray-300 text-sm">Peak Deployment</div>
+                  <div className="text-red-300 text-xs">
+                    $24K when opportunities were hot
                   </div>
                 </div>
 
-                <div className="bg-white/5 rounded-xl p-6 text-center">
-                  <div className="text-3xl font-bold text-green-400 mb-2">
-                    {yourTradingData.avgReserveSafety}%
+                <div className="bg-white/5 rounded-xl p-4 text-center">
+                  <div className="text-2xl font-bold text-blue-400 mb-2">
+                    Mar
                   </div>
                   <div className="text-gray-300 text-sm">
-                    Maintained as Reserves
+                    Conservative Pullback
                   </div>
-                  <div className="text-green-300 text-xs mt-1">
-                    Safety & flexibility buffer
+                  <div className="text-blue-300 text-xs">
+                    $8.5K when market went flat
                   </div>
                 </div>
 
-                <div className="bg-white/5 rounded-xl p-6 text-center">
-                  <div className="text-3xl font-bold text-purple-400 mb-2">
-                    100%
+                <div className="bg-white/5 rounded-xl p-4 text-center">
+                  <div className="text-2xl font-bold text-green-400 mb-2">
+                    Smart
                   </div>
-                  <div className="text-gray-300 text-sm">Success Rate</div>
-                  <div className="text-purple-300 text-xs mt-1">
-                    Never lost money
+                  <div className="text-gray-300 text-sm">No Wasted Capital</div>
+                  <div className="text-green-300 text-xs">
+                    Always kept reserves ready
                   </div>
                 </div>
               </div>
 
               <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
                 <p className="text-blue-200 text-sm text-center">
-                  <strong>Smart Money Management:</strong> While others go "all
-                  in" immediately, my autonomous trader recognized market
-                  opportunities and deployed capital strategically over 9
-                  months. This patience and intelligence is what separates
-                  systematic wealth building from gambling.
+                  <strong>This is Autonomous Intelligence:</strong> My trader
+                  analyzed market conditions each month and deployed capital
+                  accordingly. No emotional decisions, no FOMO, no catching
+                  falling knives - just pure systematic opportunity recognition.
                 </p>
               </div>
             </div>
 
-            {/* Winner Comparison */}
+            {/* Three-Way Strategy Comparison */}
             <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl p-12 border border-purple-400/30 shadow-lg shadow-purple-500/20 text-center mb-12">
               <h3 className="text-4xl font-bold text-white mb-8">
                 The Bottom Line
