@@ -184,7 +184,7 @@ export const DynamicSmartMoneyComparison = () => {
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
       const currentResponse = await fetch(
-        `https://api.coingecko.com/api/v3/simple/price?ids=${cryptoId}&vs_currencies=usd&include_24hr_change=true&include_7d_change=true&include_30d_change=true`,
+        `https://api.coingecko.com/api/v3/simple/price?ids=${cryptoId}&vs_currencies=usd&include_24hr_change=true&include_7d_change=true&include_30d_change=true&include_market_cap=true`,
         { signal: controller.signal }
       );
 
@@ -203,6 +203,9 @@ export const DynamicSmartMoneyComparison = () => {
           `Cryptocurrency "${cryptoId}" not found. Try using the full name (e.g., "bitcoin" instead of "BTC").`
         );
       }
+
+      // Debug: Log the API response to see what data we're getting
+      console.log(`CoinGecko data for ${cryptoId}:`, currentData[cryptoId]);
 
       // Get historical data for your start date
       const startDate = new Date("2025-01-08");
@@ -261,8 +264,8 @@ export const DynamicSmartMoneyComparison = () => {
         startPrice,
         gainSinceStart,
         change24h: currentData[cryptoId].usd_24h_change || 0,
-        change7d: currentData[cryptoId].usd_7d_change || 0,
-        change30d: currentData[cryptoId].usd_30d_change || 0,
+        change7d: currentData[cryptoId].usd_7d_change || null, // null indicates no data
+        change30d: currentData[cryptoId].usd_30d_change || null, // null indicates no data
         daysSinceStart,
       };
 
@@ -536,24 +539,32 @@ export const DynamicSmartMoneyComparison = () => {
                     <div className="text-gray-400 text-sm">7d</div>
                     <div
                       className={`font-bold ${
-                        cryptoData.change7d >= 0
+                        cryptoData.change7d === null
+                          ? "text-gray-500"
+                          : cryptoData.change7d >= 0
                           ? "text-green-400"
                           : "text-red-400"
                       }`}
                     >
-                      {formatPercent(cryptoData.change7d)}
+                      {cryptoData.change7d === null
+                        ? "N/A"
+                        : formatPercent(cryptoData.change7d)}
                     </div>
                   </div>
                   <div className="bg-white/5 rounded-lg p-3">
                     <div className="text-gray-400 text-sm">30d</div>
                     <div
                       className={`font-bold ${
-                        cryptoData.change30d >= 0
+                        cryptoData.change30d === null
+                          ? "text-gray-500"
+                          : cryptoData.change30d >= 0
                           ? "text-green-400"
                           : "text-red-400"
                       }`}
                     >
-                      {formatPercent(cryptoData.change30d)}
+                      {cryptoData.change30d === null
+                        ? "N/A"
+                        : formatPercent(cryptoData.change30d)}
                     </div>
                   </div>
                 </div>
