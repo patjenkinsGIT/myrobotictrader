@@ -35,12 +35,57 @@ export async function onRequest(context) {
 }
 
 // In /functions/api/rss.js, replace the mock function with:
-async function fetchLatestTradingData() {
+async function fetchLatestTradingData(context) {
   const SHEET_ID = context.env.GOOGLE_SHEET_ID;
   const API_KEY = context.env.GOOGLE_API_KEY;
 
-  // rest of function...
+  try {
+    const response = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Calculations!A:G?key=${API_KEY}`
+    );
+
+    if (!response.ok) {
+      throw new Error(`Sheets API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    // Parse your data here (reuse logic from your main hook)
+    // For now, return mock data structure:
+    return {
+      latestMonth: {
+        month: "September",
+        profit: 200.65,
+        trades: 36,
+        deploymentRatio: 39,
+      },
+      totalStats: {
+        totalProfit: 4169.18,
+        totalTrades: 875,
+        avgProfitPerTrade: 4.76,
+        successRate: 100,
+      },
+    };
+  } catch (error) {
+    console.error("RSS data fetch error:", error);
+    // Return fallback data
+    return {
+      latestMonth: {
+        month: "September",
+        profit: 200.65,
+        trades: 36,
+        deploymentRatio: 39,
+      },
+      totalStats: {
+        totalProfit: 4169.18,
+        totalTrades: 875,
+        avgProfitPerTrade: 4.76,
+        successRate: 100,
+      },
+    };
+  }
 }
+
 function generateRSSFeed(data) {
   const baseUrl = "https://myrobotictrader.com";
   const currentDate = new Date();
