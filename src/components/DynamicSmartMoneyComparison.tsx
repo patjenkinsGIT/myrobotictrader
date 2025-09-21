@@ -183,11 +183,10 @@ export const DynamicSmartMoneyComparison = () => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
-      // Replace the CoinGecko fetch in your component with:
-      const currentResponse = await fetch(
-        `https://crypto-api.your-subdomain.workers.dev/?crypto=${cryptoId}`,
-        { signal: controller.signal }
-      );
+      const currentResponse = await fetch(`/api/crypto?crypto=${cryptoId}`, {
+        signal: controller.signal,
+      });
+
       clearTimeout(timeoutId);
 
       if (!currentResponse.ok) {
@@ -280,8 +279,12 @@ export const DynamicSmartMoneyComparison = () => {
       const errorMessage =
         err instanceof Error ? err.message : "Network error occurred";
 
-      // Retry logic
-      if (retries > 0 && !errorMessage.includes("not found")) {
+      // Don't retry CORS errors - they won't resolve with retries
+      if (
+        retries > 0 &&
+        !errorMessage.includes("not found") &&
+        !errorMessage.includes("CORS")
+      ) {
         console.log(`Retrying API call... ${retries} attempts remaining`);
         setTimeout(() => {
           fetchCryptoData(cryptoId, retries - 1);
@@ -289,7 +292,9 @@ export const DynamicSmartMoneyComparison = () => {
         return;
       }
 
-      setError(errorMessage);
+      setError(
+        `CoinGecko API temporarily unavailable. This is a known issue we're working to resolve.`
+      );
     } finally {
       setIsLoading(false);
     }
