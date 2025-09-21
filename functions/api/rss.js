@@ -36,25 +36,11 @@ export async function onRequest(context) {
 
 // In /functions/api/rss.js, replace the mock function with:
 async function fetchLatestTradingData() {
-  const SHEET_ID = "your-google-sheet-id"; // You'll need to hardcode this or use environment variables
-  const API_KEY = "your-google-api-key";
+  const SHEET_ID = context.env.GOOGLE_SHEET_ID;
+  const API_KEY = context.env.GOOGLE_API_KEY;
 
-  try {
-    const response = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Calculations!A:G?key=${API_KEY}`
-    );
-    const data = await response.json();
-
-    // Parse the data using similar logic to your existing hook
-    // Extract monthly data, totals, etc.
-
-    return parsedData;
-  } catch (error) {
-    // Return fallback data if Google Sheets fails
-    return mockData;
-  }
+  // rest of function...
 }
-
 function generateRSSFeed(data) {
   const baseUrl = "https://myrobotictrader.com";
   const currentDate = new Date();
