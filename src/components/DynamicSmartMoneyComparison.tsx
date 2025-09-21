@@ -395,7 +395,7 @@ export const DynamicSmartMoneyComparison = () => {
           </div>
 
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
-            Smart Money vs. "All In" Strategy
+            "All-In" vs "DCA" vs "AI-Enhanced Autonomous Trading"
           </h2>
 
           <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
@@ -826,10 +826,12 @@ export const DynamicSmartMoneyComparison = () => {
 
               <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
                 <p className="text-blue-200 text-sm text-center">
-                  <strong>This is Autonomous Intelligence:</strong> My trader
-                  analyzed market conditions each month and deployed capital
-                  accordingly. No emotional decisions, no FOMO, no catching
-                  falling knives - just pure systematic opportunity recognition.
+                  <strong>This is Autonomous Trading Intelligence:</strong> My
+                  Robotic Trader analyzes market conditions each month and
+                  deployed capital accordingly. No emotional decisions, no FOMO,
+                  no catching falling knives - just pure "Set-It-and-Forget-It"
+                  opportunity recognition. My trader only takes what the market
+                  gives.
                 </p>
               </div>
             </div>
