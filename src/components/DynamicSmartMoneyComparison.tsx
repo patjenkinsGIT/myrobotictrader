@@ -183,11 +183,11 @@ export const DynamicSmartMoneyComparison = () => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
+      // Replace the CoinGecko fetch in your component with:
       const currentResponse = await fetch(
-        `https://api.coingecko.com/api/v3/simple/price?ids=${cryptoId}&vs_currencies=usd&include_24hr_change=true&include_7d_change=true&include_30d_change=true&include_market_cap=true`,
+        `https://crypto-api.your-subdomain.workers.dev/?crypto=${cryptoId}`,
         { signal: controller.signal }
       );
-
       clearTimeout(timeoutId);
 
       if (!currentResponse.ok) {
