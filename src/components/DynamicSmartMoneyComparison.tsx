@@ -807,21 +807,7 @@ export const DynamicSmartMoneyComparison = () => {
                     Safe reserves maintained
                   </p>
                 </div>
-                <div className="bg-white/5 rounded-xl p-6">
-                  <h4 className="text-xl font-bold text-green-400 mb-4">
-                    Intelligent AI Deployment
-                  </h4>
-                  <div className="text-4xl font-bold text-green-400 mb-2 font-mono">
-                    {formatCurrency(comparison.yourWay.realizedProfits)}
-                  </div>
-                  <p className="text-gray-400">Real cash profits</p>
-                  <div className="text-2xl font-bold text-blue-400 mt-2">
-                    {formatCurrency(comparison.yourWay.reserves)}
-                  </div>
-                  <p className="text-blue-300">Smart reserves maintained</p>
-                </div>
               </div>
-
               <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-6">
                 <div className="text-2xl font-bold text-yellow-400 mb-2">
                   {comparison.yourWay.realizedProfits >
