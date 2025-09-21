@@ -1,4 +1,4 @@
-// App.tsx - CLEAN VERSION - No Duplicates
+// App.tsx - CLEAN VERSION - Updated with DynamicSmartMoneyComparison
 import React, { useEffect } from "react";
 import {
   BrowserRouter as Router,
@@ -18,7 +18,8 @@ import { OGImageGenerator } from "./components/OGImageGenerator";
 import { Hero } from "./components/Hero";
 import { MyStory } from "./components/MyStory";
 import { TradingResults } from "./components/TradingResults";
-import { BitcoinComparison } from "./components/BitcoinComparison";
+// 🔥 REPLACED: BitcoinComparison with DynamicSmartMoneyComparison
+import { DynamicSmartMoneyComparison } from "./components/DynamicSmartMoneyComparison";
 import { Features } from "./components/Features";
 import { CallToAction } from "./components/CallToAction";
 import { FAQ } from "./components/FAQ";
@@ -172,12 +173,15 @@ const HomePage = () => {
           }
         }
       />
-      <BitcoinComparison tradingStats={tradingStats} /> <Features />
+      {/* 🔥 REPLACED: BitcoinComparison with DynamicSmartMoneyComparison */}
+      <DynamicSmartMoneyComparison />
+      <Features />
       <CallToAction />
       <FAQ />
     </>
   );
 };
+
 // Main App Component - Single default export
 function App() {
   useEffect(() => {
