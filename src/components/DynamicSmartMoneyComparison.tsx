@@ -145,13 +145,14 @@ export const DynamicSmartMoneyComparison = () => {
   };
 
   // Popular crypto options (verified CoinGecko IDs)
+  // https://api.coingecko.com/api/v3/coins/list
   const popularCryptos: PopularCrypto[] = [
     { id: "bitcoin", name: "Bitcoin", symbol: "BTC" },
     { id: "ethereum", name: "Ethereum", symbol: "ETH" },
     { id: "solana", name: "Solana", symbol: "SOL" },
     { id: "dogecoin", name: "Dogecoin", symbol: "DOGE" },
     { id: "cardano", name: "Cardano", symbol: "ADA" },
-    { id: "polygon", name: "Polygon", symbol: "MATIC" },
+    { id: "ripple", name: "XRP", symbol: "XRP" },
     { id: "chainlink", name: "Chainlink", symbol: "LINK" },
     { id: "avalanche-2", name: "Avalanche", symbol: "AVAX" },
     { id: "polkadot", name: "Polkadot", symbol: "DOT" },
