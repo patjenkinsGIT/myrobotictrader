@@ -793,13 +793,14 @@ export const DynamicSmartMoneyComparison = () => {
               </div>
             </div>
 
-            {/* Three-Way Strategy Comparison */}
+            {/* FIXED: Three-Way Strategy Comparison with ALL strategies */}
             <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl p-12 border border-purple-400/30 shadow-lg shadow-purple-500/20 text-center mb-12">
               <h3 className="text-4xl font-bold text-white mb-8">
                 The Bottom Line
               </h3>
 
-              <div className="grid md:grid-cols-2 gap-8 mb-8">
+              <div className="grid md:grid-cols-3 gap-8 mb-8">
+                {/* ALL IN Results */}
                 <div className="bg-white/5 rounded-xl p-6">
                   <h4 className="text-xl font-bold text-red-400 mb-4">
                     Hypothetical "All In" {cryptoData.symbol}
@@ -820,6 +821,28 @@ export const DynamicSmartMoneyComparison = () => {
                   <p className="text-red-300">Real money made</p>
                 </div>
 
+                {/* DCA Results */}
+                <div className="bg-white/5 rounded-xl p-6">
+                  <h4 className="text-xl font-bold text-yellow-400 mb-4">
+                    Dollar Cost Average {cryptoData.symbol}
+                  </h4>
+                  <div className="text-4xl font-bold mb-2 font-mono">
+                    <span
+                      className={
+                        comparison.dca.unrealizedGain >= 0
+                          ? "text-yellow-400"
+                          : "text-red-400"
+                      }
+                    >
+                      {formatCurrency(comparison.dca.unrealizedGain)}
+                    </span>
+                  </div>
+                  <p className="text-gray-400">Unrealized (paper gains)</p>
+                  <div className="text-2xl font-bold text-red-400 mt-2">$0</div>
+                  <p className="text-red-300">Real money made</p>
+                </div>
+
+                {/* YOUR AI Results */}
                 <div className="bg-white/5 rounded-xl p-6">
                   <h4 className="text-xl font-bold text-green-400 mb-4">
                     Intelligent AI Deployment
@@ -836,24 +859,46 @@ export const DynamicSmartMoneyComparison = () => {
               </div>
 
               <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-6">
+                {/* FIXED: Corrected math comparison */}
                 <div className="text-2xl font-bold text-yellow-400 mb-2">
-                  {comparison.yourWay.realizedProfits >
-                  Math.abs(comparison.allIn.unrealizedGain)
-                    ? `${formatCurrency(
-                        comparison.yourWay.realizedProfits -
-                          Math.abs(comparison.allIn.unrealizedGain)
-                      )} MORE in real money`
-                    : comparison.allIn.unrealizedGain > 0
-                    ? `${formatCurrency(
-                        comparison.allIn.unrealizedGain
-                      )} in paper gains vs ${formatCurrency(
-                        comparison.yourWay.realizedProfits
-                      )} real money`
-                    : `${formatCurrency(
-                        comparison.yourWay.realizedProfits
-                      )} real profit vs ${formatCurrency(
-                        comparison.allIn.unrealizedGain
-                      )} paper losses`}
+                  {(() => {
+                    const yourRealMoney = comparison.yourWay.realizedProfits;
+                    const allInDifference =
+                      yourRealMoney - comparison.allIn.unrealizedGain;
+                    const dcaDifference =
+                      yourRealMoney - comparison.dca.unrealizedGain;
+
+                    // Show the most dramatic comparison
+                    if (Math.abs(allInDifference) > Math.abs(dcaDifference)) {
+                      if (comparison.allIn.unrealizedGain < 0) {
+                        return `${formatCurrency(
+                          yourRealMoney
+                        )} real profit vs ${formatCurrency(
+                          comparison.allIn.unrealizedGain
+                        )} paper losses`;
+                      } else {
+                        return `${formatCurrency(
+                          yourRealMoney
+                        )} REAL MONEY vs ${formatCurrency(
+                          comparison.allIn.unrealizedGain
+                        )} paper gains`;
+                      }
+                    } else {
+                      if (comparison.dca.unrealizedGain < 0) {
+                        return `${formatCurrency(
+                          yourRealMoney
+                        )} real profit vs ${formatCurrency(
+                          comparison.dca.unrealizedGain
+                        )} DCA losses`;
+                      } else {
+                        return `${formatCurrency(
+                          yourRealMoney
+                        )} REAL MONEY vs ${formatCurrency(
+                          comparison.dca.unrealizedGain
+                        )} DCA paper gains`;
+                      }
+                    }
+                  })()}
                 </div>
                 <p className="text-yellow-300 mb-4">
                   Smart money takes real profits. Gamblers chase paper gains.
