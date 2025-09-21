@@ -751,12 +751,12 @@ export const DynamicSmartMoneyComparison = () => {
                 The Bottom Line
               </h3>
 
-              <div className="grid md:grid-cols-2 gap-8 mb-8">
+              <div className="grid md:grid-cols-3 gap-6 mb-8">
                 <div className="bg-white/5 rounded-xl p-6">
-                  <h4 className="text-xl font-bold text-red-400 mb-4">
-                    Hypothetical "All In" {cryptoData.symbol}
+                  <h4 className="text-lg font-bold text-red-400 mb-4">
+                    All In {cryptoData.symbol}
                   </h4>
-                  <div className="text-4xl font-bold mb-2 font-mono">
+                  <div className="text-3xl font-bold mb-2 font-mono">
                     <span
                       className={
                         comparison.allIn.unrealizedGain >= 0
@@ -767,11 +767,46 @@ export const DynamicSmartMoneyComparison = () => {
                       {formatCurrency(comparison.allIn.unrealizedGain)}
                     </span>
                   </div>
-                  <p className="text-gray-400">Unrealized (paper gains)</p>
-                  <div className="text-2xl font-bold text-red-400 mt-2">$0</div>
-                  <p className="text-red-300">Real money made</p>
+                  <p className="text-gray-400 text-sm">Paper gains/losses</p>
+                  <div className="text-xl font-bold text-red-400 mt-2">$0</div>
+                  <p className="text-red-300 text-sm">Real money made</p>
                 </div>
 
+                <div className="bg-white/5 rounded-xl p-6">
+                  <h4 className="text-lg font-bold text-yellow-400 mb-4">
+                    DCA {cryptoData.symbol}
+                  </h4>
+                  <div className="text-3xl font-bold mb-2 font-mono">
+                    <span
+                      className={
+                        comparison.dca.unrealizedGain >= 0
+                          ? "text-yellow-400"
+                          : "text-red-400"
+                      }
+                    >
+                      {formatCurrency(comparison.dca.unrealizedGain)}
+                    </span>
+                  </div>
+                  <p className="text-gray-400 text-sm">Paper gains/losses</p>
+                  <div className="text-xl font-bold text-red-400 mt-2">$0</div>
+                  <p className="text-red-300 text-sm">Real money made</p>
+                </div>
+
+                <div className="bg-white/5 rounded-xl p-6">
+                  <h4 className="text-lg font-bold text-green-400 mb-4">
+                    AI Intelligence
+                  </h4>
+                  <div className="text-3xl font-bold text-green-400 mb-2 font-mono">
+                    {formatCurrency(comparison.yourWay.realizedProfits)}
+                  </div>
+                  <p className="text-gray-400 text-sm">Real cash profits</p>
+                  <div className="text-xl font-bold text-blue-400 mt-2">
+                    {formatCurrency(comparison.yourWay.reserves)}
+                  </div>
+                  <p className="text-blue-300 text-sm">
+                    Safe reserves maintained
+                  </p>
+                </div>
                 <div className="bg-white/5 rounded-xl p-6">
                   <h4 className="text-xl font-bold text-green-400 mb-4">
                     Intelligent AI Deployment
@@ -808,9 +843,9 @@ export const DynamicSmartMoneyComparison = () => {
                       )} paper losses`}
                 </div>
                 <p className="text-yellow-300 mb-4">
-                  Smart money takes real profits. Gamblers chase paper gains.
+                  All-in gambling and mechanical DCA both produce only paper
+                  gains. Smart money generates real income.
                 </p>
-
                 {/* Strategic CTA */}
                 <div className="bg-purple-500/20 rounded-lg p-4 border border-purple-400/30">
                   <p className="text-white font-bold mb-3">
