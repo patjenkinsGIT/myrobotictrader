@@ -14,7 +14,7 @@ export async function onRequest(context) {
 
   try {
     // Fetch your actual trading data (integrate with your Google Sheets)
-    const tradingData = await fetchLatestTradingData();
+    const tradingData = await fetchLatestTradingData(context);
 
     // Generate RSS feed
     const rssXml = generateRSSFeed(tradingData);
