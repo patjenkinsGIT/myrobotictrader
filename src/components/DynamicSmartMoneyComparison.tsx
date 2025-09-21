@@ -54,25 +54,22 @@ export const DynamicSmartMoneyComparison = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Extract your trading data from Google Sheets (using your corrected values)
+  // Extract your trading data with intelligent capital deployment story
   const yourTradingData = {
-    totalDeposited: 28432, // Total capital deposited (corrected from CSV)
+    totalDeposited: 28432, // Total capital deposited over 9 months
     realizedProfits: tradingStats?.totalProfit || 4169, // Real cash profits taken
-    currentOpenPositions: 11421, // Current open positions value (from CSV analysis)
-    safeReserves: 16623, // USDC cash reserves (from CSV analysis)
+    currentOpenPositions: 11421, // Current open positions value
+    safeReserves: 16623, // USDC cash reserves - smart capital allocation
     totalCurrentValue: 28044, // Total portfolio value (positions + reserves)
-    avgTradeSize:
-      Math.round(
-        (tradingStats?.totalProfit || 4169) / (tradingStats?.totalTrades || 875)
-      ) || 175,
+    avgDeploymentRatio: 43, // Average percentage of capital deployed (from report)
+    avgReserveSafety: 57, // Average percentage kept as reserves
     totalTrades: tradingStats?.totalTrades || 875,
     successRate: 100, // Your system has 100% success rate
     timeframe: "9 months",
     startDate: "2025-01-08",
     monthlyAverage: tradingStats?.monthlyAverage || 463,
-    dailyAverage: tradingStats?.dailyAvg || 16.79,
-    bestMonthProfit: tradingStats?.bestMonthProfit || 817.31,
-    roiOnCapital: ((tradingStats?.totalProfit || 4169) / 28432) * 100, // Calculate ROI
+    intelligentDeployment: true, // Key differentiator
+    riskManagement: "Conservative deployment + opportunity recognition",
     isLiveData: tradingStats?.isLiveData || false,
   };
 
@@ -235,9 +232,10 @@ export const DynamicSmartMoneyComparison = () => {
           </h2>
 
           <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-            See how systematic profit-taking and risk management compares to
-            going "all in" on any cryptocurrency. Test with trending coins like
-            ASTER (+1,600%) or established ones like Bitcoin.
+            See how my autonomous trader intelligently deployed capital over
+            time vs. going "all in" immediately. My system waits for
+            opportunities and manages risk - compare against any cryptocurrency
+            to see the smart money advantage.
           </p>
 
           {/* Primary CTA matching your style */}
@@ -401,13 +399,15 @@ export const DynamicSmartMoneyComparison = () => {
                     <h3 className="text-2xl font-bold text-white">
                       All In {cryptoData.symbol}
                     </h3>
-                    <p className="text-red-300">The "YOLO" strategy</p>
+                    <p className="text-red-300">Immediate full deployment</p>
                   </div>
                 </div>
 
                 <div className="relative space-y-4 mb-8">
                   <div className="flex justify-between py-2 border-b border-white/10">
-                    <span className="text-gray-300">Investment (Jan 8):</span>
+                    <span className="text-gray-300">
+                      If I went "All In" (Jan 8):
+                    </span>
                     <span className="text-white font-semibold">
                       {formatCurrency(comparison.allIn.investment)}
                     </span>
@@ -448,8 +448,8 @@ export const DynamicSmartMoneyComparison = () => {
                 <div className="relative bg-red-500/10 border border-red-500/20 rounded-lg p-4">
                   <p className="text-red-300 text-sm">
                     {comparison.allIn.unrealizedGain >= 0
-                      ? "Paper gains aren't real money. Can't take profits without losing position."
-                      : "All losses are unrealized but painful. No reserves for opportunities."}
+                      ? "Hypothetical paper gains. Can't take profits without losing position, plus missed all the steady income along the way."
+                      : "Hypothetical losses plus zero income generated. All capital at risk with no diversification."}
                   </p>
                 </div>
               </div>
@@ -464,15 +464,17 @@ export const DynamicSmartMoneyComparison = () => {
                   </div>
                   <div>
                     <h3 className="text-2xl font-bold text-white">
-                      Smart AI System
+                      Intelligent AI Deployment
                     </h3>
-                    <p className="text-green-300">Systematic wealth building</p>
+                    <p className="text-green-300">
+                      Autonomous opportunity recognition
+                    </p>
                   </div>
                 </div>
 
                 <div className="relative space-y-4 mb-8">
                   <div className="flex justify-between py-2 border-b border-white/10">
-                    <span className="text-gray-300">Investment:</span>
+                    <span className="text-gray-300">My Total Deposits:</span>
                     <span className="text-white font-semibold">
                       {formatCurrency(comparison.yourWay.investment)}
                     </span>
@@ -499,8 +501,10 @@ export const DynamicSmartMoneyComparison = () => {
 
                 <div className="relative bg-green-500/10 border border-green-500/20 rounded-lg p-4">
                   <p className="text-green-300 text-sm mb-3">
-                    Real cash profits + active positions + reserves =
-                    sustainable wealth building. Income regardless of{" "}
+                    Autonomous trader deployed only ~
+                    {yourTradingData.avgDeploymentRatio}% of capital on average,
+                    keeping {yourTradingData.avgReserveSafety}% in reserves.
+                    Generated income while managing risk, regardless of{" "}
                     {cryptoData.symbol} price direction.
                   </p>
 
@@ -521,6 +525,59 @@ export const DynamicSmartMoneyComparison = () => {
               </div>
             </div>
 
+            {/* Capital Deployment Intelligence Section */}
+            <div className="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 backdrop-blur-sm rounded-2xl p-8 border border-blue-400/30 shadow-lg shadow-blue-500/20 mb-12">
+              <h3 className="text-2xl font-bold text-white mb-6 text-center">
+                How My Autonomous Trader Intelligently Deployed Capital
+              </h3>
+
+              <div className="grid md:grid-cols-3 gap-6 mb-6">
+                <div className="bg-white/5 rounded-xl p-6 text-center">
+                  <div className="text-3xl font-bold text-blue-400 mb-2">
+                    {yourTradingData.avgDeploymentRatio}%
+                  </div>
+                  <div className="text-gray-300 text-sm">
+                    Average Capital Deployed
+                  </div>
+                  <div className="text-blue-300 text-xs mt-1">
+                    Only when opportunities arose
+                  </div>
+                </div>
+
+                <div className="bg-white/5 rounded-xl p-6 text-center">
+                  <div className="text-3xl font-bold text-green-400 mb-2">
+                    {yourTradingData.avgReserveSafety}%
+                  </div>
+                  <div className="text-gray-300 text-sm">
+                    Maintained as Reserves
+                  </div>
+                  <div className="text-green-300 text-xs mt-1">
+                    Safety & flexibility buffer
+                  </div>
+                </div>
+
+                <div className="bg-white/5 rounded-xl p-6 text-center">
+                  <div className="text-3xl font-bold text-purple-400 mb-2">
+                    100%
+                  </div>
+                  <div className="text-gray-300 text-sm">Success Rate</div>
+                  <div className="text-purple-300 text-xs mt-1">
+                    Never lost money
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
+                <p className="text-blue-200 text-sm text-center">
+                  <strong>Smart Money Management:</strong> While others go "all
+                  in" immediately, my autonomous trader recognized market
+                  opportunities and deployed capital strategically over 9
+                  months. This patience and intelligence is what separates
+                  systematic wealth building from gambling.
+                </p>
+              </div>
+            </div>
+
             {/* Winner Comparison */}
             <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl p-12 border border-purple-400/30 shadow-lg shadow-purple-500/20 text-center mb-12">
               <h3 className="text-4xl font-bold text-white mb-8">
@@ -530,7 +587,7 @@ export const DynamicSmartMoneyComparison = () => {
               <div className="grid md:grid-cols-2 gap-8 mb-8">
                 <div className="bg-white/5 rounded-xl p-6">
                   <h4 className="text-xl font-bold text-red-400 mb-4">
-                    All In {cryptoData.symbol}
+                    Hypothetical "All In" {cryptoData.symbol}
                   </h4>
                   <div className="text-4xl font-bold mb-2 font-mono">
                     <span
@@ -550,7 +607,7 @@ export const DynamicSmartMoneyComparison = () => {
 
                 <div className="bg-white/5 rounded-xl p-6">
                   <h4 className="text-xl font-bold text-green-400 mb-4">
-                    Smart AI System
+                    Intelligent AI Deployment
                   </h4>
                   <div className="text-4xl font-bold text-green-400 mb-2 font-mono">
                     {formatCurrency(comparison.yourWay.realizedProfits)}
@@ -559,7 +616,7 @@ export const DynamicSmartMoneyComparison = () => {
                   <div className="text-2xl font-bold text-blue-400 mt-2">
                     {formatCurrency(comparison.yourWay.reserves)}
                   </div>
-                  <p className="text-blue-300">Safe reserves</p>
+                  <p className="text-blue-300">Smart reserves maintained</p>
                 </div>
               </div>
 
