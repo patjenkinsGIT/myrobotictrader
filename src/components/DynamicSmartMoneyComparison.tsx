@@ -145,7 +145,6 @@ export const DynamicSmartMoneyComparison = () => {
   };
 
   // Popular crypto options (verified CoinGecko IDs)
-  // https://api.coingecko.com/api/v3/coins/list
   const popularCryptos: PopularCrypto[] = [
     { id: "bitcoin", name: "Bitcoin", symbol: "BTC" },
     { id: "ethereum", name: "Ethereum", symbol: "ETH" },
@@ -842,62 +841,84 @@ export const DynamicSmartMoneyComparison = () => {
                 The Bottom Line
               </h3>
 
-              <div className="grid md:grid-cols-3 gap-8 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 {/* ALL IN Results */}
-                <div className="bg-white/5 rounded-xl p-6">
-                  <h4 className="text-xl font-bold text-red-400 mb-4">
-                    Hypothetical "All In" {cryptoData.symbol}
-                  </h4>
-                  <div className="text-4xl font-bold mb-2 font-mono">
-                    <span
-                      className={
-                        comparison.allIn.unrealizedGain >= 0
-                          ? "text-orange-400"
-                          : "text-red-400"
-                      }
-                    >
-                      {formatCurrency(comparison.allIn.unrealizedGain)}
-                    </span>
+                <div className="bg-white/5 rounded-xl p-4 md:p-6 min-h-[200px] flex flex-col justify-between">
+                  <div>
+                    <h4 className="text-lg md:text-xl font-bold text-red-400 mb-3 md:mb-4">
+                      Hypothetical "All In" {cryptoData.symbol}
+                    </h4>
+                    <div className="text-2xl md:text-4xl font-bold mb-2 font-mono">
+                      <span
+                        className={
+                          comparison.allIn.unrealizedGain >= 0
+                            ? "text-orange-400"
+                            : "text-red-400"
+                        }
+                      >
+                        {formatCurrency(comparison.allIn.unrealizedGain)}
+                      </span>
+                    </div>
+                    <p className="text-gray-400 text-sm">
+                      Unrealized (paper gains)
+                    </p>
                   </div>
-                  <p className="text-gray-400">Unrealized (paper gains)</p>
-                  <div className="text-2xl font-bold text-red-400 mt-2">$0</div>
-                  <p className="text-red-300">Real money made</p>
+                  <div className="mt-4">
+                    <div className="text-xl md:text-2xl font-bold text-red-400">
+                      $0
+                    </div>
+                    <p className="text-red-300 text-sm">Real money made</p>
+                  </div>
                 </div>
 
                 {/* DCA Results */}
-                <div className="bg-white/5 rounded-xl p-6">
-                  <h4 className="text-xl font-bold text-yellow-400 mb-4">
-                    Dollar Cost Average {cryptoData.symbol}
-                  </h4>
-                  <div className="text-4xl font-bold mb-2 font-mono">
-                    <span
-                      className={
-                        comparison.dca.unrealizedGain >= 0
-                          ? "text-yellow-400"
-                          : "text-red-400"
-                      }
-                    >
-                      {formatCurrency(comparison.dca.unrealizedGain)}
-                    </span>
+                <div className="bg-white/5 rounded-xl p-4 md:p-6 min-h-[200px] flex flex-col justify-between">
+                  <div>
+                    <h4 className="text-lg md:text-xl font-bold text-yellow-400 mb-3 md:mb-4">
+                      Dollar Cost Average {cryptoData.symbol}
+                    </h4>
+                    <div className="text-2xl md:text-4xl font-bold mb-2 font-mono">
+                      <span
+                        className={
+                          comparison.dca.unrealizedGain >= 0
+                            ? "text-yellow-400"
+                            : "text-red-400"
+                        }
+                      >
+                        {formatCurrency(comparison.dca.unrealizedGain)}
+                      </span>
+                    </div>
+                    <p className="text-gray-400 text-sm">
+                      Unrealized (paper gains)
+                    </p>
                   </div>
-                  <p className="text-gray-400">Unrealized (paper gains)</p>
-                  <div className="text-2xl font-bold text-red-400 mt-2">$0</div>
-                  <p className="text-red-300">Real money made</p>
+                  <div className="mt-4">
+                    <div className="text-xl md:text-2xl font-bold text-red-400">
+                      $0
+                    </div>
+                    <p className="text-red-300 text-sm">Real money made</p>
+                  </div>
                 </div>
 
                 {/* YOUR AI Results */}
-                <div className="bg-white/5 rounded-xl p-6">
-                  <h4 className="text-xl font-bold text-green-400 mb-4">
-                    Intelligent AI Deployment
-                  </h4>
-                  <div className="text-4xl font-bold text-green-400 mb-2 font-mono">
-                    {formatCurrency(comparison.yourWay.realizedProfits)}
+                <div className="bg-white/5 rounded-xl p-4 md:p-6 min-h-[200px] flex flex-col justify-between">
+                  <div>
+                    <h4 className="text-lg md:text-xl font-bold text-green-400 mb-3 md:mb-4">
+                      Intelligent AI Deployment
+                    </h4>
+                    <div className="text-2xl md:text-4xl font-bold text-green-400 mb-2 font-mono">
+                      {formatCurrency(comparison.yourWay.realizedProfits)}
+                    </div>
+                    <p className="text-gray-400 text-sm">Real cash profits</p>
                   </div>
-                  <p className="text-gray-400">Real cash profits</p>
-                  <div className="text-2xl font-bold text-blue-400 mt-2">
-                    {formatCurrency(comparison.yourWay.reserves)}
+                  <div className="mt-4">
+                    <div className="text-xl md:text-2xl font-bold text-blue-400">
+                      {formatCurrency(comparison.yourWay.reserves)}
+                    </div>
+                    <p className="text-blue-300 text-sm">
+                      Smart reserves maintained
+                    </p>
                   </div>
-                  <p className="text-blue-300">Smart reserves maintained</p>
                 </div>
               </div>
 
