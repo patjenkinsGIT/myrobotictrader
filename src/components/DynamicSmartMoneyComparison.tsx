@@ -170,7 +170,6 @@ export const DynamicSmartMoneyComparison = () => {
       // Check cache first to prevent unnecessary API calls
       const cached = cryptoCache.get(cryptoId);
       if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
-        console.log(`Using cached data for ${cryptoId}`);
         setCryptoData(cached.data);
         setIsLoading(false);
         return;
@@ -204,7 +203,6 @@ export const DynamicSmartMoneyComparison = () => {
       }
 
       // Debug: Log the API response to see what data we're getting
-      console.log(`CoinGecko data for ${cryptoId}:`, currentData[cryptoId]);
 
       // Get historical data for your start date
       const startDate = new Date("2025-01-08");
@@ -230,9 +228,7 @@ export const DynamicSmartMoneyComparison = () => {
           const historicalData = await historicalResponse.json();
           startPrice = historicalData.market_data?.current_price?.usd;
         }
-      } catch (historicalError) {
-        console.log("Historical data not available, using estimation");
-      }
+      } catch (historicalError) {}
 
       const currentPrice: number = currentData[cryptoId].usd;
 
@@ -285,7 +281,6 @@ export const DynamicSmartMoneyComparison = () => {
         !errorMessage.includes("not found") &&
         !errorMessage.includes("CORS")
       ) {
-        console.log(`Retrying API call... ${retries} attempts remaining`);
         setTimeout(() => {
           fetchCryptoData(cryptoId, retries - 1);
         }, 1000 * (4 - retries)); // Exponential backoff

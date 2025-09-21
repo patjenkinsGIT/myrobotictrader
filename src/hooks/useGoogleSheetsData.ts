@@ -1,4 +1,4 @@
-// Enhanced useGoogleSheetsData.ts - Complete Dynamic Version
+// Enhanced useGoogleSheetsData.ts - Production Version
 
 import { useState, useEffect, useCallback } from "react";
 import { tradingDataCache } from "../utils/smartCache";
@@ -74,15 +74,10 @@ export const useGoogleSheetsData = () => {
 
       const efficiencyData: CapitalEfficiencyData[] = [];
 
-      console.log("Parsing CapitalEfficiency rows:", rows.length);
-      console.log("First few rows:", rows.slice(0, 3));
-
       // Start from row 2 (index 2) since row 0 is titles and row 1 is headers
       for (let i = 2; i < rows.length; i++) {
         const row = rows[i];
         if (!row || row.length < 10) continue; // Need minimum columns
-
-        console.log(`Row ${i}:`, row);
 
         // Based on your Google Sheets structure: A=Month, B=Total_Capital, C=Deployed, etc.
         const month = row[0];
@@ -117,14 +112,6 @@ export const useGoogleSheetsData = () => {
 
         // Only process rows with valid data
         if (month && month.toString().startsWith("2025")) {
-          console.log("Adding month:", month, {
-            totalCapitalAvailable,
-            capitalDeployed,
-            bitcoinValue,
-            bitcoinReturn,
-            aiProfit,
-          });
-
           efficiencyData.push({
             month: month.toString(),
             totalCapitalAvailable,
@@ -143,29 +130,17 @@ export const useGoogleSheetsData = () => {
         }
       }
 
-      console.log("Final efficiency data:", efficiencyData);
       return efficiencyData;
     },
     []
   );
 
-  // DYNAMIC: Parse your actual Calculations data correctly
+  // Parse your actual Calculations data correctly
   const parseCalculationsData = useCallback(
     (rows: string[][], fetchTimestamp: string): TradingStats => {
-      console.log("🔍 Parsing Calculations data - Total rows:", rows.length);
-
       if (!rows || rows.length < 3) {
-        console.log("❌ Not enough rows, using mock data");
         return getMockTradingStatsBase();
       }
-
-      // Enhanced logging to see EXACT data structure
-      console.log("📊 DETAILED Google Sheets data structure:");
-      rows.forEach((row, index) => {
-        if (index < rows.length) {
-          console.log(`Row ${index} (${row.length} columns):`, row);
-        }
-      });
 
       // Find the Grand Total row (should be the last row with 7 columns)
       let grandTotalRow = null;
@@ -184,25 +159,9 @@ export const useGoogleSheetsData = () => {
         }
       }
 
-      console.log(
-        "💰 DETAILED Grand Total Row (index " + grandTotalIndex + "):",
-        grandTotalRow
-      );
-
       if (!grandTotalRow || grandTotalRow.length < 6) {
-        console.log("❌ Grand Total row not found or incomplete");
         return getMockTradingStatsBase();
       }
-
-      // Parse each value individually with detailed logging
-      console.log("🔍 Parsing individual Grand Total values:");
-      console.log("  Column 0 (should be 'Grand Total'):", grandTotalRow[0]);
-      console.log("  Column 1 (Total Profit):", grandTotalRow[1]);
-      console.log("  Column 2 (Total Trades):", grandTotalRow[2]);
-      console.log("  Column 3 (Avg Per Trade):", grandTotalRow[3]);
-      console.log("  Column 4 (Monthly Avg):", grandTotalRow[4]);
-      console.log("  Column 5 (Daily Avg):", grandTotalRow[5]);
-      console.log("  Column 6 (Best Month):", grandTotalRow[6]);
 
       const totalProfit =
         parseFloat(grandTotalRow[1]?.toString().replace(/[$,]/g, "")) || 0;
@@ -217,46 +176,22 @@ export const useGoogleSheetsData = () => {
       const bestMonthProfit =
         parseFloat(grandTotalRow[6]?.toString().replace(/[$,]/g, "")) || 0;
 
-      // Enhanced logging with actual values
-      console.log("💰 PARSED Grand Total values with numbers:");
-      console.log("  totalProfit:", totalProfit);
-      console.log("  totalTrades:", totalTrades);
-      console.log("  avgProfitPerTrade:", avgProfitPerTrade);
-      console.log("  monthlyAverage:", monthlyAverage);
-      console.log("  dailyAvg:", dailyAvg);
-      console.log("  bestMonthProfit:", bestMonthProfit);
-
       // Verify the parsing worked
       if (totalProfit === 0 || monthlyAverage === 0) {
-        console.log(
-          "❌ WARNING: Some parsed values are 0, check the data format"
-        );
-        console.log("Raw values for debugging:");
-        console.log("  Raw totalProfit:", grandTotalRow[1]);
-        console.log("  Raw monthlyAverage:", grandTotalRow[4]);
-      } else {
-        console.log("✅ All values parsed successfully!");
+        console.warn("Some parsed values are 0, check data format");
       }
 
-      // DYNAMIC: Enhanced monthly data parsing - handle any number of months
+      // Enhanced monthly data parsing - handle any number of months
       const monthlyData: TradingDataPoint[] = [];
-
-      console.log("🔍 Parsing monthly data rows (DYNAMIC):");
 
       // Parse ALL rows except the header (row 0) and Grand Total (last row)
       for (let i = 1; i < grandTotalIndex; i++) {
         const row = rows[i];
         if (row && row.length >= 3) {
-          console.log(`  Row ${i} details:`, row);
-
           const monthRaw = row[0]?.toString().trim();
           const profit =
             parseFloat(row[1]?.toString().replace(/[$,]/g, "")) || 0;
           const trades = parseInt(row[2]?.toString().replace(/[,]/g, "")) || 0;
-
-          console.log(
-            `    Raw month: "${monthRaw}", profit: ${profit}, trades: ${trades}`
-          );
 
           // Only process rows with valid month data (skip empty rows and Grand Total)
           if (
@@ -296,25 +231,14 @@ export const useGoogleSheetsData = () => {
               shortMonth = monthRaw.substring(0, 3);
             }
 
-            console.log(`    Converted "${monthRaw}" to "${shortMonth}"`);
-
             monthlyData.push({
               month: shortMonth,
               profit,
               trades,
             });
-
-            console.log(
-              `📅 Added month data: ${shortMonth} = $${profit.toFixed(2)}`
-            );
           }
         }
       }
-
-      console.log(
-        `📈 Final monthly data array (${monthlyData.length} months):`,
-        monthlyData
-      );
 
       return {
         totalProfit,
@@ -399,7 +323,6 @@ export const useGoogleSheetsData = () => {
             `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${EFFICIENCY_TAB}!${EFFICIENCY_RANGE}?key=${API_KEY}`
           );
         } catch (efficiencyError) {
-          console.log("CapitalEfficiency tab not found, using fallback data");
           efficiencyResponse = null;
         }
 

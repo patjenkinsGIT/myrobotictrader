@@ -30,7 +30,6 @@ export async function onRequest(context) {
   const cached = cache.get(cacheKey);
 
   if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
-    console.log(`Cache hit for ${cryptoId}`);
     return new Response(JSON.stringify(cached.data), {
       headers: {
         ...corsHeaders,
@@ -41,8 +40,6 @@ export async function onRequest(context) {
   }
 
   try {
-    console.log(`Fetching fresh data for ${cryptoId}`);
-
     // Call CoinGecko API server-side
     const coingeckoUrl = `https://api.coingecko.com/api/v3/simple/price?ids=${cryptoId}&vs_currencies=usd&include_24hr_change=true&include_7d_change=true&include_30d_change=true&include_market_cap=true`;
 
@@ -89,11 +86,8 @@ export async function onRequest(context) {
       },
     });
   } catch (error) {
-    console.error(`Error fetching ${cryptoId}:`, error.message);
-
     // Return cached data if available during errors
     if (cached) {
-      console.log(`Returning stale cache for ${cryptoId} due to error`);
       return new Response(JSON.stringify(cached.data), {
         headers: {
           ...corsHeaders,
