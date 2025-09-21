@@ -50,6 +50,10 @@ interface Comparison {
   };
 }
 
+// Simple cache to prevent API abuse
+const cryptoCache = new Map<string, { data: CryptoData; timestamp: number }>();
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
 export const DynamicSmartMoneyComparison = () => {
   // Get live trading data from your Google Sheets
   const { tradingStats } = useGoogleSheetsData();
@@ -60,6 +64,7 @@ export const DynamicSmartMoneyComparison = () => {
   const [customCrypto, setCustomCrypto] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isThrottled, setIsThrottled] = useState<boolean>(false);
 
   // Monthly capital deployment data (your actual intelligent deployment)
   const monthlyDeployment = [
@@ -161,8 +166,17 @@ export const DynamicSmartMoneyComparison = () => {
       setIsLoading(true);
       setError(null);
 
-      // Add small delay to prevent rate limiting
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      // Check cache first to prevent unnecessary API calls
+      const cached = cryptoCache.get(cryptoId);
+      if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+        console.log(`Using cached data for ${cryptoId}`);
+        setCryptoData(cached.data);
+        setIsLoading(false);
+        return;
+      }
+
+      // Add delay to prevent rate limiting (increased for safety)
+      await new Promise((resolve) => setTimeout(resolve, 300));
 
       // Get current price and basic info with timeout
       const controller = new AbortController();
@@ -234,7 +248,7 @@ export const DynamicSmartMoneyComparison = () => {
 
       const gainSinceStart = (currentPrice - startPrice) / startPrice;
 
-      setCryptoData({
+      const newCryptoData = {
         id: cryptoId,
         name:
           popularCryptos.find((c) => c.id === cryptoId)?.name ||
@@ -249,7 +263,15 @@ export const DynamicSmartMoneyComparison = () => {
         change7d: currentData[cryptoId].usd_7d_change || 0,
         change30d: currentData[cryptoId].usd_30d_change || 0,
         daysSinceStart,
+      };
+
+      // Cache the result to prevent repeated API calls
+      cryptoCache.set(cryptoId, {
+        data: newCryptoData,
+        timestamp: Date.now(),
       });
+
+      setCryptoData(newCryptoData);
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Network error occurred";
@@ -326,10 +348,20 @@ export const DynamicSmartMoneyComparison = () => {
   };
 
   const handleCustomCrypto = async (): Promise<void> => {
-    if (customCrypto.trim()) {
-      await fetchCryptoData(customCrypto.toLowerCase().trim());
-      setSelectedCrypto(customCrypto.toLowerCase().trim());
+    if (customCrypto.trim() && !isThrottled) {
+      handleCryptoSelection(customCrypto.toLowerCase().trim());
     }
+  };
+
+  // Throttled crypto selection to prevent rapid clicking and API abuse
+  const handleCryptoSelection = (cryptoId: string): void => {
+    if (isThrottled || cryptoId === selectedCrypto) return;
+
+    setSelectedCrypto(cryptoId);
+    setIsThrottled(true);
+
+    // 1.5 second cooldown between selections
+    setTimeout(() => setIsThrottled(false), 1500);
   };
 
   // CTA tracking
@@ -405,10 +437,13 @@ export const DynamicSmartMoneyComparison = () => {
             {popularCryptos.map((crypto) => (
               <button
                 key={crypto.id}
-                onClick={() => setSelectedCrypto(crypto.id)}
+                onClick={() => handleCryptoSelection(crypto.id)}
+                disabled={isThrottled}
                 className={`p-3 rounded-lg text-sm font-medium transition-all duration-300 ${
                   selectedCrypto === crypto.id
                     ? "bg-purple-600 text-white border-purple-500"
+                    : isThrottled
+                    ? "bg-white/5 text-gray-500 border-white/20 cursor-not-allowed opacity-50"
                     : "bg-white/5 text-gray-300 hover:bg-white/10 border-white/20"
                 } border`}
               >
@@ -429,7 +464,12 @@ export const DynamicSmartMoneyComparison = () => {
             />
             <button
               onClick={handleCustomCrypto}
-              className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors"
+              disabled={isThrottled}
+              className={`px-4 py-2 rounded-lg transition-colors ${
+                isThrottled
+                  ? "bg-purple-400 text-white cursor-not-allowed opacity-50"
+                  : "bg-purple-600 hover:bg-purple-700 text-white"
+              }`}
             >
               <Search className="w-5 h-5" />
             </button>
