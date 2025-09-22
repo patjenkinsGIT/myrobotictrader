@@ -1,6 +1,19 @@
 // /functions/api/metric-card.js
 // Generates trading metric cards as images for social media
+// Add this at the top of your existing metric-card.js function
+const url = new URL(context.request.url);
+const wantsSVG =
+  url.pathname.includes(".png") || url.searchParams.get("format") === "svg";
 
+if (wantsSVG) {
+  const svg = generateMetricCardSVG(tradingData);
+  return new Response(svg, {
+    headers: {
+      ...corsHeaders,
+      "Content-Type": "image/svg+xml",
+    },
+  });
+}
 export async function onRequest(context) {
   const { request } = context;
   const url = new URL(request.url);
