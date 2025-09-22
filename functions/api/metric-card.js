@@ -1,7 +1,7 @@
 export default {
   async fetch(request, env, ctx) {
     try {
-      // Get your live trading data from Google Sheets
+      // Get your live trading data from Google Sheets-
       const GOOGLE_SHEET_ID = env.VITE_GOOGLE_SHEET_ID || "your-sheet-id";
       const GOOGLE_API_KEY = env.VITE_GOOGLE_API_KEY || "your-api-key";
 
