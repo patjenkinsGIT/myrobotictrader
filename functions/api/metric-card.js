@@ -174,19 +174,24 @@ function generateEnhancedMetricCardHtml(data, month, type) {
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
+            gap: 20px;
             margin-top: auto;
+            margin-bottom: 20px;
         }
         
         .stat-item {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 16px;
-            padding: 16px;
+            padding: 18px 12px;
             text-align: center;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         
         .stat-item::before {
@@ -197,38 +202,35 @@ function generateEnhancedMetricCardHtml(data, month, type) {
             right: 0;
             height: 2px;
             background: linear-gradient(90deg, #8b5cf6 0%, #3b82f6 100%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .stat-item:hover::before {
-            opacity: 1;
+            opacity: 0.7;
         }
         
         .stat-value {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
             color: white;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
             font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+            line-height: 1;
         }
         
         .stat-label {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.6);
-            font-weight: 500;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.08em;
         }
         
         .watermark {
             position: absolute;
-            bottom: 16px;
+            bottom: 12px;
             right: 20px;
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 12px;
+            color: rgba(255, 255, 255, 0.35);
+            font-size: 11px;
             font-weight: 500;
             letter-spacing: 0.025em;
+            z-index: 10;
         }
     </style>
 </head>
