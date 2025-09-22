@@ -74,8 +74,8 @@ async function fetchRSSItems(context) {
         const publishDate = row[6] ? new Date(row[6]) : new Date();
         const priority = row[7] ? parseInt(row[7]) : 3;
 
-        // Only include unpublished items
-        if (published !== true && published !== "TRUE" && published !== "Yes") {
+        // FIXED: Only include PUBLISHED items (was backwards before)
+        if (published === true || published === "TRUE" || published === "Yes") {
           items.push({
             postType,
             period,
