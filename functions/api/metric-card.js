@@ -82,7 +82,7 @@ function generateEnhancedMetricCardHtml(data, month, type) {
         
         .metric-card {
             width: 600px;
-            height: 315px;
+            height: 350px;
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -110,7 +110,7 @@ function generateEnhancedMetricCardHtml(data, month, type) {
         .header {
             display: flex;
             align-items: center;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             position: relative;
         }
         
@@ -147,11 +147,12 @@ function generateEnhancedMetricCardHtml(data, month, type) {
         
         .main-metric {
             text-align: center;
-            margin: 24px 0 32px 0;
+            margin: 20px 0 25px 0;
+            flex-shrink: 0;
         }
         
         .profit-amount {
-            font-size: 64px;
+            font-size: 60px;
             font-weight: 800;
             background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
             -webkit-background-clip: text;
@@ -165,7 +166,7 @@ function generateEnhancedMetricCardHtml(data, month, type) {
         
         .profit-label {
             color: rgba(255, 255, 255, 0.8);
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
             letter-spacing: 0.025em;
             text-transform: uppercase;
@@ -174,21 +175,21 @@ function generateEnhancedMetricCardHtml(data, month, type) {
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
+            gap: 18px;
             margin-top: auto;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
         
         .stat-item {
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 16px;
-            padding: 18px 12px;
+            padding: 16px 12px;
             text-align: center;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            min-height: 80px;
+            min-height: 70px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -206,28 +207,29 @@ function generateEnhancedMetricCardHtml(data, month, type) {
         }
         
         .stat-value {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
             color: white;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
-            line-height: 1;
+            line-height: 1.1;
         }
         
         .stat-label {
-            font-size: 11px;
+            font-size: 10px;
             color: rgba(255, 255, 255, 0.7);
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.08em;
+            line-height: 1.2;
         }
         
         .watermark {
             position: absolute;
-            bottom: 12px;
+            bottom: 8px;
             right: 20px;
             color: rgba(255, 255, 255, 0.35);
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 500;
             letter-spacing: 0.025em;
             z-index: 10;
