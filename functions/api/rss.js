@@ -1,5 +1,5 @@
 // /functions/api/rss.js
-// Updated RSS feed that reads from the RSS Feed tab in Google Sheets
+// Enhanced RSS feed with image support for N8N automation
 
 export async function onRequest(context) {
   const corsHeaders = {
@@ -16,8 +16,8 @@ export async function onRequest(context) {
     // Fetch RSS items from Google Sheets RSS Feed tab
     const rssItems = await fetchRSSItems(context);
 
-    // Generate RSS feed from the sheet data
-    const rssXml = generateRSSFeedFromSheet(rssItems);
+    // Generate RSS feed with image support
+    const rssXml = generateRSSFeedWithImages(rssItems, context);
 
     return new Response(rssXml, {
       headers: {
@@ -39,9 +39,9 @@ async function fetchRSSItems(context) {
   const API_KEY = context.env.GOOGLE_API_KEY;
 
   try {
-    // Fetch from RSS Feed tab (columns A through H)
+    // Fetch from RSS Feed tab (columns A through J to include new image column)
     const response = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/RSS Feed!A:H?key=${API_KEY}`
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/RSS Feed!A:J?key=${API_KEY}`
     );
 
     if (!response.ok) {
@@ -73,8 +73,10 @@ async function fetchRSSItems(context) {
         const published = row[5];
         const publishDate = row[6] ? new Date(row[6]) : new Date();
         const priority = row[7] ? parseInt(row[7]) : 3;
+        const posted = row[8] || false; // Posted to X column
+        const imageUrl = row[9] || null; // New image URL column
 
-        // FIXED: Only include PUBLISHED items (was backwards before)
+        // Only include PUBLISHED items (fixed the logic from before)
         if (published === true || published === "TRUE" || published === "Yes") {
           items.push({
             postType,
@@ -84,6 +86,8 @@ async function fetchRSSItems(context) {
             guid,
             publishDate,
             priority,
+            posted,
+            imageUrl, // Include image URL
           });
         }
       }
@@ -113,22 +117,32 @@ async function fetchRSSItems(context) {
         guid: `fallback-${Date.now()}`,
         publishDate: new Date(),
         priority: 1,
+        posted: false,
+        imageUrl: null,
       },
     ];
   }
 }
 
-function generateRSSFeedFromSheet(items) {
+function generateRSSFeedWithImages(items, context) {
   const baseUrl = "https://myrobotictrader.com";
   const currentDate = new Date();
   const pubDate = currentDate.toUTCString();
 
-  // Generate RSS XML items from sheet data
+  // Generate RSS XML items with image support
   const rssItems = items
     .map((item) => {
       const itemPubDate = item.publishDate
         ? new Date(item.publishDate).toUTCString()
         : pubDate;
+
+      // Determine image URL - use specified image or default to metric card
+      const imageUrl = item.imageUrl || `${baseUrl}/api/metric-card?format=svg`;
+
+      // Create image enclosure tag for RSS
+      const imageEnclosure = imageUrl
+        ? `<enclosure url="${imageUrl}" type="image/svg+xml" length="1000"/>`
+        : "";
 
       return `
     <item>
@@ -145,6 +159,8 @@ function generateRSSFeedFromSheet(items) {
       <guid isPermaLink="false">${item.guid}</guid>
       <pubDate>${itemPubDate}</pubDate>
       <category>${item.postType}</category>
+      ${imageEnclosure}
+      <imageUrl>${imageUrl}</imageUrl>
     </item>`;
     })
     .join("");
