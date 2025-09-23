@@ -1,5 +1,5 @@
 // /functions/api/post-to-x.js
-// Direct X API posting function - eliminates need for IFTTT
+// Direct X API posting function with OAuth 1.0a authentication
 
 export async function onRequest(context) {
   const corsHeaders = {
@@ -73,7 +73,7 @@ async function getApprovedRSSItems(context) {
       const row = rows[i];
       if (row && row.length >= 7) {
         const published = row[5]; // Published column
-        const posted = row[8] || false; // Posted to X column (new)
+        const posted = row[8] || false; // Posted to X column
 
         // Only process published items that haven't been posted yet
         if ((published === true || published === "TRUE") && !posted) {
@@ -99,10 +99,10 @@ async function getApprovedRSSItems(context) {
 
 async function postToX(context, item) {
   // X API credentials from environment variables
-  const X_API_KEY = context.env.X_API_KEY;
-  const X_API_SECRET = context.env.X_API_SECRET;
-  const X_ACCESS_TOKEN = context.env.X_ACCESS_TOKEN;
-  const X_ACCESS_TOKEN_SECRET = context.env.X_ACCESS_TOKEN_SECRET;
+  const consumerKey = context.env.X_CONSUMER_KEY;
+  const consumerSecret = context.env.X_CONSUMER_SECRET;
+  const accessToken = context.env.X_ACCESS_TOKEN;
+  const accessTokenSecret = context.env.X_ACCESS_TOKEN_SECRET;
 
   // Create tweet content
   const tweetText = `${item.title}
@@ -114,40 +114,52 @@ ${item.description}
 
 #AITrading #CryptoProfit #PassiveIncome`;
 
-  // First, upload the image
-  let mediaId = null;
-  try {
-    mediaId = await uploadImageToX(context, {
-      X_API_KEY,
-      X_API_SECRET,
-      X_ACCESS_TOKEN,
-      X_ACCESS_TOKEN_SECRET,
-    });
-  } catch (error) {
-    console.log("Image upload failed, posting without image:", error);
-  }
-
-  // Post tweet with or without image
+  // Tweet data for API v2
   const tweetData = {
     text: tweetText,
   };
 
-  if (mediaId) {
-    tweetData.media = { media_ids: [mediaId] };
+  // First, try to upload image
+  let mediaId = null;
+  try {
+    mediaId = await uploadImageToX(context, {
+      consumerKey,
+      consumerSecret,
+      accessToken,
+      accessTokenSecret,
+    });
+
+    if (mediaId) {
+      tweetData.media = { media_ids: [mediaId] };
+    }
+  } catch (error) {
+    console.log("Image upload failed, posting without image:", error);
   }
 
-  // Use Twitter API v2 to post tweet
-  const tweetResponse = await fetch("https://api.twitter.com/2/tweets", {
+  // Generate OAuth signature for tweet posting
+  const url = "https://api.twitter.com/2/tweets";
+  const method = "POST";
+
+  const oauthHeader = generateOAuthHeader(method, url, {
+    consumerKey,
+    consumerSecret,
+    accessToken,
+    accessTokenSecret,
+  });
+
+  // Post tweet
+  const tweetResponse = await fetch(url, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${context.env.X_BEARER_TOKEN}`,
+      Authorization: oauthHeader,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(tweetData),
   });
 
   if (!tweetResponse.ok) {
-    throw new Error(`X API error: ${tweetResponse.status}`);
+    const errorText = await tweetResponse.text();
+    throw new Error(`X API error: ${tweetResponse.status} - ${errorText}`);
   }
 
   const result = await tweetResponse.json();
@@ -164,53 +176,126 @@ async function uploadImageToX(context, credentials) {
     new URL(context.request.url).origin
   }/api/metric-card?format=svg`;
   const svgResponse = await fetch(svgUrl);
+
+  if (!svgResponse.ok) {
+    throw new Error("Failed to fetch metric card SVG");
+  }
+
   const svgContent = await svgResponse.text();
 
-  // Convert SVG to PNG using a simple service or return SVG directly
-  // For now, let's try uploading the SVG directly
+  // Convert SVG to base64 for upload
   const svgBuffer = new TextEncoder().encode(svgContent);
+  const base64SVG = btoa(String.fromCharCode(...svgBuffer));
 
-  // Upload to X using media upload API
-  const uploadResponse = await fetch(
-    "https://upload.twitter.com/1.1/media/upload.json",
-    {
-      method: "POST",
-      headers: {
-        Authorization: createOAuthHeader(
-          "POST",
-          "https://upload.twitter.com/1.1/media/upload.json",
-          credentials
-        ),
-        "Content-Type": "multipart/form-data",
-      },
-      body: createMediaUploadBody(svgBuffer, "image/svg+xml"),
-    }
-  );
+  // Upload to X using media upload API (v1.1)
+  const uploadUrl = "https://upload.twitter.com/1.1/media/upload.json";
+  const method = "POST";
+
+  const oauthHeader = generateOAuthHeader(method, uploadUrl, credentials);
+
+  // Create form data for media upload
+  const formData = new FormData();
+  formData.append("media_data", base64SVG);
+  formData.append("media_category", "tweet_image");
+
+  const uploadResponse = await fetch(uploadUrl, {
+    method: "POST",
+    headers: {
+      Authorization: oauthHeader,
+    },
+    body: formData,
+  });
 
   if (!uploadResponse.ok) {
-    throw new Error(`Media upload failed: ${uploadResponse.status}`);
+    const errorText = await uploadResponse.text();
+    throw new Error(
+      `Media upload failed: ${uploadResponse.status} - ${errorText}`
+    );
   }
 
   const uploadResult = await uploadResponse.json();
   return uploadResult.media_id_string;
 }
 
+function generateOAuthHeader(method, url, credentials) {
+  const { consumerKey, consumerSecret, accessToken, accessTokenSecret } =
+    credentials;
+
+  // OAuth parameters
+  const oauthParams = {
+    oauth_consumer_key: consumerKey,
+    oauth_token: accessToken,
+    oauth_signature_method: "HMAC-SHA1",
+    oauth_timestamp: Math.floor(Date.now() / 1000).toString(),
+    oauth_nonce: generateNonce(),
+    oauth_version: "1.0",
+  };
+
+  // Create signature base string
+  const parameterString = Object.keys(oauthParams)
+    .sort()
+    .map(
+      (key) =>
+        `${encodeURIComponent(key)}=${encodeURIComponent(oauthParams[key])}`
+    )
+    .join("&");
+
+  const signatureBaseString = [
+    method.toUpperCase(),
+    encodeURIComponent(url),
+    encodeURIComponent(parameterString),
+  ].join("&");
+
+  // Create signing key
+  const signingKey =
+    encodeURIComponent(consumerSecret) +
+    "&" +
+    encodeURIComponent(accessTokenSecret);
+
+  // Generate signature using HMAC-SHA1
+  const signature = hmacSha1(signatureBaseString, signingKey);
+  oauthParams.oauth_signature = signature;
+
+  // Build authorization header
+  const authHeader =
+    "OAuth " +
+    Object.keys(oauthParams)
+      .sort()
+      .map(
+        (key) =>
+          `${encodeURIComponent(key)}="${encodeURIComponent(oauthParams[key])}"`
+      )
+      .join(", ");
+
+  return authHeader;
+}
+
+function generateNonce() {
+  return (
+    Math.random().toString(36).substring(2, 15) +
+    Math.random().toString(36).substring(2, 15)
+  );
+}
+
+async function hmacSha1(data, key) {
+  const encoder = new TextEncoder();
+  const keyData = encoder.encode(key);
+  const dataBuffer = encoder.encode(data);
+
+  const cryptoKey = await crypto.subtle.importKey(
+    "raw",
+    keyData,
+    { name: "HMAC", hash: "SHA-1" },
+    false,
+    ["sign"]
+  );
+
+  const signature = await crypto.subtle.sign("HMAC", cryptoKey, dataBuffer);
+  return btoa(String.fromCharCode(...new Uint8Array(signature)));
+}
+
 async function markAsPosted(context, guid) {
-  // Mark the item as posted in Google Sheets
-  // This prevents duplicate posting
-  // Implementation would update the "Posted to X" column
+  // TODO: Update Google Sheets to mark item as posted
+  // This would require Google Sheets API write access
   console.log(`Marked ${guid} as posted to X`);
-}
-
-function createOAuthHeader(method, url, credentials) {
-  // OAuth 1.0a header creation for X API
-  // This is complex - you might want to use a library
-  // For now, return a placeholder
-  return `OAuth oauth_consumer_key="${credentials.X_API_KEY}"`;
-}
-
-function createMediaUploadBody(buffer, contentType) {
-  // Create multipart form data for media upload
-  // Simplified implementation
-  return buffer;
 }
