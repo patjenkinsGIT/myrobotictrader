@@ -61,8 +61,8 @@ export async function onRequest(context) {
 async function fetchTradingData() {
   console.log("Fetching trading data...");
   try {
-    const SHEET_ID = process.env.GOOGLE_SHEET_ID;
-    const API_KEY = process.env.GOOGLE_API_KEY;
+    const SHEET_ID = context.env.GOOGLE_SHEET_ID;
+    const API_KEY = context.env.GOOGLE_API_KEY;
 
     console.log("SHEET_ID EXISTS:", !!SHEET_ID);
     console.log("API_KEY exists:", !!API_KEY);
