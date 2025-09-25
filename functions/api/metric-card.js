@@ -59,9 +59,14 @@ export async function onRequest(context) {
 
 // Mock trading data - replace with actual Google Sheets fetch
 async function fetchTradingData() {
+  console.log("Fetching trading data...");
   try {
     const SHEET_ID = process.env.GOOGLE_SHEET_ID;
     const API_KEY = process.env.GOOGLE_API_KEY;
+
+    console.log("SHEET_ID EXISTS:", !!SHEET_ID);
+    console.log("API_KEY exists:", !!API_KEY);
+
     const CALCULATIONS_TAB = "Calculations";
     const CALCULATIONS_RANGE = "A:G";
 
@@ -133,6 +138,7 @@ async function fetchTradingData() {
     ];
     const month = monthNames[currentDate.getMonth()];
 
+    console.log("Feteched Data:", { totalProfit, monthlyProfit, totalTrades });
     return {
       monthlyProfit,
       totalProfit,
