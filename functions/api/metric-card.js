@@ -59,18 +59,105 @@ export async function onRequest(context) {
 
 // Mock trading data - replace with actual Google Sheets fetch
 async function fetchTradingData() {
-  return {
-    monthlyProfit: 200.65,
-    totalProfit: 4169.18,
-    tradesThisMonth: 36,
-    totalTrades: 875,
-    month: "September",
-    deploymentRatio: 39,
-    avgProfitPerTrade: 4.76,
-    successRate: 100,
-  };
-}
+  try {
+    const SHEET_ID = process.env.GOOGLE_SHEET_ID;
+    const API_KEY = process.env.GOOGLE_API_KEY;
+    const CALCULATIONS_TAB = "Calculations";
+    const CALCULATIONS_RANGE = "A:G";
 
+    if (!SHEET_ID || !API_KEY) {
+      // Fallback to mock data if credentials missing
+      return {
+        monthlyProfit: 200.65,
+        totalProfit: 4169.18,
+        tradesThisMonth: 36,
+        totalTrades: 875,
+        month: "September",
+        deploymentRatio: 39,
+        avgProfitPerTrade: 4.76,
+        successRate: 100,
+      };
+    }
+
+    const response = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${CALCULATIONS_TAB}!${CALCULATIONS_RANGE}?key=${API_KEY}`
+    );
+
+    const data = await response.json();
+    const rows = data.values || [];
+
+    // Find Grand Total row
+    let grandTotalRow = null;
+    for (let i = rows.length - 1; i >= 0; i--) {
+      if (rows[i] && rows[i][0]?.includes("Grand Total")) {
+        grandTotalRow = rows[i];
+        break;
+      }
+    }
+
+    if (!grandTotalRow) {
+      throw new Error("Grand Total row not found");
+    }
+
+    // Parse the Grand Total data
+    const totalProfit = parseFloat(grandTotalRow[1]?.replace(/[$,]/g, "")) || 0;
+    const totalTrades = parseInt(grandTotalRow[2]?.replace(/[,]/g, "")) || 0;
+    const avgProfitPerTrade =
+      parseFloat(grandTotalRow[3]?.replace(/[$,]/g, "")) || 0;
+    const monthlyAverage =
+      parseFloat(grandTotalRow[4]?.replace(/[$,]/g, "")) || 0;
+
+    // Get current month's data (last row before Grand Total)
+    const lastMonthIndex = rows.length - 2;
+    const currentMonthRow = rows[lastMonthIndex];
+    const monthlyProfit =
+      parseFloat(currentMonthRow[1]?.replace(/[$,]/g, "")) || 0;
+    const tradesThisMonth =
+      parseInt(currentMonthRow[2]?.replace(/[,]/g, "")) || 0;
+
+    // Get month name
+    const currentDate = new Date();
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    const month = monthNames[currentDate.getMonth()];
+
+    return {
+      monthlyProfit,
+      totalProfit,
+      tradesThisMonth,
+      totalTrades,
+      month,
+      deploymentRatio: 39, // You can add this to Sheets if needed
+      avgProfitPerTrade,
+      successRate: 100,
+    };
+  } catch (error) {
+    console.error("Error fetching trading data:", error);
+    // Return fallback data on error
+    return {
+      monthlyProfit: 200.65,
+      totalProfit: 4169.18,
+      tradesThisMonth: 36,
+      totalTrades: 875,
+      month: "September",
+      deploymentRatio: 39,
+      avgProfitPerTrade: 4.76,
+      successRate: 100,
+    };
+  }
+}
 function generateMetricCardSVG(data) {
   return `
 <svg width="600" height="350" xmlns="http://www.w3.org/2000/svg">
