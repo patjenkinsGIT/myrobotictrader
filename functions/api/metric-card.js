@@ -2,7 +2,7 @@
 // Generates trading metric cards as HTML or SVG for social media
 
 export async function onRequest(context) {
-  const { request } = context;
+  const { request, env } = context;
   const url = new URL(request.url);
   const month = url.searchParams.get("month") || "current";
   const type = url.searchParams.get("type") || "monthly";
@@ -19,7 +19,7 @@ export async function onRequest(context) {
 
   try {
     // Fetch your trading data
-    const tradingData = await fetchTradingData();
+    const tradingData = await fetchTradingData(env);
 
     // Check if SVG format is requested
     const wantsSVG =
@@ -58,11 +58,11 @@ export async function onRequest(context) {
 }
 
 // Mock trading data - replace with actual Google Sheets fetch
-async function fetchTradingData() {
+async function fetchTradingData(env) {
   console.log("Fetching trading data...");
   try {
-    const SHEET_ID = context.env.GOOGLE_SHEET_ID;
-    const API_KEY = context.env.GOOGLE_API_KEY;
+    const SHEET_ID = env.GOOGLE_SHEET_ID;
+    const API_KEY = env.GOOGLE_API_KEY;
 
     console.log("SHEET_ID EXISTS:", !!SHEET_ID);
     console.log("API_KEY exists:", !!API_KEY);
