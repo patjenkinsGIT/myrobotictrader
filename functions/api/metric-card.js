@@ -162,7 +162,7 @@ function generateMetricCardSVG(data) {
     <animate attributeName="opacity" values="1;0.7;1" dur="2s" repeatCount="indefinite"/>
   </circle>
   
-  <text x="70" y="70" fill="white" font-size="24" font-weight="bold" font-family="Arial, sans-serif">AI Trading Results</text>
+  <text x="70" y="70" fill="white" font-size="24" font-weight="bold" font-family="Arial, sans-serif">My AI-Enhanced Autonomous Trading Results</text>
   <text x="70" y="95" fill="rgba(255,255,255,0.7)" font-size="16" font-family="Arial, sans-serif">${
     data.month
   } 2025 Performance</text>
