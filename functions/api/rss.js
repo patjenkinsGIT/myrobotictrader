@@ -160,7 +160,6 @@ function generateRSSFeedWithImages(items, context) {
       <pubDate>${itemPubDate}</pubDate>
       <category>${item.postType}</category>
       ${imageEnclosure}
-      <imageUrl>${imageUrl}</imageUrl>
     </item>`;
     })
     .join("");
