@@ -70,7 +70,7 @@ async function fetchTradingData() {
       return {
         monthlyProfit: 200.65,
         totalProfit: 4169.18,
-        tradesThisMonth: 36,
+        tradesThisMonth: 45,
         totalTrades: 875,
         month: "September",
         deploymentRatio: 39,
