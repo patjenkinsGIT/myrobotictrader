@@ -272,4 +272,4 @@ const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
   );
 };
 
-export default MyStory;
+export default { MyStory };
