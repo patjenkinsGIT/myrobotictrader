@@ -11,7 +11,7 @@ import {
 import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
 import { useGoogleSheetsData } from "../hooks/useGoogleSheetsData";
 
-// Types
+// Types of data we expect from CoinMarketCap API
 interface CryptoData {
   id: string;
   name: string;
