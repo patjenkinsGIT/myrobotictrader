@@ -214,10 +214,12 @@ export async function onRequest(context) {
     console.error("CoinMarketCap API error:", error);
 
     // Return detailed error for debugging
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error occurred";
     return new Response(
       JSON.stringify({
         error: "Failed to fetch crypto data",
-        details: error.message,
+        details: errorMessage,
         cryptoId: cryptoId,
         symbol: symbol,
         timestamp: new Date().toISOString(),

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Shield,
   AlertTriangle,
@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
 import { useGoogleSheetsData } from "../hooks/useGoogleSheetsData";
-import React from "react";
 
 // Types
 interface CryptoData {
@@ -78,23 +77,32 @@ const DynamicSmartMoneyComparison = () => {
     },
   };
 
-  // Extract your trading data from Google Sheets
-  // Access properties directly from tradingStats (not portfolioSummary)
+  // Extract your trading data from Google Sheets - NOW WITH LIVE PORTFOLIO DATA!
   const yourTradingData = {
-    totalDeposited: 28432, // You'll need to add this to your stats
-    realizedProfits: tradingStats?.totalProfit || 4169,
-    currentOpenPositions: 11762, // You'll need to add this to your stats
-    safeReserves: 16624, // You'll need to add this to your stats
-    totalCurrentValue: 28386, // You'll need to add this to your stats
-    avgTradeSize: 175, // You'll need to add this to your stats
+    // Live data from Coinbase Balance tab
+    totalDeposited:
+      tradingStats?.portfolioSummary?.totalCapitalDeposited || 28432,
+    realizedProfits:
+      tradingStats?.portfolioSummary?.realizedProfits ||
+      tradingStats?.totalProfit ||
+      4169,
+    currentOpenPositions:
+      tradingStats?.portfolioSummary?.openTradingPositions || 11762,
+    safeReserves: tradingStats?.portfolioSummary?.availableUSDC || 16624,
+    totalCurrentValue:
+      tradingStats?.portfolioSummary?.totalAccountValue || 28386,
+    avgTradeSize: tradingStats?.avgProfitPerTrade || 4.76,
     totalTrades: tradingStats?.totalTrades || 875,
-    successRate: 100, // You'll need to add this to your stats
+    successRate: 100,
     timeframe: "9 months",
     startDate: "2025-01-08",
     monthlyAverage: tradingStats?.monthlyAverage || 463,
     dailyAverage: tradingStats?.dailyAvg || 16.79,
     bestMonthProfit: tradingStats?.bestMonthProfit || 817.31,
-    roiOnCapital: 14.6, // You'll need to add this to your stats
+    roiOnCapital:
+      ((tradingStats?.portfolioSummary?.realizedProfits || 4169) /
+        (tradingStats?.portfolioSummary?.totalCapitalDeposited || 28432)) *
+      100,
     isLiveData: tradingStats?.isLiveData || false,
   };
 
@@ -254,7 +262,7 @@ const DynamicSmartMoneyComparison = () => {
 
   // Rate limiting state
   const [isSearching, setIsSearching] = useState(false);
-  const lastSearchTime = React.useRef<number>(0);
+  const lastSearchTime = useRef<number>(0);
 
   const handleCustomCrypto = async () => {
     const now = Date.now();
@@ -607,20 +615,18 @@ const DynamicSmartMoneyComparison = () => {
                   <p className="text-purple-100 text-base md:text-lg mb-4">
                     {comparison.allIn.unrealizedGain < 0
                       ? `${formatCurrency(
-                          comparison.yourWay.realizedProfits -
+                          comparison.yourWay.realizedProfits +
                             Math.abs(comparison.allIn.unrealizedGain)
-                        )} MORE in real money`
+                        )} better than going all-in`
                       : comparison.allIn.unrealizedGain > 0
                       ? `${formatCurrency(
-                          comparison.allIn.unrealizedGain
-                        )} in paper gains vs ${formatCurrency(
                           comparison.yourWay.realizedProfits
-                        )} real money`
+                        )} in real cash vs ${formatCurrency(
+                          comparison.allIn.unrealizedGain
+                        )} paper gains`
                       : `${formatCurrency(
                           comparison.yourWay.realizedProfits
-                        )} real profit vs ${formatCurrency(
-                          comparison.allIn.unrealizedGain
-                        )} paper losses`}
+                        )} in real profits`}
                   </p>
                   <p className="text-purple-200 text-sm md:text-base">
                     Smart money takes real profits. Gamblers chase paper gains.
