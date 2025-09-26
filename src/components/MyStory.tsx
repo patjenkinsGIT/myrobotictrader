@@ -1,20 +1,21 @@
-// MyStory.tsx - Clean Personal Story Component
-import React from "react";
-import { User, TrendingUp, CheckCircle, Target } from "lucide-react";
-import { TradingStats } from "../hooks/useGoogleSheetsData";
-import { calculateTimeSinceStart } from "../utils/tradingTime";
+import {
+  User,
+  TrendingUp,
+  CheckCircle,
+  Target,
+  DollarSign,
+  Lightbulb,
+} from "lucide-react";
 
-interface MyStoryProps {
-  tradingStats: TradingStats | null;
-}
+// This is a preview - copy the story text sections into your actual MyStory.tsx
+// Keep all your existing props, hooks, and dynamic data intact!
 
-export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
-  // Calculate time since starting trading (January 8, 2025)
-  const timeSinceStart = calculateTimeSinceStart();
-
-  // Only pull total profits and time data for the story
-  const totalProfit = tradingStats?.totalProfit || 0;
-  const hasLiveData = tradingStats !== null;
+const EnhancedStoryPreview = () => {
+  // Sample data for preview only
+  const timeSinceStart = { months: 8, days: 18 };
+  const totalProfit = 12450;
+  const dailyAvg = "89";
+  const hasLiveData = true;
 
   return (
     <section className="py-16 px-4 relative overflow-hidden">
@@ -36,9 +37,9 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
           </h2>
         </div>
 
-        {/* Main Story Container - Text wraps around image on desktop */}
+        {/* Main Story Container */}
         <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm rounded-2xl border border-blue-400/20 p-8 shadow-lg shadow-blue-500/10 mb-8">
-          {/* Mobile: Image at top, separate from text */}
+          {/* Mobile: Image at top */}
           <div className="flex justify-center mb-8 lg:hidden">
             <div className="relative">
               <div className="w-64 h-64 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
@@ -48,114 +49,180 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
                   className="w-full h-full object-cover"
                 />
               </div>
-              {/* Decorative elements */}
               <div className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full shadow-lg shadow-green-400/40"></div>
               <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full shadow-lg shadow-purple-400/40"></div>
             </div>
           </div>
 
-          {/* Desktop: Image floated right with text wrap */}
-          <div className="hidden lg:block float-right ml-8 mb-6">
-            <div className="relative">
-              <div className="w-72 h-80 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
-                <img
-                  src="/patrick-2.jpeg"
-                  alt="Patrick Jenkins"
-                  className="w-full h-full object-cover"
-                />
+          {/* Desktop: Image floated right */}
+          <div className="relative">
+            <div className="hidden lg:block float-right ml-8 mb-6">
+              <div className="relative">
+                <div className="w-80 h-80 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
+                  <img
+                    src="/patrick-2.jpeg"
+                    alt="Patrick Jenkins"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full shadow-lg shadow-green-400/40"></div>
+                <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full shadow-lg shadow-purple-400/40"></div>
               </div>
-              {/* Decorative elements */}
-              <div className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full shadow-lg shadow-green-400/40"></div>
-              <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full shadow-lg shadow-purple-400/40"></div>
+            </div>
+
+            {/* Enhanced Story Text with Headers */}
+            <div className="space-y-6 text-lg text-gray-200 leading-relaxed">
+              {/* Section 1: The Investment Journey */}
+              <div>
+                <h3 className="text-2xl font-bold text-blue-300 mb-4 flex items-center gap-2">
+                  <Target className="w-6 h-6" />
+                  My Journey Started Like Yours
+                </h3>
+                <p>
+                  I've been following the markets since 2014, and I genuinely
+                  love investing. I did okay with my stock investments, but
+                  tracking individual stocks became incredibly tedious. I got
+                  frustrated with mutual funds because of their fees and average
+                  returns - even index funds weren't delivering what I hoped
+                  for. Target date funds? Don't get me started on those.
+                </p>
+              </div>
+
+              {/* Section 2: The Search for Something Better */}
+              <div>
+                <h3 className="text-2xl font-bold text-purple-300 mb-4 flex items-center gap-2">
+                  <DollarSign className="w-6 h-6" />
+                  Chasing the Dream of Extra Income
+                </h3>
+                <p>
+                  <span className="text-blue-300 font-semibold">
+                    Like many of you, I've always wanted to make extra income in
+                    addition to my 9-to-5 job.
+                  </span>{" "}
+                  Over the years, I invested tens of thousands in various
+                  courses and systems - email marketing, affiliate marketing,
+                  Amazon wholesale, you name it. Some methods seemed unreliable,
+                  and honestly, part of the problem was probably me not putting
+                  in full effort or knowing how to position myself properly.
+                </p>
+                <p className="mt-4">
+                  I was tired of chasing the next "breakthrough" system. Tired
+                  of complex strategies that required constant attention. Tired
+                  of watching opportunities slip by because I was stuck at work
+                  or didn't have time to analyze the market.
+                </p>
+              </div>
+
+              {/* Section 3: The Discovery */}
+              <div>
+                <h3 className="text-2xl font-bold text-yellow-300 mb-4 flex items-center gap-2">
+                  <Lightbulb className="w-6 h-6" />
+                  Then Everything Changed
+                </h3>
+                <p>
+                  So when I discovered this autonomous trading system while
+                  researching new opportunities, my first thought was:{" "}
+                  <span className="text-yellow-300 font-semibold italic">
+                    "Here's just another system promising easy money."
+                  </span>{" "}
+                  I was naturally skeptical - and you should be too.
+                </p>
+                <p className="mt-4">
+                  <span className="text-green-300 font-semibold">
+                    But this one is truly automated!
+                  </span>{" "}
+                  I set it up, connected my exchange accounts with trading-only
+                  API permissions, and started with a small amount to test it.
+                  The robot trades while I'm working, sleeping, or spending time
+                  with family.
+                </p>
+              </div>
+
+              {/* Section 4: The Results */}
+              <div>
+                <h3 className="text-2xl font-bold text-green-300 mb-4 flex items-center gap-2">
+                  <TrendingUp className="w-6 h-6" />
+                  The Results Speak for Themselves
+                </h3>
+                <p>
+                  <span className="text-green-400 font-bold text-xl">
+                    In just {timeSinceStart.months} months and{" "}
+                    {timeSinceStart.days} days, my system has generated $
+                    {totalProfit.toLocaleString()} in realized profits.
+                  </span>{" "}
+                  That's an average of{" "}
+                  <span className="text-green-300 font-semibold">
+                    ${dailyAvg} per day
+                  </span>{" "}
+                  - money that's been withdrawn and spent on real life.
+                </p>
+                <p className="mt-4">
+                  This isn't paper gains or "what if" projections. This is
+                  actual cash that's improved my family's quality of life. We've
+                  taken vacations I couldn't have afforded before, paid off debt
+                  faster, and built a real financial cushion.
+                </p>
+              </div>
+
+              {/* Section 5: Why I'm Sharing */}
+              <div className="bg-blue-500/10 border-l-4 border-blue-400 pl-6 py-4 rounded-r-lg">
+                <h3 className="text-2xl font-bold text-blue-300 mb-4 flex items-center gap-2">
+                  <CheckCircle className="w-6 h-6" />
+                  Why I'm Sharing This With You
+                </h3>
+                <p>
+                  I see people struggling with finances every day - having too
+                  much month left at the end of the money. Working overtime just
+                  to stay afloat. Missing out on time with family because they
+                  need that extra shift.
+                </p>
+                <p className="mt-4">
+                  <span className="text-blue-200 font-semibold">
+                    This platform could genuinely help, but not many people know
+                    about it.
+                  </span>{" "}
+                  That's why I learned to build this site and share what's
+                  working for me. I'm not a financial guru or marketing expert -
+                  I'm just someone who found something that works and wants to
+                  help others discover it too.
+                </p>
+              </div>
             </div>
           </div>
-
-          {/* Story Content */}
-          <div className="text-gray-300 leading-relaxed space-y-6">
-            <p className="text-lg">
-              Like many people, I was frustrated watching my savings sit in
-              low-yield accounts while inflation ate away at my purchasing
-              power. I knew I needed to find a better way to grow my money, but
-              traditional investing felt risky and time-consuming.
-            </p>
-
-            <p className="text-lg">
-              That's when I discovered this "Set It and Forget It" robotic
-              trading platform. What caught my attention wasn't flashy promises
-              of overnight riches – it was the mathematical approach and the
-              fact that{" "}
-              <span className="text-purple-300 font-semibold">
-                the system never trades at a loss
-              </span>
-              .
-            </p>
-
-            <p className="text-lg">
-              I started small, just testing the waters. The results spoke for
-              themselves:{" "}
-              <span className="text-green-300 font-semibold">
-                ${totalProfit.toLocaleString()} in profits over {timeSinceStart}
-              </span>
-              {hasLiveData && (
-                <span className="text-blue-300">
-                  {" "}
-                  (updated live from my actual account)
-                </span>
-              )}
-              .
-            </p>
-
-            <p className="text-lg">
-              What I love most is the peace of mind. I don't have to watch
-              charts, make emotional decisions, or worry about timing the
-              market. The AI-enhanced robotic system handles everything
-              automatically, and I can focus on other things while it grows my
-              money consistently.
-            </p>
-
-            <p className="text-lg">
-              The most surprising part? This isn't some complicated crypto
-              strategy or high-risk trading. It's a methodical, mathematical
-              approach that prioritizes capital preservation while generating
-              steady returns.
-            </p>
-          </div>
-
-          {/* Clear float */}
-          <div className="clear-both"></div>
         </div>
 
-        {/* Key Points Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="text-center">
+        {/* Stats Grid - Keep your existing stats display */}
+        <div className="grid md:grid-cols-3 gap-6 mb-12">
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 text-center">
             <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
+              <DollarSign className="w-8 h-8 text-white" />
+            </div>
+            <h4 className="text-lg font-semibold text-white mb-2">
+              Real Profits Generated
+            </h4>
+            <p className="text-green-400 text-3xl font-bold mb-2">
+              ${totalProfit.toLocaleString()}
+            </p>
+            <p className="text-gray-400 text-sm">
+              In {timeSinceStart.months} months, {timeSinceStart.days} days.
+              Daily average: ${dailyAvg} per day.
+            </p>
+          </div>
+
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 text-center">
+            <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
               <CheckCircle className="w-8 h-8 text-white" />
             </div>
             <h4 className="text-lg font-semibold text-white mb-2">
-              Real Results
+              Truly Automated
             </h4>
             <p className="text-gray-300 text-sm">
-              These aren't theoretical gains or backtested results. Every dollar
-              shown is real profit from my actual trading account,{" "}
-              {hasLiveData ? "updated live" : "regularly updated"}.
+              Set it up once, and the robot handles everything. No chart
+              watching, no timing the market, no stress.
             </p>
           </div>
 
-          <div className="text-center">
-            <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Target className="w-8 h-8 text-white" />
-            </div>
-            <h4 className="text-lg font-semibold text-white mb-2">
-              Set & Forget
-            </h4>
-            <p className="text-gray-300 text-sm">
-              I spend maybe 5 minutes a week checking my results. The system
-              runs 24/7, making intelligent trades while I sleep, work, or spend
-              time with family.
-            </p>
-          </div>
-
-          <div className="text-center">
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 text-center">
             <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
               <TrendingUp className="w-8 h-8 text-white" />
             </div>
@@ -163,23 +230,30 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
               Helping Others
             </h4>
             <p className="text-gray-300 text-sm">
-              I see people struggling with finances, having too much month left
-              at the end of the money. This platform could really help, but not
-              many people know about it.
+              My mission is to help people build additional income streams
+              without sacrificing family time or peace of mind.
             </p>
           </div>
         </div>
 
         {/* Closing Statement */}
-        <div className="text-center">
-          <p className="text-gray-300 max-w-3xl mx-auto text-lg">
-            I'm not a financial guru or marketing expert – I'm just someone who
-            found something that works and learned I could build this site to
-            share it with others. The numbers below are my actual results,
-            updated {hasLiveData ? "live" : "regularly"}.
+        <div className="text-center bg-gradient-to-r from-purple-500/10 to-blue-500/10 backdrop-blur-sm rounded-2xl border border-purple-400/20 p-8">
+          <p className="text-gray-200 max-w-3xl mx-auto text-lg leading-relaxed">
+            <span className="text-white font-semibold">Here's the truth:</span>{" "}
+            I'm not a financial advisor, and I can't promise you'll get the same
+            results I have. But I can show you exactly what's working for me,
+            with real numbers that are updated{" "}
+            {hasLiveData ? "live" : "regularly"} from my actual trading accounts
+            below.
+          </p>
+          <p className="text-blue-300 mt-4 font-medium">
+            If you're ready to explore a different path to financial growth,
+            keep reading.
           </p>
         </div>
       </div>
     </section>
   );
 };
+
+export default EnhancedStoryPreview;
