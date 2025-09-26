@@ -23,6 +23,28 @@ export async function onRequest(context) {
     });
   }
 
+  // Input validation - prevent injection and abuse
+  const sanitizedCryptoId = cryptoId.trim().toLowerCase();
+
+  // Max length check
+  if (sanitizedCryptoId.length > 30) {
+    return new Response(
+      JSON.stringify({ error: "Invalid crypto ID - too long" }),
+      {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      }
+    );
+  }
+
+  // Alphanumeric and dash only
+  if (!/^[a-z0-9-]+$/.test(sanitizedCryptoId)) {
+    return new Response(JSON.stringify({ error: "Invalid crypto ID format" }), {
+      status: 400,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
   const CMC_API_KEY = env.COINMARKETCAP_API_KEY;
 
   if (!CMC_API_KEY) {
@@ -57,7 +79,8 @@ export async function onRequest(context) {
     pepe: "PEPE",
   };
 
-  const symbol = idToSymbol[cryptoId.toLowerCase()] || cryptoId.toUpperCase();
+  const symbol =
+    idToSymbol[sanitizedCryptoId] || sanitizedCryptoId.toUpperCase();
 
   try {
     // Fetch current price and changes from CoinMarketCap

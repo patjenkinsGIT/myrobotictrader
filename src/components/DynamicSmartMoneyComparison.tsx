@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
 import { useGoogleSheetsData } from "../hooks/useGoogleSheetsData";
+import React from "react";
 
 // Types
 interface CryptoData {
@@ -251,10 +252,27 @@ const DynamicSmartMoneyComparison = () => {
     };
   };
 
+  // Rate limiting state
+  const [isSearching, setIsSearching] = useState(false);
+  const lastSearchTime = React.useRef<number>(0);
+
   const handleCustomCrypto = async () => {
-    if (customCrypto.trim()) {
+    const now = Date.now();
+    const timeSinceLastSearch = now - lastSearchTime.current;
+
+    // Rate limit: Max 1 search every 2 seconds
+    if (timeSinceLastSearch < 2000) {
+      setError("Please wait a moment before searching again");
+      return;
+    }
+
+    if (customCrypto.trim() && !isSearching) {
+      setIsSearching(true);
+      lastSearchTime.current = now;
       await fetchCryptoData(customCrypto.toLowerCase().trim());
       setSelectedCrypto(customCrypto.toLowerCase().trim());
+      setCustomCrypto(""); // Clear input after search
+      setIsSearching(false);
     }
   };
 
@@ -326,12 +344,19 @@ const DynamicSmartMoneyComparison = () => {
               onChange={(e) => setCustomCrypto(e.target.value)}
               className="flex-1 px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 backdrop-blur-sm focus:border-purple-500/50 focus:outline-none transition-colors"
               onKeyPress={(e) => e.key === "Enter" && handleCustomCrypto()}
+              disabled={isSearching}
+              maxLength={30}
             />
             <button
               onClick={handleCustomCrypto}
-              className="px-4 py-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-xl transition-all duration-300 transform hover:scale-105"
+              disabled={isSearching || !customCrypto.trim()}
+              className="px-4 py-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
-              <Search className="w-5 h-5 text-white" />
+              {isSearching ? (
+                <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full" />
+              ) : (
+                <Search className="w-5 h-5 text-white" />
+              )}
             </button>
           </div>
 
@@ -569,17 +594,17 @@ const DynamicSmartMoneyComparison = () => {
               </div>
             </div>
 
-            {/* Key Insight Box */}
-            <div className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border-2 border-yellow-500/30 rounded-2xl p-8 mb-12">
-              <div className="flex items-start gap-4">
-                <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-yellow-500 to-orange-500 p-4 flex-shrink-0">
+            {/* Key Insight Box - CENTERED & MOBILE-ENHANCED */}
+            <div className="bg-gradient-to-br from-purple-600/30 to-blue-600/30 border-2 border-purple-400/40 rounded-2xl p-6 md:p-8 mb-12">
+              <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6">
+                <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 p-3 md:p-4 flex-shrink-0 mx-auto md:mx-0">
                   <DollarSign className="w-full h-full text-white" />
                 </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-white mb-3">
+                <div className="text-center md:text-left flex-1">
+                  <h3 className="text-xl md:text-2xl font-bold text-white mb-3">
                     The Real Money Difference
                   </h3>
-                  <p className="text-yellow-100 text-lg mb-4">
+                  <p className="text-purple-100 text-base md:text-lg mb-4">
                     {comparison.allIn.unrealizedGain < 0
                       ? `${formatCurrency(
                           comparison.yourWay.realizedProfits -
@@ -597,52 +622,35 @@ const DynamicSmartMoneyComparison = () => {
                           comparison.allIn.unrealizedGain
                         )} paper losses`}
                   </p>
-                  <p className="text-yellow-300 mb-4">
+                  <p className="text-purple-200 text-sm md:text-base">
                     Smart money takes real profits. Gamblers chase paper gains.
                   </p>
-
-                  {/* Strategic CTA */}
-                  <div className="bg-purple-500/20 rounded-lg p-4 border border-purple-400/30">
-                    <p className="text-white font-bold mb-3">
-                      Ready to learn how my AI system generates real profits?
-                    </p>
-                    <a
-                      href="https://dailyprofits.link/class"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={() => handleMasterclassClick("insight")}
-                      className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-6 py-3 rounded-full font-bold transition-all duration-300 transform hover:scale-105"
-                    >
-                      Join Free Masterclass
-                      <Zap className="w-5 h-5" />
-                    </a>
-                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Final CTA */}
-            <div className="text-center bg-white/8 backdrop-blur-sm rounded-2xl border border-white/20 p-12">
-              <h3 className="text-3xl font-bold text-white mb-6">
+            {/* Single Strategic CTA */}
+            <div className="text-center bg-white/8 backdrop-blur-sm rounded-2xl border border-white/20 p-8 md:p-12">
+              <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 md:mb-6">
                 Stop Gambling. Start Profiting.
               </h3>
-              <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+              <p className="text-lg md:text-xl text-gray-300 mb-6 md:mb-8 max-w-2xl mx-auto">
                 Join my free masterclass and discover the exact AI trading
                 system that generated{" "}
                 {formatCurrency(yourTradingData.realizedProfits)} in real,
-                withdrawable profits - no "all in" gambling required.
+                withdrawable profits.
               </p>
               <a
                 href="https://dailyprofits.link/class"
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => handleMasterclassClick("final")}
-                className="inline-flex items-center gap-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-10 py-5 rounded-full font-bold text-xl transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-500/30"
+                className="inline-flex items-center gap-3 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white px-8 md:px-10 py-4 md:py-5 rounded-full font-bold text-lg md:text-xl transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-500/30"
               >
                 Join Free Masterclass Now
-                <Zap className="w-6 h-6" />
+                <Zap className="w-5 h-5 md:w-6 md:h-6" />
               </a>
-              <div className="flex justify-center items-center gap-6 mt-6 text-sm">
+              <div className="flex flex-wrap justify-center items-center gap-4 md:gap-6 mt-6 text-sm">
                 <div className="flex items-center gap-2 text-green-300">
                   <Shield className="w-4 h-4" />
                   <span>100% Free</span>
