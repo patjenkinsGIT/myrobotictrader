@@ -1,3 +1,5 @@
+// MyStory.tsx - Enhanced Personal Story Component
+import React from "react";
 import {
   User,
   TrendingUp,
@@ -6,16 +8,29 @@ import {
   DollarSign,
   Lightbulb,
 } from "lucide-react";
+import { TradingStats } from "../hooks/useGoogleSheetsData";
+import { calculateTimeSinceStart } from "../utils/tradingTime";
 
-// This is a preview - copy the story text sections into your actual MyStory.tsx
-// Keep all your existing props, hooks, and dynamic data intact!
+interface MyStoryProps {
+  tradingStats: TradingStats | null;
+}
 
-const EnhancedStoryPreview = () => {
-  // Sample data for preview only
-  const timeSinceStart = { months: 8, days: 18 };
-  const totalProfit = 12450;
-  const dailyAvg = "89";
-  const hasLiveData = true;
+const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
+  // Calculate time since starting trading (January 8, 2025)
+  const timeSinceStart = calculateTimeSinceStart();
+
+  // Fallback data if Google Sheets is not available
+  const fallbackData = {
+    totalProfit: 12450,
+    totalTrades: 1247,
+    isLiveData: false,
+    dailyAvg: 89,
+  };
+
+  // Use Google Sheets data if available, otherwise fallback
+  const currentData = tradingStats || fallbackData;
+  const dailyAvg = tradingStats?.dailyAvg?.toFixed(0) || "89";
+  const hasLiveData = tradingStats !== null;
 
   return (
     <section className="py-16 px-4 relative overflow-hidden">
@@ -37,9 +52,9 @@ const EnhancedStoryPreview = () => {
           </h2>
         </div>
 
-        {/* Main Story Container */}
+        {/* Main Story Container - Text wraps around image on desktop */}
         <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm rounded-2xl border border-blue-400/20 p-8 shadow-lg shadow-blue-500/10 mb-8">
-          {/* Mobile: Image at top */}
+          {/* Mobile: Image at top, separate from text */}
           <div className="flex justify-center mb-8 lg:hidden">
             <div className="relative">
               <div className="w-64 h-64 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
@@ -49,12 +64,13 @@ const EnhancedStoryPreview = () => {
                   className="w-full h-full object-cover"
                 />
               </div>
+              {/* Decorative elements */}
               <div className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full shadow-lg shadow-green-400/40"></div>
               <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full shadow-lg shadow-purple-400/40"></div>
             </div>
           </div>
 
-          {/* Desktop: Image floated right */}
+          {/* Desktop: Image floated right with text wrapping around */}
           <div className="relative">
             <div className="hidden lg:block float-right ml-8 mb-6">
               <div className="relative">
@@ -65,12 +81,13 @@ const EnhancedStoryPreview = () => {
                     className="w-full h-full object-cover"
                   />
                 </div>
+                {/* Decorative elements */}
                 <div className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full shadow-lg shadow-green-400/40"></div>
                 <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full shadow-lg shadow-purple-400/40"></div>
               </div>
             </div>
 
-            {/* Enhanced Story Text with Headers */}
+            {/* Enhanced Story Text with Strategic Headers */}
             <div className="space-y-6 text-lg text-gray-200 leading-relaxed">
               {/* Section 1: The Investment Journey */}
               <div>
@@ -146,9 +163,9 @@ const EnhancedStoryPreview = () => {
                 </h3>
                 <p>
                   <span className="text-green-400 font-bold text-xl">
-                    In just {timeSinceStart.months} months and{" "}
-                    {timeSinceStart.days} days, my system has generated $
-                    {totalProfit.toLocaleString()} in realized profits.
+                    In just {timeSinceStart}, my system has generated $
+                    {currentData.totalProfit.toLocaleString()} in realized
+                    profits.
                   </span>{" "}
                   That's an average of{" "}
                   <span className="text-green-300 font-semibold">
@@ -191,7 +208,7 @@ const EnhancedStoryPreview = () => {
           </div>
         </div>
 
-        {/* Stats Grid - Keep your existing stats display */}
+        {/* Stats Grid with Dynamic Data */}
         <div className="grid md:grid-cols-3 gap-6 mb-12">
           <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 text-center">
             <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -201,11 +218,10 @@ const EnhancedStoryPreview = () => {
               Real Profits Generated
             </h4>
             <p className="text-green-400 text-3xl font-bold mb-2">
-              ${totalProfit.toLocaleString()}
+              ${currentData.totalProfit.toLocaleString()}
             </p>
             <p className="text-gray-400 text-sm">
-              In {timeSinceStart.months} months, {timeSinceStart.days} days.
-              Daily average: ${dailyAvg} per day.
+              In {timeSinceStart}. Daily average: ${dailyAvg} per day.
             </p>
           </div>
 
@@ -256,4 +272,4 @@ const EnhancedStoryPreview = () => {
   );
 };
 
-export default EnhancedStoryPreview;
+export default MyStory;
