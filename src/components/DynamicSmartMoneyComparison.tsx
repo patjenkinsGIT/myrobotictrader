@@ -602,36 +602,38 @@ const DynamicSmartMoneyComparison = () => {
               </div>
             </div>
 
-            {/* Key Insight Box - CENTERED & MOBILE-ENHANCED */}
-            <div className="bg-gradient-to-br from-purple-600/30 to-blue-600/30 border-2 border-purple-400/40 rounded-2xl p-6 md:p-8 mb-12">
-              <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6">
-                <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 p-3 md:p-4 flex-shrink-0 mx-auto md:mx-0">
+            {/* Key Insight Box - FULL WIDTH CENTERED & BOLD */}
+            <div className="bg-gradient-to-br from-purple-600/30 to-blue-600/30 border-2 border-purple-400/40 rounded-2xl p-8 md:p-12 mb-12 text-center">
+              <div className="max-w-4xl mx-auto">
+                {/* Icon centered above on mobile, larger */}
+                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500 to-blue-500 p-5 mx-auto mb-6 shadow-lg shadow-purple-500/50">
                   <DollarSign className="w-full h-full text-white" />
                 </div>
-                <div className="text-center md:text-left flex-1">
-                  <h3 className="text-xl md:text-2xl font-bold text-white mb-3">
-                    The Real Money Difference
-                  </h3>
-                  <p className="text-purple-100 text-base md:text-lg mb-4">
-                    {comparison.allIn.unrealizedGain < 0
-                      ? `${formatCurrency(
-                          comparison.yourWay.realizedProfits +
-                            Math.abs(comparison.allIn.unrealizedGain)
-                        )} better than going all-in`
-                      : comparison.allIn.unrealizedGain > 0
-                      ? `${formatCurrency(
-                          comparison.yourWay.realizedProfits
-                        )} in real cash vs ${formatCurrency(
-                          comparison.allIn.unrealizedGain
-                        )} paper gains`
-                      : `${formatCurrency(
-                          comparison.yourWay.realizedProfits
-                        )} in real profits`}
-                  </p>
-                  <p className="text-purple-200 text-sm md:text-base">
-                    Smart money takes real profits. Gamblers chase paper gains.
-                  </p>
-                </div>
+
+                <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                  The Real Money Difference
+                </h3>
+
+                <p className="text-purple-100 text-xl md:text-2xl font-semibold mb-4">
+                  {comparison.allIn.unrealizedGain < 0
+                    ? `${formatCurrency(
+                        comparison.yourWay.realizedProfits +
+                          Math.abs(comparison.allIn.unrealizedGain)
+                      )} better than going all-in`
+                    : comparison.allIn.unrealizedGain > 0
+                    ? `${formatCurrency(
+                        comparison.yourWay.realizedProfits
+                      )} in real cash vs ${formatCurrency(
+                        comparison.allIn.unrealizedGain
+                      )} paper gains`
+                    : `${formatCurrency(
+                        comparison.yourWay.realizedProfits
+                      )} in real profits`}
+                </p>
+
+                <p className="text-purple-200 text-lg md:text-xl max-w-2xl mx-auto">
+                  Smart money takes real profits. Gamblers chase paper gains.
+                </p>
               </div>
             </div>
 
