@@ -16,7 +16,7 @@ import { OGImageGenerator } from "./components/OGImageGenerator";
 
 // Main Components - Clean imports
 import { Hero } from "./components/Hero";
-import { MyStory } from "./components/MyStory";
+import MyStory from "./components/MyStory";
 import { TradingResults } from "./components/TradingResults";
 // 🔥 REPLACED: BitcoinComparison with DynamicSmartMoneyComparison
 import DynamicSmartMoneyComparison from "./components/DynamicSmartMoneyComparison";
