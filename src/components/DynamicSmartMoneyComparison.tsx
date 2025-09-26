@@ -81,7 +81,7 @@ const DynamicSmartMoneyComparison = () => {
   const yourTradingData = {
     // Live data from Coinbase Balance tab
     totalDeposited:
-      tradingStats?.portfolioSummary?.totalCapitalDeposited || 28432,
+      tradingStats?.portfolioSummary?.totalCapitalDeposited || 25000,
     realizedProfits:
       tradingStats?.portfolioSummary?.realizedProfits ||
       tradingStats?.totalProfit ||
