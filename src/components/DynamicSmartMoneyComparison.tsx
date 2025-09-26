@@ -314,7 +314,7 @@ const DynamicSmartMoneyComparison = () => {
           </h2>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
             Compare what would have happened if you went "all in" on any crypto
-            vs. my proven AI trading system with{" "}
+            vs. the AI-Enhanced Autonomous trading system I use with{" "}
             {yourTradingData.isLiveData ? "LIVE" : ""} real results
           </p>
         </div>
@@ -643,8 +643,8 @@ const DynamicSmartMoneyComparison = () => {
                 Stop Gambling. Start Profiting.
               </h3>
               <p className="text-lg md:text-xl text-gray-300 mb-6 md:mb-8 max-w-2xl mx-auto">
-                Join my free masterclass and discover the exact AI trading
-                system that generated{" "}
+                Join the free masterclass and discover the exact AI-Enhance
+                Autonomous trading system that generated{" "}
                 {formatCurrency(yourTradingData.realizedProfits)} in real,
                 withdrawable profits.
               </p>
