@@ -113,7 +113,7 @@ const DynamicSmartMoneyComparison = () => {
     { id: "solana", name: "Solana", symbol: "SOL" },
     { id: "dogecoin", name: "Dogecoin", symbol: "DOGE" },
     { id: "cardano", name: "Cardano", symbol: "ADA" },
-    { id: "polygon", name: "Polygon", symbol: "MATIC" },
+    { id: "sui", name: "SUI", symbol: "SUI" },
     { id: "chainlink", name: "Chainlink", symbol: "LINK" },
     { id: "avalanche", name: "Avalanche", symbol: "AVAX" },
   ];
