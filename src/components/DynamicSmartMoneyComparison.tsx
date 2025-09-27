@@ -629,7 +629,8 @@ const DynamicSmartMoneyComparison = () => {
                       )} in real profits`}
                 </p>
                 <p className="text-purple-200 text-lg md:text-xl max-w-2xl mx-auto">
-                  Smart money takes real profits. Gamblers chase paper gains.
+                  AI-Enhanced Autonomous Trading TAKES REAL profits. Gamblers
+                  CHASE PAPER gains.
                 </p>
                 <p className="text-purple-300/80 text-sm md:text-base mt-6 max-w-3xl mx-auto italic">
                   *Both comparisons assume $25,000 total investment. 'All In
