@@ -547,7 +547,7 @@ const DynamicSmartMoneyComparison = () => {
                   </div>
                   <div>
                     <h3 className="text-2xl font-bold text-white">
-                      Smart AI System
+                      AI-Enhanced Robotic Trader
                     </h3>
                     <p className="text-green-300">Proven & profitable</p>
                   </div>
@@ -633,8 +633,9 @@ const DynamicSmartMoneyComparison = () => {
                 </p>
                 <p className="text-purple-300/80 text-sm md:text-base mt-6 max-w-3xl mx-auto italic">
                   *Both comparisons assume $25,000 total investment. 'All In
-                  BTC' = lump sum on Jan 8. 'Smart AI System' = capital deployed
-                  gradually over time with profits realized as cash.
+                  BTC' = lump sum on Jan 8. 'AI-Enhanced Robotic Trader' =
+                  capital deployed gradually over time with profits realized as
+                  cash.
                 </p>{" "}
               </div>
             </div>
@@ -645,7 +646,7 @@ const DynamicSmartMoneyComparison = () => {
                 Stop Gambling. Start Profiting.
               </h3>
               <p className="text-lg md:text-xl text-gray-300 mb-6 md:mb-8 max-w-2xl mx-auto">
-                Join the free masterclass and discover the exact AI-Enhance
+                Join the free masterclass and discover the exact AI-Enhanced
                 Autonomous trading system that generated{" "}
                 {formatCurrency(yourTradingData.realizedProfits)} in real,
                 withdrawable profits.
