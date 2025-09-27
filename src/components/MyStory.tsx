@@ -150,8 +150,8 @@ const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
                   </span>{" "}
                   I set it up, connected my exchange accounts with trading-only
                   API permissions, and started with a small amount to test it.
-                  The robot trades while I'm working, sleeping, or spending time
-                  with family.
+                  The autonomous trader trades while I'm working, sleeping, or
+                  spending time with family.
                 </p>
               </div>
 
@@ -175,9 +175,10 @@ const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
                 </p>
                 <p className="mt-4">
                   This isn't paper gains or "what if" projections. This is
-                  actual cash that's improved my family's quality of life. We've
-                  taken vacations I couldn't have afforded before, paid off debt
-                  faster, and built a real financial cushion.
+                  actual cash that I use for every day living. As of now, it's
+                  giving me the extra moneey to spend for every day expenses and
+                  save for emergencies. I'm also reinvestig a portion of my
+                  profits to scale my investment capital.
                 </p>
               </div>
 
@@ -198,10 +199,13 @@ const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
                     This platform could genuinely help, but not many people know
                     about it.
                   </span>{" "}
-                  That's why I learned to build this site and share what's
-                  working for me. I'm not a financial guru or marketing expert -
-                  I'm just someone who found something that works and wants to
-                  help others discover it too.
+                  That's why I built this site and share what's working for me.
+                  As you can see, my total profits are not breaking any records,
+                  but it's consistent and reliable - It's truly "Set It and
+                  Forget It." My trader only takes what the market GIVES. I'm
+                  not a financial guru or marketing expert - I'm just someone
+                  who found something that works and wants to help others
+                  discover it too.
                 </p>
               </div>
             </div>
