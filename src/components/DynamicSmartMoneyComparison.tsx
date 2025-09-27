@@ -22,6 +22,10 @@ interface CryptoData {
   change24h: number;
   change7d: number | null;
   change30d: number | null;
+  // NEW: Extended timeframes
+  change60d: number | null;
+  change90d: number | null;
+  change6m: number | null;
   daysSinceStart: number;
 }
 
@@ -183,6 +187,10 @@ const DynamicSmartMoneyComparison = () => {
         change24h: data.change24h || 0,
         change7d: data.change7d || null,
         change30d: data.change30d || null,
+        change60d: data.change60d || null,
+        change90d: data.change90d || null,
+        change6m: data.change6m || null,
+
         daysSinceStart,
       };
 
@@ -215,6 +223,9 @@ const DynamicSmartMoneyComparison = () => {
           change24h: fallback.change24h || 0,
           change7d: null,
           change30d: null,
+          change60d: null,
+          change90d: null,
+          change6m: null,
           daysSinceStart,
         });
         setError("Using cached prices - live data temporarily unavailable");
@@ -400,7 +411,10 @@ const DynamicSmartMoneyComparison = () => {
         {/* Comparison Results */}
         {cryptoData && comparison && !isLoading && (
           <>
-            {/* Current Crypto Info */}
+            {/* Current Crypto Info */}/ REPLACE your current crypto info
+            display section with this: // This goes in your
+            DynamicSmartMoneyComparison component where you display the price
+            stats
             <div className="bg-white/8 backdrop-blur-sm rounded-2xl border border-white/20 p-6 mb-12">
               <div className="text-center mb-6">
                 <h3 className="text-2xl font-bold text-white mb-2">
@@ -409,7 +423,9 @@ const DynamicSmartMoneyComparison = () => {
                 <div className="text-3xl font-bold text-purple-300 mb-4 font-mono">
                   {formatCurrency(cryptoData.currentPrice)}
                 </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
+
+                {/* ROW 1: Short-term timeframes */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto mb-4">
                   <div className="bg-white/5 rounded-lg p-3">
                     <div className="text-gray-400 text-sm">Since Jan 8</div>
                     <div
@@ -459,9 +475,54 @@ const DynamicSmartMoneyComparison = () => {
                     </div>
                   </div>
                 </div>
+
+                {/* ROW 2: Extended timeframes - NEW! */}
+                <div className="grid grid-cols-3 gap-4 max-w-xl mx-auto">
+                  <div className="bg-white/5 rounded-lg p-3">
+                    <div className="text-gray-400 text-sm">60d</div>
+                    <div
+                      className={`font-bold ${
+                        (cryptoData.change60d || 0) >= 0
+                          ? "text-green-400"
+                          : "text-red-400"
+                      }`}
+                    >
+                      {cryptoData.change60d !== null
+                        ? formatPercent(cryptoData.change60d)
+                        : "N/A"}
+                    </div>
+                  </div>
+                  <div className="bg-white/5 rounded-lg p-3">
+                    <div className="text-gray-400 text-sm">90d</div>
+                    <div
+                      className={`font-bold ${
+                        (cryptoData.change90d || 0) >= 0
+                          ? "text-green-400"
+                          : "text-red-400"
+                      }`}
+                    >
+                      {cryptoData.change90d !== null
+                        ? formatPercent(cryptoData.change90d)
+                        : "N/A"}
+                    </div>
+                  </div>
+                  <div className="bg-white/5 rounded-lg p-3">
+                    <div className="text-gray-400 text-sm">6 months</div>
+                    <div
+                      className={`font-bold ${
+                        (cryptoData.change6m || 0) >= 0
+                          ? "text-green-400"
+                          : "text-red-400"
+                      }`}
+                    >
+                      {cryptoData.change6m !== null
+                        ? formatPercent(cryptoData.change6m)
+                        : "N/A"}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-
             {/* The Comparison Cards */}
             <div className="grid lg:grid-cols-2 gap-8 mb-12">
               {/* All In Strategy */}
@@ -601,7 +662,6 @@ const DynamicSmartMoneyComparison = () => {
                 </div>
               </div>
             </div>
-
             {/* Key Insight Box - FULL WIDTH CENTERED & BOLD */}
             <div className="bg-gradient-to-br from-purple-600/30 to-blue-600/30 border-2 border-purple-400/40 rounded-2xl p-8 md:p-12 mb-12 text-center">
               <div className="max-w-4xl mx-auto">
@@ -640,7 +700,6 @@ const DynamicSmartMoneyComparison = () => {
                 </p>{" "}
               </div>
             </div>
-
             {/* Single Strategic CTA */}
             <div className="text-center bg-white/8 backdrop-blur-sm rounded-2xl border border-white/20 p-8 md:p-12">
               <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 md:mb-6">

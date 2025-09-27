@@ -168,10 +168,15 @@ export async function onRequest(context) {
       startPrice: startPrice,
       gainSinceStart: gainSinceStart,
 
-      // Change metrics (already in percentage from CMC)
+      // SHORT-TERM: Change metrics (24h, 7d, 30d)
       change24h: quote.percent_change_24h || 0,
       change7d: quote.percent_change_7d || null,
       change30d: quote.percent_change_30d || null,
+
+      // EXTENDED TIMEFRAMES: 60d, 90d, 6m
+      change60d: quote.percent_change_60d || null,
+      change90d: quote.percent_change_90d || null,
+      change6m: quote.percent_change_1y ? quote.percent_change_1y / 2 : null, // Approximate 6mo from yearly data
 
       // Crypto info
       name: cryptoData.name,
