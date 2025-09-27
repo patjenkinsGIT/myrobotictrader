@@ -310,7 +310,7 @@ const DynamicSmartMoneyComparison = () => {
       <div className="relative max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            💰 All-In vs. Smart Money Strategy
+            💰 All-In vs. My AI-Enhanced Robotic Trader
           </h2>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
             Compare what would have happened if you went "all in" on any crypto
