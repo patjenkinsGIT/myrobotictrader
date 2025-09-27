@@ -22,10 +22,8 @@ interface CryptoData {
   change24h: number;
   change7d: number | null;
   change30d: number | null;
-  // NEW: Extended timeframes
-  change60d: number | null;
+  // Extended timeframes - REMOVED 60d
   change90d: number | null;
-  change6m: number | null;
   daysSinceStart: number;
 }
 
@@ -187,10 +185,7 @@ const DynamicSmartMoneyComparison = () => {
         change24h: data.change24h || 0,
         change7d: data.change7d || null,
         change30d: data.change30d || null,
-        change60d: data.change60d || null,
         change90d: data.change90d || null,
-        change6m: data.change6m || null,
-
         daysSinceStart,
       };
 
@@ -223,9 +218,7 @@ const DynamicSmartMoneyComparison = () => {
           change24h: fallback.change24h || 0,
           change7d: null,
           change30d: null,
-          change60d: null,
           change90d: null,
-          change6m: null,
           daysSinceStart,
         });
         setError("Using cached prices - live data temporarily unavailable");
@@ -313,6 +306,79 @@ const DynamicSmartMoneyComparison = () => {
     `${percent > 0 ? "+" : ""}${percent.toFixed(2)}%`;
 
   const comparison = calculateComparison();
+
+  // Dynamic messaging based on comparison results
+  const getDynamicMessage = () => {
+    if (!comparison) return null;
+
+    const paperGain = comparison.allIn.unrealizedGain;
+    const realProfit = comparison.yourWay.realizedProfits;
+    const gainPercent = (paperGain / comparison.allIn.investment) * 100;
+
+    // Scenario 1: Massive paper gains (200%+ or $50k+)
+    if (paperGain > 50000 || gainPercent > 200) {
+      return {
+        type: "warning",
+        icon: "🎲",
+        title: "That's a Huge Paper Gain!",
+        message: `You'd be sitting on ${formatCurrency(
+          paperGain
+        )} in unrealized gains. But here's the reality: Did you sell at the EXACT peak? Most people don't. Meanwhile, I've already banked ${formatCurrency(
+          realProfit
+        )} in actual cash.`,
+      };
+    }
+
+    // Scenario 2: Large paper losses ($10k+ loss)
+    if (paperGain < -10000) {
+      return {
+        type: "danger",
+        icon: "📉",
+        title: "Ouch! That's a Big Loss",
+        message: `You'd be down ${formatCurrency(
+          Math.abs(paperGain)
+        )}. That's a ${formatPercent(
+          gainPercent
+        )} loss with $0 to show for it. My system? Already extracted ${formatCurrency(
+          realProfit
+        )} in REAL profits before any downturn.`,
+      };
+    }
+
+    // Scenario 3: Robotic trader massively outperforms (3x+)
+    if (realProfit > paperGain * 3 && paperGain > 0) {
+      return {
+        type: "success",
+        icon: "🚀",
+        title: "This Is Why Systems Win",
+        message: `While they're watching ${formatCurrency(
+          paperGain
+        )} in paper gains, you've got ${formatCurrency(
+          realProfit
+        )} in REAL cash. That's ${formatPercent(
+          (realProfit / paperGain - 1) * 100
+        )} more actual money.`,
+      };
+    }
+
+    // Scenario 4: Moderate gains but highlighting the timing risk
+    if (paperGain > 5000 && paperGain < 50000) {
+      return {
+        type: "info",
+        icon: "⏰",
+        title: "The Timing Problem",
+        message: `That ${formatCurrency(
+          paperGain
+        )} looks good on screen. But when do you sell? Top? Bottom? Somewhere in between? My system doesn't guess—it systematically takes ${formatCurrency(
+          realProfit
+        )} in real profits.`,
+      };
+    }
+
+    return null;
+  };
+
+  const dynamicMessage = getDynamicMessage();
 
   return (
     <section className="py-16 px-4 relative overflow-hidden">
@@ -473,24 +539,10 @@ const DynamicSmartMoneyComparison = () => {
                   </div>
                 </div>
 
-                {/* ROW 2: Extended timeframes - NEW! */}
-                <div className="grid grid-cols-3 gap-4 max-w-xl mx-auto">
+                {/* ROW 2: Extended timeframe - ONLY 90d now */}
+                <div className="grid grid-cols-1 gap-4 max-w-xs mx-auto">
                   <div className="bg-white/5 rounded-lg p-3">
-                    <div className="text-gray-400 text-sm">60d</div>
-                    <div
-                      className={`font-bold ${
-                        (cryptoData.change60d || 0) >= 0
-                          ? "text-green-400"
-                          : "text-red-400"
-                      }`}
-                    >
-                      {cryptoData.change60d !== null
-                        ? formatPercent(cryptoData.change60d)
-                        : "N/A"}
-                    </div>
-                  </div>
-                  <div className="bg-white/5 rounded-lg p-3">
-                    <div className="text-gray-400 text-sm">90d</div>
+                    <div className="text-gray-400 text-sm">90 days</div>
                     <div
                       className={`font-bold ${
                         (cryptoData.change90d || 0) >= 0
@@ -500,20 +552,6 @@ const DynamicSmartMoneyComparison = () => {
                     >
                       {cryptoData.change90d !== null
                         ? formatPercent(cryptoData.change90d)
-                        : "N/A"}
-                    </div>
-                  </div>
-                  <div className="bg-white/5 rounded-lg p-3">
-                    <div className="text-gray-400 text-sm">6 months</div>
-                    <div
-                      className={`font-bold ${
-                        (cryptoData.change6m || 0) >= 0
-                          ? "text-green-400"
-                          : "text-red-400"
-                      }`}
-                    >
-                      {cryptoData.change6m !== null
-                        ? formatPercent(cryptoData.change6m)
                         : "N/A"}
                     </div>
                   </div>
@@ -660,6 +698,44 @@ const DynamicSmartMoneyComparison = () => {
                 </div>
               </div>
             </div>
+
+            {/* DYNAMIC REALITY CHECK MESSAGE - NEW! */}
+            {dynamicMessage && (
+              <div
+                className={`rounded-2xl p-6 mb-12 border-2 ${
+                  dynamicMessage.type === "warning"
+                    ? "bg-yellow-500/10 border-yellow-500/30"
+                    : dynamicMessage.type === "danger"
+                    ? "bg-red-500/10 border-red-500/30"
+                    : dynamicMessage.type === "success"
+                    ? "bg-green-500/10 border-green-500/30"
+                    : "bg-blue-500/10 border-blue-500/30"
+                }`}
+              >
+                <div className="flex items-start gap-4">
+                  <div className="text-4xl">{dynamicMessage.icon}</div>
+                  <div className="flex-1">
+                    <h4
+                      className={`text-xl font-bold mb-2 ${
+                        dynamicMessage.type === "warning"
+                          ? "text-yellow-300"
+                          : dynamicMessage.type === "danger"
+                          ? "text-red-300"
+                          : dynamicMessage.type === "success"
+                          ? "text-green-300"
+                          : "text-blue-300"
+                      }`}
+                    >
+                      {dynamicMessage.title}
+                    </h4>
+                    <p className="text-gray-200 text-base leading-relaxed">
+                      {dynamicMessage.message}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Key Insight Box - FULL WIDTH CENTERED & BOLD */}
             <div className="bg-gradient-to-br from-purple-600/30 to-blue-600/30 border-2 border-purple-400/40 rounded-2xl p-8 md:p-12 mb-12 text-center">
               <div className="max-w-4xl mx-auto">
@@ -695,7 +771,7 @@ const DynamicSmartMoneyComparison = () => {
                   BTC' = lump sum on Jan 8. 'AI-Enhanced Robotic Trader' =
                   capital deployed gradually over time with profits realized as
                   cash.
-                </p>{" "}
+                </p>
               </div>
             </div>
             {/* Single Strategic CTA */}
