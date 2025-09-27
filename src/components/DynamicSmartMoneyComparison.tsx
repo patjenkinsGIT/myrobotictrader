@@ -411,10 +411,7 @@ const DynamicSmartMoneyComparison = () => {
         {/* Comparison Results */}
         {cryptoData && comparison && !isLoading && (
           <>
-            {/* Current Crypto Info */}/ REPLACE your current crypto info
-            display section with this: // This goes in your
-            DynamicSmartMoneyComparison component where you display the price
-            stats
+            {/* Current Crypto Info */}
             <div className="bg-white/8 backdrop-blur-sm rounded-2xl border border-white/20 p-6 mb-12">
               <div className="text-center mb-6">
                 <h3 className="text-2xl font-bold text-white mb-2">
@@ -523,6 +520,7 @@ const DynamicSmartMoneyComparison = () => {
                 </div>
               </div>
             </div>
+
             {/* The Comparison Cards */}
             <div className="grid lg:grid-cols-2 gap-8 mb-12">
               {/* All In Strategy */}
