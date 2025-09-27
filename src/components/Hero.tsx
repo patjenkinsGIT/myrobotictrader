@@ -66,7 +66,7 @@ export const Hero: React.FC = () => {
 
           {/* Updated description - AI-Enhanced instead of AI-powered */}
           <p className="text-xl md:text-2xl text-gray-200 mb-8 max-w-4xl mx-auto">
-            AI-Enhanced autonomous robotic trader works 24/7 on Coinbase and
+            AI-Enhanced Autonomous Robotic Trader works 24/7 on Coinbase and
             Kraken. No experience needed - completely hands-free profit
             generation.
           </p>
