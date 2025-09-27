@@ -609,11 +609,9 @@ const DynamicSmartMoneyComparison = () => {
                 <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500 to-blue-500 p-5 mx-auto mb-6 shadow-lg shadow-purple-500/50">
                   <DollarSign className="w-full h-full text-white" />
                 </div>
-
                 <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
                   The Real Money Difference
                 </h3>
-
                 <p className="text-purple-100 text-xl md:text-2xl font-semibold mb-4">
                   {comparison.allIn.unrealizedGain < 0
                     ? `${formatCurrency(
@@ -630,10 +628,14 @@ const DynamicSmartMoneyComparison = () => {
                         comparison.yourWay.realizedProfits
                       )} in real profits`}
                 </p>
-
                 <p className="text-purple-200 text-lg md:text-xl max-w-2xl mx-auto">
                   Smart money takes real profits. Gamblers chase paper gains.
                 </p>
+                <p className="text-purple-300/80 text-sm md:text-base mt-6 max-w-3xl mx-auto italic">
+                  *Both comparisons assume $25,000 total investment. 'All In
+                  BTC' = lump sum on Jan 8. 'Smart AI System' = capital deployed
+                  gradually over time with profits realized as cash.
+                </p>{" "}
               </div>
             </div>
 
