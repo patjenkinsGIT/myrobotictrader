@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Bot, TrendingUp, Shield, Clock, Zap, DollarSign } from "lucide-react";
 
 export const FloatingIcons: React.FC = () => {

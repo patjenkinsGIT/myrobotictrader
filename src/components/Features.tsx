@@ -1,4 +1,5 @@
-import * as React from "react";
+import { useState, useEffect } from "react";
+
 import {
   Bot,
   TrendingUp,
@@ -79,11 +80,11 @@ const features = [
 ];
 
 export const Features: React.FC = function () {
-  const [visibleCards, setVisibleCards] = React.useState<boolean[]>(
+  const [visibleCards, setVisibleCards] = useState<boolean[]>(
     new Array(features.length).fill(false)
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {

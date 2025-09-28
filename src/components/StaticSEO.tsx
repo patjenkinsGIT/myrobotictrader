@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
 // This component sets up static SEO meta tags immediately on app load
 // to ensure social media crawlers can read them before React hydration

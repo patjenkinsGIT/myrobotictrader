@@ -1,5 +1,5 @@
 // App.tsx - CLEAN VERSION - Updated with DynamicSmartMoneyComparison
-import React, { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -146,7 +146,7 @@ const HomePage = () => {
     useGoogleSheetsData();
 
   // Safe refresh function with error handling
-  const safeRefreshStats = React.useCallback(() => {
+  const safeRefreshStats = useCallback(() => {
     try {
       if (refreshStats && typeof refreshStats === "function") {
         refreshStats();

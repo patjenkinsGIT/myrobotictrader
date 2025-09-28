@@ -1,5 +1,5 @@
 // pages/TransparencyPage.tsx - Data Transparency Policy
-import React from "react";
+
 import {
   Shield,
   Database,

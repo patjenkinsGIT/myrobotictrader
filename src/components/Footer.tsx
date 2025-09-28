@@ -1,4 +1,4 @@
-import * as React from "react";
+
 import { ExternalLink, Twitter, ArrowRight, Shield } from "lucide-react";
 
 export const Footer: React.FC = function () {

@@ -1,4 +1,5 @@
-import * as React from "react";
+import { useState } from "react";
+
 import {
   ChevronDown,
   ChevronUp,
@@ -171,7 +172,7 @@ interface FAQItemProps {
 }
 
 const FAQItem: React.FC<FAQItemProps> = ({ question, answer }) => {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="bg-white/8 backdrop-blur-sm rounded-xl border border-white/20 overflow-hidden hover:border-white/30 transition-all duration-300 shadow-lg shadow-purple-500/10">

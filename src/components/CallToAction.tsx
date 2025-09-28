@@ -1,4 +1,4 @@
-import * as React from "react";
+
 import { ArrowRight, CheckCircle, Rocket, TrendingUp } from "lucide-react";
 import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
 

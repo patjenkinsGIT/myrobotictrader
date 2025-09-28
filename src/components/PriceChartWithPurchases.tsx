@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { TrendingDown, Target, Zap, DollarSign } from "lucide-react";
 import { tradingDataCache } from "../utils/smartCache";
 import { useWebSocketPrice } from "../hooks/useWebSocketPrice";

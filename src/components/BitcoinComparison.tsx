@@ -1,4 +1,4 @@
-import React from "react";
+
 import { TradingStats } from "../hooks/useGoogleSheetsData";
 
 interface BitcoinComparisonProps {

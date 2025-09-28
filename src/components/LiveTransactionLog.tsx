@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Activity, Clock, Target, TrendingUp, Eye, EyeOff } from "lucide-react";
 import { tradingDataCache } from "../utils/smartCache";
 

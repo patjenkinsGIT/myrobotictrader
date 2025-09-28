@@ -1,4 +1,4 @@
-import * as React from "react";
+
 import { ArrowLeft, Shield, Eye, Link, Mail } from "lucide-react";
 
 export const PrivacyPage: React.FC = function () {

@@ -1,5 +1,5 @@
 // MyStory.tsx - Enhanced Personal Story Component
-import React from "react";
+
 import {
   User,
   TrendingUp,

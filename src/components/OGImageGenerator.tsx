@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 // This component generates Open Graph images dynamically for social sharing
 export const OGImageGenerator: React.FC = () => {
