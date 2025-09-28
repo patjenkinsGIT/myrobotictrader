@@ -60,49 +60,49 @@ const seoConfigs = {
     description:
       "Free AI-enhanced crypto trading resources, guides, and masterclasses. Learn the automated trading strategies to build sustainable revenue streams.",
     keywords:
-      "crypto trading guides, AI trading resources, automated trading education, robotic trading tutorials, passive income strategies",
-    ogTitle: "Free Trading Resources & AI-Enhanced Crypto Guides",
+      "crypto trading guides, automated trading resources, trading education, cryptocurrency strategies, robotic trading tutorials",
+    ogTitle: "Trading Resources & AI-Enhanced Crypto Guides",
     ogDescription:
-      "Free AI-enhanced crypto trading resources, guides, and masterclasses. Learn automated trading strategies.",
+      "Free AI-enhanced crypto trading resources and guides to build your automated revenue streams.",
     ogImage:
-      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/og-resources.png",
-    twitterTitle: "Free Trading Resources & AI-Enhanced Crypto Guides",
+      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/og-image.png",
+    twitterTitle: "Trading Resources & AI-Enhanced Crypto Guides",
     twitterDescription:
-      "Free AI-enhanced crypto trading resources, guides, and masterclasses.",
+      "Free AI-enhanced crypto trading resources and guides to build your automated revenue streams.",
     twitterImage:
-      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/twitter-resources.png",
+      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/twitter-image.png",
     canonicalUrl:
       "https://rd6xolh11t0gmjdo-default.preview.taskade.app/resources",
     pageType: "resources" as const,
   },
   privacy: {
-    title: "Privacy Policy - MyRoboticTrader.com",
+    title: "Privacy Policy | MyRoboticTrader",
     description:
-      "Privacy policy for MyRoboticTrader.com automated crypto trading platform.",
+      "Privacy policy for MyRoboticTrader - protecting your data and privacy while you build revenue streams with automated crypto trading.",
     keywords: "privacy policy, data protection, MyRoboticTrader privacy",
-    ogTitle: "Privacy Policy - MyRoboticTrader.com",
+    ogTitle: "Privacy Policy | MyRoboticTrader",
     ogDescription:
-      "Privacy policy for MyRoboticTrader.com automated crypto trading platform.",
+      "Privacy policy for MyRoboticTrader - protecting your data and privacy.",
     ogImage:
-      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/og-privacy.png",
-    twitterTitle: "Privacy Policy - MyRoboticTrader.com",
+      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/og-image.png",
+    twitterTitle: "Privacy Policy | MyRoboticTrader",
     twitterDescription:
-      "Privacy policy for MyRoboticTrader.com automated crypto trading platform.",
+      "Privacy policy for MyRoboticTrader - protecting your data and privacy.",
     twitterImage:
-      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/twitter-privacy.png",
+      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/twitter-image.png",
     canonicalUrl:
       "https://rd6xolh11t0gmjdo-default.preview.taskade.app/privacy",
     pageType: "privacy" as const,
   },
   card: {
-    title: "Patrick's Trading Card - Live Results | Building Revenue Streams",
+    title: "Live Trading Results - Building Revenue Streams | MyRoboticTrader",
     description:
-      "See live AI-enhanced robotic trading results. Real revenue streams being built automatically from Patrick's trading system!",
+      "See live AI-enhanced robotic trading results building sustainable revenue streams automatically! Real revenue streams being built automatically from Patrick's trading system!",
     keywords:
-      "live trading results, Patrick trading card, robotic trading, automated revenue streams",
-    ogTitle: "Patrick's Trading Card - Live Results | Building Revenue Streams",
+      "live trading results, robotic trading performance, automated crypto trading, revenue streams",
+    ogTitle: "Live Trading Results - Building Revenue Streams",
     ogDescription:
-      "See live AI-enhanced robotic trading results. Real revenue streams being built automatically from Patrick's trading system!",
+      "See live AI-enhanced robotic trading results building sustainable revenue streams automatically! Real revenue streams being built automatically from Patrick's trading system!",
     ogImage:
       "https://rd6xolh11t0gmjdo-default.preview.taskade.app/og-image.png",
     twitterTitle: "Live Trading Results - Building Revenue Streams",

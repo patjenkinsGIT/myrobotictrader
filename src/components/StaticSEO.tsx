@@ -38,7 +38,7 @@ export const StaticSEO: React.FC = () => {
         { property: "og:type", content: "website" },
         {
           property: "og:url",
-          content: "https://rd6xolh11t0gmjdo-default.preview.taskade.app/",
+          content: "https://myrobotictrader.com/",
         },
         {
           property: "og:title",
@@ -52,7 +52,7 @@ export const StaticSEO: React.FC = () => {
         },
         {
           property: "og:image",
-          content: "https://5defe27d.myrobotictrader.pages.dev/og-image.png",
+          content: "https://myrobotictrader.com/og-image.png",
         },
 
         { property: "og:image:width", content: "1200" },
@@ -67,7 +67,7 @@ export const StaticSEO: React.FC = () => {
         { property: "twitter:creator", content: "@myrobotictrader" },
         {
           property: "twitter:url",
-          content: "https://rd6xolh11t0gmjdo-default.preview.taskade.app/",
+          content: "https://myrobotictrader.com/",
         },
         {
           property: "twitter:title",
@@ -81,8 +81,7 @@ export const StaticSEO: React.FC = () => {
         },
         {
           property: "twitter:image",
-          content:
-            "https://rd6xolh11t0gmjdo-default.preview.taskade.app/twitter-image.png",
+          content: "https://myrobotictrader.com/twitter-image.png",
         },
         {
           property: "twitter:image:alt",
@@ -95,8 +94,7 @@ export const StaticSEO: React.FC = () => {
         // WhatsApp/Telegram Specific
         {
           property: "og:image:secure_url",
-          content:
-            "https://rd6xolh11t0gmjdo-default.preview.taskade.app/og-image.png",
+          content: "https://myrobotictrader.com/og-image.png",
         },
       ];
 
@@ -128,10 +126,7 @@ export const StaticSEO: React.FC = () => {
         canonical.setAttribute("data-dynamic", "true");
         head.appendChild(canonical);
       }
-      canonical.setAttribute(
-        "href",
-        "https://rd6xolh11t0gmjdo-default.preview.taskade.app/"
-      );
+      canonical.setAttribute("href", "https://myrobotictrader.com/");
     };
 
     // Set meta tags immediately
@@ -156,7 +151,7 @@ export const StaticSEO: React.FC = () => {
             "@type": "WebSite",
             name: "MyRoboticTrader",
             alternateName: "My Robotic Trader",
-            url: "https://rd6xolh11t0gmjdo-default.preview.taskade.app/",
+            url: "https://myrobotictrader.com/",
             description:
               "Discover how I built multiple revenue streams with AI-Enhanced autonomous robotic crypto trading. Real results, proven system.",
             author: {
@@ -172,10 +167,10 @@ export const StaticSEO: React.FC = () => {
             "@context": "https://schema.org",
             "@type": "Organization",
             name: "MyRoboticTrader",
-            url: "https://rd6xolh11t0gmjdo-default.preview.taskade.app/",
+            url: "https://myrobotictrader.com/",
             logo: {
               "@type": "ImageObject",
-              url: "https://rd6xolh11t0gmjdo-default.preview.taskade.app/og-image.png",
+              url: "https://myrobotictrader.com/og-image.png",
               width: 1200,
               height: 630,
             },
