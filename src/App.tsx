@@ -30,6 +30,7 @@ import { PrivacyPage } from "./pages/PrivacyPage";
 import { BusinessCardLanding } from "./components/BusinessCardLanding";
 
 // SEO configurations
+// SEO configurations - CORRECTED URLS
 const seoConfigs = {
   home: {
     title:
@@ -42,15 +43,13 @@ const seoConfigs = {
       "MyRoboticTrader - Set It and Forget It Crypto Trading | Build New Revenue Streams",
     ogDescription:
       "Discover how I built multiple revenue streams with AI-Enhanced autonomous robotic crypto trading. Real results, proven system.",
-    ogImage:
-      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/og-image.png",
+    ogImage: "https://myrobotictrader.com/og-image.png",
     twitterTitle:
       "MyRoboticTrader - Set It and Forget It Crypto Trading | Build New Revenue Streams",
     twitterDescription:
       "Discover how I built multiple revenue streams with AI-Enhanced autonomous robotic crypto trading. Real results, proven system.",
-    twitterImage:
-      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/twitter-image.png",
-    canonicalUrl: "https://rd6xolh11t0gmjdo-default.preview.taskade.app/",
+    twitterImage: "https://myrobotictrader.com/twitter-image.png",
+    canonicalUrl: "https://myrobotictrader.com/",
     pageType: "home" as const,
   },
   resources: {
@@ -63,15 +62,12 @@ const seoConfigs = {
     ogTitle: "Trading Resources & AI-Enhanced Crypto Guides",
     ogDescription:
       "Free AI-enhanced crypto trading resources and guides to build your automated revenue streams.",
-    ogImage:
-      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/og-image.png",
+    ogImage: "https://myrobotictrader.com/og-image.png",
     twitterTitle: "Trading Resources & AI-Enhanced Crypto Guides",
     twitterDescription:
       "Free AI-enhanced crypto trading resources and guides to build your automated revenue streams.",
-    twitterImage:
-      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/twitter-image.png",
-    canonicalUrl:
-      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/resources",
+    twitterImage: "https://myrobotictrader.com/twitter-image.png",
+    canonicalUrl: "https://myrobotictrader.com/resources",
     pageType: "resources" as const,
   },
   privacy: {
@@ -82,15 +78,12 @@ const seoConfigs = {
     ogTitle: "Privacy Policy | MyRoboticTrader",
     ogDescription:
       "Privacy policy for MyRoboticTrader - protecting your data and privacy.",
-    ogImage:
-      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/og-image.png",
+    ogImage: "https://myrobotictrader.com/og-image.png",
     twitterTitle: "Privacy Policy | MyRoboticTrader",
     twitterDescription:
       "Privacy policy for MyRoboticTrader - protecting your data and privacy.",
-    twitterImage:
-      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/twitter-image.png",
-    canonicalUrl:
-      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/privacy",
+    twitterImage: "https://myrobotictrader.com/twitter-image.png",
+    canonicalUrl: "https://myrobotictrader.com/privacy",
     pageType: "privacy" as const,
   },
   card: {
@@ -102,18 +95,15 @@ const seoConfigs = {
     ogTitle: "Live Trading Results - Building Revenue Streams",
     ogDescription:
       "See live AI-enhanced robotic trading results building sustainable revenue streams automatically! Real revenue streams being built automatically from Patrick's trading system!",
-    ogImage:
-      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/og-image.png",
+    ogImage: "https://myrobotictrader.com/og-image.png",
     twitterTitle: "Live Trading Results - Building Revenue Streams",
     twitterDescription:
       "See live AI-enhanced robotic trading results building sustainable revenue streams automatically!",
-    twitterImage:
-      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/twitter-image.png",
-    canonicalUrl: "https://rd6xolh11t0gmjdo-default.preview.taskade.app/card",
+    twitterImage: "https://myrobotictrader.com/twitter-image.png",
+    canonicalUrl: "https://myrobotictrader.com/card",
     pageType: "card" as const,
   },
 };
-
 // SEO Wrapper Component
 const SEOWrapper = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
