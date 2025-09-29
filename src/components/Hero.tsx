@@ -24,7 +24,7 @@ const HEADLINE_VARIANTS = [
     mainText: "The $4,000+ Secret Most",
     gradientText: "Crypto Traders Never Discover",
     description:
-      "How I automated my way to financial freedom using AI-enhanced technology most people don't know exists.",
+      "How I am AUTOMATING my way to financial freedom using AI-enhanced trading technology most people don't know exists.",
   },
 ];
 
