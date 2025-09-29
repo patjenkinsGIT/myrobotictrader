@@ -1,10 +1,9 @@
-// src/hooks/useGoogleSheetsData.ts - UPDATED VERSION
-// Add Records interface and reading capability
+// Enhanced useGoogleSheetsData.ts - Cleaned Version (CapitalEfficiency removed)
 
 import { useState, useEffect, useCallback } from "react";
 import { tradingDataCache } from "../utils/smartCache";
 
-// Existing interfaces
+// Your existing interfaces
 export interface TradingDataPoint {
   month: string;
   profit: number;
@@ -23,55 +22,26 @@ export interface TradingStats {
   lastUpdated: string;
 }
 
+// Portfolio Summary Interface
 export interface PortfolioSummary {
+  totalCapitalDeposited: number;
   availableUSDC: number;
   openTradingPositions: number;
   totalAccountValue: number;
-  totalCapitalDeployed: number;
+  realizedProfits: number;
   profitsWithdrawn: number;
   netCapitalAtRisk: number;
-  realizedProfits: number;
 }
 
-// NEW: Trophy Records interface
-export interface TradingRecord {
-  type: "day" | "week" | "month";
-  amount: number;
-  date: string;
-  trades: number;
-  period: string;
-  previous: number;
-  beatBy: number;
-  lastUpdated: string;
+// Enhanced interface extending your existing TradingStats
+export interface EnhancedTradingStats extends TradingStats {
+  portfolioSummary?: PortfolioSummary;
 }
 
-export interface TradingRecords {
-  bestDay: TradingRecord | null;
-  bestWeek: TradingRecord | null;
-  bestMonth: TradingRecord | null;
-}
-
-// Add to main hook return
-export interface UseGoogleSheetsDataReturn {
-  tradingStats: TradingStats | null;
-  portfolioSummary: PortfolioSummary | null;
-  tradingRecords: TradingRecords | null; // NEW
-  isLoading: boolean;
-  error: string | null;
-  cacheInfo: {
-    isFresh: boolean;
-    timeUntilNextRefresh: number;
-    isRateLimited: boolean;
-  };
-}
-
-export const useGoogleSheetsData = (): UseGoogleSheetsDataReturn => {
-  const [tradingStats, setTradingStats] = useState<TradingStats | null>(null);
-  const [portfolioSummary, setPortfolioSummary] =
-    useState<PortfolioSummary | null>(null);
-  const [tradingRecords, setTradingRecords] = useState<TradingRecords | null>(
+export const useGoogleSheetsData = () => {
+  const [tradingStats, setTradingStats] = useState<EnhancedTradingStats | null>(
     null
-  ); // NEW
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [cacheInfo, setCacheInfo] = useState({
@@ -80,70 +50,49 @@ export const useGoogleSheetsData = (): UseGoogleSheetsDataReturn => {
     isRateLimited: false,
   });
 
-  const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
-  const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
+  // Constants
+  const CALCULATIONS_TAB = "Calculations";
+  const CALCULATIONS_RANGE = "A:G";
+  const PORTFOLIO_TAB = "Coinbase Balance";
+  const PORTFOLIO_RANGE = "A:D";
 
-  // NEW: Parse Records tab data
-  const parseRecordsData = useCallback(
-    (rows: string[][]): TradingRecords | null => {
-      if (!rows || rows.length < 5) {
-        console.log("Records tab: Not enough rows");
-        return null;
-      }
+  // Parse Coinbase Balance tab
+  const parseCoinbaseBalance = useCallback(
+    (rows: string[][]): PortfolioSummary | null => {
+      if (!rows || rows.length < 20) return null;
 
       try {
-        // Row 3 = Best Day, Row 4 = Best Week, Row 5 = Best Month
-        // Columns: A=Type, B=Amount, C=Date, D=Trades, E=Period, F=Previous, G=Beat By, H=Last Updated
-
-        const parseRecord = (
-          row: string[],
-          type: "day" | "week" | "month"
-        ): TradingRecord | null => {
-          if (!row || row.length < 8) return null;
-
-          const amount =
-            parseFloat((row[1] || "0").toString().replace(/[$,]/g, "")) || 0;
-          const trades =
-            parseInt((row[3] || "0").toString().replace(/[,]/g, "")) || 0;
-          const previous =
-            parseFloat((row[5] || "0").toString().replace(/[$,]/g, "")) || 0;
-          const beatBy =
-            parseFloat((row[6] || "0").toString().replace(/[$,]/g, "")) || 0;
-
-          if (amount === 0) return null;
-
-          return {
-            type,
-            amount,
-            date: row[2]?.toString() || "N/A",
-            trades,
-            period: row[4]?.toString() || "N/A",
-            previous,
-            beatBy,
-            lastUpdated: row[7]?.toString() || "N/A",
-          };
+        const parseValue = (value: any): number => {
+          if (!value) return 0;
+          const str = value.toString().replace(/[$,%]/g, "").trim();
+          return parseFloat(str) || 0;
         };
 
         return {
-          bestDay: parseRecord(rows[2], "day"),
-          bestWeek: parseRecord(rows[3], "week"),
-          bestMonth: parseRecord(rows[4], "month"),
+          availableUSDC: parseValue(rows[3]?.[1]), // Row 4, Column B
+          openTradingPositions: parseValue(rows[4]?.[1]), // Row 5, Column B
+          totalAccountValue: parseValue(rows[5]?.[1]), // Row 6, Column B
+          totalCapitalDeposited: parseValue(rows[10]?.[1]), // Row 11, Column B
+          profitsWithdrawn: parseValue(rows[11]?.[1]), // Row 12, Column B
+          netCapitalAtRisk: parseValue(rows[12]?.[1]), // Row 13, Column B
+          realizedProfits: parseValue(rows[17]?.[1]), // Row 18, Column B
         };
       } catch (error) {
-        console.error("Error parsing Records data:", error);
+        console.error("Error parsing Coinbase Balance:", error);
         return null;
       }
     },
     []
   );
 
-  // Existing parseCalculationsData function (keep as is)
+  // Parse Calculations data with dynamic Grand Total finding
   const parseCalculationsData = useCallback(
     (rows: string[][], fetchTimestamp: string): TradingStats => {
       if (!rows || rows.length < 3) {
         return getMockTradingStatsBase();
       }
 
+      // Find Grand Total row (searches from bottom up)
       let grandTotalRow = null;
       let grandTotalIndex = -1;
 
@@ -174,25 +123,59 @@ export const useGoogleSheetsData = (): UseGoogleSheetsDataReturn => {
         parseFloat(grandTotalRow[4]?.toString().replace(/[$,]/g, "")) || 0;
       const dailyAvg =
         parseFloat(grandTotalRow[5]?.toString().replace(/[$,]/g, "")) || 0;
+      const bestMonthProfit =
+        parseFloat(grandTotalRow[6]?.toString().replace(/[$,]/g, "")) || 0;
 
+      // Parse monthly data (all rows before Grand Total)
       const monthlyData: TradingDataPoint[] = [];
-      let bestMonthProfit = 0;
 
-      for (let i = 0; i < grandTotalIndex; i++) {
+      for (let i = 1; i < grandTotalIndex; i++) {
         const row = rows[i];
-        if (!row || row.length < 3) continue;
+        if (row && row.length >= 3) {
+          const monthRaw = row[0]?.toString().trim();
+          const profit =
+            parseFloat(row[1]?.toString().replace(/[$,]/g, "")) || 0;
+          const trades = parseInt(row[2]?.toString().replace(/[,]/g, "")) || 0;
 
-        const month = row[0]?.toString().trim();
-        if (!month || month === "" || month.toLowerCase().includes("month"))
-          continue;
+          if (
+            monthRaw &&
+            monthRaw !== "Grand Total" &&
+            monthRaw !== "" &&
+            profit > 0
+          ) {
+            let shortMonth = monthRaw;
 
-        const profit = parseFloat(row[1]?.toString().replace(/[$,]/g, "")) || 0;
-        const trades = parseInt(row[2]?.toString().replace(/[,]/g, "")) || 0;
+            // Handle date format like "2025-01"
+            if (monthRaw.includes("-")) {
+              const dateParts = monthRaw.split("-");
+              if (dateParts.length >= 2) {
+                const monthNum = parseInt(dateParts[1]);
+                const monthNames = [
+                  "",
+                  "Jan",
+                  "Feb",
+                  "Mar",
+                  "Apr",
+                  "May",
+                  "Jun",
+                  "Jul",
+                  "Aug",
+                  "Sep",
+                  "Oct",
+                  "Nov",
+                  "Dec",
+                ];
+                shortMonth = monthNames[monthNum] || monthRaw;
+              }
+            } else if (monthRaw.length > 3) {
+              shortMonth = monthRaw.substring(0, 3);
+            }
 
-        if (profit > 0) {
-          monthlyData.push({ month, profit, trades });
-          if (profit > bestMonthProfit) {
-            bestMonthProfit = profit;
+            monthlyData.push({
+              month: shortMonth,
+              profit,
+              trades,
+            });
           }
         }
       }
@@ -212,151 +195,161 @@ export const useGoogleSheetsData = (): UseGoogleSheetsDataReturn => {
     []
   );
 
-  // Existing parseCoinbaseBalanceData function (keep as is)
-  const parseCoinbaseBalanceData = useCallback(
-    (rows: string[][]): PortfolioSummary | null => {
-      if (!rows || rows.length < 18) {
-        return null;
-      }
+  // Base mock trading stats
+  const getMockTradingStatsBase = (): TradingStats => {
+    const monthlyData: TradingDataPoint[] = [
+      { month: "Jan", profit: 477.23, trades: 89 },
+      { month: "Feb", profit: 686.71, trades: 124 },
+      { month: "Mar", profit: 261.97, trades: 67 },
+      { month: "Apr", profit: 552.58, trades: 98 },
+      { month: "May", profit: 376.3, trades: 82 },
+      { month: "Jun", profit: 382.97, trades: 91 },
+      { month: "Jul", profit: 817.31, trades: 156 },
+      { month: "Aug", profit: 350.32, trades: 78 },
+    ];
 
+    const totalProfit = monthlyData.reduce(
+      (sum, month) => sum + month.profit,
+      0
+    );
+    const totalTrades = monthlyData.reduce(
+      (sum, month) => sum + month.trades,
+      0
+    );
+
+    return {
+      totalProfit,
+      totalTrades,
+      avgProfitPerTrade: totalTrades > 0 ? totalProfit / totalTrades : 0,
+      monthlyAverage:
+        monthlyData.length > 0 ? totalProfit / monthlyData.length : 0,
+      dailyAvg: 15.5,
+      bestMonthProfit: Math.max(...monthlyData.map((m) => m.profit)),
+      monthlyData,
+      isLiveData: false,
+      lastUpdated: new Date().toISOString(),
+    };
+  };
+
+  // Enhanced fetch - now pulls TWO tabs: Calculations and Coinbase Balance
+  const fetchEnhancedTradingStats = useCallback(
+    async (forceRefresh = false) => {
       try {
-        const parseValue = (value: any): number => {
-          if (value === null || value === undefined || value === "") return 0;
-          const cleaned = value.toString().replace(/[$,]/g, "");
-          return parseFloat(cleaned) || 0;
+        setIsLoading(true);
+        setError(null);
+
+        const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
+        const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
+
+        if (!SHEET_ID || !API_KEY) {
+          const mockStats = getEnhancedMockTradingStats();
+          setTradingStats(mockStats);
+          setError("Using demo data - configure Google Sheets for live data");
+          return;
+        }
+
+        const fetchTimestamp = new Date().toISOString();
+
+        // Fetch TWO tabs: Calculations and Coinbase Balance
+        const [calculationsResponse, portfolioResponse] =
+          await Promise.allSettled([
+            fetch(
+              `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${CALCULATIONS_TAB}!${CALCULATIONS_RANGE}?key=${API_KEY}`
+            ),
+            fetch(
+              `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${PORTFOLIO_TAB}!${PORTFOLIO_RANGE}?key=${API_KEY}`
+            ),
+          ]);
+
+        // Parse calculations data
+        const calculationsData =
+          calculationsResponse.status === "fulfilled"
+            ? await calculationsResponse.value.json()
+            : null;
+        const originalStats = calculationsData
+          ? parseCalculationsData(calculationsData.values || [], fetchTimestamp)
+          : getMockTradingStatsBase();
+
+        // Parse portfolio data
+        const portfolioData =
+          portfolioResponse.status === "fulfilled"
+            ? await portfolioResponse.value.json()
+            : null;
+        const portfolioSummary = portfolioData
+          ? parseCoinbaseBalance(portfolioData.values || [])
+          : null;
+
+        const enhancedStats: EnhancedTradingStats = {
+          ...originalStats,
+          portfolioSummary: portfolioSummary || undefined,
         };
 
-        return {
-          availableUSDC: parseValue(rows[3]?.[1]),
-          openTradingPositions: parseValue(rows[4]?.[1]),
-          totalAccountValue: parseValue(rows[5]?.[1]),
-          totalCapitalDeployed: parseValue(rows[10]?.[1]),
-          profitsWithdrawn: parseValue(rows[11]?.[1]),
-          netCapitalAtRisk: parseValue(rows[12]?.[1]),
-          realizedProfits: parseValue(rows[17]?.[1]),
-        };
+        setTradingStats(enhancedStats);
+        setCacheInfo({
+          isFresh: !forceRefresh,
+          timeUntilNextRefresh: 0,
+          isRateLimited: false,
+        });
       } catch (error) {
-        console.error("Error parsing Coinbase Balance:", error);
-        return null;
+        console.error("Error fetching enhanced trading stats:", error);
+        setError(
+          error instanceof Error ? error.message : "Failed to load trading data"
+        );
+        const mockStats = getEnhancedMockTradingStats();
+        setTradingStats(mockStats);
+      } finally {
+        setIsLoading(false);
       }
     },
-    []
+    [parseCalculationsData, parseCoinbaseBalance]
   );
 
-  // Mock data generator (keep as is)
-  const getMockTradingStatsBase = (): TradingStats => ({
-    totalProfit: 4169.18,
-    totalTrades: 875,
-    avgProfitPerTrade: 4.76,
-    monthlyAverage: 463.24,
-    dailyAvg: 15.44,
-    bestMonthProfit: 1247.83,
-    monthlyData: [],
-    isLiveData: false,
-    lastUpdated: new Date().toISOString(),
-  });
+  // Enhanced mock data
+  const getEnhancedMockTradingStats = (): EnhancedTradingStats => {
+    const monthlyData: TradingDataPoint[] = [
+      { month: "Jan", profit: 477.23, trades: 89 },
+      { month: "Feb", profit: 686.71, trades: 124 },
+      { month: "Mar", profit: 261.97, trades: 67 },
+    ];
 
-  // Main fetch function - UPDATED to include Records
-  const fetchData = useCallback(async () => {
-    if (!SHEET_ID || !API_KEY) {
-      setError("Missing Google Sheets configuration");
-      setIsLoading(false);
-      return;
-    }
+    const totalProfit = monthlyData.reduce(
+      (sum, month) => sum + month.profit,
+      0
+    );
+    const totalTrades = monthlyData.reduce(
+      (sum, month) => sum + month.trades,
+      0
+    );
 
-    const cacheKey = `all-sheets-data-${SHEET_ID}`;
-    const cached = tradingDataCache.get(cacheKey);
-
-    if (cached) {
-      setTradingStats(cached.stats);
-      setPortfolioSummary(cached.portfolio);
-      setTradingRecords(cached.records); // NEW
-      setCacheInfo({
-        isFresh: true,
-        timeUntilNextRefresh: tradingDataCache.getTimeUntilExpiration(cacheKey),
-        isRateLimited: false,
-      });
-      setIsLoading(false);
-      return;
-    }
-
-    try {
-      setIsLoading(true);
-      const fetchTimestamp = new Date().toISOString();
-
-      // Fetch all tabs in parallel
-      const [calculationsResponse, coinbaseResponse, recordsResponse] =
-        await Promise.all([
-          fetch(
-            `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Calculations!A:G?key=${API_KEY}`
-          ),
-          fetch(
-            `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Coinbase%20Balance!A:B?key=${API_KEY}`
-          ),
-          fetch(
-            `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Records!A:H?key=${API_KEY}`
-          ),
-        ]);
-
-      if (!calculationsResponse.ok || !coinbaseResponse.ok) {
-        throw new Error("Failed to fetch data");
-      }
-
-      const [calculationsData, coinbaseData, recordsData] = await Promise.all([
-        calculationsResponse.json(),
-        coinbaseResponse.json(),
-        recordsResponse.ok ? recordsResponse.json() : null,
-      ]);
-
-      const stats = parseCalculationsData(
-        calculationsData.values || [],
-        fetchTimestamp
-      );
-      const portfolio = parseCoinbaseBalanceData(coinbaseData.values || []);
-      const records = recordsData?.values
-        ? parseRecordsData(recordsData.values)
-        : null;
-
-      // Cache all data together
-      tradingDataCache.set(cacheKey, {
-        stats,
-        portfolio,
-        records,
-      });
-
-      setTradingStats(stats);
-      setPortfolioSummary(portfolio);
-      setTradingRecords(records);
-      setCacheInfo({
-        isFresh: false,
-        timeUntilNextRefresh: tradingDataCache.getTimeUntilExpiration(cacheKey),
-        isRateLimited: false,
-      });
-      setError(null);
-    } catch (err) {
-      console.error("Error fetching Google Sheets data:", err);
-      setError("Failed to load data");
-    } finally {
-      setIsLoading(false);
-    }
-  }, [
-    SHEET_ID,
-    API_KEY,
-    parseCalculationsData,
-    parseCoinbaseBalanceData,
-    parseRecordsData,
-  ]);
+    return {
+      totalProfit,
+      totalTrades,
+      avgProfitPerTrade: totalTrades > 0 ? totalProfit / totalTrades : 0,
+      monthlyAverage:
+        monthlyData.length > 0 ? totalProfit / monthlyData.length : 0,
+      dailyAvg: 15.5,
+      bestMonthProfit: 686.71,
+      monthlyData,
+      isLiveData: false,
+      lastUpdated: new Date().toISOString(),
+      portfolioSummary: undefined,
+    };
+  };
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    fetchEnhancedTradingStats();
+  }, [fetchEnhancedTradingStats]);
 
   return {
     tradingStats,
-    portfolioSummary,
-    tradingRecords, // NEW
     isLoading,
     error,
+    refreshStats: () => fetchEnhancedTradingStats(true),
     cacheInfo,
+    cacheStats: tradingDataCache?.getStats?.() || {
+      hits: 0,
+      misses: 0,
+      size: 0,
+    },
   };
 };
