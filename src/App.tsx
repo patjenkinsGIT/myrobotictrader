@@ -1,5 +1,5 @@
 // App.tsx - CLEAN VERSION - All Components Working
-import { useEffect, useCallback } from "react";
+import { useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -131,37 +131,13 @@ const SEOWrapper = ({ children }: { children: React.ReactNode }) => {
 
 const HomePage = () => {
   // Single data source from hook
-  const { tradingStats, isLoading, error, refreshStats, cacheInfo } =
-    useGoogleSheetsData();
-
-  // Safe refresh function with error handling
-  const safeRefreshStats = useCallback(() => {
-    try {
-      if (refreshStats && typeof refreshStats === "function") {
-        refreshStats();
-      }
-    } catch (error) {
-      console.error("Error in refresh function:", error);
-    }
-  }, [refreshStats]);
+  const { tradingStats } = useGoogleSheetsData();
 
   return (
     <>
       <Hero />
       <MyStory tradingStats={tradingStats} />
-      <TradingResults
-        tradingStats={tradingStats}
-        isLoading={isLoading}
-        error={error}
-        refreshStats={refreshStats || safeRefreshStats}
-        cacheInfo={
-          cacheInfo || {
-            isFresh: false,
-            isRateLimited: false,
-            timeUntilNextRefresh: 0,
-          }
-        }
-      />
+      <TradingResults />
       <DynamicSmartMoneyComparison />
       <Features />
       <CallToAction />
