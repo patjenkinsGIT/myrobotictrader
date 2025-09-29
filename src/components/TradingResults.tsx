@@ -1,4 +1,4 @@
-// src/components/TradingResults.tsx - COMPLETE VERSION WITH RECORDS
+// src/components/TradingResults.tsx - UPDATED with props
 import React from "react";
 import {
   TrendingUp,
@@ -12,13 +12,21 @@ import {
 } from "lucide-react";
 import { calculateTimeSinceStart } from "../utils/tradingTime";
 import { LiveTransactionLog } from "./LiveTransactionLog";
-import { useGoogleSheetsData } from "../hooks/useGoogleSheetsData";
 
-export const TradingResults: React.FC = () => {
-  // Use the hook directly in the component
-  const { tradingStats, tradingRecords, isLoading, error } =
-    useGoogleSheetsData();
+// Props interface
+interface TradingResultsProps {
+  tradingStats: any;
+  tradingRecords: any;
+  isLoading: boolean;
+  error: string | null;
+}
 
+export const TradingResults: React.FC<TradingResultsProps> = ({
+  tradingStats,
+  tradingRecords,
+  isLoading,
+  error,
+}) => {
   const timeSinceStart = calculateTimeSinceStart();
 
   if (isLoading) {

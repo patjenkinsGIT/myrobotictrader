@@ -130,14 +130,20 @@ const SEOWrapper = ({ children }: { children: React.ReactNode }) => {
 };
 
 const HomePage = () => {
-  // Single data source from hook
-  const { tradingStats } = useGoogleSheetsData();
+  // Get all the data from the hook
+  const { tradingStats, tradingRecords, isLoading, error } =
+    useGoogleSheetsData();
 
   return (
     <>
       <Hero />
       <MyStory tradingStats={tradingStats} />
-      <TradingResults />
+      <TradingResults
+        tradingStats={tradingStats}
+        tradingRecords={tradingRecords}
+        isLoading={isLoading}
+        error={error}
+      />
       <DynamicSmartMoneyComparison />
       <Features />
       <CallToAction />
