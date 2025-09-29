@@ -3,7 +3,7 @@ import { ArrowRight, Bot, Shield, Clock, Users } from "lucide-react";
 import { FloatingIcons } from "./FloatingIcons";
 import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
 
-// A/B Test Configuration
+// A/B Test Configuration goes here
 const HEADLINE_VARIANTS = [
   {
     id: "control",
