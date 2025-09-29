@@ -1,4 +1,4 @@
-// Enhanced useGoogleSheetsData.ts - Complete Merged Version
+// Enhanced useGoogleSheetsData.ts - Cleaned Version (CapitalEfficiency removed)
 
 import { useState, useEffect, useCallback } from "react";
 import { tradingDataCache } from "../utils/smartCache";
@@ -22,7 +22,7 @@ export interface TradingStats {
   lastUpdated: string;
 }
 
-// NEW: Portfolio Summary Interface
+// Portfolio Summary Interface
 export interface PortfolioSummary {
   totalCapitalDeposited: number;
   availableUSDC: number;
@@ -33,31 +33,9 @@ export interface PortfolioSummary {
   netCapitalAtRisk: number;
 }
 
-// Capital efficiency data interface
-export interface CapitalEfficiencyData {
-  month: string;
-  totalCapitalAvailable: number;
-  capitalDeployed: number;
-  cashReserves: number;
-  deploymentRatio: number;
-  reserveSafety: number;
-  bitcoinValue: number;
-  bitcoinReturn: number;
-  aiPortfolioValue: number;
-  aiProfit: number;
-  aiReturnDeployed: number;
-  aiReturnTotal: number;
-  advantage: number;
-}
-
 // Enhanced interface extending your existing TradingStats
 export interface EnhancedTradingStats extends TradingStats {
-  capitalEfficiencyData: CapitalEfficiencyData[];
   portfolioSummary?: PortfolioSummary;
-  totalCapitalDeployed: number;
-  totalAdvantage: number;
-  avgDeploymentRatio: number;
-  avgReserveSafety: number;
 }
 
 export const useGoogleSheetsData = () => {
@@ -75,73 +53,10 @@ export const useGoogleSheetsData = () => {
   // Constants
   const CALCULATIONS_TAB = "Calculations";
   const CALCULATIONS_RANGE = "A:G";
-  const EFFICIENCY_TAB = "CapitalEfficiency";
-  const EFFICIENCY_RANGE = "A:R";
   const PORTFOLIO_TAB = "Coinbase Balance";
   const PORTFOLIO_RANGE = "A:D";
 
-  // Parse capital efficiency data
-  const parseCapitalEfficiencyData = useCallback(
-    (rows: string[][]): CapitalEfficiencyData[] => {
-      if (!rows || rows.length < 3) return [];
-
-      const efficiencyData: CapitalEfficiencyData[] = [];
-
-      for (let i = 2; i < rows.length; i++) {
-        const row = rows[i];
-        if (!row || row.length < 10) continue;
-
-        const month = row[0];
-        const totalCapitalAvailable =
-          parseFloat(row[1]?.toString().replace(/[$,]/g, "")) || 0;
-        const capitalDeployed =
-          parseFloat(row[2]?.toString().replace(/[$,]/g, "")) || 0;
-        const cashReserves =
-          parseFloat(row[3]?.toString().replace(/[$,]/g, "")) || 0;
-        const deploymentRatio =
-          parseFloat(row[4]?.toString().replace(/[%]/g, "")) || 0;
-        const reserveSafety =
-          parseFloat(row[5]?.toString().replace(/[%]/g, "")) || 0;
-        const bitcoinValue =
-          parseFloat(row[9]?.toString().replace(/[$,]/g, "")) || 0;
-        const bitcoinReturn =
-          parseFloat(row[10]?.toString().replace(/[%]/g, "")) || 0;
-        const aiPortfolioValue =
-          parseFloat(row[13]?.toString().replace(/[$,]/g, "")) || 0;
-        const aiProfit =
-          parseFloat(row[14]?.toString().replace(/[$,]/g, "")) || 0;
-        const aiReturnDeployed =
-          parseFloat(row[15]?.toString().replace(/[%]/g, "")) || 0;
-        const aiReturnTotal =
-          parseFloat(row[16]?.toString().replace(/[%]/g, "")) || 0;
-        const advantage =
-          parseFloat(row[17]?.toString().replace(/[$,]/g, "")) || 0;
-
-        if (month && month.toString().startsWith("2025")) {
-          efficiencyData.push({
-            month: month.toString(),
-            totalCapitalAvailable,
-            capitalDeployed,
-            cashReserves,
-            deploymentRatio,
-            reserveSafety,
-            bitcoinValue,
-            bitcoinReturn,
-            aiPortfolioValue,
-            aiProfit,
-            aiReturnDeployed,
-            aiReturnTotal,
-            advantage,
-          });
-        }
-      }
-
-      return efficiencyData;
-    },
-    []
-  );
-
-  // NEW: Parse Coinbase Balance tab
+  // Parse Coinbase Balance tab
   const parseCoinbaseBalance = useCallback(
     (rows: string[][]): PortfolioSummary | null => {
       if (!rows || rows.length < 20) return null;
@@ -316,7 +231,7 @@ export const useGoogleSheetsData = () => {
     };
   };
 
-  // Enhanced fetch - now pulls THREE tabs!
+  // Enhanced fetch - now pulls TWO tabs: Calculations and Coinbase Balance
   const fetchEnhancedTradingStats = useCallback(
     async (forceRefresh = false) => {
       try {
@@ -335,14 +250,11 @@ export const useGoogleSheetsData = () => {
 
         const fetchTimestamp = new Date().toISOString();
 
-        // Fetch all three tabs: Calculations, CapitalEfficiency, and Coinbase Balance
-        const [calculationsResponse, efficiencyResponse, portfolioResponse] =
+        // Fetch TWO tabs: Calculations and Coinbase Balance
+        const [calculationsResponse, portfolioResponse] =
           await Promise.allSettled([
             fetch(
               `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${CALCULATIONS_TAB}!${CALCULATIONS_RANGE}?key=${API_KEY}`
-            ),
-            fetch(
-              `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${EFFICIENCY_TAB}!${EFFICIENCY_RANGE}?key=${API_KEY}`
             ),
             fetch(
               `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${PORTFOLIO_TAB}!${PORTFOLIO_RANGE}?key=${API_KEY}`
@@ -358,16 +270,7 @@ export const useGoogleSheetsData = () => {
           ? parseCalculationsData(calculationsData.values || [], fetchTimestamp)
           : getMockTradingStatsBase();
 
-        // Parse capital efficiency data
-        const efficiencyData =
-          efficiencyResponse.status === "fulfilled"
-            ? await efficiencyResponse.value.json()
-            : null;
-        const capitalEfficiencyData = efficiencyData
-          ? parseCapitalEfficiencyData(efficiencyData.values || [])
-          : getEnhancedMockTradingStats().capitalEfficiencyData;
-
-        // Parse portfolio data (NEW!)
+        // Parse portfolio data
         const portfolioData =
           portfolioResponse.status === "fulfilled"
             ? await portfolioResponse.value.json()
@@ -376,38 +279,9 @@ export const useGoogleSheetsData = () => {
           ? parseCoinbaseBalance(portfolioData.values || [])
           : null;
 
-        // Calculate enhanced metrics
-        const totalCapitalDeployed = capitalEfficiencyData.reduce(
-          (sum, month) => sum + month.capitalDeployed,
-          0
-        );
-        const totalAdvantage = capitalEfficiencyData.reduce(
-          (sum, month) => sum + month.advantage,
-          0
-        );
-        const avgDeploymentRatio =
-          capitalEfficiencyData.length > 0
-            ? capitalEfficiencyData.reduce(
-                (sum, month) => sum + month.deploymentRatio,
-                0
-              ) / capitalEfficiencyData.length
-            : 0;
-        const avgReserveSafety =
-          capitalEfficiencyData.length > 0
-            ? capitalEfficiencyData.reduce(
-                (sum, month) => sum + month.reserveSafety,
-                0
-              ) / capitalEfficiencyData.length
-            : 0;
-
         const enhancedStats: EnhancedTradingStats = {
           ...originalStats,
-          capitalEfficiencyData,
-          portfolioSummary: portfolioSummary || undefined, // Convert null to undefined
-          totalCapitalDeployed,
-          totalAdvantage,
-          avgDeploymentRatio,
-          avgReserveSafety,
+          portfolioSummary: portfolioSummary || undefined,
         };
 
         setTradingStats(enhancedStats);
@@ -427,29 +301,11 @@ export const useGoogleSheetsData = () => {
         setIsLoading(false);
       }
     },
-    [parseCalculationsData, parseCapitalEfficiencyData, parseCoinbaseBalance]
+    [parseCalculationsData, parseCoinbaseBalance]
   );
 
   // Enhanced mock data
   const getEnhancedMockTradingStats = (): EnhancedTradingStats => {
-    const mockCapitalEfficiencyData: CapitalEfficiencyData[] = [
-      {
-        month: "2025-01",
-        totalCapitalAvailable: 25000,
-        capitalDeployed: 10750,
-        cashReserves: 14250,
-        deploymentRatio: 43.0,
-        reserveSafety: 57.0,
-        bitcoinValue: 27403,
-        bitcoinReturn: 9.61,
-        aiPortfolioValue: 25477,
-        aiProfit: 477,
-        aiReturnDeployed: 4.44,
-        aiReturnTotal: 1.91,
-        advantage: -1926,
-      },
-    ];
-
     const monthlyData: TradingDataPoint[] = [
       { month: "Jan", profit: 477.23, trades: 89 },
       { month: "Feb", profit: 686.71, trades: 124 },
@@ -476,12 +332,7 @@ export const useGoogleSheetsData = () => {
       monthlyData,
       isLiveData: false,
       lastUpdated: new Date().toISOString(),
-      capitalEfficiencyData: mockCapitalEfficiencyData,
       portfolioSummary: undefined,
-      totalCapitalDeployed: 15700,
-      totalAdvantage: 5972,
-      avgDeploymentRatio: 19.9,
-      avgReserveSafety: 80.1,
     };
   };
 
