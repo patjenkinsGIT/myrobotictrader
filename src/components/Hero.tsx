@@ -125,25 +125,27 @@ export const Hero: React.FC = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <button
+            <a
+              href="https://dailyprofits.link/class"
               onClick={handleGetFreeTraining}
-              className="group relative bg-gradient-to-r from-green-500 to-emerald-500 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-2xl hover:shadow-green-500/50 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 border border-green-400/30"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative bg-gradient-to-r from-green-500 to-emerald-500 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-2xl hover:shadow-green-500/50 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 border border-green-400/30 flex items-center justify-center gap-2"
             >
-              <span className="flex items-center gap-2">
-                Get Free Training
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </span>
-            </button>
+              Get Free Training
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </a>
 
-            <button
+            <a
+              href="https://dailyprofits.link/gbt"
               onClick={handleStartTrading}
-              className="group relative bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-xl font-semibold text-lg border border-white/20 hover:border-white/40 hover:bg-white/15 transition-all duration-300 transform hover:scale-105"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-xl font-semibold text-lg border border-white/20 hover:border-white/40 hover:bg-white/15 transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2"
             >
-              <span className="flex items-center gap-2">
-                Start Trading
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </span>
-            </button>
+              Start Trading
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </a>
           </div>
         </div>
 
