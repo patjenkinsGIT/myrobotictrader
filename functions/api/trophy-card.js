@@ -109,6 +109,13 @@ function generateTrophyCardSVG(data, type) {
 
   return `<svg width="600" height="350" xmlns="http://www.w3.org/2000/svg">
   <defs>
+    <!-- Background gradient -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e1b4b;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#312e81;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e293b;stop-opacity:1" />
+    </linearGradient>
+    
     <!-- Gold gradient for trophy theme -->
     <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
@@ -121,16 +128,9 @@ function generateTrophyCardSVG(data, type) {
       <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
       <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
     </linearGradient>
-    
-    <!-- Background gradient -->
-    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#0f172a;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#1e293b;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#0f172a;stop-opacity:1" />
-    </linearGradient>
   </defs>
   
-  <!-- Background -->
+  <!-- Full background with gradient -->
   <rect width="600" height="350" fill="url(#bgGradient)" rx="24"/>
   
   <!-- Decorative corner accents -->
@@ -170,7 +170,7 @@ function generateTrophyCardSVG(data, type) {
   <!-- Main profit amount -->
   <text x="300" y="${
     isNewRecord ? "190" : "180"
-  }" text-anchor="middle" fill="url(#goldGradient)" font-size="64" font-weight="bold" font-family="Arial, monospace">$${data.amount.toFixed(
+  }" text-anchor="middle" fill="url(#goldGradient)" font-size="64" font-weight="bold" font-family="Arial, monospace">${data.amount.toFixed(
     2
   )}</text>
   
@@ -182,31 +182,31 @@ function generateTrophyCardSVG(data, type) {
   }</text>
   
   <!-- Stats row -->
-  <g transform="translate(0, ${isNewRecord ? "245" : "235"})">
+  <g transform="translate(0, ${isNewRecord ? "250" : "240"})">
     <!-- Trades executed -->
-    <rect x="80" y="0" width="150" height="60" fill="rgba(255,255,255,0.08)" rx="12" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
-    <text x="155" y="30" text-anchor="middle" fill="white" font-size="24" font-weight="bold" font-family="Arial, monospace">${
+    <rect x="90" y="0" width="140" height="60" fill="rgba(255,255,255,0.08)" rx="12" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+    <text x="160" y="30" text-anchor="middle" fill="white" font-size="24" font-weight="bold" font-family="Arial, monospace">${
       data.trades
     }</text>
-    <text x="155" y="48" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="11" font-weight="600" font-family="Arial, sans-serif">TRADES</text>
+    <text x="160" y="48" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="11" font-weight="600" font-family="Arial, sans-serif">TRADES</text>
     
     ${
       isNewRecord && data.beatBy > 0
         ? `
     <!-- Beat previous by -->
-    <rect x="250" y="0" width="180" height="60" fill="rgba(255,255,255,0.08)" rx="12" stroke="rgba(16,185,129,0.3)" stroke-width="2"/>
-    <text x="340" y="30" text-anchor="middle" fill="#10b981" font-size="24" font-weight="bold" font-family="Arial, monospace">+$${data.beatBy.toFixed(
+    <rect x="250" y="0" width="200" height="60" fill="rgba(255,255,255,0.08)" rx="12" stroke="rgba(16,185,129,0.3)" stroke-width="2"/>
+    <text x="350" y="30" text-anchor="middle" fill="#10b981" font-size="22" font-weight="bold" font-family="Arial, monospace">+${data.beatBy.toFixed(
       2
     )}</text>
-    <text x="340" y="48" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="11" font-weight="600" font-family="Arial, sans-serif">BEAT PREVIOUS BY</text>
+    <text x="350" y="48" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="10" font-weight="600" font-family="Arial, sans-serif">BEAT PREVIOUS BY</text>
     `
         : `
     <!-- Previous record -->
-    <rect x="250" y="0" width="180" height="60" fill="rgba(255,255,255,0.08)" rx="12" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
-    <text x="340" y="30" text-anchor="middle" fill="white" font-size="20" font-weight="bold" font-family="Arial, monospace">$${data.previous.toFixed(
+    <rect x="260" y="0" width="180" height="60" fill="rgba(255,255,255,0.08)" rx="12" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+    <text x="350" y="30" text-anchor="middle" fill="white" font-size="20" font-weight="bold" font-family="Arial, monospace">${data.previous.toFixed(
       2
     )}</text>
-    <text x="340" y="48" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="11" font-weight="600" font-family="Arial, sans-serif">PREVIOUS BEST</text>
+    <text x="350" y="48" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="11" font-weight="600" font-family="Arial, sans-serif">PREVIOUS BEST</text>
     `
     }
   </g>
