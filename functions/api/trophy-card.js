@@ -7,6 +7,15 @@ export async function onRequest(context) {
     "Access-Control-Allow-Methods": "GET, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
   };
+}
+// Trophy card generator for record-breaking trading achievements
+
+export async function onRequest(context) {
+  const corsHeaders = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+  };
 
   if (context.request.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -421,7 +430,7 @@ function generateTrophyCardHTML(data, type) {
     
     .profit-amount {
       position: absolute;
-      top: 190px;
+      top: 185px;
       width: 100%;
       text-align: center;
       font-size: 44px;
@@ -433,7 +442,7 @@ function generateTrophyCardHTML(data, type) {
     
     .badges {
       position: absolute;
-      bottom: 35px;
+      bottom: 38px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
