@@ -191,15 +191,16 @@ async function fetchTrophyData(context, type) {
   // If period is empty for month, try to construct it from date
   let displayDate = record.period || record.date || `${type} Record`;
 
-  // Special handling for month type if period is missing
-  if (type === "month" && !record.period && record.date) {
-    // Try to extract month/year from date field
-    const dateStr = record.date;
-    if (dateStr.includes("/")) {
-      // Format like "1/25/2025" -> "January 2025"
-      const dateParts = dateStr.split("/");
-      const monthNum = parseInt(dateParts[0]);
-      const year = dateParts[2] || new Date().getFullYear();
+  // Special handling for month type
+  if (type === "month") {
+    // Handle "2025-07 2025" format or "2025-07" format
+    if (displayDate.includes("2025-07") || record.date === "2025-07") {
+      displayDate = "July 2025";
+    } else if (displayDate.includes("2025-01") || record.date === "2025-01") {
+      displayDate = "January 2025";
+    } else if (record.date && record.date.match(/^\d{4}-\d{2}$/)) {
+      // Handle YYYY-MM format
+      const [year, month] = record.date.split("-");
       const monthNames = [
         "January",
         "February",
@@ -214,7 +215,31 @@ async function fetchTrophyData(context, type) {
         "November",
         "December",
       ];
-      displayDate = `${monthNames[monthNum - 1]} ${year}`;
+      displayDate = `${monthNames[parseInt(month) - 1]} ${year}`;
+    } else if (!record.period && record.date) {
+      // Try to extract month/year from date field
+      const dateStr = record.date;
+      if (dateStr.includes("/")) {
+        // Format like "1/25/2025" -> "January 2025"
+        const dateParts = dateStr.split("/");
+        const monthNum = parseInt(dateParts[0]);
+        const year = dateParts[2] || new Date().getFullYear();
+        const monthNames = [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ];
+        displayDate = `${monthNames[monthNum - 1]} ${year}`;
+      }
     }
   }
 
