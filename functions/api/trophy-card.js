@@ -107,11 +107,22 @@ export async function onRequest(context) {
 }
 
 async function fetchTrophyData(context, type) {
-  const SHEETS_API_KEY = context.env.SHEETS_API_KEY;
-  const SPREADSHEET_ID = context.env.SPREADSHEET_ID;
+  const SHEETS_API_KEY = context.env.GOOGLE_API_KEY;
+  const SPREADSHEET_ID = context.env.GOOGLE_SHEET_ID;
+
+  // Debug: Check what we're getting
+  const debugInfo = {
+    hasApiKey: !!SHEETS_API_KEY,
+    apiKeyLength: SHEETS_API_KEY ? SHEETS_API_KEY.length : 0,
+    hasSpreadsheetId: !!SPREADSHEET_ID,
+    spreadsheetIdLength: SPREADSHEET_ID ? SPREADSHEET_ID.length : 0,
+    envKeys: Object.keys(context.env || {}),
+  };
 
   if (!SHEETS_API_KEY || !SPREADSHEET_ID) {
-    throw new Error("Missing API credentials");
+    throw new Error(
+      `Missing API credentials - Debug: ${JSON.stringify(debugInfo)}`
+    );
   }
 
   // Fetch from Records tab (A1:H4)
