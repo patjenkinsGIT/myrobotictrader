@@ -16,9 +16,21 @@ export async function onRequest(context) {
     const url = new URL(context.request.url);
     const type = url.searchParams.get("type") || "month";
     const format = url.searchParams.get("format") || "html";
+    const debug = url.searchParams.get("debug") === "true";
 
     // Fetch real trading data from Google Sheets
     const trophyData = await fetchTrophyData(context, type);
+
+    // If debug mode, show raw data
+    if (debug) {
+      return new Response(JSON.stringify(trophyData, null, 2), {
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json",
+          "Cache-Control": "no-cache",
+        },
+      });
+    }
 
     if (format === "svg") {
       const svg = generateTrophyCardSVG(trophyData, type);
@@ -42,10 +54,29 @@ export async function onRequest(context) {
   } catch (error) {
     console.error("Trophy card error:", error);
     const url = new URL(context.request.url);
+    const debug = url.searchParams.get("debug") === "true";
     const fallbackData = getFallbackData(
       url.searchParams.get("type") || "month"
     );
     const format = url.searchParams.get("format") || "html";
+
+    // If debug mode and error, show error details
+    if (debug) {
+      return new Response(
+        JSON.stringify(
+          { error: error.message, fallback: fallbackData },
+          null,
+          2
+        ),
+        {
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "application/json",
+            "Cache-Control": "no-cache",
+          },
+        }
+      );
+    }
 
     if (format === "svg") {
       const svg = generateTrophyCardSVG(
@@ -99,18 +130,28 @@ async function fetchTrophyData(context, type) {
     throw new Error("Insufficient data in Records tab");
   }
 
-  // Debug logging for month row
-  console.log("Month row data:", rows[3]);
-
   // Parse the Records tab data
   // Row 0: Headers
   // Row 1: Best Day
   // Row 2: Best Week
   // Row 3: Best Month
 
-  const parseRecordRow = (row) => {
+  const parseRecordRow = (row, rowType) => {
+    // Debug: Store raw row data
+    const rawData = {
+      rowType: rowType,
+      rawRow: row,
+      columnB_Amount: row[1],
+      columnC_Date: row[2],
+      columnD_Trades: row[3],
+      columnE_Period: row[4],
+      columnF_Previous: row[5],
+      columnG_BeatBy: row[6],
+      columnH_LastUpdated: row[7],
+    };
+
     // Handle potential missing columns
-    return {
+    const parsed = {
       amount: parseFloat((row[1] || "0").replace(/[$,]/g, "")),
       date: row[2] || "",
       trades: parseInt(row[3] || "0"),
@@ -118,28 +159,59 @@ async function fetchTrophyData(context, type) {
       previousAmount: parseFloat((row[5] || "0").replace(/[$,]/g, "")),
       beatBy: parseFloat((row[6] || "0").replace(/[$,]/g, "")),
       lastUpdated: row[7] || "",
+      _debug: rawData, // Include raw data for debugging
     };
+
+    return parsed;
   };
 
   const recordsData = {
-    day: parseRecordRow(rows[1]),
-    week: parseRecordRow(rows[2]),
-    month: parseRecordRow(rows[3]),
+    day: parseRecordRow(rows[1], "day"),
+    week: parseRecordRow(rows[2], "week"),
+    month: parseRecordRow(rows[3], "month"),
   };
 
   // Format data for the requested type
   const record = recordsData[type];
 
-  // Debug log for selected record
-  console.log(`Record for type ${type}:`, record);
+  // If period is empty for month, try to construct it from date
+  let displayDate = record.period || record.date || `${type} Record`;
+
+  // Special handling for month type if period is missing
+  if (type === "month" && !record.period && record.date) {
+    // Try to extract month/year from date field
+    const dateStr = record.date;
+    if (dateStr.includes("/")) {
+      // Format like "1/25/2025" -> "January 2025"
+      const dateParts = dateStr.split("/");
+      const monthNum = parseInt(dateParts[0]);
+      const year = dateParts[2] || new Date().getFullYear();
+      const monthNames = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+      displayDate = `${monthNames[monthNum - 1]} ${year}`;
+    }
+  }
 
   return {
-    date: record.period || record.date || `${type} Record`, // Better fallback
+    date: displayDate,
     profit: record.amount,
     trades: record.trades,
     beatBy: record.beatBy,
     previous: record.previousAmount,
     lastUpdated: record.lastUpdated,
+    _debug: record._debug, // Include debug info
   };
 }
 
