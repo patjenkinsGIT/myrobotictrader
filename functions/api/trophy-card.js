@@ -125,8 +125,8 @@ async function fetchTrophyData(context, type) {
     );
   }
 
-  // Fetch from Records tab (A1:H4)
-  const range = "Records!A1:H4";
+  // Fetch from Records tab (A1:H5 to include all records)
+  const range = "Records!A1:H5";
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}?key=${SHEETS_API_KEY}`;
 
   const response = await fetch(url);
@@ -137,15 +137,18 @@ async function fetchTrophyData(context, type) {
   const data = await response.json();
   const rows = data.values || [];
 
-  if (rows.length < 4) {
-    throw new Error("Insufficient data in Records tab");
+  if (rows.length < 5) {
+    throw new Error(
+      `Insufficient data in Records tab - found ${rows.length} rows, need 5`
+    );
   }
 
   // Parse the Records tab data
   // Row 0: Headers
-  // Row 1: Best Day
-  // Row 2: Best Week
-  // Row 3: Best Month
+  // Row 1: "Record Type" header row
+  // Row 2: Best Day
+  // Row 3: Best Week
+  // Row 4: Best Month
 
   const parseRecordRow = (row, rowType) => {
     // Debug: Store raw row data
@@ -177,9 +180,9 @@ async function fetchTrophyData(context, type) {
   };
 
   const recordsData = {
-    day: parseRecordRow(rows[1], "day"),
-    week: parseRecordRow(rows[2], "week"),
-    month: parseRecordRow(rows[3], "month"),
+    day: parseRecordRow(rows[2], "day"),
+    week: parseRecordRow(rows[3], "week"),
+    month: parseRecordRow(rows[4], "month"),
   };
 
   // Format data for the requested type
