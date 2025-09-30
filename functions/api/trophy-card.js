@@ -99,20 +99,24 @@ async function fetchTrophyData(context, type) {
     throw new Error("Insufficient data in Records tab");
   }
 
+  // Debug logging for month row
+  console.log("Month row data:", rows[3]);
+
   // Parse the Records tab data
-  // Row 1: Headers
-  // Row 2: Best Day
-  // Row 3: Best Week
-  // Row 4: Best Month
+  // Row 0: Headers
+  // Row 1: Best Day
+  // Row 2: Best Week
+  // Row 3: Best Month
 
   const parseRecordRow = (row) => {
+    // Handle potential missing columns
     return {
-      amount: parseFloat(row[1].replace(/[$,]/g, "") || 0),
+      amount: parseFloat((row[1] || "0").replace(/[$,]/g, "")),
       date: row[2] || "",
-      trades: parseInt(row[3] || 0),
+      trades: parseInt(row[3] || "0"),
       period: row[4] || "",
-      previousAmount: parseFloat(row[5].replace(/[$,]/g, "") || 0),
-      beatBy: parseFloat(row[6].replace(/[$,]/g, "") || 0),
+      previousAmount: parseFloat((row[5] || "0").replace(/[$,]/g, "")),
+      beatBy: parseFloat((row[6] || "0").replace(/[$,]/g, "")),
       lastUpdated: row[7] || "",
     };
   };
@@ -126,8 +130,11 @@ async function fetchTrophyData(context, type) {
   // Format data for the requested type
   const record = recordsData[type];
 
+  // Debug log for selected record
+  console.log(`Record for type ${type}:`, record);
+
   return {
-    date: record.period || record.date, // Use period for all types, fallback to date
+    date: record.period || record.date || `${type} Record`, // Better fallback
     profit: record.amount,
     trades: record.trades,
     beatBy: record.beatBy,
@@ -315,7 +322,7 @@ function generateTrophyCardHTML(data, type) {
     
     .badges {
       position: absolute;
-      bottom: 30px;
+      bottom: 35px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
