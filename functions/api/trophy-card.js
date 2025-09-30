@@ -127,7 +127,7 @@ async function fetchTrophyData(context, type) {
   const record = recordsData[type];
 
   return {
-    date: type === "day" ? record.date : record.period,
+    date: record.period || record.date, // Use period for all types, fallback to date
     profit: record.amount,
     trades: record.trades,
     beatBy: record.beatBy,
@@ -303,10 +303,10 @@ function generateTrophyCardHTML(data, type) {
     
     .profit-amount {
       position: absolute;
-      top: 195px;
+      top: 190px;
       width: 100%;
       text-align: center;
-      font-size: 48px;
+      font-size: 44px;
       font-weight: bold;
       color: #10b981;
       font-family: 'SF Mono', Monaco, monospace;
@@ -315,7 +315,7 @@ function generateTrophyCardHTML(data, type) {
     
     .badges {
       position: absolute;
-      bottom: 40px;
+      bottom: 30px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
@@ -471,7 +471,7 @@ function generateTrophyCardSVG(data, type) {
 
   const isNewRecord = data.beatBy > 0;
 
-  // Return pure SVG for format=svg
+  // Return pure SVG without HTML wrapper
   return `<svg width="600" height="350" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <!-- Background gradient -->
@@ -519,41 +519,41 @@ function generateTrophyCardSVG(data, type) {
   ].toUpperCase()}</text>
   
   <!-- Date/Period -->
-  <text x="300" y="180" text-anchor="middle" fill="rgba(255,255,255,0.9)" font-size="18" font-weight="600" font-family="Arial, sans-serif">${
+  <text x="300" y="178" text-anchor="middle" fill="rgba(255,255,255,0.9)" font-size="17" font-weight="600" font-family="Arial, sans-serif">${
     data.date
   }</text>
   
-  <!-- Profit amount (moved up to avoid overlap) -->
-  <text x="300" y="215" text-anchor="middle" fill="#10b981" font-size="48" font-weight="bold" font-family="Arial, monospace">$${data.profit.toFixed(
+  <!-- Profit amount (adjusted spacing) -->
+  <text x="300" y="220" text-anchor="middle" fill="#10b981" font-size="44" font-weight="bold" font-family="Arial, monospace">${data.profit.toFixed(
     2
   )}</text>
   
-  <!-- Badges container (adjusted position) -->
-  <g transform="translate(${isNewRecord ? "90" : "185"}, 255)">
+  <!-- Badges properly centered -->
+  <g transform="translate(${isNewRecord ? "115" : "155"}, 260)">
     <!-- Trades executed -->
-    <rect x="0" y="0" width="150" height="60" fill="rgba(255,255,255,0.08)" rx="12" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
-    <text x="75" y="30" text-anchor="middle" fill="white" font-size="24" font-weight="bold" font-family="Arial, monospace">${
+    <rect x="0" y="0" width="140" height="55" fill="rgba(255,255,255,0.08)" rx="12" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+    <text x="70" y="28" text-anchor="middle" fill="white" font-size="22" font-weight="bold" font-family="Arial, monospace">${
       data.trades
     }</text>
-    <text x="75" y="48" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="10" font-weight="600" font-family="Arial, sans-serif">TRADES</text>
+    <text x="70" y="44" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="10" font-weight="600" font-family="Arial, sans-serif">TRADES</text>
     
     ${
       isNewRecord && data.beatBy > 0
         ? `
     <!-- Beat previous by -->
-    <rect x="170" y="0" width="200" height="60" fill="rgba(255,255,255,0.08)" rx="12" stroke="rgba(16,185,129,0.3)" stroke-width="2"/>
-    <text x="270" y="30" text-anchor="middle" fill="#10b981" font-size="24" font-weight="bold" font-family="Arial, monospace">+$${data.beatBy.toFixed(
+    <rect x="150" y="0" width="180" height="55" fill="rgba(255,255,255,0.08)" rx="12" stroke="rgba(16,185,129,0.3)" stroke-width="2"/>
+    <text x="240" y="28" text-anchor="middle" fill="#10b981" font-size="22" font-weight="bold" font-family="Arial, monospace">+${data.beatBy.toFixed(
       2
     )}</text>
-    <text x="270" y="48" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="10" font-weight="600" font-family="Arial, sans-serif">BEAT PREVIOUS BY</text>
+    <text x="240" y="44" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="10" font-weight="600" font-family="Arial, sans-serif">BEAT PREVIOUS BY</text>
     `
         : `
     <!-- Previous record -->
-    <rect x="170" y="0" width="180" height="60" fill="rgba(255,255,255,0.08)" rx="12" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
-    <text x="260" y="30" text-anchor="middle" fill="white" font-size="20" font-weight="bold" font-family="Arial, monospace">$${data.previous.toFixed(
+    <rect x="150" y="0" width="150" height="55" fill="rgba(255,255,255,0.08)" rx="12" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+    <text x="225" y="28" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="Arial, monospace">${data.previous.toFixed(
       2
     )}</text>
-    <text x="260" y="48" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="10" font-weight="600" font-family="Arial, sans-serif">PREVIOUS BEST</text>
+    <text x="225" y="44" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="10" font-weight="600" font-family="Arial, sans-serif">PREVIOUS BEST</text>
     `
     }
   </g>
