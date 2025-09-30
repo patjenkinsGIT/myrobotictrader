@@ -17,7 +17,7 @@ export async function onRequest(context) {
     const type = url.searchParams.get("type") || "month";
     const format = url.searchParams.get("format") || "html";
 
-    // Fetch trading data
+    // Fetch real trading data from Google Sheets
     const trophyData = await fetchTrophyData(context, type);
 
     if (format === "svg") {
@@ -41,75 +41,127 @@ export async function onRequest(context) {
     }
   } catch (error) {
     console.error("Trophy card error:", error);
+    const url = new URL(context.request.url);
     const fallbackData = getFallbackData(
       url.searchParams.get("type") || "month"
     );
-    const html = generateTrophyCardHTML(
-      fallbackData,
-      url.searchParams.get("type") || "month"
-    );
-    return new Response(html, {
-      headers: {
-        ...corsHeaders,
-        "Content-Type": "text/html",
-        "Cache-Control": "public, max-age=60",
-      },
-    });
+    const format = url.searchParams.get("format") || "html";
+
+    if (format === "svg") {
+      const svg = generateTrophyCardSVG(
+        fallbackData,
+        url.searchParams.get("type") || "month"
+      );
+      return new Response(svg, {
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "image/svg+xml",
+          "Cache-Control": "public, max-age=60",
+        },
+      });
+    } else {
+      const html = generateTrophyCardHTML(
+        fallbackData,
+        url.searchParams.get("type") || "month"
+      );
+      return new Response(html, {
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "text/html",
+          "Cache-Control": "public, max-age=60",
+        },
+      });
+    }
   }
 }
 
 async function fetchTrophyData(context, type) {
-  // This would fetch from your Google Sheets
-  // For now, using example data
-  const exampleData = {
-    day: {
-      date: "Sep 15, 2024",
-      profit: 187.42,
-      trades: 8,
-      beatBy: 23.15,
-      previous: 164.27,
-    },
-    week: {
-      date: "Sep 9-15, 2024",
-      profit: 624.18,
-      trades: 42,
-      beatBy: 89.33,
-      previous: 534.85,
-    },
-    month: {
-      date: "September 2024",
-      profit: 1847.32,
-      trades: 168,
-      beatBy: 234.67,
-      previous: 1612.65,
-    },
+  const SHEETS_API_KEY = context.env.SHEETS_API_KEY;
+  const SPREADSHEET_ID = context.env.SPREADSHEET_ID;
+
+  if (!SHEETS_API_KEY || !SPREADSHEET_ID) {
+    throw new Error("Missing API credentials");
+  }
+
+  // Fetch from Records tab (A1:H4)
+  const range = "Records!A1:H4";
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range}?key=${SHEETS_API_KEY}`;
+
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch data: ${response.status}`);
+  }
+
+  const data = await response.json();
+  const rows = data.values || [];
+
+  if (rows.length < 4) {
+    throw new Error("Insufficient data in Records tab");
+  }
+
+  // Parse the Records tab data
+  // Row 1: Headers
+  // Row 2: Best Day
+  // Row 3: Best Week
+  // Row 4: Best Month
+
+  const parseRecordRow = (row) => {
+    return {
+      amount: parseFloat(row[1].replace(/[$,]/g, "") || 0),
+      date: row[2] || "",
+      trades: parseInt(row[3] || 0),
+      period: row[4] || "",
+      previousAmount: parseFloat(row[5].replace(/[$,]/g, "") || 0),
+      beatBy: parseFloat(row[6].replace(/[$,]/g, "") || 0),
+      lastUpdated: row[7] || "",
+    };
   };
 
-  return exampleData[type] || exampleData.month;
+  const recordsData = {
+    day: parseRecordRow(rows[1]),
+    week: parseRecordRow(rows[2]),
+    month: parseRecordRow(rows[3]),
+  };
+
+  // Format data for the requested type
+  const record = recordsData[type];
+
+  return {
+    date: type === "day" ? record.date : record.period,
+    profit: record.amount,
+    trades: record.trades,
+    beatBy: record.beatBy,
+    previous: record.previousAmount,
+    lastUpdated: record.lastUpdated,
+  };
 }
 
 function getFallbackData(type) {
+  // Based on your actual records from the spreadsheet
   const fallback = {
     day: {
-      date: "Loading...",
-      profit: 187.42,
-      trades: 8,
-      beatBy: 23.15,
-      previous: 164.27,
+      date: "Jan 25, 2025",
+      profit: 129.03,
+      trades: 17,
+      beatBy: 0,
+      previous: 129.03,
+      lastUpdated: "9/29/2025, 5:54:10 PM",
     },
     week: {
-      date: "Loading...",
-      profit: 624.18,
-      trades: 42,
-      beatBy: 89.33,
-      previous: 534.85,
+      date: "Jan 25 - Jan 31, 2025",
+      profit: 417.53,
+      trades: 72,
+      beatBy: 0,
+      previous: 417.53,
+      lastUpdated: "9/29/2025, 5:54:10 PM",
     },
     month: {
-      date: "Loading...",
-      profit: 1847.32,
-      trades: 168,
-      beatBy: 234.67,
-      previous: 1612.65,
+      date: "January 2025",
+      profit: 817.31,
+      trades: 112,
+      beatBy: 0,
+      previous: 817.31,
+      lastUpdated: "9/29/2025, 5:54:10 PM",
     },
   };
 
@@ -136,6 +188,7 @@ function generateTrophyCardHTML(data, type) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${titles[type]} - MyRoboticTrader</title>
   <style>
     * {
       margin: 0;
@@ -149,7 +202,7 @@ function generateTrophyCardHTML(data, type) {
       display: flex;
       justify-content: center;
       align-items: center;
-      /* Beautiful page background gradient */
+      /* Beautiful animated page background */
       background: linear-gradient(135deg, 
         #667eea 0%, 
         #764ba2 25%, 
@@ -223,6 +276,7 @@ function generateTrophyCardHTML(data, type) {
       background: linear-gradient(90deg, #fbbf24, #f59e0b, #d97706);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      background-clip: text;
       letter-spacing: 1.5px;
     }
     
@@ -266,7 +320,8 @@ function generateTrophyCardHTML(data, type) {
       transform: translateX(-50%);
       display: flex;
       gap: 20px;
-      width: ${isNewRecord ? "420px" : "235px"};
+      justify-content: center;
+      width: auto;
     }
     
     .badge {
@@ -275,7 +330,7 @@ function generateTrophyCardHTML(data, type) {
       border-radius: 12px;
       padding: 12px 20px;
       text-align: center;
-      flex: 1;
+      min-width: 150px;
     }
     
     .badge.beat-previous {
@@ -416,107 +471,146 @@ function generateTrophyCardSVG(data, type) {
 
   const isNewRecord = data.beatBy > 0;
 
-  return `<svg width="600" height="350" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <!-- Background gradient -->
-    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#1e1b4b;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#312e81;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#1e293b;stop-opacity:1" />
-    </linearGradient>
-    
-    <!-- Gold gradient for trophy theme -->
-    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#f59e0b;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#d97706;stop-opacity:1" />
-    </linearGradient>
-    
-    <!-- Accent gradient -->
-    <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
-    </linearGradient>
-  </defs>
-  
-  <!-- Full background with gradient -->
-  <rect width="600" height="350" fill="url(#bgGradient)" rx="24"/>
-  
-  <!-- Decorative corner accents -->
-  <path d="M 0,24 Q 0,0 24,0 L 100,0" stroke="url(#goldGradient)" stroke-width="3" fill="none" opacity="0.6"/>
-  <path d="M 600,24 Q 600,0 576,0 L 500,0" stroke="url(#goldGradient)" stroke-width="3" fill="none" opacity="0.6"/>
-  
-  <!-- Trophy icon (top center) -->
-  <g transform="translate(275, 35)">
-    <circle cx="25" cy="25" r="22" fill="url(#goldGradient)" opacity="0.2"/>
-    <text x="25" y="37" text-anchor="middle" font-size="32" fill="url(#goldGradient)">🏆</text>
-  </g>
-  
-  <!-- Title -->
-  <text x="300" y="125" text-anchor="middle" font-size="28" font-weight="bold" fill="url(#goldGradient)" font-family="Arial, sans-serif" letter-spacing="1.5">${
-    titles[type]
-  }</text>
-  
-  <!-- Subtitle -->
-  <text x="300" y="148" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="13" font-weight="600" font-family="Arial, sans-serif" letter-spacing="2">${subtitles[
-    type
-  ].toUpperCase()}</text>
-  
-  <!-- Date/Period -->
-  <text x="300" y="180" text-anchor="middle" fill="rgba(255,255,255,0.9)" font-size="18" font-weight="600" font-family="Arial, sans-serif">${
-    data.date
-  }</text>
-  
-  <!-- Profit amount -->
-  <text x="300" y="230" text-anchor="middle" fill="#10b981" font-size="48" font-weight="bold" font-family="Arial, monospace">$${data.profit.toFixed(
-    2
-  )}</text>
-  
-  <!-- Badges -->
-  <g transform="translate(${isNewRecord ? "90" : "185"}, 270)">
-    <!-- Trades executed -->
-    <rect x="0" y="0" width="150" height="60" fill="rgba(255,255,255,0.08)" rx="12" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
-    <text x="75" y="30" text-anchor="middle" fill="white" font-size="24" font-weight="bold" font-family="Arial, monospace">${
-      data.trades
-    }</text>
-    <text x="75" y="48" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="10" font-weight="600" font-family="Arial, sans-serif">TRADES</text>
-    
-    ${
-      isNewRecord && data.beatBy > 0
-        ? `
-    <!-- Beat previous by -->
-    <rect x="170" y="0" width="200" height="60" fill="rgba(255,255,255,0.08)" rx="12" stroke="rgba(16,185,129,0.3)" stroke-width="2"/>
-    <text x="270" y="30" text-anchor="middle" fill="#10b981" font-size="24" font-weight="bold" font-family="Arial, monospace">+$${data.beatBy.toFixed(
-      2
-    )}</text>
-    <text x="270" y="48" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="10" font-weight="600" font-family="Arial, sans-serif">BEAT PREVIOUS BY</text>
-    `
-        : `
-    <!-- Previous record -->
-    <rect x="170" y="0" width="180" height="60" fill="rgba(255,255,255,0.08)" rx="12" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
-    <text x="260" y="30" text-anchor="middle" fill="white" font-size="20" font-weight="bold" font-family="Arial, monospace">$${data.previous.toFixed(
-      2
-    )}</text>
-    <text x="260" y="48" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="10" font-weight="600" font-family="Arial, sans-serif">PREVIOUS BEST</text>
-    `
+  // SVG wrapped in HTML for centering and background
+  return `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${titles[type]} - MyRoboticTrader</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-  </g>
-  
-  <!-- Branding -->
-  <text x="560" y="330" text-anchor="end" fill="rgba(255,255,255,0.35)" font-size="11" font-family="Arial, sans-serif">MyRoboticTrader.com</text>
-  
-  <!-- Sparkle effects -->
-  <circle cx="50" cy="140" r="2" fill="#fbbf24" opacity="0.8">
-    <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/>
-  </circle>
-  <circle cx="550" cy="160" r="2" fill="#fbbf24" opacity="0.6">
-    <animate attributeName="opacity" values="0.3;1;0.3" dur="2.5s" repeatCount="indefinite"/>
-  </circle>
-  <circle cx="80" cy="250" r="1.5" fill="#fbbf24" opacity="0.7">
-    <animate attributeName="opacity" values="1;0.4;1" dur="3s" repeatCount="indefinite"/>
-  </circle>
-  <circle cx="520" cy="270" r="1.5" fill="#fbbf24" opacity="0.5">
-    <animate attributeName="opacity" values="0.4;1;0.4" dur="2.8s" repeatCount="indefinite"/>
-  </circle>
-</svg>`;
+    
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, 
+        #667eea 0%, 
+        #764ba2 25%, 
+        #f093fb 50%, 
+        #f5576c 75%, 
+        #4facfe 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+    }
+    
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+  </style>
+</head>
+<body>
+  <svg width="600" height="350" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <!-- Background gradient -->
+      <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#1e1b4b;stop-opacity:1" />
+        <stop offset="50%" style="stop-color:#312e81;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#1e293b;stop-opacity:1" />
+      </linearGradient>
+      
+      <!-- Gold gradient for trophy theme -->
+      <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
+        <stop offset="50%" style="stop-color:#f59e0b;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#d97706;stop-opacity:1" />
+      </linearGradient>
+      
+      <!-- Accent gradient -->
+      <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+      </linearGradient>
+    </defs>
+    
+    <!-- Full background with gradient -->
+    <rect width="600" height="350" fill="url(#bgGradient)" rx="24"/>
+    
+    <!-- Decorative corner accents -->
+    <path d="M 0,24 Q 0,0 24,0 L 100,0" stroke="url(#goldGradient)" stroke-width="3" fill="none" opacity="0.6"/>
+    <path d="M 600,24 Q 600,0 576,0 L 500,0" stroke="url(#goldGradient)" stroke-width="3" fill="none" opacity="0.6"/>
+    
+    <!-- Trophy icon (top center) -->
+    <g transform="translate(275, 35)">
+      <circle cx="25" cy="25" r="22" fill="url(#goldGradient)" opacity="0.2"/>
+      <text x="25" y="37" text-anchor="middle" font-size="32" fill="url(#goldGradient)">🏆</text>
+    </g>
+    
+    <!-- Title -->
+    <text x="300" y="125" text-anchor="middle" font-size="28" font-weight="bold" fill="url(#goldGradient)" font-family="Arial, sans-serif" letter-spacing="1.5">${
+      titles[type]
+    }</text>
+    
+    <!-- Subtitle -->
+    <text x="300" y="148" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="13" font-weight="600" font-family="Arial, sans-serif" letter-spacing="2">${subtitles[
+      type
+    ].toUpperCase()}</text>
+    
+    <!-- Date/Period -->
+    <text x="300" y="180" text-anchor="middle" fill="rgba(255,255,255,0.9)" font-size="18" font-weight="600" font-family="Arial, sans-serif">${
+      data.date
+    }</text>
+    
+    <!-- Profit amount -->
+    <text x="300" y="230" text-anchor="middle" fill="#10b981" font-size="48" font-weight="bold" font-family="Arial, monospace">$${data.profit.toFixed(
+      2
+    )}</text>
+    
+    <!-- Badges container centered -->
+    <g transform="translate(${isNewRecord ? "90" : "185"}, 270)">
+      <!-- Trades executed -->
+      <rect x="0" y="0" width="150" height="60" fill="rgba(255,255,255,0.08)" rx="12" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+      <text x="75" y="30" text-anchor="middle" fill="white" font-size="24" font-weight="bold" font-family="Arial, monospace">${
+        data.trades
+      }</text>
+      <text x="75" y="48" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="10" font-weight="600" font-family="Arial, sans-serif">TRADES</text>
+      
+      ${
+        isNewRecord && data.beatBy > 0
+          ? `
+      <!-- Beat previous by -->
+      <rect x="170" y="0" width="200" height="60" fill="rgba(255,255,255,0.08)" rx="12" stroke="rgba(16,185,129,0.3)" stroke-width="2"/>
+      <text x="270" y="30" text-anchor="middle" fill="#10b981" font-size="24" font-weight="bold" font-family="Arial, monospace">+$${data.beatBy.toFixed(
+        2
+      )}</text>
+      <text x="270" y="48" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="10" font-weight="600" font-family="Arial, sans-serif">BEAT PREVIOUS BY</text>
+      `
+          : `
+      <!-- Previous record -->
+      <rect x="170" y="0" width="180" height="60" fill="rgba(255,255,255,0.08)" rx="12" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+      <text x="260" y="30" text-anchor="middle" fill="white" font-size="20" font-weight="bold" font-family="Arial, monospace">$${data.previous.toFixed(
+        2
+      )}</text>
+      <text x="260" y="48" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="10" font-weight="600" font-family="Arial, sans-serif">PREVIOUS BEST</text>
+      `
+      }
+    </g>
+    
+    <!-- Branding -->
+    <text x="560" y="330" text-anchor="end" fill="rgba(255,255,255,0.35)" font-size="11" font-family="Arial, sans-serif">MyRoboticTrader.com</text>
+    
+    <!-- Sparkle effects -->
+    <circle cx="50" cy="140" r="2" fill="#fbbf24" opacity="0.8">
+      <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="550" cy="160" r="2" fill="#fbbf24" opacity="0.6">
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="80" cy="250" r="1.5" fill="#fbbf24" opacity="0.7">
+      <animate attributeName="opacity" values="1;0.4;1" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="520" cy="270" r="1.5" fill="#fbbf24" opacity="0.5">
+      <animate attributeName="opacity" values="0.4;1;0.4" dur="2.8s" repeatCount="indefinite"/>
+    </circle>
+  </svg>
+</body>
+</html>`;
 }
