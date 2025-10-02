@@ -1,0 +1,806 @@
+{
+  "startDate": "2025-01-08",
+  "lastUpdated": "2025-10-02",
+  "cryptos": [
+    {
+      "id": "bitcoin",
+      "symbol": "BTC",
+      "name": "Bitcoin",
+      "jan8Price": 94209.19,
+      "category": "Layer 1",
+      "marketCapRank": 1
+    },
+    {
+      "id": "ethereum",
+      "symbol": "ETH",
+      "name": "Ethereum",
+      "jan8Price": 3205.5,
+      "category": "Layer 1",
+      "marketCapRank": 2
+    },
+    {
+      "id": "tether",
+      "symbol": "USDT",
+      "name": "Tether",
+      "jan8Price": 1.0,
+      "category": "Stablecoin",
+      "marketCapRank": 3
+    },
+    {
+      "id": "solana",
+      "symbol": "SOL",
+      "name": "Solana",
+      "jan8Price": 98.75,
+      "category": "Layer 1",
+      "marketCapRank": 4
+    },
+    {
+      "id": "binancecoin",
+      "symbol": "BNB",
+      "name": "BNB",
+      "jan8Price": 650.2,
+      "category": "Exchange",
+      "marketCapRank": 5
+    },
+    {
+      "id": "ripple",
+      "symbol": "XRP",
+      "name": "XRP",
+      "jan8Price": 1.5,
+      "category": "Payment",
+      "marketCapRank": 6
+    },
+    {
+      "id": "usd-coin",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "jan8Price": 1.0,
+      "category": "Stablecoin",
+      "marketCapRank": 7
+    },
+    {
+      "id": "dogecoin",
+      "symbol": "DOGE",
+      "name": "Dogecoin",
+      "jan8Price": 0.2,
+      "category": "Meme",
+      "marketCapRank": 8
+    },
+    {
+      "id": "cardano",
+      "symbol": "ADA",
+      "name": "Cardano",
+      "jan8Price": 0.65,
+      "category": "Layer 1",
+      "marketCapRank": 9
+    },
+    {
+      "id": "tron",
+      "symbol": "TRX",
+      "name": "TRON",
+      "jan8Price": 0.23,
+      "category": "Layer 1",
+      "marketCapRank": 10
+    },
+    {
+      "id": "avalanche-2",
+      "symbol": "AVAX",
+      "name": "Avalanche",
+      "jan8Price": 27.3,
+      "category": "Layer 1",
+      "marketCapRank": 11
+    },
+    {
+      "id": "chainlink",
+      "symbol": "LINK",
+      "name": "Chainlink",
+      "jan8Price": 14.85,
+      "category": "Oracle",
+      "marketCapRank": 12
+    },
+    {
+      "id": "shiba-inu",
+      "symbol": "SHIB",
+      "name": "Shiba Inu",
+      "jan8Price": 0.000015,
+      "category": "Meme",
+      "marketCapRank": 13
+    },
+    {
+      "id": "polkadot",
+      "symbol": "DOT",
+      "name": "Polkadot",
+      "jan8Price": 5.48,
+      "category": "Layer 0",
+      "marketCapRank": 14
+    },
+    {
+      "id": "bitcoin-cash",
+      "symbol": "BCH",
+      "name": "Bitcoin Cash",
+      "jan8Price": 380.5,
+      "category": "Layer 1",
+      "marketCapRank": 15
+    },
+    {
+      "id": "near",
+      "symbol": "NEAR",
+      "name": "NEAR Protocol",
+      "jan8Price": 3.85,
+      "category": "Layer 1",
+      "marketCapRank": 16
+    },
+    {
+      "id": "uniswap",
+      "symbol": "UNI",
+      "name": "Uniswap",
+      "jan8Price": 9.02,
+      "category": "DEX",
+      "marketCapRank": 17
+    },
+    {
+      "id": "litecoin",
+      "symbol": "LTC",
+      "name": "Litecoin",
+      "jan8Price": 85.2,
+      "category": "Layer 1",
+      "marketCapRank": 18
+    },
+    {
+      "id": "internet-computer",
+      "symbol": "ICP",
+      "name": "Internet Computer",
+      "jan8Price": 7.95,
+      "category": "Layer 1",
+      "marketCapRank": 19
+    },
+    {
+      "id": "pepe",
+      "symbol": "PEPE",
+      "name": "Pepe",
+      "jan8Price": 0.0000088,
+      "category": "Meme",
+      "marketCapRank": 20
+    },
+    {
+      "id": "dai",
+      "symbol": "DAI",
+      "name": "Dai",
+      "jan8Price": 1.0,
+      "category": "Stablecoin",
+      "marketCapRank": 21
+    },
+    {
+      "id": "ethereum-classic",
+      "symbol": "ETC",
+      "name": "Ethereum Classic",
+      "jan8Price": 18.75,
+      "category": "Layer 1",
+      "marketCapRank": 22
+    },
+    {
+      "id": "stellar",
+      "symbol": "XLM",
+      "name": "Stellar",
+      "jan8Price": 0.31,
+      "category": "Payment",
+      "marketCapRank": 23
+    },
+    {
+      "id": "render-token",
+      "symbol": "RENDER",
+      "name": "Render",
+      "jan8Price": 5.2,
+      "category": "AI/GPU",
+      "marketCapRank": 24
+    },
+    {
+      "id": "okb",
+      "symbol": "OKB",
+      "name": "OKB",
+      "jan8Price": 42.5,
+      "category": "Exchange",
+      "marketCapRank": 25
+    },
+    {
+      "id": "cosmos",
+      "symbol": "ATOM",
+      "name": "Cosmos",
+      "jan8Price": 5.2,
+      "category": "Layer 0",
+      "marketCapRank": 26
+    },
+    {
+      "id": "filecoin",
+      "symbol": "FIL",
+      "name": "Filecoin",
+      "jan8Price": 3.45,
+      "category": "Storage",
+      "marketCapRank": 27
+    },
+    {
+      "id": "monero",
+      "symbol": "XMR",
+      "name": "Monero",
+      "jan8Price": 165.3,
+      "category": "Privacy",
+      "marketCapRank": 28
+    },
+    {
+      "id": "hedera-hashgraph",
+      "symbol": "HBAR",
+      "name": "Hedera",
+      "jan8Price": 0.18,
+      "category": "Layer 1",
+      "marketCapRank": 29
+    },
+    {
+      "id": "arbitrum",
+      "symbol": "ARB",
+      "name": "Arbitrum",
+      "jan8Price": 0.56,
+      "category": "Layer 2",
+      "marketCapRank": 30
+    },
+    {
+      "id": "vechain",
+      "symbol": "VET",
+      "name": "VeChain",
+      "jan8Price": 0.028,
+      "category": "Supply Chain",
+      "marketCapRank": 31
+    },
+    {
+      "id": "kaspa",
+      "symbol": "KAS",
+      "name": "Kaspa",
+      "jan8Price": 0.095,
+      "category": "Layer 1",
+      "marketCapRank": 32
+    },
+    {
+      "id": "optimism",
+      "symbol": "OP",
+      "name": "Optimism",
+      "jan8Price": 1.35,
+      "category": "Layer 2",
+      "marketCapRank": 33
+    },
+    {
+      "id": "immutable-x",
+      "symbol": "IMX",
+      "name": "Immutable",
+      "jan8Price": 0.95,
+      "category": "Layer 2",
+      "marketCapRank": 34
+    },
+    {
+      "id": "the-graph",
+      "symbol": "GRT",
+      "name": "The Graph",
+      "jan8Price": 0.14,
+      "category": "Indexing",
+      "marketCapRank": 35
+    },
+    {
+      "id": "injective-protocol",
+      "symbol": "INJ",
+      "name": "Injective",
+      "jan8Price": 15.2,
+      "category": "DeFi",
+      "marketCapRank": 36
+    },
+    {
+      "id": "polygon",
+      "symbol": "MATIC",
+      "name": "Polygon",
+      "jan8Price": 0.6,
+      "category": "Layer 2",
+      "marketCapRank": 37
+    },
+    {
+      "id": "sei-network",
+      "symbol": "SEI",
+      "name": "Sei",
+      "jan8Price": 0.28,
+      "category": "Layer 1",
+      "marketCapRank": 38
+    },
+    {
+      "id": "maker",
+      "symbol": "MKR",
+      "name": "Maker",
+      "jan8Price": 1320.0,
+      "category": "DeFi",
+      "marketCapRank": 39
+    },
+    {
+      "id": "sui",
+      "symbol": "SUI",
+      "name": "Sui",
+      "jan8Price": 2.5,
+      "category": "Layer 1",
+      "marketCapRank": 40
+    },
+    {
+      "id": "bittensor",
+      "symbol": "TAO",
+      "name": "Bittensor",
+      "jan8Price": 285.0,
+      "category": "AI",
+      "marketCapRank": 41
+    },
+    {
+      "id": "celestia",
+      "symbol": "TIA",
+      "name": "Celestia",
+      "jan8Price": 3.8,
+      "category": "Modular",
+      "marketCapRank": 42
+    },
+    {
+      "id": "thorchain",
+      "symbol": "RUNE",
+      "name": "THORChain",
+      "jan8Price": 3.25,
+      "category": "DeFi",
+      "marketCapRank": 43
+    },
+    {
+      "id": "algorand",
+      "symbol": "ALGO",
+      "name": "Algorand",
+      "jan8Price": 0.25,
+      "category": "Layer 1",
+      "marketCapRank": 44
+    },
+    {
+      "id": "stacks",
+      "symbol": "STX",
+      "name": "Stacks",
+      "jan8Price": 1.15,
+      "category": "Bitcoin L2",
+      "marketCapRank": 45
+    },
+    {
+      "id": "the-sandbox",
+      "symbol": "SAND",
+      "name": "The Sandbox",
+      "jan8Price": 0.28,
+      "category": "Metaverse",
+      "marketCapRank": 46
+    },
+    {
+      "id": "aave",
+      "symbol": "AAVE",
+      "name": "Aave",
+      "jan8Price": 185.5,
+      "category": "DeFi",
+      "marketCapRank": 47
+    },
+    {
+      "id": "fantom",
+      "symbol": "FTM",
+      "name": "Fantom",
+      "jan8Price": 0.42,
+      "category": "Layer 1",
+      "marketCapRank": 48
+    },
+    {
+      "id": "theta-token",
+      "symbol": "THETA",
+      "name": "Theta Network",
+      "jan8Price": 1.15,
+      "category": "Video",
+      "marketCapRank": 49
+    },
+    {
+      "id": "flow",
+      "symbol": "FLOW",
+      "name": "Flow",
+      "jan8Price": 0.52,
+      "category": "Layer 1",
+      "marketCapRank": 50
+    },
+    {
+      "id": "synthetix",
+      "symbol": "SNX",
+      "name": "Synthetix",
+      "jan8Price": 1.85,
+      "category": "DeFi",
+      "marketCapRank": 51
+    },
+    {
+      "id": "axie-infinity",
+      "symbol": "AXS",
+      "name": "Axie Infinity",
+      "jan8Price": 4.2,
+      "category": "Gaming",
+      "marketCapRank": 52
+    },
+    {
+      "id": "decentraland",
+      "symbol": "MANA",
+      "name": "Decentraland",
+      "jan8Price": 0.32,
+      "category": "Metaverse",
+      "marketCapRank": 53
+    },
+    {
+      "id": "eos",
+      "symbol": "EOS",
+      "name": "EOS",
+      "jan8Price": 0.58,
+      "category": "Layer 1",
+      "marketCapRank": 54
+    },
+    {
+      "id": "aptos",
+      "symbol": "APT",
+      "name": "Aptos",
+      "jan8Price": 6.85,
+      "category": "Layer 1",
+      "marketCapRank": 55
+    },
+    {
+      "id": "quant-network",
+      "symbol": "QNT",
+      "name": "Quant",
+      "jan8Price": 78.5,
+      "category": "Interoperability",
+      "marketCapRank": 56
+    },
+    {
+      "id": "bitget-token",
+      "symbol": "BGB",
+      "name": "Bitget Token",
+      "jan8Price": 0.42,
+      "category": "Exchange",
+      "marketCapRank": 57
+    },
+    {
+      "id": "zcash",
+      "symbol": "ZEC",
+      "name": "Zcash",
+      "jan8Price": 32.5,
+      "category": "Privacy",
+      "marketCapRank": 58
+    },
+    {
+      "id": "tezos",
+      "symbol": "XTZ",
+      "name": "Tezos",
+      "jan8Price": 0.68,
+      "category": "Layer 1",
+      "marketCapRank": 59
+    },
+    {
+      "id": "elrond-egld",
+      "symbol": "EGLD",
+      "name": "MultiversX",
+      "jan8Price": 22.5,
+      "category": "Layer 1",
+      "marketCapRank": 60
+    },
+    {
+      "id": "gala",
+      "symbol": "GALA",
+      "name": "Gala",
+      "jan8Price": 0.018,
+      "category": "Gaming",
+      "marketCapRank": 61
+    },
+    {
+      "id": "mina-protocol",
+      "symbol": "MINA",
+      "name": "Mina",
+      "jan8Price": 0.48,
+      "category": "Layer 1",
+      "marketCapRank": 62
+    },
+    {
+      "id": "kucoin-shares",
+      "symbol": "KCS",
+      "name": "KuCoin Token",
+      "jan8Price": 7.85,
+      "category": "Exchange",
+      "marketCapRank": 63
+    },
+    {
+      "id": "pancakeswap-token",
+      "symbol": "CAKE",
+      "name": "PancakeSwap",
+      "jan8Price": 1.95,
+      "category": "DEX",
+      "marketCapRank": 64
+    },
+    {
+      "id": "neo",
+      "symbol": "NEO",
+      "name": "NEO",
+      "jan8Price": 9.2,
+      "category": "Layer 1",
+      "marketCapRank": 65
+    },
+    {
+      "id": "curve-dao-token",
+      "symbol": "CRV",
+      "name": "Curve DAO",
+      "jan8Price": 0.42,
+      "category": "DeFi",
+      "marketCapRank": 66
+    },
+    {
+      "id": "chiliz",
+      "symbol": "CHZ",
+      "name": "Chiliz",
+      "jan8Price": 0.058,
+      "category": "Fan Token",
+      "marketCapRank": 67
+    },
+    {
+      "id": "flare-networks",
+      "symbol": "FLR",
+      "name": "Flare",
+      "jan8Price": 0.012,
+      "category": "Layer 1",
+      "marketCapRank": 68
+    },
+    {
+      "id": "ecash",
+      "symbol": "XEC",
+      "name": "eCash",
+      "jan8Price": 0.000028,
+      "category": "Layer 1",
+      "marketCapRank": 69
+    },
+    {
+      "id": "kava",
+      "symbol": "KAVA",
+      "name": "Kava",
+      "jan8Price": 0.32,
+      "category": "DeFi",
+      "marketCapRank": 70
+    },
+    {
+      "id": "1inch",
+      "symbol": "1INCH",
+      "name": "1inch Network",
+      "jan8Price": 0.28,
+      "category": "DEX",
+      "marketCapRank": 71
+    },
+    {
+      "id": "trust-wallet-token",
+      "symbol": "TWT",
+      "name": "Trust Wallet Token",
+      "jan8Price": 0.75,
+      "category": "Wallet",
+      "marketCapRank": 72
+    },
+    {
+      "id": "zilliqa",
+      "symbol": "ZIL",
+      "name": "Zilliqa",
+      "jan8Price": 0.015,
+      "category": "Layer 1",
+      "marketCapRank": 73
+    },
+    {
+      "id": "fetch-ai",
+      "symbol": "FET",
+      "name": "Fetch.ai",
+      "jan8Price": 0.85,
+      "category": "AI",
+      "marketCapRank": 74
+    },
+    {
+      "id": "compound-ether",
+      "symbol": "CETH",
+      "name": "cETH",
+      "jan8Price": 65.2,
+      "category": "DeFi",
+      "marketCapRank": 75
+    },
+    {
+      "id": "nexo",
+      "symbol": "NEXO",
+      "name": "Nexo",
+      "jan8Price": 0.95,
+      "category": "CeFi",
+      "marketCapRank": 76
+    },
+    {
+      "id": "iota",
+      "symbol": "IOTA",
+      "name": "IOTA",
+      "jan8Price": 0.15,
+      "category": "IoT",
+      "marketCapRank": 77
+    },
+    {
+      "id": "frax",
+      "symbol": "FRAX",
+      "name": "Frax",
+      "jan8Price": 1.0,
+      "category": "Stablecoin",
+      "marketCapRank": 78
+    },
+    {
+      "id": "enjincoin",
+      "symbol": "ENJ",
+      "name": "Enjin Coin",
+      "jan8Price": 0.18,
+      "category": "Gaming",
+      "marketCapRank": 79
+    },
+    {
+      "id": "woo-network",
+      "symbol": "WOO",
+      "name": "WOO Network",
+      "jan8Price": 0.16,
+      "category": "DeFi",
+      "marketCapRank": 80
+    },
+    {
+      "id": "rocket-pool",
+      "symbol": "RPL",
+      "name": "Rocket Pool",
+      "jan8Price": 18.5,
+      "category": "Staking",
+      "marketCapRank": 81
+    },
+    {
+      "id": "convex-finance",
+      "symbol": "CVX",
+      "name": "Convex Finance",
+      "jan8Price": 2.15,
+      "category": "DeFi",
+      "marketCapRank": 82
+    },
+    {
+      "id": "casper-network",
+      "symbol": "CSPR",
+      "name": "Casper",
+      "jan8Price": 0.028,
+      "category": "Layer 1",
+      "marketCapRank": 83
+    },
+    {
+      "id": "harmony",
+      "symbol": "ONE",
+      "name": "Harmony",
+      "jan8Price": 0.012,
+      "category": "Layer 1",
+      "marketCapRank": 84
+    },
+    {
+      "id": "gmx",
+      "symbol": "GMX",
+      "name": "GMX",
+      "jan8Price": 28.5,
+      "category": "DeFi",
+      "marketCapRank": 85
+    },
+    {
+      "id": "helium",
+      "symbol": "HNT",
+      "name": "Helium",
+      "jan8Price": 4.2,
+      "category": "IoT",
+      "marketCapRank": 86
+    },
+    {
+      "id": "mask-network",
+      "symbol": "MASK",
+      "name": "Mask Network",
+      "jan8Price": 2.35,
+      "category": "Web3",
+      "marketCapRank": 87
+    },
+    {
+      "id": "ravencoin",
+      "symbol": "RVN",
+      "name": "Ravencoin",
+      "jan8Price": 0.018,
+      "category": "Layer 1",
+      "marketCapRank": 88
+    },
+    {
+      "id": "basic-attention-token",
+      "symbol": "BAT",
+      "name": "Basic Attention Token",
+      "jan8Price": 0.16,
+      "category": "Browser",
+      "marketCapRank": 89
+    },
+    {
+      "id": "compound-governance-token",
+      "symbol": "COMP",
+      "name": "Compound",
+      "jan8Price": 42.5,
+      "category": "DeFi",
+      "marketCapRank": 90
+    },
+    {
+      "id": "arweave",
+      "symbol": "AR",
+      "name": "Arweave",
+      "jan8Price": 12.8,
+      "category": "Storage",
+      "marketCapRank": 91
+    },
+    {
+      "id": "ocean-protocol",
+      "symbol": "OCEAN",
+      "name": "Ocean Protocol",
+      "jan8Price": 0.38,
+      "category": "AI/Data",
+      "marketCapRank": 92
+    },
+    {
+      "id": "loopring",
+      "symbol": "LRC",
+      "name": "Loopring",
+      "jan8Price": 0.15,
+      "category": "Layer 2",
+      "marketCapRank": 93
+    },
+    {
+      "id": "conflux-token",
+      "symbol": "CFX",
+      "name": "Conflux",
+      "jan8Price": 0.11,
+      "category": "Layer 1",
+      "marketCapRank": 94
+    },
+    {
+      "id": "holotoken",
+      "symbol": "HOT",
+      "name": "Holo",
+      "jan8Price": 0.0015,
+      "category": "Cloud",
+      "marketCapRank": 95
+    },
+    {
+      "id": "lido-dao",
+      "symbol": "LDO",
+      "name": "Lido DAO",
+      "jan8Price": 1.45,
+      "category": "Staking",
+      "marketCapRank": 96
+    },
+    {
+      "id": "skale",
+      "symbol": "SKL",
+      "name": "SKALE",
+      "jan8Price": 0.035,
+      "category": "Layer 2",
+      "marketCapRank": 97
+    },
+    {
+      "id": "sushi",
+      "symbol": "SUSHI",
+      "name": "SushiSwap",
+      "jan8Price": 0.68,
+      "category": "DEX",
+      "marketCapRank": 98
+    },
+    {
+      "id": "amp-token",
+      "symbol": "AMP",
+      "name": "Amp",
+      "jan8Price": 0.0038,
+      "category": "Payments",
+      "marketCapRank": 99
+    },
+    {
+      "id": "perpetual-protocol",
+      "symbol": "PERP",
+      "name": "Perpetual Protocol",
+      "jan8Price": 0.52,
+      "category": "DeFi",
+      "marketCapRank": 100
+    }
+  ]
+}
