@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { DollarSign, Shield, AlertTriangle } from "lucide-react";
 import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
-import { CryptoSelector } from "./CryptoSelector";
-import { DataAccuracyDisclaimer } from "./DataAccuracyDisclaimer";
+import { SimpleCryptoSelector } from "./SimpleCryptoSelector";
+import { SimpleDisclaimer } from "./SimpleDisclaimer";
 
 interface CryptoData {
   name: string;
@@ -178,7 +178,7 @@ export const DynamicSmartMoneyComparison = () => {
               Compare your results against any cryptocurrency
             </p>
 
-            <CryptoSelector
+            <SimpleCryptoSelector
               selectedCrypto={selectedCrypto}
               onSelect={setSelectedCrypto}
             />
@@ -212,12 +212,12 @@ export const DynamicSmartMoneyComparison = () => {
             See how your AI-enhanced trading compares to holding
           </p>
 
-          <CryptoSelector
+          <SimpleCryptoSelector
             selectedCrypto={selectedCrypto}
             onSelect={setSelectedCrypto}
           />
 
-          <DataAccuracyDisclaimer cryptoData={cryptoData} />
+          <SimpleDisclaimer cryptoData={cryptoData} />
         </div>
 
         {cryptoData && (
