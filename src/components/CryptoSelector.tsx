@@ -141,99 +141,109 @@ export const CryptoSelector: React.FC<CryptoSelectorProps> = ({
       </button>
 
       {isOpen && (
-        <div className="absolute top-full mt-2 left-0 right-0 bg-gray-900 border-2 border-purple-500/30 rounded-xl shadow-2xl z-[9999] w-full max-h-[450px] overflow-hidden flex flex-col">
-          <div className="p-4 border-b border-white/10 sticky top-0 bg-gray-900 z-10">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search by name, symbol, or ID..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full bg-white/5 border border-white/20 rounded-lg pl-10 pr-10 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-purple-500/50"
-                autoFocus
-              />
-              {searchTerm && (
-                <button
-                  onClick={() => setSearchTerm("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2"
-                >
-                  <X className="w-4 h-4 text-gray-400 hover:text-white" />
-                </button>
+        <div
+          className="fixed inset-0 z-[9998] bg-black/20"
+          onClick={() => setIsOpen(false)}
+        >
+          <div
+            className="absolute top-[180px] left-1/2 -translate-x-1/2 w-full max-w-2xl z-[9999]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="bg-gray-900 border-2 border-purple-500/30 rounded-xl shadow-2xl max-h-[450px] flex flex-col overflow-hidden">
+              <div className="p-4 border-b border-white/10 sticky top-0 bg-gray-900 z-10">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search by name, symbol, or ID..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full bg-white/5 border border-white/20 rounded-lg pl-10 pr-10 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-purple-500/50"
+                    autoFocus
+                  />
+                  {searchTerm && (
+                    <button
+                      onClick={() => setSearchTerm("")}
+                      className="absolute right-3 top-1/2 -translate-y-1/2"
+                    >
+                      <X className="w-4 h-4 text-gray-400 hover:text-white" />
+                    </button>
+                  )}
+                </div>
+                <div className="text-gray-400 text-xs mt-2">
+                  {filteredCryptos.length}{" "}
+                  {filteredCryptos.length === 1 ? "result" : "results"}
+                </div>
+              </div>
+
+              {!searchTerm && (
+                <div className="p-4 border-b border-white/10 flex-shrink-0">
+                  <div className="text-gray-400 text-xs font-semibold mb-2">
+                    POPULAR
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    {popularCryptos.map((crypto) => (
+                      <button
+                        key={crypto.id}
+                        onClick={() => handleSelect(crypto)}
+                        className="bg-white/5 hover:bg-purple-500/20 border border-white/10 hover:border-purple-500/50 rounded-lg p-2 transition-all"
+                      >
+                        <div className="text-white font-bold text-sm">
+                          {crypto.symbol}
+                        </div>
+                        <div className="text-gray-400 text-xs truncate">
+                          {crypto.name}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
               )}
-            </div>
-            <div className="text-gray-400 text-xs mt-2">
-              {filteredCryptos.length}{" "}
-              {filteredCryptos.length === 1 ? "result" : "results"}
-            </div>
-          </div>
 
-          {!searchTerm && (
-            <div className="p-4 border-b border-white/10 flex-shrink-0">
-              <div className="text-gray-400 text-xs font-semibold mb-2">
-                POPULAR
-              </div>
-              <div className="grid grid-cols-3 gap-2">
-                {popularCryptos.map((crypto) => (
-                  <button
-                    key={crypto.id}
-                    onClick={() => handleSelect(crypto)}
-                    className="bg-white/5 hover:bg-purple-500/20 border border-white/10 hover:border-purple-500/50 rounded-lg p-2 transition-all"
-                  >
-                    <div className="text-white font-bold text-sm">
-                      {crypto.symbol}
-                    </div>
-                    <div className="text-gray-400 text-xs truncate">
-                      {crypto.name}
-                    </div>
-                  </button>
-                ))}
+              <div className="overflow-y-scroll" style={{ maxHeight: "250px" }}>
+                {filteredCryptos.length > 0 ? (
+                  filteredCryptos.map((crypto) => (
+                    <button
+                      key={crypto.id}
+                      onClick={() => handleSelect(crypto)}
+                      className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-purple-500/10 transition-colors border-b border-white/5 ${
+                        selectedCrypto === crypto.symbol.toLowerCase()
+                          ? "bg-purple-500/20"
+                          : ""
+                      }`}
+                    >
+                      <span className="text-xl">
+                        {getCategoryIcon(crypto.category)}
+                      </span>
+                      <div className="flex-1 text-left">
+                        <div className="flex items-center gap-2">
+                          <span className="text-white font-semibold">
+                            {crypto.name}
+                          </span>
+                          <span className="text-gray-400 text-sm">
+                            ({crypto.symbol})
+                          </span>
+                          {getRankBadge(crypto.marketCapRank)}
+                        </div>
+                        <div className="text-gray-400 text-xs">
+                          #{crypto.marketCapRank} • {crypto.category}
+                        </div>
+                      </div>
+                      <div className="text-right flex-shrink-0">
+                        <div className="text-xs text-gray-400">Jan 8</div>
+                        <div className="text-sm text-blue-300 font-mono">
+                          ${crypto.jan8Price.toLocaleString()}
+                        </div>
+                      </div>
+                    </button>
+                  ))
+                ) : (
+                  <div className="p-8 text-center text-gray-400">
+                    No cryptocurrencies found for "{searchTerm}"
+                  </div>
+                )}
               </div>
             </div>
-          )}
-
-          <div className="overflow-y-auto flex-1">
-            {filteredCryptos.length > 0 ? (
-              filteredCryptos.map((crypto) => (
-                <button
-                  key={crypto.id}
-                  onClick={() => handleSelect(crypto)}
-                  className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-purple-500/10 transition-colors border-b border-white/5 ${
-                    selectedCrypto === crypto.symbol.toLowerCase()
-                      ? "bg-purple-500/20"
-                      : ""
-                  }`}
-                >
-                  <span className="text-xl">
-                    {getCategoryIcon(crypto.category)}
-                  </span>
-                  <div className="flex-1 text-left">
-                    <div className="flex items-center gap-2">
-                      <span className="text-white font-semibold">
-                        {crypto.name}
-                      </span>
-                      <span className="text-gray-400 text-sm">
-                        ({crypto.symbol})
-                      </span>
-                      {getRankBadge(crypto.marketCapRank)}
-                    </div>
-                    <div className="text-gray-400 text-xs">
-                      #{crypto.marketCapRank} • {crypto.category}
-                    </div>
-                  </div>
-                  <div className="text-right flex-shrink-0">
-                    <div className="text-xs text-gray-400">Jan 8</div>
-                    <div className="text-sm text-blue-300 font-mono">
-                      ${crypto.jan8Price.toLocaleString()}
-                    </div>
-                  </div>
-                </button>
-              ))
-            ) : (
-              <div className="p-8 text-center text-gray-400">
-                No cryptocurrencies found for "{searchTerm}"
-              </div>
-            )}
           </div>
         </div>
       )}
