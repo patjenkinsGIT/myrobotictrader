@@ -143,7 +143,7 @@ export const CryptoSelector: React.FC<CryptoSelectorProps> = ({
       {isOpen && (
         <div className="absolute top-full mt-2 w-full bg-gray-900 border-2 border-purple-500/30 rounded-xl shadow-2xl z-50 max-h-[500px] overflow-hidden">
           {/* Search Bar */}
-          <div className="p-4 border-b border-white/10 sticky top-0 bg-gray-900">
+          <div className="p-4 border-b border-white/10 sticky top-0 bg-gray-900 z-10">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
