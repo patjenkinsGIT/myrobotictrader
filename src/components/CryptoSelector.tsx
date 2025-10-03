@@ -142,11 +142,13 @@ export const CryptoSelector: React.FC<CryptoSelectorProps> = ({
 
       {isOpen && (
         <div
-          className="fixed inset-0 z-[9998] bg-black/20"
+          className="fixed inset-0 bg-black/20"
+          style={{ zIndex: 99998 }}
           onClick={() => setIsOpen(false)}
         >
           <div
-            className="absolute top-[180px] left-1/2 -translate-x-1/2 w-full max-w-2xl z-[9999]"
+            className="absolute top-[180px] left-1/2 -translate-x-1/2 w-full max-w-2xl"
+            style={{ zIndex: 99999 }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="bg-gray-900 border-2 border-purple-500/30 rounded-xl shadow-2xl max-h-[450px] flex flex-col overflow-hidden">
