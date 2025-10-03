@@ -28,12 +28,12 @@ interface EnhancedTradingStats {
 
 const yourTradingData: EnhancedTradingStats = {
   totalDeposited: 25000,
-  totalCurrentValue: 25397.41,
-  currentOpenPositions: 9676.21,
-  safeReserves: 15721.2,
-  realizedProfits: 11315.68,
-  totalTrades: 847,
-  wins: 623,
+  totalCurrentValue: 26677.0,
+  currentOpenPositions: 12384.94,
+  safeReserves: 14292.06,
+  realizedProfits: 4218.96,
+  totalTrades: 888,
+  wins: 888,
 };
 
 export const DynamicSmartMoneyComparison = () => {
