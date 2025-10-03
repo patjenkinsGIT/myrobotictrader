@@ -252,7 +252,6 @@ export const DynamicSmartMoneyComparison = () => {
             <CryptoSelector
               selectedCrypto={selectedCrypto}
               onSelect={setSelectedCrypto}
-              cryptoData={cryptoData}
             />
 
             {cryptoData && <DataAccuracyDisclaimer cryptoData={cryptoData} />}
@@ -311,7 +310,6 @@ export const DynamicSmartMoneyComparison = () => {
           <CryptoSelector
             selectedCrypto={selectedCrypto}
             onSelect={setSelectedCrypto}
-            cryptoData={cryptoData}
           />
 
           <DataAccuracyDisclaimer cryptoData={cryptoData} />

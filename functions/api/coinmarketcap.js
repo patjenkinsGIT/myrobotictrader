@@ -1,10 +1,10 @@
 // /functions/api/coinmarketcap.js
-// Backend proxy for CoinMarketCap API calls with historical data support
+// Backend proxy for CoinMarketCap API with static Jan 8 data
 
 export async function onRequest(context) {
   const { request, env } = context;
   const url = new URL(request.url);
-  const cryptoId = url.searchParams.get("crypto");
+  const symbol = url.searchParams.get("symbol");
 
   const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
@@ -16,30 +16,8 @@ export async function onRequest(context) {
     return new Response(null, { headers: corsHeaders });
   }
 
-  if (!cryptoId) {
-    return new Response(JSON.stringify({ error: "Missing crypto parameter" }), {
-      status: 400,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
-  }
-
-  // Input validation - prevent injection and abuse
-  const sanitizedCryptoId = cryptoId.trim().toLowerCase();
-
-  // Max length check
-  if (sanitizedCryptoId.length > 30) {
-    return new Response(
-      JSON.stringify({ error: "Invalid crypto ID - too long" }),
-      {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
-    );
-  }
-
-  // Alphanumeric and dash only
-  if (!/^[a-z0-9-]+$/.test(sanitizedCryptoId)) {
-    return new Response(JSON.stringify({ error: "Invalid crypto ID format" }), {
+  if (!symbol) {
+    return new Response(JSON.stringify({ error: "Missing symbol parameter" }), {
       status: 400,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
@@ -54,183 +32,131 @@ export async function onRequest(context) {
     });
   }
 
-  // Enhanced mapping: ID to Symbol
-  const idToSymbol = {
-    bitcoin: "BTC",
-    ethereum: "ETH",
-    solana: "SOL",
-    dogecoin: "DOGE",
-    cardano: "ADA",
-    ripple: "XRP",
-    xrp: "XRP",
-    chainlink: "LINK",
-    "avalanche-2": "AVAX",
-    avalanche: "AVAX",
-    polkadot: "DOT",
-    polygon: "MATIC",
-    matic: "MATIC",
-    sui: "SUI",
-    litecoin: "LTC",
-    "bitcoin-cash": "BCH",
-    uniswap: "UNI",
-    stellar: "XLM",
-    tron: "TRX",
-    "shiba-inu": "SHIB",
-    pepe: "PEPE",
-  };
-
-  const symbol =
-    idToSymbol[sanitizedCryptoId] || sanitizedCryptoId.toUpperCase();
-
   try {
-    // Fetch current price and changes from CoinMarketCap
-    const response = await fetch(
-      `https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?symbol=${symbol}`,
+    // Step 1: Load static Jan 8 data from JSON file
+    const staticDataUrl = new URL("/data/cryptoJan8Data.json", url.origin);
+    let jan8Price = null;
+    let cryptoName = null;
+    let cryptoSymbol = symbol.toUpperCase();
+
+    try {
+      const staticResponse = await fetch(staticDataUrl.toString());
+      const staticData = await staticResponse.json();
+
+      // Find crypto in our JSON (match by symbol)
+      const cryptoEntry = staticData.cryptos.find(
+        (c) => c.symbol.toUpperCase() === symbol.toUpperCase()
+      );
+
+      if (cryptoEntry) {
+        jan8Price = cryptoEntry.jan8Price;
+        cryptoName = cryptoEntry.name;
+        cryptoSymbol = cryptoEntry.symbol;
+      }
+    } catch (err) {
+      console.error("Error loading static data:", err);
+    }
+
+    // Step 2: Get current price from CoinMarketCap
+    const cmcUrl = `https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?symbol=${symbol.toUpperCase()}`;
+
+    const cmcResponse = await fetch(cmcUrl, {
+      headers: {
+        "X-CMC_PRO_API_KEY": CMC_API_KEY,
+        Accept: "application/json",
+      },
+    });
+
+    if (!cmcResponse.ok) {
+      throw new Error(`CoinMarketCap API error: ${cmcResponse.status}`);
+    }
+
+    const cmcData = await cmcResponse.json();
+
+    if (!cmcData.data || !cmcData.data[symbol.toUpperCase()]) {
+      throw new Error("Cryptocurrency not found");
+    }
+
+    const cryptoData = cmcData.data[symbol.toUpperCase()][0];
+    const currentPrice = cryptoData.quote.USD.price;
+
+    // Use name from CMC if we don't have it from static data
+    if (!cryptoName) {
+      cryptoName = cryptoData.name;
+    }
+
+    // Step 3: Calculate gain since Jan 8
+    let gainSinceStart;
+    let estimationMethod;
+
+    if (jan8Price) {
+      // We have real Jan 8 data!
+      gainSinceStart = (currentPrice - jan8Price) / jan8Price;
+      estimationMethod = "historical_data_file";
+    } else {
+      // Fallback: Estimate using 30-day trend
+      const change30d = cryptoData.quote.USD.percent_change_30d || 0;
+
+      if (Math.abs(change30d) > 0.1) {
+        // Extrapolate backwards from 30-day change
+        const price30DaysAgo = currentPrice / (1 + change30d / 100);
+
+        // Assume linear progression (rough estimate)
+        const daysFromJan8 = Math.floor(
+          (Date.now() - new Date("2025-01-08").getTime()) /
+            (1000 * 60 * 60 * 24)
+        );
+        const dailyRate = change30d / 30;
+        const estimatedChange = dailyRate * daysFromJan8;
+
+        jan8Price = currentPrice / (1 + estimatedChange / 100);
+        gainSinceStart = (currentPrice - jan8Price) / jan8Price;
+        estimationMethod = "extrapolated_30d_trend";
+      } else {
+        // No good data - use conservative 25% default
+        jan8Price = currentPrice / 1.25;
+        gainSinceStart = 0.25;
+        estimationMethod = "conservative_default";
+      }
+    }
+
+    // Step 4: Return comprehensive response
+    return new Response(
+      JSON.stringify({
+        name: cryptoName,
+        symbol: cryptoSymbol,
+        price: currentPrice,
+        priceOnJan8: jan8Price,
+        gainSinceStart: gainSinceStart,
+        change24h: cryptoData.quote.USD.percent_change_24h || 0,
+        change7d: cryptoData.quote.USD.percent_change_7d || 0,
+        change30d: cryptoData.quote.USD.percent_change_30d || 0,
+        marketCap: cryptoData.quote.USD.market_cap,
+        volume24h: cryptoData.quote.USD.volume_24h,
+        debug: {
+          estimationMethod,
+          hasHistoricalData: estimationMethod === "historical_data_file",
+        },
+      }),
       {
+        status: 200,
         headers: {
-          "X-CMC_PRO_API_KEY": CMC_API_KEY,
-          Accept: "application/json",
+          ...corsHeaders,
+          "Content-Type": "application/json",
+          "Cache-Control": "public, max-age=300", // Cache for 5 minutes
         },
       }
     );
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`CMC API error ${response.status}:`, errorText);
-      throw new Error(`CMC API error: ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    // Check if we got valid data
-    if (!data.data || !data.data[symbol] || !data.data[symbol][0]) {
-      console.error("Invalid CMC response structure:", JSON.stringify(data));
-      throw new Error("Invalid response from CMC - crypto not found");
-    }
-
-    const cryptoData = data.data[symbol][0];
-    const quote = cryptoData.quote.USD;
-
-    // Your trading start date
-    const START_DATE = "2025-01-08";
-    const startDate = new Date(START_DATE);
-    const currentDate = new Date();
-    const daysSinceStart = Math.floor(
-      (currentDate - startDate) / (1000 * 60 * 60 * 24)
-    );
-
-    // Calculate historical price estimate
-    // Method 1: Try to use 30-day change to extrapolate
-    let startPrice;
-    let gainSinceStart;
-
-    if (quote.percent_change_30d) {
-      // If we have 30-day data, use it to estimate
-      const change30d = quote.percent_change_30d / 100;
-      const price30DaysAgo = quote.price / (1 + change30d);
-
-      // Extrapolate to Jan 8 based on 30-day trend
-      const daysToExtrapolate = daysSinceStart - 30;
-      const dailyRate = Math.pow(1 + change30d, 1 / 30) - 1;
-      startPrice = price30DaysAgo / Math.pow(1 + dailyRate, daysToExtrapolate);
-      gainSinceStart = (quote.price - startPrice) / startPrice;
-    } else {
-      // Fallback: Use known estimates for major cryptos
-      const estimatedGains = {
-        BTC: 0.52, // Bitcoin up 52% since Jan 8
-        ETH: 0.45, // Ethereum up 45%
-        SOL: 2.1, // Solana up 210%
-        DOGE: 1.8, // Dogecoin up 180%
-        ADA: 0.35, // Cardano up 35%
-        XRP: 0.42, // XRP up 42%
-        LINK: 0.68, // Chainlink up 68%
-        AVAX: 0.95, // Avalanche up 95%
-        DOT: 0.55, // Polkadot up 55%
-        MATIC: 0.48, // Polygon up 48%
-        SUI: 1.2, // Sui up 120%
-        LTC: 0.38, // Litecoin up 38%
-        BCH: 0.45, // Bitcoin Cash up 45%
-        UNI: 0.55, // Uniswap up 55%
-        XLM: 0.4, // Stellar up 40%
-        TRX: 0.35, // Tron up 35%
-        SHIB: 0.85, // Shiba up 85%
-        PEPE: 1.5, // Pepe up 150%
-      };
-
-      gainSinceStart = estimatedGains[symbol] || 0.3; // Default 30% if unknown
-      startPrice = quote.price / (1 + gainSinceStart);
-    }
-
-    // Build comprehensive response
-    const transformedData = {
-      // Price data
-      currentPrice: quote.price,
-      startPrice: startPrice,
-      gainSinceStart: gainSinceStart,
-
-      // SHORT-TERM: Change metrics (24h, 7d, 30d)
-      change24h: quote.percent_change_24h || 0,
-      change7d: quote.percent_change_7d || null,
-      change30d: quote.percent_change_30d || null,
-
-      // EXTENDED TIMEFRAMES: 60d, 90d, 6m
-      change60d: quote.percent_change_60d || null,
-      change90d: quote.percent_change_90d || null,
-      change6m: quote.percent_change_1y ? quote.percent_change_1y / 2 : null, // Approximate 6mo from yearly data
-
-      // Crypto info
-      name: cryptoData.name,
-      symbol: cryptoData.symbol,
-
-      // Market data (additional info)
-      marketCap: quote.market_cap || null,
-      volume24h: quote.volume_24h || null,
-
-      // Metadata
-      lastUpdated: quote.last_updated,
-      cmcRank: cryptoData.cmc_rank || null,
-
-      // Debug info (remove in production if desired)
-      debug: {
-        requestedId: cryptoId,
-        resolvedSymbol: symbol,
-        daysSinceStart: daysSinceStart,
-        startDate: START_DATE,
-        estimationMethod: quote.percent_change_30d
-          ? "extrapolated"
-          : "estimated",
-      },
-    };
-
-    // Log success for monitoring
-    console.log(
-      `✅ CMC: ${symbol} fetched successfully - $${quote.price.toFixed(2)}`
-    );
-
-    return new Response(JSON.stringify(transformedData), {
-      headers: {
-        ...corsHeaders,
-        "Content-Type": "application/json",
-        // Cache for 5 minutes (CMC updates less frequently)
-        "Cache-Control": "public, max-age=300, s-maxage=300",
-      },
-    });
   } catch (error) {
-    console.error("CoinMarketCap API error:", error);
+    console.error("API Error:", error);
 
-    // Return detailed error for debugging
-    const errorMessage =
-      error instanceof Error ? error.message : "Unknown error occurred";
     return new Response(
       JSON.stringify({
-        error: "Failed to fetch crypto data",
-        details: errorMessage,
-        cryptoId: cryptoId,
-        symbol: symbol,
-        timestamp: new Date().toISOString(),
+        error: error.message || "Failed to fetch cryptocurrency data",
+        details: "Please try again or select a different cryptocurrency",
       }),
       {
-        status: error.message.includes("not found") ? 404 : 500,
+        status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       }
     );
