@@ -37,7 +37,7 @@ const yourTradingData: EnhancedTradingStats = {
 };
 
 export const DynamicSmartMoneyComparison = () => {
-  const [selectedCrypto, setSelectedCrypto] = useState("bitcoin");
+  const [selectedCrypto, setSelectedCrypto] = useState("btc");
   const [cryptoData, setCryptoData] = useState<CryptoData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

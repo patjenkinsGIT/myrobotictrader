@@ -66,8 +66,8 @@ export const CryptoSelector: React.FC<CryptoSelectorProps> = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleSelect = (cryptoId: string) => {
-    onSelect(cryptoId);
+  const handleSelect = (crypto: CryptoData) => {
+    onSelect(crypto.symbol.toLowerCase());
     setIsOpen(false);
     setSearchTerm("");
   };
@@ -182,7 +182,7 @@ export const CryptoSelector: React.FC<CryptoSelectorProps> = ({
                 {popularCryptos.map((crypto) => (
                   <button
                     key={crypto.id}
-                    onClick={() => handleSelect(crypto.id)}
+                    onClick={() => handleSelect(crypto)}
                     className="bg-white/5 hover:bg-purple-500/20 border border-white/10 hover:border-purple-500/50 rounded-lg p-2 transition-all"
                   >
                     <div className="text-white font-bold text-sm">
@@ -203,9 +203,11 @@ export const CryptoSelector: React.FC<CryptoSelectorProps> = ({
               filteredCryptos.map((crypto) => (
                 <button
                   key={crypto.id}
-                  onClick={() => handleSelect(crypto.id)}
+                  onClick={() => handleSelect(crypto)}
                   className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-purple-500/10 transition-colors border-b border-white/5 ${
-                    selectedCrypto === crypto.id ? "bg-purple-500/20" : ""
+                    selectedCrypto === crypto.symbol.toLowerCase()
+                      ? "bg-purple-500/20"
+                      : ""
                   }`}
                 >
                   <span className="text-xl">
