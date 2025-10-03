@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { DollarSign, Shield, AlertTriangle } from "lucide-react";
 import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
 import { CryptoSelector } from "./CryptoSelector";
