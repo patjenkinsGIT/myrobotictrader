@@ -460,3 +460,5 @@ export const DynamicSmartMoneyComparison = () => {
 };
 
 export default DynamicSmartMoneyComparison;
+
+// Note: The following components were modified to be simpler versions as per the context provided.
