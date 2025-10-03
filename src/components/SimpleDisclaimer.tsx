@@ -1,4 +1,4 @@
-import { Info, CheckCircle } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 
 interface SimpleDisclaimerProps {
   cryptoData?: {
