@@ -1,559 +1,245 @@
-import { useState, useEffect, useRef } from "react";
-import { DollarSign, Shield, AlertTriangle } from "lucide-react";
-import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
-import { CryptoSelector } from "./CryptoSelector";
-import { DataAccuracyDisclaimer } from "./DataAccuracyDisclaimer";
+import React, { useState, useEffect, useRef } from "react";
+import { Search, ChevronDown, X } from "lucide-react";
 
 interface CryptoData {
-  name: string;
+  id: string;
   symbol: string;
-  price: number;
-  priceOnJan8: number;
-  gainSinceStart: number;
-  change24h: number;
-  change7d: number | null;
-  change30d: number | null;
-  daysSinceStart: number;
+  name: string;
+  jan8Price: number;
+  category: string;
+  marketCapRank: number;
 }
 
-interface EnhancedTradingStats {
-  totalDeposited: number;
-  totalCurrentValue: number;
-  currentOpenPositions: number;
-  safeReserves: number;
-  realizedProfits: number;
-  totalTrades: number;
-  wins: number;
+interface CryptoSelectorProps {
+  selectedCrypto: string;
+  onSelect: (cryptoId: string) => void;
 }
 
-const yourTradingData: EnhancedTradingStats = {
-  totalDeposited: 25000,
-  totalCurrentValue: 25397.41,
-  currentOpenPositions: 9676.21,
-  safeReserves: 15721.2,
-  realizedProfits: 11315.68,
-  totalTrades: 847,
-  wins: 623,
-};
+export const CryptoSelector: React.FC<CryptoSelectorProps> = ({
+  selectedCrypto,
+  onSelect,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [cryptoList, setCryptoList] = useState<CryptoData[]>([]);
+  const [filteredCryptos, setFilteredCryptos] = useState<CryptoData[]>([]);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-export const DynamicSmartMoneyComparison = () => {
-  const [selectedCrypto, setSelectedCrypto] = useState("btc");
-  const [cryptoData, setCryptoData] = useState<CryptoData | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [customCrypto, setCustomCrypto] = useState("");
-
-  const fetchCryptoData = async (symbol: string) => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch(
-        `/api/coinmarketcap?symbol=${symbol.toUpperCase()}`
-      );
-      const data = await response.json();
-
-      if (data.error) {
-        throw new Error(data.error);
-      }
-
-      const startDate = new Date("2025-01-08");
-      const today = new Date();
-      const daysSinceStart = Math.floor(
-        (today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
-      );
-
-      setCryptoData({
-        name: data.name,
-        symbol: data.symbol,
-        price: data.price,
-        priceOnJan8: data.priceOnJan8,
-        gainSinceStart: data.gainSinceStart,
-        change24h: data.change24h,
-        change7d: data.change7d,
-        change30d: data.change30d,
-        daysSinceStart,
-      });
-    } catch (err) {
-      console.error("Error fetching crypto data:", err);
-
-      const fallbackPrices: Record<
-        string,
-        {
-          current: number;
-          jan8: number;
-          change24h?: number;
-          gainSinceStart?: number;
-        }
-      > = {
-        btc: {
-          current: 94723.45,
-          jan8: 93893.0,
-          change24h: 0.88,
-          gainSinceStart: 0.0088,
-        },
-        eth: {
-          current: 3289.67,
-          jan8: 3342.0,
-          change24h: -1.57,
-          gainSinceStart: -0.0157,
-        },
-      };
-
-      const fallback = fallbackPrices[symbol.toLowerCase()];
-
-      if (fallback) {
-        const startDate = new Date("2025-01-08");
-        const today = new Date();
-        const daysSinceStart = Math.floor(
-          (today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
-        );
-
-        setCryptoData({
-          name:
-            symbol.toUpperCase() === "BTC"
-              ? "Bitcoin"
-              : symbol.toUpperCase() === "ETH"
-              ? "Ethereum"
-              : symbol.toUpperCase(),
-          symbol: symbol.toUpperCase(),
-          price: fallback.current,
-          priceOnJan8: fallback.jan8,
-          gainSinceStart: fallback.gainSinceStart || 0,
-          change24h: fallback.change24h || 0,
-          change7d: null,
-          change30d: null,
-          daysSinceStart,
-        });
-        setError("Using cached prices - live data temporarily unavailable");
-      } else {
-        setError(
-          "Price data unavailable for this cryptocurrency. Try Bitcoin or Ethereum."
-        );
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
+  // Load crypto data from JSON file
   useEffect(() => {
-    fetchCryptoData(selectedCrypto);
-  }, [selectedCrypto]);
+    fetch("/data/cryptoJan8Data.json")
+      .then((res) => res.json())
+      .then((data) => {
+        setCryptoList(data.cryptos);
+        setFilteredCryptos(data.cryptos);
+      })
+      .catch((err) => console.error("Error loading crypto data:", err));
+  }, []);
 
-  const calculateComparison = () => {
-    if (!cryptoData) return null;
+  // Filter cryptos based on search
+  useEffect(() => {
+    if (!searchTerm.trim()) {
+      setFilteredCryptos(cryptoList);
+    } else {
+      const filtered = cryptoList.filter(
+        (crypto) =>
+          crypto.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          crypto.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          crypto.id.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredCryptos(filtered);
+    }
+  }, [searchTerm, cryptoList]);
 
-    const allInValue =
-      yourTradingData.totalDeposited * (1 + cryptoData.gainSinceStart);
-    const allInProfit = allInValue - yourTradingData.totalDeposited;
-
-    return {
-      allIn: {
-        investment: yourTradingData.totalDeposited,
-        currentValue: allInValue,
-        unrealizedGain: allInProfit,
-        realized: 0,
-        risk: `100% exposed to ${cryptoData.name} volatility`,
-      },
-      yourWay: {
-        investment: yourTradingData.totalDeposited,
-        realizedProfits: yourTradingData.realizedProfits,
-        currentPositions: yourTradingData.currentOpenPositions,
-        reserves: yourTradingData.safeReserves,
-        totalValue:
-          yourTradingData.totalCurrentValue + yourTradingData.realizedProfits,
-      },
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
     };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleSelect = (cryptoId: string) => {
+    onSelect(cryptoId);
+    setIsOpen(false);
+    setSearchTerm("");
   };
 
-  const [isSearching, setIsSearching] = useState(false);
-  const lastSearchTime = useRef<number>(0);
-
-  const handleCustomCrypto = async () => {
-    const now = Date.now();
-    const timeSinceLastSearch = now - lastSearchTime.current;
-
-    if (timeSinceLastSearch < 2000) {
-      setError("Please wait a moment before searching again");
-      return;
-    }
-
-    if (customCrypto.trim() && !isSearching) {
-      setIsSearching(true);
-      lastSearchTime.current = now;
-      await fetchCryptoData(customCrypto.toLowerCase().trim());
-      setSelectedCrypto(customCrypto.toLowerCase().trim());
-      setCustomCrypto("");
-      setIsSearching(false);
-    }
+  const getCategoryIcon = (category: string) => {
+    const icons: Record<string, string> = {
+      "Layer 1": "🏗️",
+      "Layer 2": "⚡",
+      "Layer 0": "🌐",
+      DeFi: "💰",
+      Payment: "💳",
+      Exchange: "🔄",
+      Stablecoin: "🔒",
+      Meme: "🐕",
+      Gaming: "🎮",
+      Metaverse: "🌍",
+      NFT: "🎨",
+      Oracle: "🔮",
+      Storage: "💾",
+      Privacy: "🔐",
+      AI: "🤖",
+    };
+    return icons[category] || "🪙";
   };
 
-  const handleMasterclassClick = (location: string) => {
-    trackCTAClick("join_free_masterclass", `dynamic_comparison_${location}`);
-    trackOutboundLink(
-      "https://dailyprofits.link/class",
-      `Masterclass from Dynamic Comparison ${location}`
-    );
+  const getRankBadge = (rank: number) => {
+    if (rank === 1) return "🥇";
+    if (rank === 2) return "🥈";
+    if (rank === 3) return "🥉";
+    if (rank <= 10) return "🏆";
+    return null;
   };
 
-  const formatCurrency = (amount: number) =>
-    `$${amount.toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`;
+  const selectedCryptoData = cryptoList.find((c) => c.id === selectedCrypto);
+  const popularCryptos = cryptoList.slice(0, 6);
 
-  const formatPercent = (percent: number) =>
-    `${percent > 0 ? "+" : ""}${percent.toFixed(2)}%`;
-
-  const comparison = calculateComparison();
-
-  const dynamicMessage =
-    comparison && comparison.allIn.unrealizedGain < 0
-      ? {
-          type: "warning" as const,
-          icon: "⚠️",
-          title: `While ${cryptoData?.name} Dropped ${formatPercent(
-            cryptoData?.gainSinceStart! * 100
-          )}...`,
-          message: `You would have LOST ${formatCurrency(
-            Math.abs(comparison.allIn.unrealizedGain)
-          )} going all-in. Instead, you're up ${formatCurrency(
-            comparison.yourWay.realizedProfits
-          )} in REAL profits. That's a ${formatCurrency(
-            comparison.yourWay.realizedProfits +
-              Math.abs(comparison.allIn.unrealizedGain)
-          )} difference.`,
-        }
-      : comparison && comparison.allIn.unrealizedGain > 0
-      ? {
-          type: "success" as const,
-          icon: "💰",
-          title: `${cryptoData?.name} Holders Are Celebrating...`,
-          message: `But their ${formatCurrency(
-            comparison.allIn.unrealizedGain
-          )} is just paper gains. You? You've already WITHDRAWN ${formatCurrency(
-            comparison.yourWay.realizedProfits
-          )} to your bank account. Real money > Hopium.`,
-        }
-      : null;
-
-  if (!cryptoData || !comparison) {
-    return (
-      <section className="relative py-16 px-4 bg-gradient-to-b from-gray-900 via-purple-900/20 to-gray-900">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              The Smart Money Difference
-            </h2>
-            <p className="text-xl text-gray-300 mb-8">
-              Compare your results against any cryptocurrency
-            </p>
-
-            <CryptoSelector
-              selectedCrypto={selectedCrypto}
-              onSelect={setSelectedCrypto}
-            />
-
-            {cryptoData && <DataAccuracyDisclaimer cryptoData={cryptoData} />}
-
-            <div className="bg-white/10 rounded-xl p-8 backdrop-blur-sm">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <input
-                  type="text"
-                  value={customCrypto}
-                  onChange={(e) => setCustomCrypto(e.target.value)}
-                  onKeyPress={(e) => e.key === "Enter" && handleCustomCrypto()}
-                  placeholder="Try any crypto (e.g., 'sol', 'ada', 'doge')"
-                  className="px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  disabled={isSearching}
-                />
-                <button
-                  onClick={handleCustomCrypto}
-                  disabled={isSearching || !customCrypto.trim()}
-                  className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                >
-                  {isSearching ? "..." : "Compare"}
-                </button>
+  return (
+    <div ref={dropdownRef} className="relative w-full max-w-2xl mx-auto mb-8">
+      {/* Selected Display Button */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full bg-white/5 backdrop-blur-sm border-2 border-white/20 rounded-xl p-4 flex items-center justify-between hover:border-purple-500/50 transition-all"
+      >
+        <div className="flex items-center gap-3">
+          {selectedCryptoData && (
+            <>
+              <span className="text-2xl">
+                {getCategoryIcon(selectedCryptoData.category)}
+              </span>
+              <div className="text-left">
+                <div className="text-white font-bold text-lg">
+                  {selectedCryptoData.name} ({selectedCryptoData.symbol})
+                </div>
+                <div className="text-gray-400 text-sm">
+                  #{selectedCryptoData.marketCapRank} •{" "}
+                  {selectedCryptoData.category}
+                </div>
               </div>
-              {error && <p className="text-yellow-400 text-sm mt-2">{error}</p>}
-            </div>
+            </>
+          )}
+          {!selectedCryptoData && (
+            <div className="text-gray-400">Select a cryptocurrency...</div>
+          )}
+        </div>
+        <ChevronDown
+          className={`w-5 h-5 text-gray-400 transition-transform ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        />
+      </button>
 
-            {isLoading && (
-              <div className="text-center mt-8">
-                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
-                <p className="text-gray-300 mt-4">Loading comparison data...</p>
+      {/* Dropdown */}
+      {isOpen && (
+        <div className="absolute top-full mt-2 w-full bg-gray-900/95 backdrop-blur-xl border-2 border-purple-500/30 rounded-xl shadow-2xl z-50 max-h-[500px] overflow-hidden">
+          {/* Search Bar */}
+          <div className="p-4 border-b border-white/10 sticky top-0 bg-gray-900">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search by name, symbol, or ID..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full bg-white/5 border border-white/20 rounded-lg pl-10 pr-10 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-purple-500/50"
+                autoFocus
+              />
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2"
+                >
+                  <X className="w-4 h-4 text-gray-400 hover:text-white" />
+                </button>
+              )}
+            </div>
+            <div className="text-gray-400 text-xs mt-2">
+              {filteredCryptos.length}{" "}
+              {filteredCryptos.length === 1 ? "result" : "results"}
+            </div>
+          </div>
+
+          {/* Popular Section (only show when not searching) */}
+          {!searchTerm && (
+            <div className="p-4 border-b border-white/10">
+              <div className="text-gray-400 text-xs font-semibold mb-2">
+                POPULAR
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                {popularCryptos.map((crypto) => (
+                  <button
+                    key={crypto.id}
+                    onClick={() => handleSelect(crypto.id)}
+                    className="bg-white/5 hover:bg-purple-500/20 border border-white/10 hover:border-purple-500/50 rounded-lg p-2 transition-all"
+                  >
+                    <div className="text-white font-bold text-sm">
+                      {crypto.symbol}
+                    </div>
+                    <div className="text-gray-400 text-xs truncate">
+                      {crypto.name}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Crypto List */}
+          <div className="overflow-y-auto max-h-[300px]">
+            {filteredCryptos.length > 0 ? (
+              filteredCryptos.map((crypto) => (
+                <button
+                  key={crypto.id}
+                  onClick={() => handleSelect(crypto.id)}
+                  className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-purple-500/10 transition-colors border-b border-white/5 ${
+                    selectedCrypto === crypto.id ? "bg-purple-500/20" : ""
+                  }`}
+                >
+                  <span className="text-xl">
+                    {getCategoryIcon(crypto.category)}
+                  </span>
+                  <div className="flex-1 text-left">
+                    <div className="flex items-center gap-2">
+                      <span className="text-white font-semibold">
+                        {crypto.name}
+                      </span>
+                      <span className="text-gray-400 text-sm">
+                        ({crypto.symbol})
+                      </span>
+                      {getRankBadge(crypto.marketCapRank)}
+                    </div>
+                    <div className="text-gray-400 text-xs">
+                      #{crypto.marketCapRank} • {crypto.category}
+                    </div>
+                  </div>
+                  <div className="text-right flex-shrink-0">
+                    <div className="text-xs text-gray-400">Jan 8</div>
+                    <div className="text-sm text-blue-300 font-mono">
+                      ${crypto.jan8Price.toLocaleString()}
+                    </div>
+                  </div>
+                </button>
+              ))
+            ) : (
+              <div className="p-8 text-center text-gray-400">
+                No cryptocurrencies found for "{searchTerm}"
               </div>
             )}
           </div>
         </div>
-      </section>
-    );
-  }
-
-  // Calculate success rate
-  const successRate =
-    yourTradingData.totalTrades > 0
-      ? (yourTradingData.wins / yourTradingData.totalTrades) * 100
-      : 0;
-
-  return (
-    <section className="relative py-16 px-4 bg-gradient-to-b from-gray-900 via-purple-900/20 to-gray-900">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            The Smart Money Difference
-          </h2>
-          <p className="text-xl text-gray-300 mb-8">
-            See how your AI-enhanced trading compares to holding
-          </p>
-
-          <CryptoSelector
-            selectedCrypto={selectedCrypto}
-            onSelect={setSelectedCrypto}
-          />
-
-          <DataAccuracyDisclaimer cryptoData={cryptoData} />
-
-          <DataAccuracyDisclaimer cryptoData={cryptoData} />
-        </div>
-
-        {cryptoData && (
-          <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 mb-8 border border-white/20">
-            <div className="text-center mb-4">
-              <h3 className="text-2xl font-bold text-white mb-2">
-                {cryptoData.name} ({cryptoData.symbol})
-              </h3>
-              <div className="text-3xl font-bold text-blue-400">
-                {formatCurrency(cryptoData.price)}
-              </div>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-              <div className="bg-white/5 rounded-lg p-3">
-                <div className="text-gray-400 text-sm">Since Start</div>
-                <div
-                  className={`font-bold ${
-                    cryptoData.gainSinceStart >= 0
-                      ? "text-green-400"
-                      : "text-red-400"
-                  }`}
-                >
-                  {formatPercent(cryptoData.gainSinceStart * 100)}
-                </div>
-              </div>
-              <div className="bg-white/5 rounded-lg p-3">
-                <div className="text-gray-400 text-sm">24h</div>
-                <div
-                  className={`font-bold ${
-                    cryptoData.change24h >= 0
-                      ? "text-green-400"
-                      : "text-red-400"
-                  }`}
-                >
-                  {formatPercent(cryptoData.change24h)}
-                </div>
-              </div>
-              <div className="bg-white/5 rounded-lg p-3">
-                <div className="text-gray-400 text-sm">7d</div>
-                <div
-                  className={`font-bold ${
-                    (cryptoData.change7d || 0) >= 0
-                      ? "text-green-400"
-                      : "text-red-400"
-                  }`}
-                >
-                  {formatPercent(cryptoData.change7d || 0)}
-                </div>
-              </div>
-              <div className="bg-white/5 rounded-lg p-3">
-                <div className="text-gray-400 text-sm">30d</div>
-                <div
-                  className={`font-bold ${
-                    (cryptoData.change30d || 0) >= 0
-                      ? "text-green-400"
-                      : "text-red-400"
-                  }`}
-                >
-                  {formatPercent(cryptoData.change30d || 0)}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <div className="grid md:grid-cols-2 gap-8 mb-12">
-          <div className="relative bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-red-500/30">
-            <div className="absolute top-4 right-4">
-              <AlertTriangle className="w-8 h-8 text-red-400" />
-            </div>
-            <div className="mb-6">
-              <h3 className="text-2xl font-bold text-white mb-2">
-                All-In on {cryptoData.name}
-              </h3>
-              <p className="text-red-300">Risky & stressful</p>
-            </div>
-            <div className="space-y-4 mb-8">
-              <div className="flex justify-between py-2 border-b border-white/10">
-                <span className="text-gray-300">Investment:</span>
-                <span className="text-white font-semibold">
-                  {formatCurrency(comparison.allIn.investment)}
-                </span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-white/10">
-                <span className="text-gray-300">Current Value:</span>
-                <span
-                  className={`font-semibold ${
-                    comparison.allIn.unrealizedGain >= 0
-                      ? "text-green-400"
-                      : "text-red-400"
-                  }`}
-                >
-                  {formatCurrency(comparison.allIn.currentValue)}
-                </span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-white/10">
-                <span className="text-gray-300">Paper Gains/Losses:</span>
-                <span
-                  className={`font-semibold ${
-                    comparison.allIn.unrealizedGain >= 0
-                      ? "text-green-400"
-                      : "text-red-400"
-                  }`}
-                >
-                  {formatCurrency(comparison.allIn.unrealizedGain)}
-                </span>
-              </div>
-              <div className="flex justify-between py-2">
-                <span className="text-gray-300">Realized Cash:</span>
-                <span className="text-gray-500 font-semibold">
-                  {formatCurrency(0)}
-                </span>
-              </div>
-            </div>
-            <div className="bg-red-500/20 border border-red-500/30 rounded-xl p-4">
-              <p className="text-red-200 text-sm font-medium">
-                {comparison.allIn.risk}
-              </p>
-              <p className="text-red-300 text-sm mt-2">
-                {comparison.allIn.unrealizedGain >= 0
-                  ? "Nice gains, but can you actually spend them? What if it crashes tomorrow?"
-                  : "Down money and can't do anything about it. Hope it recovers... someday."}
-              </p>
-            </div>
-          </div>
-
-          <div className="relative bg-gradient-to-br from-green-500/20 to-blue-500/20 backdrop-blur-sm rounded-2xl p-8 border-2 border-green-400/40">
-            <div className="absolute top-4 right-4">
-              <Shield className="w-8 h-8 text-green-400" />
-            </div>
-            <div className="mb-6">
-              <h3 className="text-2xl font-bold text-white mb-2">
-                Your AI-Enhanced Way
-              </h3>
-              <p className="text-green-300">Smart, systematic & profitable</p>
-            </div>
-            <div className="space-y-4 mb-8">
-              <div className="flex justify-between py-2 border-b border-white/10">
-                <span className="text-gray-300">Investment:</span>
-                <span className="text-white font-semibold">
-                  {formatCurrency(comparison.yourWay.investment)}
-                </span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-white/10">
-                <span className="text-gray-300">Realized Profits:</span>
-                <span className="text-green-400 font-semibold">
-                  {formatCurrency(comparison.yourWay.realizedProfits)}
-                </span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-white/10">
-                <span className="text-gray-300">Active Positions:</span>
-                <span className="text-blue-400 font-semibold">
-                  {formatCurrency(comparison.yourWay.currentPositions)}
-                </span>
-              </div>
-              <div className="flex justify-between py-2">
-                <span className="text-gray-300">Safe Reserves:</span>
-                <span className="text-purple-400 font-semibold">
-                  {formatCurrency(comparison.yourWay.reserves)}
-                </span>
-              </div>
-            </div>
-            <div className="bg-green-500/20 border border-green-400/30 rounded-xl p-4">
-              <p className="text-green-200 text-sm font-medium">
-                Real profits withdrawn. Active positions working. Safe reserves
-                maintained. No timing needed.
-              </p>
-              <p className="text-green-200 text-sm mt-2">
-                {yourTradingData.totalTrades} trades •{" "}
-                {formatPercent(successRate)} success rate
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {dynamicMessage && (
-          <div
-            className={`rounded-2xl p-6 mb-12 border-2 ${
-              dynamicMessage.type === "warning"
-                ? "bg-yellow-500/10 border-yellow-500/30"
-                : "bg-green-500/10 border-green-500/30"
-            }`}
-          >
-            <div className="flex items-start gap-4">
-              <div className="text-4xl">{dynamicMessage.icon}</div>
-              <div className="flex-1">
-                <h4
-                  className={`text-xl font-bold mb-2 ${
-                    dynamicMessage.type === "warning"
-                      ? "text-yellow-300"
-                      : "text-green-300"
-                  }`}
-                >
-                  {dynamicMessage.title}
-                </h4>
-                <p className="text-gray-200 text-base leading-relaxed">
-                  {dynamicMessage.message}
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <div className="bg-gradient-to-br from-purple-600/30 to-blue-600/30 border-2 border-purple-400/40 rounded-2xl p-8 md:p-12 mb-12 text-center">
-          <div className="max-w-4xl mx-auto">
-            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500 to-blue-500 p-5 mx-auto mb-6 shadow-lg shadow-purple-500/50">
-              <DollarSign className="w-full h-full text-white" />
-            </div>
-            <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              The Real Money Difference
-            </h3>
-            <p className="text-purple-100 text-xl md:text-2xl font-semibold mb-4">
-              {comparison.allIn.unrealizedGain < 0
-                ? `${formatCurrency(
-                    comparison.yourWay.realizedProfits +
-                      Math.abs(comparison.allIn.unrealizedGain)
-                  )} better than going all-in`
-                : comparison.allIn.unrealizedGain > 0
-                ? `Real cash secured while ${cryptoData.name} holders watch paper gains`
-                : `Profits locked in regardless of market direction`}
-            </p>
-            <p className="text-purple-200 text-lg">
-              This is the power of AI-enhanced automated trading: consistent
-              profits without the stress, timing, or guesswork.
-            </p>
-          </div>
-        </div>
-
-        <div className="text-center">
-          <button
-            onClick={() => handleMasterclassClick("comparison_bottom")}
-            className="bg-gradient-to-r from-blue-500 to-purple-500 text-white text-lg font-bold py-4 px-8 rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all transform hover:scale-105 shadow-lg"
-          >
-            Learn My Complete System (Free Masterclass)
-          </button>
-        </div>
-      </div>
-    </section>
+      )}
+    </div>
   );
 };
 
-export default DynamicSmartMoneyComparison;
+export default CryptoSelector;
