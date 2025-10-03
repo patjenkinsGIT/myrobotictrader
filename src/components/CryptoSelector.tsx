@@ -12,7 +12,7 @@ interface CryptoData {
 
 interface CryptoSelectorProps {
   selectedCrypto: string;
-  onSelect: (cryptoId: string) => void;
+  onSelect: (cryptoSymbol: string) => void;
 }
 
 export const CryptoSelector: React.FC<CryptoSelectorProps> = ({
@@ -25,7 +25,6 @@ export const CryptoSelector: React.FC<CryptoSelectorProps> = ({
   const [filteredCryptos, setFilteredCryptos] = useState<CryptoData[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Load crypto data from JSON file
   useEffect(() => {
     fetch("/data/cryptoJan8Data.json")
       .then((res) => res.json())
@@ -36,7 +35,6 @@ export const CryptoSelector: React.FC<CryptoSelectorProps> = ({
       .catch((err) => console.error("Error loading crypto data:", err));
   }, []);
 
-  // Filter cryptos based on search
   useEffect(() => {
     if (!searchTerm.trim()) {
       setFilteredCryptos(cryptoList);
@@ -51,7 +49,6 @@ export const CryptoSelector: React.FC<CryptoSelectorProps> = ({
     }
   }, [searchTerm, cryptoList]);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -101,7 +98,9 @@ export const CryptoSelector: React.FC<CryptoSelectorProps> = ({
     return null;
   };
 
-  const selectedCryptoData = cryptoList.find((c) => c.id === selectedCrypto);
+  const selectedCryptoData = cryptoList.find(
+    (c) => c.symbol.toLowerCase() === selectedCrypto
+  );
   const popularCryptos = cryptoList.slice(0, 6);
 
   return (
@@ -109,7 +108,6 @@ export const CryptoSelector: React.FC<CryptoSelectorProps> = ({
       ref={dropdownRef}
       className="relative w-full max-w-2xl mx-auto mb-8 z-[100]"
     >
-      {/* Selected Display Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-full bg-white/5 backdrop-blur-sm border-2 border-white/20 rounded-xl p-4 flex items-center justify-between hover:border-purple-500/50 transition-all"
@@ -142,10 +140,8 @@ export const CryptoSelector: React.FC<CryptoSelectorProps> = ({
         />
       </button>
 
-      {/* Dropdown */}
       {isOpen && (
-        <div className="absolute top-full mt-2 left-0 right-0 bg-gray-900 border-2 border-purple-500/30 rounded-xl shadow-2xl z-[9999] max-h-[400px] overflow-hidden">
-          {/* Search Bar */}
+        <div className="absolute top-full mt-2 left-0 right-0 bg-gray-900 border-2 border-purple-500/30 rounded-xl shadow-2xl z-[9999] w-full max-h-[450px] overflow-hidden flex flex-col">
           <div className="p-4 border-b border-white/10 sticky top-0 bg-gray-900 z-10">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -172,9 +168,8 @@ export const CryptoSelector: React.FC<CryptoSelectorProps> = ({
             </div>
           </div>
 
-          {/* Popular Section (only show when not searching) */}
           {!searchTerm && (
-            <div className="p-4 border-b border-white/10">
+            <div className="p-4 border-b border-white/10 flex-shrink-0">
               <div className="text-gray-400 text-xs font-semibold mb-2">
                 POPULAR
               </div>
@@ -197,8 +192,7 @@ export const CryptoSelector: React.FC<CryptoSelectorProps> = ({
             </div>
           )}
 
-          {/* Crypto List */}
-          <div className="overflow-y-auto max-h-[250px] overscroll-contain">
+          <div className="overflow-y-auto flex-1">
             {filteredCryptos.length > 0 ? (
               filteredCryptos.map((crypto) => (
                 <button
