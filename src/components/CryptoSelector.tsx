@@ -105,7 +105,10 @@ export const CryptoSelector: React.FC<CryptoSelectorProps> = ({
   const popularCryptos = cryptoList.slice(0, 6);
 
   return (
-    <div ref={dropdownRef} className="relative w-full max-w-2xl mx-auto mb-8">
+    <div
+      ref={dropdownRef}
+      className="relative w-full max-w-2xl mx-auto mb-8 z-50"
+    >
       {/* Selected Display Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
@@ -141,7 +144,7 @@ export const CryptoSelector: React.FC<CryptoSelectorProps> = ({
 
       {/* Dropdown */}
       {isOpen && (
-        <div className="absolute top-full mt-2 w-full bg-gray-900 border-2 border-purple-500/30 rounded-xl shadow-2xl z-50 max-h-[500px] overflow-hidden">
+        <div className="absolute top-full mt-2 w-full bg-gray-900 border-2 border-purple-500/30 rounded-xl shadow-2xl z-[9999] max-h-[400px] overflow-hidden">
           {/* Search Bar */}
           <div className="p-4 border-b border-white/10 sticky top-0 bg-gray-900 z-10">
             <div className="relative">
@@ -195,7 +198,7 @@ export const CryptoSelector: React.FC<CryptoSelectorProps> = ({
           )}
 
           {/* Crypto List */}
-          <div className="overflow-y-auto max-h-[300px]">
+          <div className="overflow-y-auto max-h-[250px] overscroll-contain">
             {filteredCryptos.length > 0 ? (
               filteredCryptos.map((crypto) => (
                 <button
