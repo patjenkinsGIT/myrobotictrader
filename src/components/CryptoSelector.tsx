@@ -107,7 +107,7 @@ export const CryptoSelector: React.FC<CryptoSelectorProps> = ({
   return (
     <div
       ref={dropdownRef}
-      className="relative w-full max-w-2xl mx-auto mb-8 z-50"
+      className="relative w-full max-w-2xl mx-auto mb-8 z-[100]"
     >
       {/* Selected Display Button */}
       <button

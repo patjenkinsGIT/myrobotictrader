@@ -18,7 +18,7 @@ export const DataAccuracyDisclaimer = ({
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <div className="max-w-4xl mx-auto mt-8 mb-4">
+    <div className="max-w-4xl mx-auto mt-8 mb-4 relative z-10">
       {/* Main Disclaimer Badge */}
       <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-xl overflow-hidden">
         {/* Header - Always Visible */}
