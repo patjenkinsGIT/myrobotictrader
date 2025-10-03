@@ -27,11 +27,11 @@ interface EnhancedTradingStats {
 }
 
 const yourTradingData: EnhancedTradingStats = {
-  totalDeposited: 8500,
-  totalCurrentValue: 8635.12,
-  currentOpenPositions: 3289.47,
-  safeReserves: 5345.65,
-  realizedProfits: 3847.23,
+  totalDeposited: 25000,
+  totalCurrentValue: 25397.41,
+  currentOpenPositions: 9676.21,
+  safeReserves: 15721.2,
+  realizedProfits: 11315.68,
   totalTrades: 847,
   wins: 623,
 };
@@ -311,6 +311,8 @@ export const DynamicSmartMoneyComparison = () => {
             selectedCrypto={selectedCrypto}
             onSelect={setSelectedCrypto}
           />
+
+          <DataAccuracyDisclaimer cryptoData={cryptoData} />
 
           <DataAccuracyDisclaimer cryptoData={cryptoData} />
         </div>
