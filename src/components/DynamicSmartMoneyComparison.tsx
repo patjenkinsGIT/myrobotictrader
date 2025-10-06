@@ -56,6 +56,16 @@ export const DynamicSmartMoneyComparison = () => {
         throw new Error(data.error);
       }
 
+      // Add validation to ensure we got valid data
+      if (
+        !data.price ||
+        !data.priceOnJan8 ||
+        data.gainSinceStart === null ||
+        data.gainSinceStart === undefined
+      ) {
+        throw new Error(`Invalid data returned for ${symbol.toUpperCase()}`);
+      }
+
       const startDate = new Date("2025-01-08");
       const today = new Date();
       const daysSinceStart = Math.floor(
@@ -68,16 +78,17 @@ export const DynamicSmartMoneyComparison = () => {
         price: data.price,
         priceOnJan8: data.priceOnJan8,
         gainSinceStart: data.gainSinceStart,
-        change24h: data.change24h,
-        change7d: data.change7d,
-        change30d: data.change30d,
+        change24h: data.change24h || 0,
+        change7d: data.change7d || 0,
+        change30d: data.change30d || 0,
         daysSinceStart,
       });
     } catch (err) {
       console.error("Error fetching crypto data:", err);
       setError(
-        "Unable to load cryptocurrency data. Please try another selection."
+        `Unable to load data for ${symbol.toUpperCase()}. Please try another cryptocurrency.`
       );
+      setCryptoData(null);
     } finally {
       setIsLoading(false);
     }
@@ -137,32 +148,40 @@ export const DynamicSmartMoneyComparison = () => {
       : 0;
 
   const dynamicMessage =
-    comparison && comparison.allIn.unrealizedGain < 0
+    comparison &&
+    cryptoData &&
+    cryptoData.gainSinceStart !== null &&
+    comparison.allIn.unrealizedGain < 0
       ? {
           type: "warning" as const,
           icon: "⚠️",
-          title: `While ${cryptoData?.name} Dropped ${formatPercent(
+          title: `If ${cryptoData?.name} Drops ${formatPercent(
             cryptoData?.gainSinceStart! * 100
           )}...`,
-          message: `You would have LOST ${formatCurrency(
+          message: `Going all-in means you'd be DOWN ${formatCurrency(
             Math.abs(comparison.allIn.unrealizedGain)
-          )} going all-in. Instead, you're up ${formatCurrency(
+          )}. But with my proven system, I turned the same $25,000 into ${formatCurrency(
             comparison.yourWay.realizedProfits
-          )} in REAL profits. That's a ${formatCurrency(
+          )} in REAL cash profits—that's a ${formatCurrency(
             comparison.yourWay.realizedProfits +
               Math.abs(comparison.allIn.unrealizedGain)
           )} difference.`,
         }
-      : comparison && comparison.allIn.unrealizedGain > 0
+      : comparison &&
+        cryptoData &&
+        cryptoData.gainSinceStart !== null &&
+        comparison.allIn.unrealizedGain > 0
       ? {
           type: "success" as const,
           icon: "💰",
-          title: `${cryptoData?.name} Holders Are Celebrating...`,
-          message: `But their ${formatCurrency(
+          title: `${cryptoData?.name} Is Up ${formatPercent(
+            cryptoData?.gainSinceStart! * 100
+          )}`,
+          message: `Going all-in would give you ${formatCurrency(
             comparison.allIn.unrealizedGain
-          )} is just paper gains. You? You've already WITHDRAWN ${formatCurrency(
+          )} in paper gains. But here's the problem: you can't spend paper gains. My system already withdrew ${formatCurrency(
             comparison.yourWay.realizedProfits
-          )} to your bank account. Real money > Hopium.`,
+          )} in REAL cash while still keeping positions active. Real money > Paper profits.`,
         }
       : null;
 
@@ -460,5 +479,3 @@ export const DynamicSmartMoneyComparison = () => {
 };
 
 export default DynamicSmartMoneyComparison;
-
-// Note: The following components were modified to be simpler versions as per the context provided.
