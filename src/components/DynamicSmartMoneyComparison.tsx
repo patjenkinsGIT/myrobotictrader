@@ -369,7 +369,7 @@ export const DynamicSmartMoneyComparison = () => {
             </div>
             <div className="mb-6">
               <h3 className="text-2xl font-bold text-white mb-2">
-                Your AI-Enhanced Way
+                AI-Enhanced Robotic Trader
               </h3>
               <p className="text-green-300">Smart, systematic & profitable</p>
             </div>
