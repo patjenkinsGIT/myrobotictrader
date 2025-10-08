@@ -228,7 +228,8 @@ export const DynamicSmartMoneyComparison = () => {
             The Smart Money Difference
           </h2>
           <p className="text-xl text-gray-300 mb-8">
-            See how your AI-enhanced trading compares to holding
+            See how AI-Enhanced Autonomous Trading compares to typical "Buy and
+            Hold" strategies.
           </p>
 
           <SimpleCryptoSelector
