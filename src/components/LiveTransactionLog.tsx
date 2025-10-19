@@ -118,16 +118,34 @@ export const LiveTransactionLog: React.FC = () => {
       if (!rows || rows.length === 0) return [];
       return rows
         .map((row, index) => {
-          if (index === 0 && row[0]?.toLowerCase() === "coin") return null;
+          // Skip header rows - check for common header text in ANY column
+          const rowText = row.join("|").toLowerCase();
+          if (
+            (rowText.includes("coin") && rowText.includes("action")) ||
+            (rowText.includes("symbol") && rowText.includes("action")) ||
+            (rowText.includes("price") &&
+              rowText.includes("quantity") &&
+              rowText.includes("profit")) ||
+            row[0]?.toString().toLowerCase().trim() === "symbol" ||
+            row[0]?.toString().toLowerCase().trim() === "coin" ||
+            row[1]?.toString().toLowerCase().trim() === "action"
+          ) {
+            return null;
+          }
+
           const [coin, action, price, quantity, status, profit, timestamp] =
             row;
-          if (!coin || profit === undefined) return null;
+          if (!coin || profit === undefined || coin.toString().trim() === "")
+            return null;
+
           const parsedProfit =
             parseFloat(profit.toString().replace(/[$,]/g, "")) || 0;
           return {
             id: `tx_${Date.now()}_${index}`,
             coin: coin?.toString().trim() || "",
-            action: (action?.toString().trim() as "CLOSE" | "OPEN") || "CLOSE",
+            action:
+              (action?.toString().trim().toUpperCase() as "CLOSE" | "OPEN") ||
+              "CLOSE",
             price: formatPrice(price?.toString() || ""),
             quantity: formatQuantity(quantity?.toString() || ""),
             profit: parsedProfit,
@@ -153,7 +171,6 @@ export const LiveTransactionLog: React.FC = () => {
 
       const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
       const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
-      // Use "Transactions Raw Data" tab to get ALL transactions
       const SHEET_TAB = "Transactions Raw Data";
       const SHEET_RANGE = "A:G";
 
@@ -443,13 +460,14 @@ export const LiveTransactionLog: React.FC = () => {
             {currentTransactions.map((tx, index) => (
               <div
                 key={tx.id}
-                className={`px-4 py-3 border-b border-white/5 hover:bg-white/5 transition-colors ${
+                className={`px-4 py-3 border-b border-r border-t border-white/5 hover:bg-white/5 transition-colors ${
                   index % 2 === 0 ? "bg-white/2" : ""
-                } ${
-                  tx.action === "OPEN"
-                    ? "border-l-4 border-l-blue-400"
-                    : "border-l-4 border-l-green-400"
+                } border-l-4 ${
+                  tx.action === "OPEN" ? "border-l-blue-400" : ""
                 }`}
+                style={
+                  tx.action === "CLOSE" ? { borderLeftColor: "#4ade80" } : {}
+                }
               >
                 <div className="grid grid-cols-12 gap-2 items-center text-sm">
                   <div className="col-span-2">
@@ -502,15 +520,16 @@ export const LiveTransactionLog: React.FC = () => {
         </div>
 
         {/* Mobile Cards */}
-        <div className="block md:hidden space-y-2 p-2">
+        <div className="block md:hidden space-y-2 p-2 max-h-96 overflow-y-auto">
           {currentTransactions.map((tx) => (
             <div
               key={tx.id}
-              className={`bg-white/5 rounded-lg p-3 border border-white/10 ${
+              className="bg-white/5 rounded-lg p-3 border border-r border-t border-b border-white/10 border-l-4"
+              style={
                 tx.action === "OPEN"
-                  ? "border-l-4 border-l-blue-400"
-                  : "border-l-4 border-l-green-400"
-              }`}
+                  ? { borderLeftColor: "#60a5fa" }
+                  : { borderLeftColor: "#4ade80" }
+              }
             >
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
