@@ -25,19 +25,21 @@ export const ProfitManagement: React.FC<ProfitManagementProps> = ({
     tradingStats?.portfolioSummary?.totalTradingVolume || 142000;
   const totalCapitalDeposited =
     tradingStats?.portfolioSummary?.totalCapitalDeposited || 29538;
+  const profitsSaved = tradingStats?.portfolioSummary?.profitsSaved || 1490.81;
+
+  // Use Open Trading Positions (Row 5) as the active capital - this is what you update from Coinbase!
+  const avgActiveCapital =
+    tradingStats?.portfolioSummary?.openTradingPositions || 12000;
 
   // Your 50% savings rule
-  const currentSaved = 1490.81;
   const savingsRate = 50;
-
-  // Average capital actively deployed at any one time (conservative amount)
-  const avgActiveCapital = 12000;
 
   // Calculated values
   const profitsReinvested = realizedProfits * 0.5;
 
   // Capital Efficiency Calculations
-  // Capital Turnover = Total Volume / Avg Active Capital (how many times you "turn over" your money)
+  // Capital Turnover = Total Volume / Active Capital (Row 5 - Open Trading Positions)
+  // This shows how many times you've "turned over" your actively deployed capital
   const capitalTurnover =
     avgActiveCapital > 0 ? totalTradingVolume / avgActiveCapital : 0;
 
@@ -100,7 +102,7 @@ export const ProfitManagement: React.FC<ProfitManagementProps> = ({
             <div className="relative text-center">
               <div className="text-3xl font-bold text-blue-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-300 group-hover:to-cyan-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
                 $
-                {currentSaved.toLocaleString("en-US", {
+                {profitsSaved.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}
