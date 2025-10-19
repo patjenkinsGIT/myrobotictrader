@@ -37,7 +37,7 @@ export const LiveTransactionLog: React.FC = () => {
   const endIndex = startIndex + TRANSACTIONS_PER_PAGE;
   const currentTransactions = allTransactions.slice(startIndex, endIndex);
 
-  // Calculate summary for current page
+  // Calculate summary for current page with date range
   const pageSummary = useMemo(() => {
     const closed = currentTransactions.filter((tx) => tx.action === "CLOSE");
     const open = currentTransactions.filter((tx) => tx.action === "OPEN");
@@ -46,6 +46,25 @@ export const LiveTransactionLog: React.FC = () => {
       (tx) => tx.status === "profit_goal_reached"
     ).length;
 
+    // Get date range for current page
+    let dateRange = "";
+    if (currentTransactions.length > 0) {
+      const firstDate = new Date(currentTransactions[0].timestamp);
+      const lastDate = new Date(
+        currentTransactions[currentTransactions.length - 1].timestamp
+      );
+
+      if (!isNaN(firstDate.getTime()) && !isNaN(lastDate.getTime())) {
+        const formatDate = (date: Date) =>
+          date.toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          });
+        dateRange = `${formatDate(lastDate)} - ${formatDate(firstDate)}`;
+      }
+    }
+
     return {
       totalProfit,
       closedCount: closed.length,
@@ -53,6 +72,7 @@ export const LiveTransactionLog: React.FC = () => {
       totalCount: currentTransactions.length,
       successRate: closed.length > 0 ? "100%" : "0%",
       profitGoalReached,
+      dateRange,
     };
   }, [currentTransactions]);
 
@@ -299,6 +319,11 @@ export const LiveTransactionLog: React.FC = () => {
             ${pageSummary.totalProfit.toFixed(2)}
           </div>
           <div className="text-xs text-gray-400">Total Profit</div>
+          {pageSummary.dateRange && (
+            <div className="text-xs text-gray-500 mt-1">
+              {pageSummary.dateRange}
+            </div>
+          )}
         </div>
         <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:border-green-500/30 transition-all">
           <div className="text-lg font-bold text-green-300">
@@ -325,6 +350,53 @@ export const LiveTransactionLog: React.FC = () => {
           <div className="text-xs text-gray-400">Success</div>
         </div>
       </div>
+
+      {/* Pagination - Top */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-2 mb-4">
+          <button
+            onClick={() => goToPage(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="p-2 rounded-lg bg-white/8 hover:bg-white/12 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <div className="flex gap-1">
+            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+              let pageNum;
+              if (totalPages <= 5) {
+                pageNum = i + 1;
+              } else if (currentPage <= 3) {
+                pageNum = i + 1;
+              } else if (currentPage >= totalPages - 2) {
+                pageNum = totalPages - 4 + i;
+              } else {
+                pageNum = currentPage - 2 + i;
+              }
+              return (
+                <button
+                  key={pageNum}
+                  onClick={() => goToPage(pageNum)}
+                  className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
+                    currentPage === pageNum
+                      ? "bg-blue-500 text-white"
+                      : "bg-white/8 hover:bg-white/12 text-gray-300"
+                  }`}
+                >
+                  {pageNum}
+                </button>
+              );
+            })}
+          </div>
+          <button
+            onClick={() => goToPage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="p-2 rounded-lg bg-white/8 hover:bg-white/12 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </div>
+      )}
 
       {/* Last updated */}
       <div className="flex items-center justify-center gap-2 mb-4">
