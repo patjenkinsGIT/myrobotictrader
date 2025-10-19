@@ -22,7 +22,7 @@ export interface TradingStats {
   lastUpdated: string;
 }
 
-// Portfolio Summary Interface
+// Portfolio Summary Interface - FIXED with all new properties
 export interface PortfolioSummary {
   totalCapitalDeposited: number;
   availableUSDC: number;
@@ -31,6 +31,10 @@ export interface PortfolioSummary {
   realizedProfits: number;
   profitsWithdrawn: number;
   netCapitalAtRisk: number;
+  totalTrades: number; // Row 19
+  avgProfitPerTrade: number; // Row 20
+  totalTradingVolume: number; // Row 22
+  profitsSaved?: number; // Row 23 - OPTIONAL (may not exist in old sheets)
 }
 
 // Enhanced interface extending your existing TradingStats
@@ -59,7 +63,7 @@ export const useGoogleSheetsData = () => {
   // Parse Coinbase Balance tab
   const parseCoinbaseBalance = useCallback(
     (rows: string[][]): PortfolioSummary | null => {
-      if (!rows || rows.length < 20) return null;
+      if (!rows || rows.length < 23) return null; // Need at least 23 rows now
 
       try {
         const parseValue = (value: any): number => {
@@ -76,6 +80,10 @@ export const useGoogleSheetsData = () => {
           profitsWithdrawn: parseValue(rows[11]?.[1]), // Row 12, Column B
           netCapitalAtRisk: parseValue(rows[12]?.[1]), // Row 13, Column B
           realizedProfits: parseValue(rows[17]?.[1]), // Row 18, Column B
+          totalTrades: parseValue(rows[18]?.[1]), // Row 19, Column B
+          avgProfitPerTrade: parseValue(rows[19]?.[1]), // Row 20, Column B
+          totalTradingVolume: parseValue(rows[21]?.[1]), // Row 22, Column B
+          profitsSaved: parseValue(rows[22]?.[1]), // Row 23, Column B (NEW)
         };
       } catch (error) {
         console.error("Error parsing Coinbase Balance:", error);

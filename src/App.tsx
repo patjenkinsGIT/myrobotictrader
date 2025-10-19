@@ -1,36 +1,36 @@
-// App.tsx - CLEAN VERSION - All Components Working
-import { useEffect, useCallback } from "react";
+import React from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   useLocation,
 } from "react-router-dom";
+import { useEffect } from "react";
 import { initGA } from "./utils/analytics";
 import { useGoogleSheetsData } from "./hooks/useGoogleSheetsData";
 
-// SEO Components
+// SEO Components - CRITICAL FOR LINK SHARING
 import { SEOHead } from "./components/SEOHead";
 import { StaticSEO } from "./components/StaticSEO";
 import { OGImageGenerator } from "./components/OGImageGenerator";
 
-// Main Components
+// Your existing components
 import { Hero } from "./components/Hero";
-import MyStory from "./components/MyStory";
+import MyStory from "./components/MyStory"; // ✅ FIXED: Default import
 import { TradingResults } from "./components/TradingResults";
-import DynamicSmartMoneyComparison from "./components/DynamicSmartMoneyComparison";
+import { ProfitManagement } from "./components/ProfitManagement"; // ⭐ NEW COMPONENT
 import { Features } from "./components/Features";
+import DynamicSmartMoneyComparison from "./components/DynamicSmartMoneyComparison"; // ✅ FIXED: Using correct component
 import { CallToAction } from "./components/CallToAction";
 import { FAQ } from "./components/FAQ";
 import { Footer } from "./components/Footer";
 
-// Page components
+// Your page components
 import { ResourcesPage } from "./pages/ResourcesPage";
 import { PrivacyPage } from "./pages/PrivacyPage";
 import { BusinessCardLanding } from "./components/BusinessCardLanding";
 
-// SEO configurations
-// SEO configurations - CORRECTED URLS
+// SEO configurations for different pages with structured data
 const seoConfigs = {
   home: {
     title:
@@ -43,13 +43,15 @@ const seoConfigs = {
       "MyRoboticTrader - Set It and Forget It Crypto Trading | Build New Revenue Streams",
     ogDescription:
       "Discover how I built multiple revenue streams with AI-Enhanced autonomous robotic crypto trading. Real results, proven system.",
-    ogImage: "https://myrobotictrader.com/og-image.png",
+    ogImage:
+      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/og-image.png",
     twitterTitle:
       "MyRoboticTrader - Set It and Forget It Crypto Trading | Build New Revenue Streams",
     twitterDescription:
       "Discover how I built multiple revenue streams with AI-Enhanced autonomous robotic crypto trading. Real results, proven system.",
-    twitterImage: "https://myrobotictrader.com/twitter-image.png",
-    canonicalUrl: "https://myrobotictrader.com/",
+    twitterImage:
+      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/twitter-image.png",
+    canonicalUrl: "https://rd6xolh11t0gmjdo-default.preview.taskade.app/",
     pageType: "home" as const,
   },
   resources: {
@@ -58,52 +60,59 @@ const seoConfigs = {
     description:
       "Free AI-enhanced crypto trading resources, guides, and masterclasses. Learn the automated trading strategies to build sustainable revenue streams.",
     keywords:
-      "crypto trading guides, automated trading resources, trading education, cryptocurrency strategies, robotic trading tutorials",
-    ogTitle: "Trading Resources & AI-Enhanced Crypto Guides",
+      "trading guides, crypto resources, trading education, automated trading strategies, financial education",
+    ogTitle: "Free Trading Resources & Guides | MyRoboticTrader",
     ogDescription:
-      "Free AI-enhanced crypto trading resources and guides to build your automated revenue streams.",
-    ogImage: "https://myrobotictrader.com/og-image.png",
-    twitterTitle: "Trading Resources & AI-Enhanced Crypto Guides",
+      "Access free crypto trading resources, guides, and educational content to build your revenue stream.",
+    ogImage:
+      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/og-image.png",
+    twitterTitle: "Trading Resources & Guides",
     twitterDescription:
-      "Free AI-enhanced crypto trading resources and guides to build your automated revenue streams.",
-    twitterImage: "https://myrobotictrader.com/twitter-image.png",
-    canonicalUrl: "https://myrobotictrader.com/resources",
+      "Free crypto trading resources and educational content for building sustainable revenue streams.",
+    twitterImage:
+      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/twitter-image.png",
+    canonicalUrl:
+      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/resources",
     pageType: "resources" as const,
   },
   privacy: {
     title: "Privacy Policy | MyRoboticTrader",
     description:
-      "Privacy policy for MyRoboticTrader - protecting your data and privacy while you build revenue streams with automated crypto trading.",
-    keywords: "privacy policy, data protection, MyRoboticTrader privacy",
+      "Privacy policy and data handling practices for MyRoboticTrader.com",
+    keywords: "privacy policy, data protection, terms of service",
     ogTitle: "Privacy Policy | MyRoboticTrader",
-    ogDescription:
-      "Privacy policy for MyRoboticTrader - protecting your data and privacy.",
-    ogImage: "https://myrobotictrader.com/og-image.png",
-    twitterTitle: "Privacy Policy | MyRoboticTrader",
-    twitterDescription:
-      "Privacy policy for MyRoboticTrader - protecting your data and privacy.",
-    twitterImage: "https://myrobotictrader.com/twitter-image.png",
-    canonicalUrl: "https://myrobotictrader.com/privacy",
+    ogDescription: "Privacy policy and data handling practices.",
+    ogImage:
+      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/og-image.png",
+    twitterTitle: "Privacy Policy",
+    twitterDescription: "Privacy policy and data handling practices.",
+    twitterImage:
+      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/twitter-image.png",
+    canonicalUrl:
+      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/privacy",
     pageType: "privacy" as const,
   },
   card: {
     title: "Live Trading Results - Building Revenue Streams | MyRoboticTrader",
     description:
-      "See live AI-enhanced robotic trading results building sustainable revenue streams automatically! Real revenue streams being built automatically from Patrick's trading system!",
+      "See live AI-enhanced robotic trading results. Real revenue streams being built automatically from Patrick's trading system!",
     keywords:
-      "live trading results, robotic trading performance, automated crypto trading, revenue streams",
+      "live trading results, crypto performance, trading dashboard, automated trading results",
     ogTitle: "Live Trading Results - Building Revenue Streams",
     ogDescription:
-      "See live AI-enhanced robotic trading results building sustainable revenue streams automatically! Real revenue streams being built automatically from Patrick's trading system!",
-    ogImage: "https://myrobotictrader.com/og-image.png",
+      "See live AI-enhanced robotic trading results. Real revenue streams being built automatically from Patrick's trading system!",
+    ogImage:
+      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/og-image.png",
     twitterTitle: "Live Trading Results - Building Revenue Streams",
     twitterDescription:
       "See live AI-enhanced robotic trading results building sustainable revenue streams automatically!",
-    twitterImage: "https://myrobotictrader.com/twitter-image.png",
-    canonicalUrl: "https://myrobotictrader.com/card",
+    twitterImage:
+      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/twitter-image.png",
+    canonicalUrl: "https://rd6xolh11t0gmjdo-default.preview.taskade.app/card",
     pageType: "card" as const,
   },
 };
+
 // SEO Wrapper Component
 const SEOWrapper = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
@@ -135,7 +144,7 @@ const HomePage = () => {
     useGoogleSheetsData();
 
   // Safe refresh function with error handling
-  const safeRefreshStats = useCallback(() => {
+  const safeRefreshStats = React.useCallback(() => {
     try {
       if (refreshStats && typeof refreshStats === "function") {
         refreshStats();
@@ -162,6 +171,8 @@ const HomePage = () => {
           }
         }
       />
+      {/* ⭐ NEW: Profit Management Dashboard - Only pass if tradingStats exists */}
+      {tradingStats && <ProfitManagement tradingStats={tradingStats} />}
       <DynamicSmartMoneyComparison />
       <Features />
       <CallToAction />
