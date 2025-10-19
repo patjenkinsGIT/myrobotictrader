@@ -115,16 +115,34 @@ export const LiveTransactionLog: React.FC = () => {
       if (!rows || rows.length === 0) return [];
       return rows
         .map((row, index) => {
-          if (index === 0 && row[0]?.toLowerCase() === "coin") return null;
+          // Skip header rows - check for common header text in ANY column
+          const rowText = row.join("|").toLowerCase();
+          if (
+            (rowText.includes("coin") && rowText.includes("action")) ||
+            (rowText.includes("symbol") && rowText.includes("action")) ||
+            (rowText.includes("price") &&
+              rowText.includes("quantity") &&
+              rowText.includes("profit")) ||
+            row[0]?.toString().toLowerCase().trim() === "symbol" ||
+            row[0]?.toString().toLowerCase().trim() === "coin" ||
+            row[1]?.toString().toLowerCase().trim() === "action"
+          ) {
+            return null;
+          }
+
           const [coin, action, price, quantity, status, profit, timestamp] =
             row;
-          if (!coin || profit === undefined) return null;
+          if (!coin || profit === undefined || coin.toString().trim() === "")
+            return null;
+
           const parsedProfit =
             parseFloat(profit.toString().replace(/[$,]/g, "")) || 0;
           return {
             id: `tx_${Date.now()}_${index}`,
             coin: coin?.toString().trim() || "",
-            action: (action?.toString().trim() as "CLOSE" | "OPEN") || "CLOSE",
+            action:
+              (action?.toString().trim().toUpperCase() as "CLOSE" | "OPEN") ||
+              "CLOSE",
             price: formatPrice(price?.toString() || ""),
             quantity: formatQuantity(quantity?.toString() || ""),
             profit: parsedProfit,
@@ -140,7 +158,6 @@ export const LiveTransactionLog: React.FC = () => {
     },
     [formatPrice, formatQuantity, formatTimestamp]
   );
-
   // Fetch ALL transactions from Google Sheets
   const fetchTransactions = useCallback(async () => {
     try {
