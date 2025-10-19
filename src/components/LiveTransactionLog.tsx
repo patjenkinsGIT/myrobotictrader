@@ -1,5 +1,13 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
-import { Activity, Clock, Target, TrendingUp, Eye, EyeOff } from "lucide-react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import {
+  Activity,
+  Clock,
+  Target,
+  TrendingUp,
+  Download,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { tradingDataCache } from "../utils/smartCache";
 
 export interface LiveTransaction {
@@ -13,135 +21,87 @@ export interface LiveTransaction {
   status: "completed" | "profit_goal_reached";
 }
 
+const TRANSACTIONS_PER_PAGE = 100;
+
 export const LiveTransactionLog: React.FC = () => {
-  const [transactions, setTransactions] = useState<LiveTransaction[]>([]);
+  const [allTransactions, setAllTransactions] = useState<LiveTransaction[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
-  const [showOnMobile, setShowOnMobile] = useState(false);
   const [isCacheHit, setIsCacheHit] = useState(false);
 
-  // Constants
-  const SHEET_TAB = "Last25Results";
-  const SHEET_RANGE = "A:G";
+  // Calculate pagination
+  const totalPages = Math.ceil(allTransactions.length / TRANSACTIONS_PER_PAGE);
+  const startIndex = (currentPage - 1) * TRANSACTIONS_PER_PAGE;
+  const endIndex = startIndex + TRANSACTIONS_PER_PAGE;
+  const currentTransactions = allTransactions.slice(startIndex, endIndex);
 
-  // Format price to display properly
+  // Calculate summary for current page
+  const pageSummary = useMemo(() => {
+    const closed = currentTransactions.filter((tx) => tx.action === "CLOSE");
+    const open = currentTransactions.filter((tx) => tx.action === "OPEN");
+    const totalProfit = closed.reduce((sum, tx) => sum + tx.profit, 0);
+    const profitGoalReached = closed.filter(
+      (tx) => tx.status === "profit_goal_reached"
+    ).length;
+
+    return {
+      totalProfit,
+      closedCount: closed.length,
+      openCount: open.length,
+      totalCount: currentTransactions.length,
+      successRate: closed.length > 0 ? "100%" : "0%",
+      profitGoalReached,
+    };
+  }, [currentTransactions]);
+
+  // Format helpers
   const formatPrice = useCallback((price: string): string => {
     if (!price) return "$0.00";
-
-    // If already formatted with $, return as is
     if (price.includes("$")) return price;
-
-    const cleanPrice = price.replace(/[,$]/g, "");
-    const numPrice = parseFloat(cleanPrice);
-
+    const numPrice = parseFloat(price.replace(/[,$]/g, ""));
     if (isNaN(numPrice)) return price;
-
-    // Format based on price range
-    if (numPrice < 0.00001) {
-      return `$${numPrice.toFixed(8)}`;
-    } else if (numPrice < 0.001) {
-      return `$${numPrice.toFixed(5)}`;
-    } else if (numPrice < 1) {
-      return `$${numPrice.toFixed(4)}`;
-    } else if (numPrice < 100) {
-      return `$${numPrice.toFixed(2)}`;
-    } else {
-      return `$${numPrice.toLocaleString()}`;
-    }
+    if (numPrice < 0.00001) return `$${numPrice.toFixed(8)}`;
+    if (numPrice < 0.001) return `$${numPrice.toFixed(5)}`;
+    if (numPrice < 1) return `$${numPrice.toFixed(4)}`;
+    if (numPrice < 100) return `$${numPrice.toFixed(2)}`;
+    return `$${numPrice.toLocaleString()}`;
   }, []);
 
-  // Format quantity to handle large numbers
   const formatQuantity = useCallback((quantity: string): string => {
     if (!quantity) return "0";
-
-    const cleanQuantity = quantity.replace(/[,$]/g, "");
-    const numQuantity = parseFloat(cleanQuantity);
-
+    const numQuantity = parseFloat(quantity.replace(/[,$]/g, ""));
     if (isNaN(numQuantity)) return quantity;
-
-    // Format large numbers
-    if (numQuantity >= 1000000) {
-      return `${(numQuantity / 1000000).toFixed(1)}M`;
-    } else if (numQuantity >= 1000) {
-      return `${(numQuantity / 1000).toFixed(1)}K`;
-    } else if (numQuantity < 1) {
-      return numQuantity.toFixed(3);
-    } else {
-      return numQuantity.toLocaleString();
-    }
+    if (numQuantity >= 1000000) return `${(numQuantity / 1000000).toFixed(1)}M`;
+    if (numQuantity >= 1000) return `${(numQuantity / 1000).toFixed(1)}K`;
+    if (numQuantity < 1) return numQuantity.toFixed(3);
+    return numQuantity.toLocaleString();
   }, []);
 
-  // Format timestamp for display
   const formatTimestamp = useCallback((timestamp: string): string => {
-    if (!timestamp) return "Unknown";
-
-    // If it contains "Today", keep as is
-    if (timestamp.toLowerCase().includes("today")) {
-      return timestamp;
-    }
-
-    // Try to parse and format other timestamps
-    try {
-      const date = new Date(timestamp);
-      if (!isNaN(date.getTime())) {
-        const now = new Date();
-        if (date.toDateString() === now.toDateString()) {
-          return `Today ${date.toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}`;
-        } else {
-          return (
-            date.toLocaleDateString() +
-            " " +
-            date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-          );
-        }
-      }
-    } catch (e) {
-      // If parsing fails, return original
-    }
-
-    return timestamp;
+    if (!timestamp) return "";
+    const date = new Date(timestamp);
+    if (isNaN(date.getTime())) return timestamp;
+    return (
+      date.toLocaleDateString() +
+      " " +
+      date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    );
   }, []);
 
-  // Parse status from your format
-  const parseStatus = useCallback(
-    (status: string): "completed" | "profit_goal_reached" => {
-      if (!status) return "completed";
-      return status.toLowerCase().includes("profit goal reached")
-        ? "profit_goal_reached"
-        : "completed";
-    },
-    []
-  );
-
-  // Parse Google Sheets data from A:G columns - NOW INCLUDES BOTH OPEN AND CLOSED
   const parseGoogleSheetsData = useCallback(
     (rows: string[][]): LiveTransaction[] => {
       if (!rows || rows.length === 0) return [];
-
       return rows
         .map((row, index) => {
-          // Skip header row
-          if (index === 0 && row[0]?.toLowerCase() === "coin") {
-            return null;
-          }
-
+          if (index === 0 && row[0]?.toLowerCase() === "coin") return null;
           const [coin, action, price, quantity, status, profit, timestamp] =
             row;
-
-          // Skip empty rows
-          if (!coin || !profit) {
-            return null;
-          }
-
-          // Parse profit amount from string like "$7.34"
+          if (!coin || profit === undefined) return null;
           const parsedProfit =
             parseFloat(profit.toString().replace(/[$,]/g, "")) || 0;
-
-          const transaction = {
+          return {
             id: `tx_${Date.now()}_${index}`,
             coin: coin?.toString().trim() || "",
             action: (action?.toString().trim() as "CLOSE" | "OPEN") || "CLOSE",
@@ -149,301 +109,117 @@ export const LiveTransactionLog: React.FC = () => {
             quantity: formatQuantity(quantity?.toString() || ""),
             profit: parsedProfit,
             timestamp: formatTimestamp(timestamp?.toString() || ""),
-            status: parseStatus(status?.toString() || ""),
+            status: (status?.toString().toLowerCase().includes("goal")
+              ? "profit_goal_reached"
+              : "completed") as "completed" | "profit_goal_reached",
           };
-
-          return transaction;
         })
         .filter(
-          (tx): tx is LiveTransaction =>
-            tx !== null && tx.coin.length > 0 && tx.profit !== undefined
+          (tx): tx is LiveTransaction => tx !== null && tx.coin.length > 0
         );
     },
-    [formatPrice, formatQuantity, formatTimestamp, parseStatus]
+    [formatPrice, formatQuantity, formatTimestamp]
   );
 
-  // Fallback data with both OPEN and CLOSED transactions
-  const getFallbackData = useCallback((): LiveTransaction[] => {
-    const mockRows: string[][] = [
-      ["Coin", "Action", "Price", "Quantity", "Status", "Profit", "Timestamp"], // Header
-      // Recent CLOSED transactions
-      [
-        "SUI",
-        "CLOSE",
-        "$3.60",
-        "50.9",
-        "Profit Goal Reached",
-        "$7.34",
-        "Today 2:48 AM",
-      ],
-      [
-        "BONK",
-        "CLOSE",
-        "$0.00002",
-        "10.2M",
-        "Profit Goal Reached",
-        "$9.03",
-        "9/8 12:26 PM",
-      ],
-      ["DOGE", "CLOSE", "$0.24", "710", "Completed", "$5.16", "9/8 9:19 AM"],
-      [
-        "BTC",
-        "CLOSE",
-        "$43,250.00",
-        "0.025",
-        "Profit Goal Reached",
-        "$12.45",
-        "9/7 11:45 PM",
-      ],
-      ["ETH", "CLOSE", "$2,650.75", "1.8", "Completed", "$8.92", "9/7 6:33 PM"],
-      // Current OPEN positions
-      [
-        "ADA",
-        "OPEN",
-        "$0.45",
-        "2,450",
-        "Active Position",
-        "$0.00",
-        "9/7 2:15 PM",
-      ],
-      [
-        "SOL",
-        "OPEN",
-        "$145.32",
-        "12.5",
-        "Active Position",
-        "$0.00",
-        "9/7 8:22 AM",
-      ],
-      [
-        "MATIC",
-        "OPEN",
-        "$0.89",
-        "1,200",
-        "Active Position",
-        "$0.00",
-        "9/6 11:58 PM",
-      ],
-      ["LINK", "CLOSE", "$11.45", "85.3", "Completed", "$9.87", "9/6 7:41 PM"],
-      ["DOT", "CLOSE", "$5.67", "180.5", "Completed", "$7.12", "9/6 3:29 PM"],
-      [
-        "AVAX",
-        "CLOSE",
-        "$28.91",
-        "45.2",
-        "Profit Goal Reached",
-        "$11.34",
-        "9/6 10:15 AM",
-      ],
-      ["UNI", "CLOSE", "$6.78", "125.8", "Completed", "$5.89", "9/5 9:47 PM"],
-      ["ATOM", "CLOSE", "$9.23", "95.7", "Completed", "$8.45", "9/5 4:12 PM"],
-      [
-        "FTM",
-        "OPEN",
-        "$0.35",
-        "3,200",
-        "Active Position",
-        "$0.00",
-        "9/5 12:38 PM",
-      ],
-      ["ALGO", "CLOSE", "$0.18", "5,500", "Completed", "$4.67", "9/5 8:55 AM"],
-      [
-        "XRP",
-        "CLOSE",
-        "$0.52",
-        "1,850",
-        "Profit Goal Reached",
-        "$9.12",
-        "9/4 11:23 PM",
-      ],
-      ["LTC", "CLOSE", "$67.89", "18.5", "Completed", "$7.89", "9/4 6:17 PM"],
-      [
-        "BCH",
-        "OPEN",
-        "$234.56",
-        "5.2",
-        "Active Position",
-        "$0.00",
-        "9/4 1:44 PM",
-      ],
-      ["VET", "CLOSE", "$0.02", "12,500", "Completed", "$5.78", "9/4 9:31 AM"],
-      ["THETA", "CLOSE", "$1.23", "450", "Completed", "$8.23", "9/3 10:56 PM"],
-      ["HBAR", "CLOSE", "$0.06", "8,900", "Completed", "$6.45", "9/3 5:42 PM"],
-      [
-        "ICP",
-        "CLOSE",
-        "$4.56",
-        "78.3",
-        "Profit Goal Reached",
-        "$9.67",
-        "9/3 2:18 PM",
-      ],
-      [
-        "NEAR",
-        "OPEN",
-        "$3.45",
-        "125.7",
-        "Active Position",
-        "$0.00",
-        "9/3 10:25 AM",
-      ],
-      ["FLOW", "CLOSE", "$0.78", "650", "Completed", "$4.89", "9/2 8:13 PM"],
-      ["MANA", "CLOSE", "$0.45", "1,100", "Completed", "$6.12", "9/2 3:47 PM"],
-    ];
+  // Fetch ALL transactions from Google Sheets
+  const fetchTransactions = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      setIsCacheHit(false);
 
-    return parseGoogleSheetsData(mockRows);
-  }, [parseGoogleSheetsData]);
+      const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
+      const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
+      // Use "Transactions Raw Data" tab to get ALL transactions
+      const SHEET_TAB = "Transactions Raw Data";
+      const SHEET_RANGE = "A:G";
 
-  // Fetch transactions from Google Sheets Last25Results tab with Smart Cache
-  const fetchTransactions = useCallback(
-    async (showLoading = true) => {
-      try {
-        if (showLoading) setIsLoading(true);
-        setError(null);
-        setIsCacheHit(false);
+      if (SHEET_ID && API_KEY) {
+        const cacheKey = `${SHEET_ID}_${SHEET_TAB}_${SHEET_RANGE}`;
+        const cachedData = tradingDataCache.get(cacheKey);
 
-        // Move environment variables inside the function
-        const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
-        const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
-
-        // Check if we have Google Sheets configuration
-        if (SHEET_ID && API_KEY) {
-          // Use smart cache for transaction data
-          const cacheKey = `${SHEET_ID}_${SHEET_TAB}_${SHEET_RANGE}`;
-          let cachedData = tradingDataCache.get(cacheKey);
-
-          if (cachedData) {
-            setTransactions(cachedData as LiveTransaction[]);
-            setLastUpdated(new Date());
-            setIsCacheHit(true);
-            setIsLoading(false);
-            return;
-          }
-
-          const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_TAB}!${SHEET_RANGE}?key=${API_KEY}`;
-
-          try {
-            const response = await fetch(url);
-
-            if (!response.ok) {
-              console.error(`Google Sheets API error: ${response.status}`);
-              throw new Error(
-                `Google Sheets API error: ${response.status} ${response.statusText}`
-              );
-            }
-
-            const data = await response.json();
-
-            if (data.values && data.values.length > 0) {
-              const liveTransactions = parseGoogleSheetsData(data.values);
-
-              // Cache the fresh data
-              tradingDataCache.set(cacheKey, liveTransactions);
-
-              setTransactions(liveTransactions);
-              setLastUpdated(new Date());
-              setIsCacheHit(false);
-              return;
-            } else {
-              setError(
-                "No data found in Last25Results tab. Using sample data."
-              );
-            }
-          } catch (apiError) {
-            console.error("Google Sheets API error:", apiError);
-            setError(
-              `Failed to load from Last25Results tab: ${
-                apiError instanceof Error ? apiError.message : "Unknown error"
-              }`
-            );
-          }
+        if (cachedData) {
+          setAllTransactions(cachedData as LiveTransaction[]);
+          setIsCacheHit(true);
+          setIsLoading(false);
+          return;
         }
 
-        // Use fallback data
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        const fallbackData = getFallbackData();
-        setTransactions(fallbackData);
-        setLastUpdated(new Date());
-        setIsCacheHit(false);
-      } catch (err) {
-        console.error("Failed to fetch transactions:", err);
-        setError("Failed to load transactions. Using sample data.");
-        setTransactions(getFallbackData());
-        setIsCacheHit(false);
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [SHEET_TAB, SHEET_RANGE, parseGoogleSheetsData, getFallbackData]
-  );
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_TAB}!${SHEET_RANGE}?key=${API_KEY}`;
+        const response = await fetch(url);
 
-  // Fetch on mount - NO AUTO-REFRESH
+        if (!response.ok) throw new Error(`API error: ${response.status}`);
+
+        const data = await response.json();
+        if (data.values && data.values.length > 0) {
+          const transactions = parseGoogleSheetsData(data.values);
+          tradingDataCache.set(cacheKey, transactions);
+          setAllTransactions(transactions);
+          setLastUpdated(new Date());
+        }
+      }
+    } catch (err) {
+      console.error("Failed to fetch transactions:", err);
+      setError("Failed to load transactions");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [parseGoogleSheetsData]);
+
   useEffect(() => {
     fetchTransactions();
   }, [fetchTransactions]);
 
-  // Calculate summary stats from current transactions - ONLY CLOSED TRADES FOR PROFIT
-  const summary = useMemo(() => {
-    const closedTransactions = transactions.filter(
-      (tx) => tx.action === "CLOSE"
-    );
-    const openTransactions = transactions.filter((tx) => tx.action === "OPEN");
+  // Download CSV function
+  const downloadCSV = useCallback(() => {
+    const headers = [
+      "Coin",
+      "Action",
+      "Price",
+      "Quantity",
+      "Status",
+      "Profit",
+      "Timestamp",
+    ];
+    const csvContent = [
+      headers.join(","),
+      ...allTransactions.map((tx) =>
+        [
+          tx.coin,
+          tx.action,
+          tx.price,
+          tx.quantity,
+          tx.status,
+          tx.profit,
+          tx.timestamp,
+        ].join(",")
+      ),
+    ].join("\n");
 
-    // Only closed trades have profit
-    const totalProfit = closedTransactions.reduce(
-      (sum, tx) => sum + tx.profit,
-      0
-    );
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `trading-transactions-${
+      new Date().toISOString().split("T")[0]
+    }.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  }, [allTransactions]);
 
-    const profitGoalReached = closedTransactions.filter(
-      (tx) => tx.status === "profit_goal_reached"
-    ).length;
-
-    return {
-      totalProfit,
-      totalTrades: transactions.length,
-      closedTrades: closedTransactions.length,
-      openTrades: openTransactions.length,
-      profitGoalReached,
-      successRate: "100%",
-    };
-  }, [transactions]);
+  // Pagination handlers
+  const goToPage = (page: number) => {
+    setCurrentPage(Math.max(1, Math.min(page, totalPages)));
+  };
 
   const getCoinColor = (coin: string) => {
     const colors: { [key: string]: string } = {
       BTC: "text-orange-400",
       ETH: "text-blue-400",
+      DOGE: "text-yellow-400",
       SUI: "text-purple-400",
-      BONK: "text-yellow-400",
-      DOGE: "text-yellow-300",
-      ADA: "text-blue-300",
-      SOL: "text-green-400",
-      MATIC: "text-purple-300",
-      LINK: "text-blue-500",
-      DOT: "text-pink-400",
-      AVAX: "text-red-400",
-      UNI: "text-pink-300",
-      ATOM: "text-purple-500",
-      FTM: "text-blue-600",
-      ALGO: "text-gray-400",
-      XRP: "text-gray-300",
-      LTC: "text-gray-500",
-      BCH: "text-green-500",
-      VET: "text-blue-700",
-      THETA: "text-purple-600",
-      HBAR: "text-gray-600",
-      ICP: "text-orange-300",
-      NEAR: "text-green-300",
-      FLOW: "text-blue-800",
-      MANA: "text-red-300",
     };
-    return colors[coin] || "text-gray-400";
-  };
-
-  const getProfitColor = (profit: number) => {
-    if (profit >= 10) return "text-green-300";
-    if (profit >= 7) return "text-green-400";
-    return "text-green-500";
+    return colors[coin] || "text-gray-300";
   };
 
   const getActionColor = (action: string) => {
@@ -452,271 +228,118 @@ export const LiveTransactionLog: React.FC = () => {
       : "bg-blue-500/20 text-blue-300";
   };
 
-  // Get cache status for display
-  const getCacheStatus = () => {
-    const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
-    const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
-
-    if (!SHEET_ID || !API_KEY || error) {
-      return { text: "SAMPLE", color: "text-gray-300" };
-    }
-
-    if (isCacheHit) {
-      return { text: "CACHED", color: "text-blue-300" };
-    }
-
-    return { text: "LIVE", color: "text-green-300" };
+  const getProfitColor = (profit: number) => {
+    if (profit > 10) return "text-green-400";
+    if (profit > 5) return "text-green-300";
+    return "text-emerald-300";
   };
 
-  if (isLoading && transactions.length === 0) {
+  if (isLoading && allTransactions.length === 0) {
     return (
-      <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-6 mb-8">
-        <div className="flex items-center justify-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-400"></div>
-          <span className="ml-3 text-gray-300">
-            Loading transaction data...
-          </span>
-        </div>
+      <div className="text-center py-12">
+        <Activity className="w-8 h-8 text-blue-400 animate-spin mx-auto mb-4" />
+        <p className="text-gray-400">Loading transactions...</p>
       </div>
     );
   }
 
-  const cacheStatus = getCacheStatus();
+  if (error && allTransactions.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <div className="text-red-400 mb-4">⚠️ {error}</div>
+        <button
+          onClick={fetchTransactions}
+          className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-lg transition-colors"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
 
   return (
-    <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-6 mb-8">
-      {/* Header with live indicator and mobile toggle */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+    <div className="mb-12">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 p-2 md:p-3 shadow-lg shadow-green-500/40">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 p-3 shadow-lg">
             <Activity className="w-full h-full text-white" />
           </div>
           <div>
-            <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-white">
+            <h2 className="text-2xl font-bold text-white">
               TRADING SCOREBOARD
-            </h3>
-            <p className="text-xs md:text-sm text-gray-400">
-              Last {transactions.length} Transactions
+            </h2>
+            <p className="text-sm text-gray-400">
+              {currentPage === 1 ? "Last" : "Viewing"}{" "}
+              {currentTransactions.length} Transactions
+              {totalPages > 1 && ` (Page ${currentPage} of ${totalPages})`}
             </p>
           </div>
         </div>
-
-        <div className="flex items-center gap-3">
-          {/* Mobile toggle button */}
+        <div className="flex gap-2">
           <button
-            onClick={() => setShowOnMobile(!showOnMobile)}
-            className="md:hidden flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full px-3 py-2 border border-white/20 transition-all duration-200"
+            onClick={downloadCSV}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-lg transition-colors"
           >
-            {showOnMobile ? (
-              <>
-                <EyeOff className="w-4 h-4 text-gray-300" />
-                <span className="text-xs text-gray-300">Hide Details</span>
-              </>
-            ) : (
-              <>
-                <Eye className="w-4 h-4 text-gray-300" />
-                <span className="text-xs text-gray-300">Show Details</span>
-              </>
-            )}
+            <Download className="w-4 h-4" />
+            <span className="hidden sm:inline">Download CSV</span>
           </button>
-
-          {/* Smart Cache indicator */}
-          <div className="flex items-center gap-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-full px-3 py-1 border border-green-400/30">
-            <div
-              className={`w-2 h-2 rounded-full ${
-                isCacheHit ? "bg-blue-400" : "bg-green-400"
-              } animate-pulse`}
-            ></div>
-            <span
-              className={`text-xs md:text-sm font-medium ${cacheStatus.color}`}
-            >
-              {cacheStatus.text}
+          <div className="px-3 py-2 bg-green-500/20 rounded-lg">
+            <span className="text-xs text-green-400 font-medium uppercase">
+              {isCacheHit ? "CACHED" : "LIVE"}
             </span>
           </div>
         </div>
       </div>
 
-      {/* Error message */}
-      {error && (
-        <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3 mb-4">
-          <p className="text-yellow-400 text-sm">{error}</p>
+      {/* Summary Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-6">
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:border-green-500/30 transition-all">
+          <div className="text-lg font-bold text-green-300">
+            ${pageSummary.totalProfit.toFixed(2)}
+          </div>
+          <div className="text-xs text-gray-400">Total Profit</div>
         </div>
-      )}
-
-      {/* Summary stats - Always visible, optimized for mobile */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-2 md:gap-4 mb-6">
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-green-500/15 text-center">
-          <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-500 opacity-0 group-hover:opacity-15 rounded-xl transition-opacity duration-300"></div>
-          <div className="relative text-sm md:text-lg font-bold text-green-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-green-300 group-hover:to-emerald-300 group-hover:bg-clip-text transition-all duration-300">
-            ${summary.totalProfit.toFixed(2)}
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:border-green-500/30 transition-all">
+          <div className="text-lg font-bold text-green-300">
+            {pageSummary.closedCount}
           </div>
-          <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
-            Total Profit
-          </div>
-          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
+          <div className="text-xs text-gray-400">Closed</div>
         </div>
-
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-green-500/15 text-center">
-          <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-500 opacity-0 group-hover:opacity-15 rounded-xl transition-opacity duration-300"></div>
-          <div className="relative text-sm md:text-lg font-bold text-green-400 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-green-400 group-hover:to-emerald-400 group-hover:bg-clip-text transition-all duration-300">
-            {summary.closedTrades}
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:border-blue-500/30 transition-all">
+          <div className="text-lg font-bold text-blue-300">
+            {pageSummary.openCount}
           </div>
-          <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
-            Closed
-          </div>
-          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
+          <div className="text-xs text-gray-400">Open</div>
         </div>
-
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-blue-500/15 text-center">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-15 rounded-xl transition-opacity duration-300"></div>
-          <div className="relative text-sm md:text-lg font-bold text-blue-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-300 group-hover:to-cyan-300 group-hover:bg-clip-text transition-all duration-300">
-            {summary.openTrades}
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:border-purple-500/30 transition-all">
+          <div className="text-lg font-bold text-purple-300">
+            {pageSummary.totalCount}
           </div>
-          <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
-            Open
-          </div>
-          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
+          <div className="text-xs text-gray-400">Total</div>
         </div>
-
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/15 text-center">
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-500 opacity-0 group-hover:opacity-15 rounded-xl transition-opacity duration-300"></div>
-          <div className="relative text-sm md:text-lg font-bold text-purple-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-300 group-hover:to-pink-300 group-hover:bg-clip-text transition-all duration-300">
-            {summary.totalTrades}
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:border-orange-500/30 transition-all">
+          <div className="text-lg font-bold text-orange-300">
+            {pageSummary.successRate}
           </div>
-          <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
-            Total
-          </div>
-          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
-        </div>
-
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-orange-500/15 text-center col-span-2 lg:col-span-1">
-          <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-amber-500 opacity-0 group-hover:opacity-15 rounded-xl transition-opacity duration-300"></div>
-          <div className="relative text-sm md:text-lg font-bold text-orange-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-orange-300 group-hover:to-amber-300 group-hover:bg-clip-text transition-all duration-300">
-            {summary.successRate}
-          </div>
-          <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
-            Success
-          </div>
-          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
+          <div className="text-xs text-gray-400">Success</div>
         </div>
       </div>
 
-      {/* Last updated info */}
+      {/* Last updated */}
       <div className="flex items-center justify-center gap-2 mb-4">
-        <Clock className="w-3 h-3 md:w-4 md:h-4 text-gray-400" />
+        <Clock className="w-4 h-4 text-gray-400" />
         <span className="text-xs text-gray-400">
           Last updated: {lastUpdated.toLocaleTimeString()}
-          {isCacheHit && (
-            <span className="text-blue-400 ml-2">• Smart Cache Hit</span>
-          )}
-          {!isCacheHit && cacheStatus.text === "LIVE" && (
-            <span className="text-green-400 ml-2">• Fresh Data Cached</span>
-          )}
         </span>
       </div>
 
-      {/* Transaction log - Conditional rendering for mobile */}
-      <div
-        className={`bg-black/20 rounded-xl border border-white/5 overflow-hidden ${
-          !showOnMobile ? "hidden md:block" : ""
-        }`}
-      >
-        {/* Mobile-first transaction list - Card layout for mobile, table for desktop */}
-        <div className="block md:hidden">
-          {/* Mobile Card Layout */}
-          <div className="space-y-2 p-2 max-h-96 overflow-y-auto">
-            {transactions.length === 0 ? (
-              <div className="p-8 text-center text-gray-400">
-                No transactions available
-              </div>
-            ) : (
-              transactions.map((transaction) => (
-                <div
-                  key={transaction.id}
-                  className={`bg-white/5 rounded-lg p-3 border border-white/10 ${
-                    transaction.action === "OPEN"
-                      ? "border-l-2 border-l-blue-400"
-                      : ""
-                  }`}
-                >
-                  {/* Top row: Coin and Action */}
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={`font-bold text-sm ${getCoinColor(
-                          transaction.coin
-                        )}`}
-                      >
-                        {transaction.coin}
-                      </span>
-                      <span
-                        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getActionColor(
-                          transaction.action
-                        )}`}
-                      >
-                        {transaction.action}
-                      </span>
-                    </div>
-                    <div className="text-xs text-gray-400">
-                      {transaction.timestamp}
-                    </div>
-                  </div>
-
-                  {/* Middle row: Price and Quantity */}
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="text-xs text-gray-300">
-                      <span className="text-gray-500">Price:</span>{" "}
-                      {transaction.price}
-                    </div>
-                    <div className="text-xs text-gray-300">
-                      <span className="text-gray-500">Qty:</span>{" "}
-                      {transaction.quantity}
-                    </div>
-                  </div>
-
-                  {/* Bottom row: Profit and Status */}
-                  <div className="flex items-center justify-between">
-                    <div>
-                      {transaction.action === "CLOSE" ? (
-                        <div
-                          className={`font-bold text-sm ${getProfitColor(
-                            transaction.profit
-                          )}`}
-                        >
-                          +${transaction.profit.toFixed(2)}
-                        </div>
-                      ) : (
-                        <div className="text-gray-500 text-sm">
-                          Active Position
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      {transaction.status === "profit_goal_reached" && (
-                        <>
-                          <Target className="w-3 h-3 text-yellow-400" />
-                          <span className="text-xs text-yellow-400">Goal</span>
-                        </>
-                      )}
-                      {transaction.action === "OPEN" && (
-                        <>
-                          <TrendingUp className="w-3 h-3 text-blue-400" />
-                          <span className="text-xs text-blue-400">Active</span>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-
-        {/* Desktop Table Layout */}
+      {/* Transaction Table */}
+      <div className="bg-black/20 rounded-xl border border-white/5 overflow-hidden">
+        {/* Desktop Table */}
         <div className="hidden md:block">
-          {/* Header */}
           <div className="bg-white/5 px-4 py-3 border-b border-white/5">
-            <div className="grid grid-cols-12 gap-2 text-xs font-semibold text-gray-300 uppercase tracking-wider">
+            <div className="grid grid-cols-12 gap-2 text-xs font-semibold text-gray-300 uppercase">
               <div className="col-span-2">Coin</div>
               <div className="col-span-2">Action</div>
               <div className="col-span-2">Price</div>
@@ -725,117 +348,169 @@ export const LiveTransactionLog: React.FC = () => {
               <div className="col-span-2">Time</div>
             </div>
           </div>
-
-          {/* Scrollable transaction list */}
-          <div className="max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
-            {transactions.length === 0 ? (
-              <div className="p-8 text-center text-gray-400">
-                No transactions available
-              </div>
-            ) : (
-              transactions.map((transaction, index) => (
-                <div
-                  key={transaction.id}
-                  className={`px-4 py-3 border-b border-white/5 hover:bg-white/5 transition-colors duration-200 ${
-                    index % 2 === 0 ? "bg-white/2" : ""
-                  } ${
-                    transaction.action === "OPEN"
-                      ? "border-l-2 border-l-blue-400"
-                      : ""
-                  }`}
-                >
-                  <div className="grid grid-cols-12 gap-2 items-center text-sm">
-                    {/* Coin */}
-                    <div className="col-span-2">
-                      <div
-                        className={`font-bold ${getCoinColor(
-                          transaction.coin
-                        )}`}
-                      >
-                        {transaction.coin}
-                      </div>
-                    </div>
-
-                    {/* Action */}
-                    <div className="col-span-2">
-                      <span
-                        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getActionColor(
-                          transaction.action
-                        )}`}
-                      >
-                        {transaction.action}
-                      </span>
-                    </div>
-
-                    {/* Price */}
-                    <div className="col-span-2">
-                      <div className="text-gray-200 font-mono text-xs">
-                        {transaction.price}
-                      </div>
-                    </div>
-
-                    {/* Quantity */}
-                    <div className="col-span-2">
-                      <div className="text-gray-300 font-mono text-xs">
-                        {transaction.quantity}
-                      </div>
-                    </div>
-
-                    {/* Profit */}
-                    <div className="col-span-2">
-                      {transaction.action === "CLOSE" ? (
-                        <div
+          <div className="max-h-96 overflow-y-auto">
+            {currentTransactions.map((tx, index) => (
+              <div
+                key={tx.id}
+                className={`px-4 py-3 border-b border-white/5 hover:bg-white/5 transition-colors ${
+                  index % 2 === 0 ? "bg-white/2" : ""
+                } ${
+                  tx.action === "OPEN" ? "border-l-2 border-l-blue-400" : ""
+                }`}
+              >
+                <div className="grid grid-cols-12 gap-2 items-center text-sm">
+                  <div className="col-span-2">
+                    <span className={`font-bold ${getCoinColor(tx.coin)}`}>
+                      {tx.coin}
+                    </span>
+                  </div>
+                  <div className="col-span-2">
+                    <span
+                      className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${getActionColor(
+                        tx.action
+                      )}`}
+                    >
+                      {tx.action}
+                    </span>
+                  </div>
+                  <div className="col-span-2 text-gray-300">{tx.price}</div>
+                  <div className="col-span-2 text-gray-300">{tx.quantity}</div>
+                  <div className="col-span-2">
+                    {tx.action === "CLOSE" ? (
+                      <div className="flex flex-col">
+                        <span
                           className={`font-bold font-mono ${getProfitColor(
-                            transaction.profit
+                            tx.profit
                           )}`}
                         >
-                          +${transaction.profit.toFixed(2)}
-                        </div>
-                      ) : (
-                        <div className="text-gray-500 font-mono text-xs">-</div>
-                      )}
-                      {transaction.status === "profit_goal_reached" && (
-                        <div className="text-xs text-yellow-400 flex items-center gap-1 mt-1">
-                          <Target className="w-3 h-3" />
-                          <span>Goal Reached</span>
-                        </div>
-                      )}
-                      {transaction.action === "OPEN" && (
-                        <div className="text-xs text-blue-400 flex items-center gap-1 mt-1">
-                          <TrendingUp className="w-3 h-3" />
-                          <span>Active</span>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Time */}
-                    <div className="col-span-2">
-                      <div className="text-gray-400 text-xs">
-                        {transaction.timestamp}
+                          +${tx.profit.toFixed(2)}
+                        </span>
+                        {tx.status === "profit_goal_reached" && (
+                          <span className="text-xs text-yellow-400 flex items-center gap-1">
+                            <Target className="w-3 h-3" />
+                            Goal
+                          </span>
+                        )}
                       </div>
-                    </div>
+                    ) : (
+                      <span className="text-gray-500 text-sm flex items-center gap-1">
+                        <TrendingUp className="w-3 h-3 text-blue-400" />
+                        Active
+                      </span>
+                    )}
+                  </div>
+                  <div className="col-span-2 text-gray-400 text-xs">
+                    {tx.timestamp}
                   </div>
                 </div>
-              ))
-            )}
+              </div>
+            ))}
           </div>
+        </div>
+
+        {/* Mobile Cards */}
+        <div className="block md:hidden space-y-2 p-2">
+          {currentTransactions.map((tx) => (
+            <div
+              key={tx.id}
+              className={`bg-white/5 rounded-lg p-3 border ${
+                tx.action === "OPEN"
+                  ? "border-l-2 border-l-blue-400"
+                  : "border-white/10"
+              }`}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <span className={`font-bold ${getCoinColor(tx.coin)}`}>
+                    {tx.coin}
+                  </span>
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs ${getActionColor(
+                      tx.action
+                    )}`}
+                  >
+                    {tx.action}
+                  </span>
+                </div>
+                <div className="text-xs text-gray-400">{tx.timestamp}</div>
+              </div>
+              <div className="flex justify-between mb-2 text-xs text-gray-300">
+                <div>
+                  <span className="text-gray-500">Price:</span> {tx.price}
+                </div>
+                <div>
+                  <span className="text-gray-500">Qty:</span> {tx.quantity}
+                </div>
+              </div>
+              <div className="flex justify-between items-center">
+                {tx.action === "CLOSE" ? (
+                  <span className={`font-bold ${getProfitColor(tx.profit)}`}>
+                    +${tx.profit.toFixed(2)}
+                  </span>
+                ) : (
+                  <span className="text-blue-400 text-sm flex items-center gap-1">
+                    <TrendingUp className="w-3 h-3" />
+                    Active
+                  </span>
+                )}
+                {tx.status === "profit_goal_reached" && (
+                  <span className="text-xs text-yellow-400 flex items-center gap-1">
+                    <Target className="w-3 h-3" />
+                    Goal
+                  </span>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Footer note - CLEANED UP */}
-      <div className="mt-4 text-center">
-        <p className="text-xs text-gray-500">
-          ✅ Smart Cache enabled • Live data with intelligent caching •{" "}
-          <span className="text-green-400 font-medium">
-            Shows both Open & Closed positions
-          </span>
-        </p>
-        {!showOnMobile && (
-          <p className="text-xs text-gray-500 mt-1 md:hidden">
-            Tap "Show Details" to view transaction history
-          </p>
-        )}
-      </div>
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-2 mt-6">
+          <button
+            onClick={() => goToPage(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="p-2 rounded-lg bg-white/8 hover:bg-white/12 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <div className="flex gap-1">
+            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+              let pageNum;
+              if (totalPages <= 5) {
+                pageNum = i + 1;
+              } else if (currentPage <= 3) {
+                pageNum = i + 1;
+              } else if (currentPage >= totalPages - 2) {
+                pageNum = totalPages - 4 + i;
+              } else {
+                pageNum = currentPage - 2 + i;
+              }
+              return (
+                <button
+                  key={pageNum}
+                  onClick={() => goToPage(pageNum)}
+                  className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
+                    currentPage === pageNum
+                      ? "bg-blue-500 text-white"
+                      : "bg-white/8 hover:bg-white/12 text-gray-300"
+                  }`}
+                >
+                  {pageNum}
+                </button>
+              );
+            })}
+          </div>
+          <button
+            onClick={() => goToPage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="p-2 rounded-lg bg-white/8 hover:bg-white/12 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </div>
+      )}
     </div>
   );
 };
