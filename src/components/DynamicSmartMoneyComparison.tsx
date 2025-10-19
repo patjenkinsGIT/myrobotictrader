@@ -1,21 +1,9 @@
-// src/components/DynamicSmartMoneyComparison.tsx - COMPLETE RESTORED VERSION
 import { useState, useEffect, useRef } from "react";
-import {
-  TrendingUp,
-  Shield,
-  AlertTriangle,
-  DollarSign,
-  Target,
-  Brain,
-  Zap,
-  BarChart3,
-  PiggyBank,
-  RefreshCw,
-  Search,
-} from "lucide-react";
+import { Shield, AlertTriangle, Brain, Zap, Search } from "lucide-react";
 import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
 import { useGoogleSheetsData } from "../hooks/useGoogleSheetsData";
 
+// Types of data we expect from CoinMarketCap API
 interface CryptoData {
   id: string;
   name: string;
@@ -35,20 +23,53 @@ interface CachedCryptoData {
 }
 
 const DynamicSmartMoneyComparison = () => {
+  // Get live trading data from your Google Sheets
   const { tradingStats } = useGoogleSheetsData();
 
+  // Dynamic state for crypto data
   const [selectedCrypto, setSelectedCrypto] = useState("bitcoin");
   const [cryptoData, setCryptoData] = useState<CryptoData | null>(null);
   const [customCrypto, setCustomCrypto] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isSearching, setIsSearching] = useState(false);
-  const lastSearchTime = useRef<number>(0);
 
-  const cryptoCache = new Map<string, CachedCryptoData>();
-  const CACHE_DURATION = 15 * 60 * 1000; // 15 minutes for CMC
+  // Enhanced cache with longer duration for CMC
+  const cryptoCacheRef = useRef(new Map<string, CachedCryptoData>());
+  const CACHE_DURATION = 15 * 60 * 1000; // 15 minutes
 
-  // Extract your trading data from Google Sheets with CORRECT property names
+  // Fallback data for when API is completely unavailable
+  const fallbackCryptoData: Record<string, Partial<CryptoData>> = {
+    bitcoin: {
+      currentPrice: 95000,
+      gainSinceStart: 0.52,
+      change24h: -2.3,
+      symbol: "BTC",
+      name: "Bitcoin",
+    },
+    ethereum: {
+      currentPrice: 3600,
+      gainSinceStart: 0.45,
+      change24h: -1.8,
+      symbol: "ETH",
+      name: "Ethereum",
+    },
+    solana: {
+      currentPrice: 145,
+      gainSinceStart: 2.1,
+      change24h: -3.2,
+      symbol: "SOL",
+      name: "Solana",
+    },
+    dogecoin: {
+      currentPrice: 0.38,
+      gainSinceStart: 1.8,
+      change24h: -4.1,
+      symbol: "DOGE",
+      name: "Dogecoin",
+    },
+  };
+
+  // Extract your trading data with CORRECT property names from PortfolioSummary
   const yourTradingData = {
     totalDeposited:
       tradingStats?.portfolioSummary?.totalCapitalDeposited || 28432,
@@ -61,8 +82,8 @@ const DynamicSmartMoneyComparison = () => {
     safeReserves: tradingStats?.portfolioSummary?.availableUSDC || 16624,
     totalCurrentValue:
       tradingStats?.portfolioSummary?.totalAccountValue || 28386,
-    avgTradeSize: tradingStats?.avgProfitPerTrade || 4.76,
     totalTrades: tradingStats?.totalTrades || 875,
+    avgTradeSize: tradingStats?.avgProfitPerTrade || 4.76,
     successRate: 100,
     timeframe: "9 months",
     startDate: "2025-01-08",
@@ -76,33 +97,55 @@ const DynamicSmartMoneyComparison = () => {
     isLiveData: tradingStats?.isLiveData || false,
   };
 
-  // Popular crypto options
+  // Popular crypto options - TOP 25
   const popularCryptos = [
     { id: "bitcoin", name: "Bitcoin", symbol: "BTC" },
     { id: "ethereum", name: "Ethereum", symbol: "ETH" },
+    { id: "tether", name: "Tether", symbol: "USDT" },
+    { id: "xrp", name: "XRP", symbol: "XRP" },
+    { id: "bnb", name: "BNB", symbol: "BNB" },
     { id: "solana", name: "Solana", symbol: "SOL" },
-    { id: "dogecoin", name: "Dogecoin", symbol: "DOGE" },
+    { id: "usd-coin", name: "USDC", symbol: "USDC" },
     { id: "cardano", name: "Cardano", symbol: "ADA" },
-    { id: "polygon", name: "Polygon", symbol: "MATIC" },
-    { id: "chainlink", name: "Chainlink", symbol: "LINK" },
+    { id: "dogecoin", name: "Dogecoin", symbol: "DOGE" },
+    { id: "tron", name: "TRON", symbol: "TRX" },
     { id: "avalanche-2", name: "Avalanche", symbol: "AVAX" },
+    { id: "shiba-inu", name: "Shiba Inu", symbol: "SHIB" },
+    { id: "chainlink", name: "Chainlink", symbol: "LINK" },
+    { id: "polkadot", name: "Polkadot", symbol: "DOT" },
+    { id: "bitcoin-cash", name: "Bitcoin Cash", symbol: "BCH" },
+    { id: "uniswap", name: "Uniswap", symbol: "UNI" },
+    { id: "near", name: "NEAR Protocol", symbol: "NEAR" },
+    { id: "litecoin", name: "Litecoin", symbol: "LTC" },
+    { id: "dai", name: "Dai", symbol: "DAI" },
+    { id: "polygon", name: "Polygon", symbol: "MATIC" },
+    { id: "internet-computer", name: "Internet Computer", symbol: "ICP" },
+    { id: "pepe", name: "Pepe", symbol: "PEPE" },
+    { id: "ethereum-classic", name: "Ethereum Classic", symbol: "ETC" },
+    { id: "fetch-ai", name: "Fetch.ai", symbol: "FET" },
+    { id: "sui", name: "Sui", symbol: "SUI" },
   ];
 
-  // Fetch crypto data from CoinMarketCap via proxy
+  // Start date for comparisons
+  const START_DATE = new Date("2025-01-08");
+  const daysSinceStart = Math.floor(
+    (Date.now() - START_DATE.getTime()) / (1000 * 60 * 60 * 24)
+  );
+
+  // Fetch crypto data from CoinMarketCap API via Cloudflare Function
   const fetchCryptoData = async (cryptoId: string, retries: number = 2) => {
     try {
+      setIsLoading(true);
+      setError(null);
+
       // Check cache first
-      const cached = cryptoCache.get(cryptoId);
+      const cached = cryptoCacheRef.current.get(cryptoId);
       if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
         console.log(`✅ Using cached data for ${cryptoId}`);
         setCryptoData(cached.data);
         setIsLoading(false);
-        setError(null);
         return;
       }
-
-      setIsLoading(true);
-      setError(null);
 
       // Call CoinMarketCap API proxy with timeout
       const controller = new AbortController();
@@ -126,17 +169,11 @@ const DynamicSmartMoneyComparison = () => {
 
       const data = await response.json();
 
-      if (!data || !data.currentPrice) {
-        throw new Error("Invalid data received from API");
+      if (!data || !data.currentPrice || data.error) {
+        throw new Error(data.error || "Invalid data received from API");
       }
 
-      // Calculate days since start
-      const startDate = new Date(yourTradingData.startDate);
-      const daysSinceStart = Math.floor(
-        (Date.now() - startDate.getTime()) / (1000 * 60 * 60 * 24)
-      );
-
-      const cryptoDataObj: CryptoData = {
+      const cryptoInfo: CryptoData = {
         id: cryptoId,
         name: data.name,
         symbol: data.symbol,
@@ -146,176 +183,160 @@ const DynamicSmartMoneyComparison = () => {
         change24h: data.change24h,
         change7d: data.change7d,
         change30d: data.change30d,
-        daysSinceStart,
+        daysSinceStart: daysSinceStart,
       };
 
       console.log(
-        `✅ CMC: ${data.symbol} fetched - ${data.currentPrice.toFixed(2)}`
+        `✅ CMC: ${data.symbol} fetched - $${data.currentPrice.toFixed(2)}`
       );
 
-      setCryptoData(cryptoDataObj);
-      cryptoCache.set(cryptoId, {
-        data: cryptoDataObj,
+      // Cache the result
+      cryptoCacheRef.current.set(cryptoId, {
+        data: cryptoInfo,
         timestamp: Date.now(),
       });
+
+      setCryptoData(cryptoInfo);
     } catch (err) {
       console.error("Error fetching crypto data:", err);
-      setError(
-        "Unable to fetch live crypto prices. Please try again or select a different crypto."
-      );
+      setError("Unable to fetch live crypto data");
+
+      // Use fallback data if available
+      const fallback = fallbackCryptoData[cryptoId];
+      if (fallback) {
+        setCryptoData({
+          id: cryptoId,
+          name: fallback.name || cryptoId,
+          symbol: fallback.symbol || cryptoId.toUpperCase(),
+          currentPrice: fallback.currentPrice || 0,
+          startPrice:
+            (fallback.currentPrice || 0) / (1 + (fallback.gainSinceStart || 0)),
+          gainSinceStart: fallback.gainSinceStart || 0,
+          change24h: fallback.change24h || 0,
+          change7d: null,
+          change30d: null,
+          daysSinceStart: daysSinceStart,
+        });
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
+  // Fetch data when crypto selection changes
   useEffect(() => {
     fetchCryptoData(selectedCrypto);
   }, [selectedCrypto]);
 
-  // Calculate comparison data
+  // Handle custom crypto search
+  const handleCustomSearch = () => {
+    if (customCrypto.trim()) {
+      const searchId = customCrypto.toLowerCase().trim();
+      setSelectedCrypto(searchId);
+      setCustomCrypto("");
+    }
+  };
+
+  // Calculate comparison metrics
   const calculateComparison = () => {
     if (!cryptoData) return null;
 
-    const allInValue =
-      yourTradingData.totalDeposited * (1 + cryptoData.gainSinceStart);
-    const allInProfit = allInValue - yourTradingData.totalDeposited;
+    const investmentAmount = yourTradingData.totalDeposited;
+
+    // All-in crypto scenario
+    const allInBTC = {
+      invested: investmentAmount,
+      currentValue: investmentAmount * (1 + cryptoData.gainSinceStart),
+      unrealizedGain: investmentAmount * cryptoData.gainSinceStart,
+      percentGain: cryptoData.gainSinceStart * 100,
+      withdrawnCash: 0,
+    };
+
+    // Your way (AI-Enhanced Robotic Trader)
+    const yourWay = {
+      invested: investmentAmount,
+      realizedProfits: yourTradingData.realizedProfits,
+      percentGain: (yourTradingData.realizedProfits / investmentAmount) * 100,
+      withdrawnCash: yourTradingData.realizedProfits,
+      currentPositions: yourTradingData.currentOpenPositions,
+      reserves: yourTradingData.safeReserves,
+    };
 
     return {
-      allIn: {
-        investment: yourTradingData.totalDeposited,
-        currentValue: allInValue,
-        unrealizedGain: allInProfit,
-        realized: 0,
-        risk: `100% exposed to ${cryptoData.name} volatility`,
-        gainPercent: cryptoData.gainSinceStart * 100,
-      },
-      yourWay: {
-        investment: yourTradingData.totalDeposited,
-        realizedProfits: yourTradingData.realizedProfits,
-        currentPositions: yourTradingData.currentOpenPositions,
-        reserves: yourTradingData.safeReserves,
-        totalValue:
-          yourTradingData.totalCurrentValue + yourTradingData.realizedProfits,
-        gainPercent: yourTradingData.roiOnCapital,
-      },
+      allIn: allInBTC,
+      yourWay: yourWay,
+      advantage: yourWay.realizedProfits - allInBTC.unrealizedGain,
     };
   };
 
-  // Dynamic message based on comparison
+  const comparison = calculateComparison();
+
+  // Format currency helper
+  const formatCurrency = (value: number): string => {
+    return Math.abs(value).toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  };
+
+  // Get dynamic message based on comparison
   const getDynamicMessage = () => {
-    if (!cryptoData) return null;
-    const comparison = calculateComparison();
     if (!comparison) return null;
 
-    const { unrealizedGain } = comparison.allIn;
-    const yourRealizedProfits = yourTradingData.realizedProfits;
-    const difference = yourRealizedProfits - unrealizedGain;
+    const { advantage } = comparison;
+    const unrealizedGain = comparison.allIn.unrealizedGain;
 
-    if (unrealizedGain < 0 && yourRealizedProfits > 0) {
+    if (unrealizedGain < 0) {
       return {
         type: "success" as const,
         icon: "🎯",
-        title: "Smart Money Wins Big",
-        message: `While ${cryptoData.name} holders are down ${formatCurrency(
+        title: `${cryptoData?.name} Is Down ${Math.abs(
+          comparison.allIn.percentGain
+        ).toFixed(2)}%`,
+        message: `Going all-in would have LOST you $${formatCurrency(
           Math.abs(unrealizedGain)
-        )}, your AI trader locked in ${formatCurrency(
-          yourRealizedProfits
-        )} in real profits. That's ${formatCurrency(
-          difference
-        )} better than holding!`,
+        )}. But here's the win: my system already withdrew $${formatCurrency(
+          yourTradingData.realizedProfits
+        )} in REAL cash while still keeping positions active. Real money > Paper losses.`,
       };
-    }
-
-    if (unrealizedGain > 0 && difference < 0) {
-      return {
-        type: "warning" as const,
-        icon: "⚠️",
-        title: "Paper Gains vs Real Money",
-        message: `Sure, ${cryptoData.name} is up ${formatCurrency(
-          unrealizedGain
-        )} on paper. But you've already banked ${formatCurrency(
-          yourRealizedProfits
-        )} in REAL profits. No stress, no volatility risk, just consistent gains.`,
-      };
-    }
-
-    if (difference > 0) {
+    } else if (advantage > 0) {
       return {
         type: "success" as const,
         icon: "💰",
-        title: "You're Crushing It",
-        message: `Your AI trader has secured ${formatCurrency(
-          yourRealizedProfits
-        )} in realized profits - ${formatCurrency(
-          difference
-        )} more than holding ${
-          cryptoData.name
-        }. Plus you've got ${formatCurrency(
-          yourTradingData.safeReserves
-        )} in safe reserves!`,
+        title: `${
+          cryptoData?.name
+        } Is Up ${comparison.allIn.percentGain.toFixed(2)}%`,
+        message: `Going all-in would give you $${formatCurrency(
+          unrealizedGain
+        )} in paper gains. But here's the problem: you can't spend paper gains. My system already withdrew $${formatCurrency(
+          yourTradingData.realizedProfits
+        )} in REAL cash while still keeping positions active. Real money > Paper profits.`,
+      };
+    } else {
+      return {
+        type: "warning" as const,
+        icon: "⚠️",
+        title: `${
+          cryptoData?.name
+        } Is Up ${comparison.allIn.percentGain.toFixed(2)}%`,
+        message: `Sure, ${cryptoData?.name} holders have $${formatCurrency(
+          unrealizedGain
+        )} in paper gains. But can they spend it? My $${formatCurrency(
+          yourTradingData.realizedProfits
+        )} is already in my bank account. Real profits beat paper gains every time.`,
       };
     }
-
-    return {
-      type: "info" as const,
-      icon: "📊",
-      title: "Strategic Trading Advantage",
-      message: `While both strategies show gains, your approach provides ${formatCurrency(
-        yourTradingData.safeReserves
-      )} in safety reserves and ${formatCurrency(
-        yourRealizedProfits
-      )} in locked profits. That's real financial security.`,
-    };
   };
 
-  // Rate limiting for custom search
-  const handleCustomCrypto = async () => {
-    const now = Date.now();
-    const timeSinceLastSearch = now - lastSearchTime.current;
-
-    if (timeSinceLastSearch < 2000) {
-      setError("Please wait a moment before searching again");
-      return;
-    }
-
-    if (customCrypto.trim() && !isSearching) {
-      setIsSearching(true);
-      lastSearchTime.current = now;
-      await fetchCryptoData(customCrypto.toLowerCase().trim());
-      setSelectedCrypto(customCrypto.toLowerCase().trim());
-      setCustomCrypto("");
-      setIsSearching(false);
-    }
-  };
-
-  // CTA tracking
-  const handleMasterclassClick = (location: string) => {
-    trackCTAClick("join_free_masterclass", `dynamic_comparison_${location}`);
-    trackOutboundLink(
-      "https://dailyprofits.link/class",
-      `Masterclass from Dynamic Comparison ${location}`
-    );
-  };
-
-  const formatCurrency = (amount: number) =>
-    `$${amount.toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`;
-
-  const formatPercent = (percent: number) =>
-    `${percent > 0 ? "+" : ""}${percent.toFixed(2)}%`;
-
-  const comparison = calculateComparison();
-  const dynamicMessage = getDynamicMessage();
+  const message = getDynamicMessage();
 
   if (isLoading && !cryptoData) {
     return (
-      <section className="py-20 px-4 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-        <div className="max-w-6xl mx-auto text-center">
-          <div className="flex items-center justify-center gap-3">
-            <RefreshCw className="w-6 h-6 text-purple-400 animate-spin" />
-            <p className="text-xl text-white">Loading comparison data...</p>
+      <section className="py-12 md:py-20 bg-gradient-to-b from-gray-900 to-purple-900">
+        <div className="container mx-auto px-4">
+          <div className="text-center text-white">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto"></div>
+            <p className="mt-4">Loading comparison data...</p>
           </div>
         </div>
       </section>
@@ -323,93 +344,90 @@ const DynamicSmartMoneyComparison = () => {
   }
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      <div className="max-w-7xl mx-auto">
+    <section className="py-12 md:py-20 bg-gradient-to-b from-gray-900 to-purple-900 relative overflow-hidden">
+      {/* Background effects */}
+      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-10"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-purple-900/50 to-transparent"></div>
+
+      <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/20 to-blue-500/20 backdrop-blur-sm rounded-full px-6 py-2 border border-purple-400/30 mb-6">
-            <BarChart3 className="w-5 h-5 text-purple-300" />
-            <span className="text-purple-200 font-medium">Live Comparison</span>
-          </div>
-
-          <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            Smart Money vs{" "}
-            <span className="text-transparent bg-gradient-to-r from-red-400 via-orange-400 to-yellow-400 bg-clip-text">
-              All-In Gambling
-            </span>
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
+            Smart Money vs. All-In Gambling
           </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Compare strategic AI trading against buying and holding. Real data,
-            real results.
+          <p className="text-xl md:text-2xl text-purple-200 max-w-3xl mx-auto">
+            See the REAL difference between systematic trading and going all-in
           </p>
         </div>
 
         {/* Crypto Selector */}
-        <div className="mb-12">
-          <div className="flex flex-wrap gap-3 justify-center items-center mb-4">
-            {popularCryptos.map((crypto) => (
-              <button
-                key={crypto.id}
-                onClick={() => setSelectedCrypto(crypto.id)}
-                className={`px-6 py-3 rounded-xl font-semibold transition-all transform hover:scale-105 ${
-                  selectedCrypto === crypto.id
-                    ? "bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg shadow-purple-500/50"
-                    : "bg-white/10 text-gray-300 hover:bg-white/20 border border-white/20"
-                }`}
-              >
-                {crypto.symbol}
-              </button>
-            ))}
-          </div>
+        <div className="max-w-4xl mx-auto mb-8">
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+            <label className="block text-white text-lg font-semibold mb-4">
+              Compare Against:
+            </label>
 
-          {/* Custom Search */}
-          <div className="flex gap-2 justify-center max-w-md mx-auto">
-            <input
-              type="text"
-              value={customCrypto}
-              onChange={(e) => setCustomCrypto(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && handleCustomCrypto()}
-              placeholder="Try any crypto (e.g., 'cardano')..."
-              className="flex-1 px-4 py-3 rounded-xl bg-white/10 text-white placeholder-gray-400 border border-white/20 focus:outline-none focus:border-purple-500 focus:bg-white/15 transition-all"
-            />
-            <button
-              onClick={handleCustomCrypto}
-              disabled={isSearching}
-              className="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-blue-500 text-white hover:opacity-90 disabled:opacity-50 transition-all flex items-center gap-2"
-            >
-              <Search className="w-5 h-5" />
-              {isSearching ? "..." : "Search"}
-            </button>
+            {/* Popular cryptos - Display in 5 columns on desktop */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 mb-4">
+              {popularCryptos.map((crypto) => (
+                <button
+                  key={crypto.id}
+                  onClick={() => setSelectedCrypto(crypto.id)}
+                  className={`px-3 py-2 rounded-lg font-semibold transition-all text-sm ${
+                    selectedCrypto === crypto.id
+                      ? "bg-purple-600 text-white shadow-lg"
+                      : "bg-white/20 text-white hover:bg-white/30"
+                  }`}
+                >
+                  {crypto.symbol}
+                </button>
+              ))}
+            </div>
+
+            {/* Custom search */}
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={customCrypto}
+                onChange={(e) => setCustomCrypto(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && handleCustomSearch()}
+                placeholder="Or search any crypto (e.g., 'polygon')"
+                className="flex-1 px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-purple-400"
+              />
+              <button
+                onClick={handleCustomSearch}
+                className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold flex items-center gap-2 transition-colors"
+              >
+                <Search className="w-5 h-5" />
+                Search
+              </button>
+            </div>
+
+            {error && (
+              <div className="mt-4 p-3 bg-yellow-500/20 border border-yellow-500/50 rounded-lg text-yellow-200 text-sm">
+                {error} - Showing estimated data
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Error Message */}
-        {error && (
-          <div className="mb-8 p-4 bg-yellow-500/20 border border-yellow-500/50 rounded-xl text-yellow-200 text-center max-w-2xl mx-auto">
-            <AlertTriangle className="w-5 h-5 inline mr-2" />
-            {error}
-          </div>
-        )}
-
-        {/* Dynamic Message */}
-        {dynamicMessage && (
+        {/* Dynamic Message Box */}
+        {message && (
           <div
-            className={`mb-8 p-6 rounded-2xl border-2 max-w-4xl mx-auto ${
-              dynamicMessage.type === "success"
-                ? "bg-green-500/10 border-green-500/30"
-                : dynamicMessage.type === "warning"
-                ? "bg-yellow-500/10 border-yellow-500/30"
-                : "bg-blue-500/10 border-blue-500/30"
+            className={`max-w-4xl mx-auto mb-12 p-8 rounded-2xl border-2 ${
+              message.type === "success"
+                ? "bg-green-900/30 border-green-500"
+                : "bg-yellow-900/30 border-yellow-500"
             }`}
           >
             <div className="flex items-start gap-4">
-              <span className="text-4xl">{dynamicMessage.icon}</span>
+              <div className="text-4xl">{message.icon}</div>
               <div className="flex-1">
-                <h3 className="text-2xl font-bold text-white mb-2">
-                  {dynamicMessage.title}
+                <h3 className="text-2xl font-bold text-white mb-3">
+                  {message.title}
                 </h3>
-                <p className="text-gray-200 text-lg">
-                  {dynamicMessage.message}
+                <p className="text-lg text-white/90 leading-relaxed">
+                  {message.message}
                 </p>
               </div>
             </div>
@@ -417,198 +435,163 @@ const DynamicSmartMoneyComparison = () => {
         )}
 
         {/* Comparison Cards */}
-        {comparison && cryptoData && (
-          <div className="grid lg:grid-cols-2 gap-8 mb-12">
-            {/* All-In Strategy */}
-            <div className="bg-gradient-to-br from-red-900/40 to-orange-900/40 border-2 border-red-500/30 rounded-2xl p-8 backdrop-blur-sm">
-              <div className="flex items-center gap-3 mb-6">
-                <AlertTriangle className="w-10 h-10 text-red-400" />
-                <div>
-                  <h3 className="text-2xl font-bold text-white">
-                    All-In on {cryptoData.name}
-                  </h3>
-                  <p className="text-red-300 text-sm">High Risk Strategy</p>
-                </div>
+        {comparison && (
+          <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto mb-12">
+            {/* All-In Bitcoin */}
+            <div
+              className={`bg-white/10 backdrop-blur-sm rounded-2xl p-8 border-2 ${
+                comparison.allIn.unrealizedGain < 0
+                  ? "border-red-500/50"
+                  : "border-yellow-500/50"
+              }`}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-2xl font-bold text-white">
+                  All-In on {cryptoData?.name}
+                </h3>
+                <AlertTriangle className="w-8 h-8 text-red-400" />
               </div>
 
-              <div className="space-y-6">
-                <div className="flex justify-between items-center pb-4 border-b border-red-500/20">
-                  <span className="text-gray-300">Initial Investment</span>
+              <p className="text-purple-200 mb-6">Risky & stressful</p>
+
+              <div className="space-y-4">
+                <div className="flex justify-between items-center pb-3 border-b border-white/20">
+                  <span className="text-gray-300">Investment:</span>
                   <span className="text-2xl font-bold text-white">
-                    {formatCurrency(comparison.allIn.investment)}
+                    ${formatCurrency(comparison.allIn.invested)}
                   </span>
                 </div>
 
-                <div className="flex justify-between items-center pb-4 border-b border-red-500/20">
-                  <span className="text-gray-300">Current Value</span>
-                  <span className="text-2xl font-bold text-white">
-                    {formatCurrency(comparison.allIn.currentValue)}
-                  </span>
-                </div>
-
-                <div className="flex justify-between items-center pb-4 border-b border-red-500/20">
-                  <span className="text-gray-300">Unrealized Gain/Loss</span>
+                <div className="flex justify-between items-center pb-3 border-b border-white/20">
+                  <span className="text-gray-300">Current Value:</span>
                   <span
-                    className={`text-3xl font-bold ${
+                    className={`text-2xl font-bold ${
                       comparison.allIn.unrealizedGain >= 0
                         ? "text-green-400"
                         : "text-red-400"
                     }`}
                   >
+                    ${formatCurrency(comparison.allIn.currentValue)}
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center pb-3 border-b border-white/20">
+                  <span className="text-gray-300">Paper Gains/Losses:</span>
+                  <span
+                    className={`text-2xl font-bold ${
+                      comparison.allIn.unrealizedGain >= 0
+                        ? "text-green-400"
+                        : "text-red-400"
+                    }`}
+                  >
+                    {comparison.allIn.unrealizedGain >= 0 ? "+" : ""}$
                     {formatCurrency(comparison.allIn.unrealizedGain)}
-                    <span className="text-lg ml-2">
-                      ({formatPercent(comparison.allIn.gainPercent)})
-                    </span>
                   </span>
                 </div>
 
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-300">Realized Profits</span>
+                  <span className="text-gray-300">Realized Cash:</span>
                   <span className="text-2xl font-bold text-gray-500">
                     $0.00
                   </span>
                 </div>
+              </div>
 
-                <div className="mt-6 p-4 bg-red-500/20 rounded-xl border border-red-500/30">
-                  <div className="flex items-start gap-3">
-                    <Target className="w-5 h-5 text-red-300 mt-1 flex-shrink-0" />
-                    <p className="text-sm text-red-200">
-                      {comparison.allIn.risk}
-                    </p>
-                  </div>
-                </div>
+              <div className="mt-6 p-4 bg-red-900/50 rounded-lg border border-red-500/30">
+                <p className="text-red-200 text-center font-semibold">
+                  100% exposed to {cryptoData?.name} volatility
+                </p>
+                <p className="text-red-300/80 text-center text-sm mt-2">
+                  Nice gains, but can you actually spend them? What if it
+                  crashes tomorrow?
+                </p>
               </div>
             </div>
 
-            {/* Smart Trading Strategy */}
-            <div className="bg-gradient-to-br from-green-900/40 to-emerald-900/40 border-2 border-green-500/30 rounded-2xl p-8 backdrop-blur-sm">
-              <div className="flex items-center gap-3 mb-6">
-                <Shield className="w-10 h-10 text-green-400" />
-                <div>
-                  <h3 className="text-2xl font-bold text-white">
-                    Smart AI Trading
-                  </h3>
-                  <p className="text-green-300 text-sm">Protected Strategy</p>
-                </div>
+            {/* AI-Enhanced Robotic Trader */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border-2 border-green-500/50">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-2xl font-bold text-white">
+                  AI-Enhanced Robotic Trader
+                </h3>
+                <Shield className="w-8 h-8 text-green-400" />
               </div>
 
-              <div className="space-y-6">
-                <div className="flex justify-between items-center pb-4 border-b border-green-500/20">
-                  <span className="text-gray-300">Initial Investment</span>
+              <p className="text-purple-200 mb-6">
+                Smart, systematic & profitable
+              </p>
+
+              <div className="space-y-4">
+                <div className="flex justify-between items-center pb-3 border-b border-white/20">
+                  <span className="text-gray-300">Investment:</span>
                   <span className="text-2xl font-bold text-white">
-                    {formatCurrency(comparison.yourWay.investment)}
+                    ${formatCurrency(comparison.yourWay.invested)}
                   </span>
                 </div>
 
-                <div className="flex justify-between items-center pb-4 border-b border-green-500/20">
-                  <span className="text-gray-300">Total Value</span>
-                  <span className="text-2xl font-bold text-white">
-                    {formatCurrency(comparison.yourWay.totalValue)}
+                <div className="flex justify-between items-center pb-3 border-b border-white/20">
+                  <span className="text-gray-300">Realized Profits:</span>
+                  <span className="text-2xl font-bold text-green-400">
+                    ${formatCurrency(comparison.yourWay.realizedProfits)}
                   </span>
                 </div>
 
-                <div className="flex justify-between items-center pb-4 border-b border-green-500/20">
-                  <span className="text-gray-300">Unrealized Positions</span>
+                <div className="flex justify-between items-center pb-3 border-b border-white/20">
+                  <span className="text-gray-300">Active Positions:</span>
                   <span className="text-2xl font-bold text-blue-400">
-                    {formatCurrency(comparison.yourWay.currentPositions)}
+                    ${formatCurrency(comparison.yourWay.currentPositions)}
                   </span>
                 </div>
 
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-300 font-semibold">
-                    Realized Profits (Banked!)
-                  </span>
-                  <span className="text-3xl font-bold text-green-400">
-                    {formatCurrency(comparison.yourWay.realizedProfits)}
-                    <span className="text-lg ml-2">
-                      ({formatPercent(comparison.yourWay.gainPercent)})
-                    </span>
+                  <span className="text-gray-300">Safe Reserves:</span>
+                  <span className="text-2xl font-bold text-purple-400">
+                    ${formatCurrency(comparison.yourWay.reserves)}
                   </span>
                 </div>
+              </div>
 
-                <div className="grid grid-cols-2 gap-4 mt-6">
-                  <div className="p-4 bg-green-500/20 rounded-xl border border-green-500/30">
-                    <div className="flex items-center gap-2 mb-2">
-                      <PiggyBank className="w-4 h-4 text-green-300" />
-                      <span className="text-sm text-gray-300">
-                        Safe Reserves
-                      </span>
-                    </div>
-                    <p className="text-xl font-bold text-white">
-                      {formatCurrency(comparison.yourWay.reserves)}
-                    </p>
-                  </div>
-
-                  <div className="p-4 bg-green-500/20 rounded-xl border border-green-500/30">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Brain className="w-4 h-4 text-green-300" />
-                      <span className="text-sm text-gray-300">
-                        Total Trades
-                      </span>
-                    </div>
-                    <p className="text-xl font-bold text-white">
-                      {yourTradingData.totalTrades}
-                    </p>
-                  </div>
-                </div>
+              <div className="mt-6 p-4 bg-green-900/50 rounded-lg border border-green-500/30">
+                <p className="text-green-200 text-center font-semibold">
+                  Real profits withdrawn. Active positions working. Safe
+                  reserves maintained. No timing needed.
+                </p>
+                <p className="text-green-300/80 text-center text-sm mt-2">
+                  {yourTradingData.totalTrades} trades • +100.00% success rate
+                </p>
               </div>
             </div>
           </div>
         )}
 
-        {/* Key Insights */}
-        {comparison && (
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
-              <div className="flex items-center gap-3 mb-3">
-                <Zap className="w-6 h-6 text-yellow-400" />
-                <h4 className="text-lg font-semibold text-white">
-                  Daily Average
-                </h4>
-              </div>
-              <p className="text-3xl font-bold text-green-400">
-                {formatCurrency(yourTradingData.dailyAverage)}
-              </p>
-              <p className="text-sm text-gray-400 mt-2">
-                Consistent daily gains
-              </p>
-            </div>
-
-            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
-              <div className="flex items-center gap-3 mb-3">
-                <TrendingUp className="w-6 h-6 text-green-400" />
-                <h4 className="text-lg font-semibold text-white">Best Month</h4>
-              </div>
-              <p className="text-3xl font-bold text-green-400">
-                {formatCurrency(yourTradingData.bestMonthProfit)}
-              </p>
-              <p className="text-sm text-gray-400 mt-2">Peak performance</p>
-            </div>
-
-            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
-              <div className="flex items-center gap-3 mb-3">
-                <DollarSign className="w-6 h-6 text-blue-400" />
-                <h4 className="text-lg font-semibold text-white">ROI</h4>
-              </div>
-              <p className="text-3xl font-bold text-blue-400">
-                {formatPercent(yourTradingData.roiOnCapital)}
-              </p>
-              <p className="text-sm text-gray-400 mt-2">Return on capital</p>
-            </div>
-          </div>
-        )}
-
-        {/* CTA */}
-        <div className="text-center">
+        {/* Bottom CTA */}
+        <div className="text-center bg-white/8 backdrop-blur-sm rounded-2xl border border-white/20 p-8 md:p-12 max-w-4xl mx-auto">
+          <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 md:mb-6">
+            Stop Gambling. Start Profiting.
+          </h3>
+          <p className="text-lg md:text-xl text-gray-300 mb-6 md:mb-8 max-w-2xl mx-auto">
+            Join the free masterclass and discover the exact AI-Enhanced
+            Autonomous trading system that generated $
+            {formatCurrency(yourTradingData.realizedProfits)} in real,
+            withdrawable profits.
+          </p>
           <button
-            onClick={() => handleMasterclassClick("bottom")}
-            className="group px-8 py-4 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-bold text-lg rounded-xl hover:opacity-90 transition-all transform hover:scale-105 shadow-lg shadow-purple-500/50 flex items-center gap-3 mx-auto"
+            onClick={() => {
+              trackCTAClick("join_free_masterclass", "smart_money_bottom");
+              trackOutboundLink(
+                "https://dailyprofits.link/class",
+                "Smart Money Bottom CTA"
+              );
+              window.open("https://dailyprofits.link/class", "_blank");
+            }}
+            className="inline-flex items-center gap-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
           >
-            <span>Learn the Smart Money Strategy</span>
-            <TrendingUp className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            <Brain className="w-6 h-6" />
+            Get Free Masterclass Access
+            <Zap className="w-6 h-6" />
           </button>
-          <p className="text-gray-400 mt-4">
-            Free masterclass • No credit card required
+          <p className="text-sm text-gray-400 mt-4">
+            No credit card required • Learn the system in 60 minutes
           </p>
         </div>
       </div>
