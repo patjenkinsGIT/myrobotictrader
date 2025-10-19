@@ -18,7 +18,7 @@ import { OGImageGenerator } from "./components/OGImageGenerator";
 import { Hero } from "./components/Hero";
 import MyStory from "./components/MyStory";
 import { TradingResults } from "./components/TradingResults";
-import { DynamicSmartMoneyComparison } from "./components/DynamicSmartMoneyComparison";
+import DynamicSmartMoneyComparison from "./components/DynamicSmartMoneyComparison";
 import { Features } from "./components/Features";
 import { CallToAction } from "./components/CallToAction";
 import { FAQ } from "./components/FAQ";
