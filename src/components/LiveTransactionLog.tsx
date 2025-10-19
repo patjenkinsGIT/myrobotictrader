@@ -428,8 +428,8 @@ export const LiveTransactionLog: React.FC = () => {
                   index % 2 === 0 ? "bg-white/2" : ""
                 } ${
                   tx.action === "OPEN"
-                    ? "border-l-2 border-l-blue-400"
-                    : "border-l-2 border-l-green-400"
+                    ? "border-l-4 border-l-blue-400"
+                    : "border-l-4 border-l-green-400"
                 }`}
               >
                 <div className="grid grid-cols-12 gap-2 items-center text-sm">
@@ -487,10 +487,10 @@ export const LiveTransactionLog: React.FC = () => {
           {currentTransactions.map((tx) => (
             <div
               key={tx.id}
-              className={`bg-white/5 rounded-lg p-3 border ${
+              className={`bg-white/5 rounded-lg p-3 border border-white/10 ${
                 tx.action === "OPEN"
-                  ? "border-l-2 border-l-blue-400"
-                  : "border-l-2 border-l-green-400 border-white/10"
+                  ? "border-l-4 border-l-blue-400"
+                  : "border-l-4 border-l-green-400"
               }`}
             >
               <div className="flex items-center justify-between mb-2">
