@@ -441,12 +441,12 @@ export const LiveTransactionLog: React.FC = () => {
             {currentTransactions.map((tx, index) => (
               <div
                 key={tx.id}
-                className={`px-4 py-3 border-b border-white/5 hover:bg-white/5 transition-colors ${
+                className={`px-4 py-3 border-b border-r border-t border-white/5 hover:bg-white/5 transition-colors ${
                   index % 2 === 0 ? "bg-white/2" : ""
                 } border-l-4 ${
                   tx.action === "OPEN"
-                    ? "!border-l-blue-400"
-                    : "!border-l-green-400"
+                    ? "border-l-blue-400"
+                    : "border-l-green-400"
                 }`}
               >
                 <div className="grid grid-cols-12 gap-2 items-center text-sm">
