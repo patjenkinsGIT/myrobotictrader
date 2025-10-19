@@ -7,6 +7,8 @@ import {
   Download,
   ChevronLeft,
   ChevronRight,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { tradingDataCache } from "../utils/smartCache";
 
@@ -30,6 +32,7 @@ export const LiveTransactionLog: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [isCacheHit, setIsCacheHit] = useState(false);
+  const [showOnMobile, setShowOnMobile] = useState(false);
 
   // Calculate pagination
   const totalPages = Math.ceil(allTransactions.length / TRANSACTIONS_PER_PAGE);
@@ -115,34 +118,16 @@ export const LiveTransactionLog: React.FC = () => {
       if (!rows || rows.length === 0) return [];
       return rows
         .map((row, index) => {
-          // Skip header rows - check for common header text in ANY column
-          const rowText = row.join("|").toLowerCase();
-          if (
-            (rowText.includes("coin") && rowText.includes("action")) ||
-            (rowText.includes("symbol") && rowText.includes("action")) ||
-            (rowText.includes("price") &&
-              rowText.includes("quantity") &&
-              rowText.includes("profit")) ||
-            row[0]?.toString().toLowerCase().trim() === "symbol" ||
-            row[0]?.toString().toLowerCase().trim() === "coin" ||
-            row[1]?.toString().toLowerCase().trim() === "action"
-          ) {
-            return null;
-          }
-
+          if (index === 0 && row[0]?.toLowerCase() === "coin") return null;
           const [coin, action, price, quantity, status, profit, timestamp] =
             row;
-          if (!coin || profit === undefined || coin.toString().trim() === "")
-            return null;
-
+          if (!coin || profit === undefined) return null;
           const parsedProfit =
             parseFloat(profit.toString().replace(/[$,]/g, "")) || 0;
           return {
             id: `tx_${Date.now()}_${index}`,
             coin: coin?.toString().trim() || "",
-            action:
-              (action?.toString().trim().toUpperCase() as "CLOSE" | "OPEN") ||
-              "CLOSE",
+            action: (action?.toString().trim() as "CLOSE" | "OPEN") || "CLOSE",
             price: formatPrice(price?.toString() || ""),
             quantity: formatQuantity(quantity?.toString() || ""),
             profit: parsedProfit,
@@ -158,6 +143,7 @@ export const LiveTransactionLog: React.FC = () => {
     },
     [formatPrice, formatQuantity, formatTimestamp]
   );
+
   // Fetch ALL transactions from Google Sheets
   const fetchTransactions = useCallback(async () => {
     try {
@@ -314,6 +300,18 @@ export const LiveTransactionLog: React.FC = () => {
           </div>
         </div>
         <div className="flex gap-2">
+          {/* Mobile toggle button */}
+          <button
+            onClick={() => setShowOnMobile(!showOnMobile)}
+            className="md:hidden flex items-center gap-2 px-3 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
+          >
+            {showOnMobile ? (
+              <EyeOff className="w-4 h-4" />
+            ) : (
+              <Eye className="w-4 h-4" />
+            )}
+            <span className="text-xs">{showOnMobile ? "Hide" : "Show"}</span>
+          </button>
           <button
             onClick={downloadCSV}
             className="flex items-center gap-2 px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-lg transition-colors"
@@ -424,7 +422,11 @@ export const LiveTransactionLog: React.FC = () => {
       </div>
 
       {/* Transaction Table */}
-      <div className="bg-black/20 rounded-xl border border-white/5 overflow-hidden">
+      <div
+        className={`bg-black/20 rounded-xl border border-white/5 overflow-hidden ${
+          !showOnMobile ? "hidden md:block" : ""
+        }`}
+      >
         {/* Desktop Table */}
         <div className="hidden md:block">
           <div className="bg-white/5 px-4 py-3 border-b border-white/5">
@@ -441,14 +443,13 @@ export const LiveTransactionLog: React.FC = () => {
             {currentTransactions.map((tx, index) => (
               <div
                 key={tx.id}
-                className={`px-4 py-3 border-b border-r border-t border-white/5 hover:bg-white/5 transition-colors ${
+                className={`px-4 py-3 border-b border-white/5 hover:bg-white/5 transition-colors ${
                   index % 2 === 0 ? "bg-white/2" : ""
-                } border-l-4 ${
-                  tx.action === "OPEN" ? "border-l-blue-400" : ""
+                } ${
+                  tx.action === "OPEN"
+                    ? "border-l-4 border-l-blue-400"
+                    : "border-l-4 border-l-green-400"
                 }`}
-                style={
-                  tx.action === "CLOSE" ? { borderLeftColor: "#4ade80" } : {}
-                }
               >
                 <div className="grid grid-cols-12 gap-2 items-center text-sm">
                   <div className="col-span-2">
@@ -557,7 +558,7 @@ export const LiveTransactionLog: React.FC = () => {
         </div>
       </div>
 
-      {/* Pagination */}
+      {/* Pagination - Bottom */}
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-2 mt-6">
           <button
@@ -601,6 +602,15 @@ export const LiveTransactionLog: React.FC = () => {
           >
             <ChevronRight className="w-5 h-5" />
           </button>
+        </div>
+      )}
+
+      {/* Mobile helper text */}
+      {!showOnMobile && (
+        <div className="text-center mt-4 md:hidden">
+          <p className="text-xs text-gray-500">
+            Tap "Show" button above to view transaction history
+          </p>
         </div>
       )}
     </div>
