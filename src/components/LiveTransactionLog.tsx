@@ -444,10 +444,11 @@ export const LiveTransactionLog: React.FC = () => {
                 className={`px-4 py-3 border-b border-r border-t border-white/5 hover:bg-white/5 transition-colors ${
                   index % 2 === 0 ? "bg-white/2" : ""
                 } border-l-4 ${
-                  tx.action === "OPEN"
-                    ? "border-l-blue-400"
-                    : "border-l-green-400"
+                  tx.action === "OPEN" ? "border-l-blue-400" : ""
                 }`}
+                style={
+                  tx.action === "CLOSE" ? { borderLeftColor: "#4ade80" } : {}
+                }
               >
                 <div className="grid grid-cols-12 gap-2 items-center text-sm">
                   <div className="col-span-2">
