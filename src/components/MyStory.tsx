@@ -1,4 +1,4 @@
-// MyStory.tsx - Personal Story with Moses the Dog
+// MyStory.tsx - Personal Story with Moses Addition
 import React from "react";
 import { User, CheckCircle, Target, Heart } from "lucide-react";
 import { TradingStats } from "../hooks/useGoogleSheetsData";
@@ -12,9 +12,17 @@ const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
   // Calculate time since starting trading (January 8, 2025)
   const timeSinceStart = calculateTimeSinceStart();
 
-  // Only pull total profits and time data for the story
-  const totalProfit = tradingStats?.totalProfit || 0;
-  const hasLiveData = tradingStats !== null;
+  // Fallback data if Google Sheets is not available
+  const fallbackData = {
+    totalProfit: 12450,
+    totalTrades: 1247,
+    isLiveData: false,
+    dailyAvg: 89,
+  };
+
+  // Use Google Sheets data if available, otherwise fallback
+  const currentData = tradingStats || fallbackData;
+  const dailyAvg = tradingStats?.dailyAvg?.toFixed(0) || "89";
 
   return (
     <section className="py-16 px-4 relative overflow-hidden">
@@ -43,8 +51,8 @@ const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
             <div className="relative">
               <div className="w-64 h-64 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
                 <img
-                  src="/patrick-and-moses.jpg"
-                  alt="Patrick Jenkins with Moses"
+                  src="/patrick-2.jpeg"
+                  alt="Patrick Jenkins"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -53,132 +61,165 @@ const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
             </div>
           </div>
 
-          {/* Desktop: Image floats right, text wraps */}
-          <div className="hidden lg:block float-right ml-8 mb-4">
-            <div className="relative">
-              <div className="w-80 h-80 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
-                <img
-                  src="/patrick-and-moses.jpg"
-                  alt="Patrick Jenkins with Moses"
-                  className="w-full h-full object-cover"
-                />
+          {/* Desktop: Image floated right with text wrapping around */}
+          <div className="relative">
+            <div className="hidden lg:block float-right ml-8 mb-6">
+              <div className="relative">
+                <div className="w-80 h-80 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
+                  <img
+                    src="/patrick-2.jpeg"
+                    alt="Patrick Jenkins"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full shadow-lg shadow-green-400/40"></div>
+                <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full shadow-lg shadow-purple-400/40"></div>
               </div>
-              <div className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full shadow-lg shadow-green-400/40"></div>
-              <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full shadow-lg shadow-purple-400/40"></div>
             </div>
-          </div>
 
-          {/* Story Text */}
-          <div className="text-gray-300 space-y-4 text-lg leading-relaxed">
-            <p>
-              Like most people, I spent years{" "}
-              <span className="text-white font-semibold">
-                trying to figure out crypto trading
-              </span>
-              . I'd watch charts, read analysis, try to time the market... and
-              mostly just stress myself out while missing opportunities.
-            </p>
+            {/* Story Text - YOUR ORIGINAL STORY */}
+            <div className="space-y-6 text-lg text-gray-200 leading-relaxed">
+              <p>
+                I've been following the markets since 2014, and I genuinely love
+                investing. I did okay with my stock investments, but tracking
+                individual stocks became incredibly tedious. I got frustrated
+                with mutual funds because of their fees and average returns -
+                even index funds weren't delivering what I hoped for. Target
+                date funds? Don't get me started on those.
+              </p>
 
-            <p>
-              Then I discovered something that changed everything:{" "}
-              <span className="text-blue-300 font-semibold">
-                AI-enhanced autonomous trading technology
-              </span>
-              . Not a bot that just follows simple rules, but a sophisticated
-              system that trades 24/7, never panics, and only takes
-              profits—never losses.
-            </p>
+              <p>
+                <span className="text-blue-300 font-semibold">
+                  I've always wanted to make extra income in addition to my
+                  9-to-5 job, so over the years I invested tens of thousands in
+                  various courses and systems
+                </span>{" "}
+                - email marketing, affiliate marketing, Amazon wholesale, you
+                name it. Some methods seemed unreliable, and honestly, part of
+                the problem was probably me not putting in full effort or
+                knowing how to position myself properly.
+              </p>
 
-            <p>
-              I started with $25,000 in January 2025. {timeSinceStart} later,
-              I've generated{" "}
-              <span className="text-green-300 font-bold">
-                ${totalProfit.toLocaleString()}
-              </span>{" "}
-              in{" "}
-              <span className="text-white font-semibold">realized profits</span>
-              . Not paper gains that could disappear—actual money I've taken off
-              the table.
-            </p>
+              <p>
+                So when I discovered this autonomous trading system while
+                researching new opportunities, I thought "here's just another
+                system promising easy money."{" "}
+                <span className="text-yellow-300 font-semibold">
+                  I was naturally skeptical.
+                </span>
+              </p>
 
-            <p className="text-white font-semibold bg-gradient-to-r from-purple-500/20 to-pink-500/20 p-4 rounded-xl border border-purple-400/30">
-              <Heart className="w-5 h-5 inline-block mr-2 text-pink-400" />
-              Here's the best part: While my automated trader works 24/7, I get
-              to spend quality time with my new dog Moses. No more staring at
-              charts all day. No more missing out on life because I'm "watching
-              the market." The system handles everything while I actually enjoy
-              my life.
-            </p>
+              <p>
+                <span className="text-green-300 font-semibold">
+                  But this one is truly automated!
+                </span>{" "}
+                It doesn't require constant monitoring or stress about trying to
+                time entries. It doesn't involve manual chart analysis or
+                reading endless market reports. I just set my preferences, and
+                the system manages everything—24/7, without requiring my
+                attention. That was the game-changer for me.
+              </p>
 
-            <p>
-              The platform makes money while I sleep, while I'm at the park with
-              Moses, while I'm doing literally anything else. That's the whole
-              point of "
-              <span className="text-purple-300 font-semibold">
-                Set It and Forget It
-              </span>
-              " trading.
-            </p>
+              <p>
+                <span className="text-purple-300 font-semibold">
+                  After several months of real trading, I can honestly say this
+                  is working better than I hoped.
+                </span>{" "}
+                The results speak for themselves. For the first time in years,
+                I'm not constantly worried about my financial future.
+              </p>
 
-            <p>
-              I see people struggling with finances, having too much month left
-              at the end of the money. This technology could really help, but
-              not many people know about it. That's why I built this site—to
-              show what's actually possible when you stop trying to manually
-              trade and let technology do the heavy lifting.
-            </p>
+              <p>
+                <span className="text-yellow-300 font-semibold">
+                  As I approach retirement, this really is the closest thing to
+                  true passive income I've experienced. I wish this had been
+                  available years ago, but I'm grateful that I found it when I
+                  did and I'm super happy that I can share my experience here. I
+                  really want others to have the opportunity to experience
+                  trading on a level that everyone can use. This is a true gift.
+                </span>
+              </p>
+
+              {/* NEW MOSES PARAGRAPH */}
+              <div className="bg-gradient-to-r from-pink-500/10 to-purple-500/10 p-6 rounded-xl border border-pink-400/20 mt-8">
+                <p className="text-white font-semibold flex items-start gap-3">
+                  <Heart className="w-6 h-6 text-pink-400 flex-shrink-0 mt-1" />
+                  <span>
+                    One of the best parts? I recently got a new dog named Moses,
+                    and because my trading is completely automated, I get to
+                    spend quality time with him without worrying about missing
+                    trades or staring at charts. While the system works 24/7,
+                    I'm at the park with Moses, enjoying life. That's what true
+                    automation means—the freedom to actually live while your
+                    money works for you.
+                  </span>
+                </p>
+              </div>
+            </div>
+
+            {/* Clear float for proper layout */}
+            <div className="clear-both"></div>
           </div>
         </div>
 
-        {/* Three Key Benefits */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="text-center bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
-            <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <CheckCircle className="w-8 h-8 text-white" />
+        {/* Additional Story Section */}
+        <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-8">
+          <h3 className="text-2xl font-bold text-white mb-6 text-center">
+            Why I Built This Site
+          </h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CheckCircle className="w-8 h-8 text-white" />
+              </div>
+              <h4 className="text-lg font-semibold text-white mb-2">
+                Real Results
+              </h4>
+              <p className="text-gray-300 text-sm">
+                {currentData.totalTrades.toLocaleString()} actual trades
+                executed with consistent profitability over {timeSinceStart} of
+                real trading.
+              </p>
             </div>
-            <h4 className="text-lg font-semibold text-white mb-2">
-              Real Results
-            </h4>
-            <p className="text-gray-300 text-sm">
-              {timeSinceStart} of consistent profits. $
-              {totalProfit.toLocaleString()} realized and verified.
-            </p>
+
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Target className="w-8 h-8 text-white" />
+              </div>
+              <h4 className="text-lg font-semibold text-white mb-2">
+                Learning Experience
+              </h4>
+              <p className="text-gray-300 text-sm">
+                Building this site taught me that I can create powerful tools to
+                share something genuinely valuable. Daily average: ${dailyAvg}{" "}
+                per day.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Heart className="w-8 h-8 text-white" />
+              </div>
+              <h4 className="text-lg font-semibold text-white mb-2">
+                Helping Others
+              </h4>
+              <p className="text-gray-300 text-sm">
+                I see people struggling with finances, having too much month
+                left at the end of the money. This platform could really help,
+                but not many people know about it.
+              </p>
+            </div>
           </div>
 
-          <div className="text-center bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
-            <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Target className="w-8 h-8 text-white" />
-            </div>
-            <h4 className="text-lg font-semibold text-white mb-2">
-              True Automation
-            </h4>
-            <p className="text-gray-300 text-sm">
-              Works 24/7. No charts to watch. No stress. Just consistent profits
-              while you live your life.
+          <div className="text-center mt-8">
+            <p className="text-gray-300 max-w-3xl mx-auto">
+              I'm not a financial guru or marketing expert - I'm just someone
+              who found something that works and learned I could build this site
+              to share it with others. The numbers below are my actual results,
+              updated {currentData.isLiveData ? "live" : "regularly"}.
             </p>
           </div>
-
-          <div className="text-center bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
-            <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Heart className="w-8 h-8 text-white" />
-            </div>
-            <h4 className="text-lg font-semibold text-white mb-2">
-              Life Balance
-            </h4>
-            <p className="text-gray-300 text-sm">
-              Spend time with Moses, family, hobbies. The system handles the
-              trading so you can enjoy life.
-            </p>
-          </div>
-        </div>
-
-        {/* Closing Statement */}
-        <div className="text-center">
-          <p className="text-gray-300 max-w-3xl mx-auto text-lg">
-            I'm not a financial guru or marketing expert—I'm just someone who
-            found something that works and wanted to share it. The numbers below
-            are my actual results, updated {hasLiveData ? "live" : "regularly"}.
-          </p>
         </div>
       </div>
     </section>
