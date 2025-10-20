@@ -60,7 +60,7 @@ const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
             <div className="relative">
               <div className="w-64 h-64 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
                 <img
-                  src="public/patrick-and-moses.jpeg"
+                  src="/patrick-and-moses.jpeg"
                   alt="Patrick Jenkins with Moses"
                   className="w-full h-full object-cover"
                 />
@@ -77,7 +77,7 @@ const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
               <div className="relative">
                 <div className="w-80 h-80 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
                   <img
-                    src="/patrick-and-moses.jpg"
+                    src="/patrick-and-moses.jpeg"
                     alt="Patrick Jenkins with Moses"
                     className="w-full h-full object-cover"
                   />
