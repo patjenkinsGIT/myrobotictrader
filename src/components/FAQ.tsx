@@ -73,6 +73,60 @@ const faqData = [
     ],
   },
   {
+    category: "About My Trade Log",
+    icon: TrendingUp,
+    color: "from-cyan-500 to-blue-500",
+    questions: [
+      {
+        question: "Why do you publicly show every single trade?",
+        answer:
+          "Because I'm tired of fake affiliate sites with cherry-picked results and photoshopped screenshots. If I'm going to recommend this system, I need to prove it works with real, verifiable data. Every trade you see is real—pulled directly from my live Google Sheets that I update almost daily, sometimes multiple times a day. This isn't about me trying to impress you with my best month. It's about showing you the complete, unfiltered reality of how this system performs.",
+      },
+      {
+        question: "How do I know your trade log is real and not faked?",
+        answer:
+          "The data comes directly from my live Google Sheets, which updates in real-time on this site. You can see the timestamps, the coins, the buy/sell prices, the profits—everything. I'm not posting screenshots that could be doctored. This is live data that anyone can verify. Plus, I show the flat weeks and quiet periods too, not just the wins. If I were faking it, why would I show the boring weeks?",
+      },
+      {
+        question: "What do all the numbers in the trade log mean?",
+        answer:
+          "Each row shows a completed trade: the cryptocurrency, when I bought it, when I sold it, the quantity, the profit (or if it was a break-even trade), and the strategy used. The 'Trading Results' section above summarizes everything—total profits, win rate, average profit per trade, etc. The raw log is there if you want to dig into the details and see exactly how the system is performing trade by trade.",
+      },
+      {
+        question: "Why are some weeks busier with trades than others?",
+        answer:
+          "The system only trades when market conditions are favorable. During high volatility, you'll see lots of trading activity. During flat or low-volatility periods, the system waits patiently for better opportunities. This is a feature, not a bug—it's being smart with capital instead of forcing trades just for the sake of activity. Some weeks have 20+ trades, other weeks might have 2-3. That's normal and expected.",
+      },
+      {
+        question:
+          "What happens during down markets? Shouldn't the system stop trading?",
+        answer:
+          "Actually, down markets are where the system shines! When prices drop, the trader accumulates inventory at lower prices—building up positions strategically. This might look quiet on the surface because there are fewer sells, but the system is actively buying and preparing for the eventual market recovery. When prices turn around, you'll have a portfolio of positions ready to sell for profit. This patient approach of 'buy low, wait, sell high' is what produces successful long-term results. The quiet periods are actually the setup for bigger wins later.",
+      },
+      {
+        question:
+          "Your average profit per trade seems small. Why only a few dollars per trade?",
+        answer:
+          "Here's what matters more than average profit per trade: I've been profitable every single month since I started. Every. Single. Month. How many traders can say that? The system isn't trying to hit home runs on every trade—it's focused on consistency and never selling at a loss. Small, consistent profits compound over time. I'd rather make $4 per trade with 100% winning months than chase $100 per trade and have losing months. The math works out, trust me. And as I scale up capital, those per-trade numbers naturally increase.",
+      },
+      {
+        question: "Do you ever hide losing trades?",
+        answer:
+          "No. Every single trade is shown. However, the system is designed to only sell positions when they're profitable, so you'll rarely see actual losses. If a position goes underwater, the system holds it until it can sell for a profit. That's the whole point—patience over panic. You'll see flat weeks, you'll see small profits, you'll see big profits—but you won't see me panic-selling at a loss because the system doesn't do that.",
+      },
+      {
+        question: "Can I see trades from specific cryptocurrencies?",
+        answer:
+          "Yes! The trade log shows which coins are being traded—BONK, DOGE, SHIB, and others. You can see which coins generate the most trades, which ones are most profitable, and how the system handles different market conditions for each coin. This transparency helps you understand exactly what's being traded and why.",
+      },
+      {
+        question: "Why is this level of transparency important?",
+        answer:
+          "Because 99% of crypto affiliate sites are full of hype and promises with no proof. I wanted to build something different—a site where you can see the actual performance, not marketing spin. If you're going to trust this system with your money, you deserve to see real results, not just testimonials and sales pitches. This trade log is my proof. It's my accountability. And honestly, if I came across a site like this as a potential customer, I'd be sold immediately.",
+      },
+    ],
+  },
+  {
     category: "Getting Started",
     icon: HelpCircle,
     color: "from-blue-500 to-purple-500",
