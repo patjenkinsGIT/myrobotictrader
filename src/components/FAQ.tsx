@@ -1,5 +1,4 @@
-import { useState } from "react";
-
+import * as React from "react";
 import {
   ChevronDown,
   ChevronUp,
@@ -8,9 +7,60 @@ import {
   Bot,
   TrendingUp,
   DollarSign,
+  User,
 } from "lucide-react";
 
 const faqData = [
+  {
+    category: "My Personal Experience",
+    icon: User,
+    color: "from-purple-500 to-pink-500",
+    questions: [
+      {
+        question: "Why did you start automated trading in January 2025?",
+        answer:
+          "I was tired of watching charts and trying to time the market perfectly. I wanted a systematic approach that could work while I lived my life. The idea of a system that only trades when conditions are favorable—and sits patiently when they're not—made sense to me. I started tracking every single trade publicly on this site to prove it works.",
+      },
+      {
+        question: "What surprised you most in your first months of trading?",
+        answer:
+          "Two things: First, how truly hands-off it is. I genuinely don't watch it constantly. Second, how patience is everything. Some weeks are quiet with few trades, and that used to make me nervous. Now I understand that's the system being smart—waiting for the right opportunities instead of forcing trades.",
+      },
+      {
+        question: "What happens during flat or low volatility weeks?",
+        answer:
+          "The system thrives on volatility, so when the market is flat, there are fewer trading opportunities. Some weeks I see very few trades. The key lesson I've learned: Don't panic and don't start tweaking settings. Patience is paramount. The system knows what it's doing—it's waiting for better conditions.",
+      },
+      {
+        question: "Do you still check it constantly or worry about trades?",
+        answer:
+          "Honestly? In the beginning, yes—I checked it all the time. Now, a few months in, I glance at it maybe once a day, sometimes less. The transparency on this site is actually for YOU to see how it works, not because I'm obsessing over every trade. The system handles it.",
+      },
+      {
+        question: "Would you recommend this to a complete beginner?",
+        answer:
+          "Yes, but with realistic expectations. This isn't a 'get rich quick' scheme. It's systematic investing that requires patience and trust in the process. If you're willing to let the system do its job without constantly interfering, this works. If you need immediate results or want to tinker constantly, you'll struggle with the patience required.",
+      },
+      {
+        question: "How do I learn more about this system?",
+        answer: (
+          <>
+            The best way is to attend the free training where they walk through
+            exactly how the system works, show live demonstrations, and answer
+            all your questions. That's where you'll get the full picture:{" "}
+            <a
+              href="https://dailyprofits.link/class"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-purple-300 hover:text-purple-200 underline transition-colors duration-200"
+            >
+              Register for the free masterclass here
+            </a>
+          </>
+        ),
+      },
+    ],
+  },
   {
     category: "Getting Started",
     icon: HelpCircle,
@@ -24,34 +74,17 @@ const faqData = [
       {
         question: "Do I need trading experience?",
         answer:
-          "No experience required! The AI handles all analysis and decisions. You set your preferences and investment amount - the platform does the rest. We provide support and resources to help you understand the process.",
+          "No experience required! The AI handles all analysis and decisions. You set your preferences and investment amount - the platform does the rest. Support and resources are provided to help you understand the process.",
       },
       {
         question: "How much money do I need to start?",
         answer:
-          "Start with as little as $100. We recommend starting small to get familiar with the platform before scaling up your investment.",
+          "You can start with as little as $100, though starting small to get familiar with the platform before scaling up is recommended. I personally started with a few thousand and added more capital gradually as I got comfortable with how the system works.",
       },
       {
         question: "Can I use this outside the USA?",
         answer:
           "Yes! Available worldwide as long as you can trade on Coinbase or Kraken. Simply verify you can create and fund an account with either exchange in your region.",
-      },
-      {
-        question: "How do I learn more?",
-        answer: (
-          <>
-            Join our free masterclass where we demonstrate the system live and
-            answer questions. Register at:{" "}
-            <a
-              href="https://dailyprofits.link/class"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-purple-300 hover:text-purple-200 underline transition-colors duration-200"
-            >
-              https://dailyprofits.link/class
-            </a>
-          </>
-        ),
       },
     ],
   },
@@ -63,61 +96,66 @@ const faqData = [
       {
         question: "Is my money safe?",
         answer:
-          "Yes! Your funds stay in your own Kraken/Coinbase accounts. We only connect via API with trading permissions - we can never withdraw or transfer your funds.",
+          "Yes! Your funds stay in your own Kraken/Coinbase accounts. The system only connects via API with trading permissions - it can never withdraw or transfer your funds. Your money never leaves your exchange account.",
       },
       {
         question: "What if the system makes losing trades?",
         answer:
-          "Our protection system never executes losing trades. It waits for profitable opportunities or doesn't trade at all, safeguarding your capital.",
+          "The protection system never executes losing trades. It waits for profitable opportunities or doesn't trade at all, safeguarding your capital. This is why you'll see periods where there are very few trades—the system is being patient.",
       },
       {
         question: "Can I pause or stop the automated trading anytime?",
         answer:
-          "Yes! You have complete control over the automation. You can pause or stop the robotic trader anytime directly in the trader interface. When paused, the system stops making new trades but your existing positions remain untouched.",
+          "Yes! You have complete control. You can pause or stop the robotic trader anytime directly in the trader interface. When paused, the system stops making new trades but your existing positions remain untouched.",
       },
     ],
   },
   {
     category: "Performance & Profits",
     icon: TrendingUp,
-    color: "from-purple-500 to-pink-500",
+    color: "from-emerald-500 to-blue-500",
     questions: [
       {
         question: "What returns can I expect?",
         answer:
-          "While past performance doesn't guarantee future results, our platform achieves consistent profits by only trading when conditions are favorable. Results vary based on market conditions and your settings.",
+          "While past performance doesn't guarantee future results, the platform achieves consistent profits by only trading when conditions are favorable. Results vary based on market conditions and your settings. You can see my complete, transparent trading history on this site—every single trade since January 2025.",
       },
       {
         question: "How often does it trade?",
         answer:
-          "The system operates 24/7 and only trades when profitable opportunities arise. May trade multiple times daily during favorable conditions, or wait patiently when conditions aren't optimal.",
-      },
-      {
-        question: "What about ROI?",
-        answer:
-          "ROI calculations can be misleading since most successful traders grow capital over time. Focus on overall portfolio growth and consistent profitable trades rather than ROI percentages.",
+          "The system operates 24/7 and only trades when profitable opportunities arise. It may trade multiple times daily during favorable conditions, or wait patiently when conditions aren't optimal. Some weeks you'll see lots of activity, other weeks very little—that's by design.",
       },
       {
         question: "Does it ever sell at a loss?",
         answer:
-          "Positions are only sold when profitable, unless you manually choose otherwise. The system waits patiently for opportunities to sell for gains, avoiding locked-in losses.",
+          "Positions are only sold when profitable, unless you manually choose otherwise. The system waits patiently for opportunities to sell for gains, avoiding locked-in losses. This is a core principle of how the system protects your capital.",
       },
       {
         question: "Do you guarantee profits?",
         answer:
-          "No legitimate system can guarantee profits. However, our approach of never trading at a loss significantly improves your probability of success.",
+          "No legitimate system can guarantee profits. However, the approach of never trading at a loss significantly improves your probability of success. My results speak for themselves, but your results will depend on your capital, settings, and market conditions.",
       },
     ],
   },
   {
     category: "Money Management",
     icon: DollarSign,
-    color: "from-emerald-500 to-teal-500",
+    color: "from-amber-500 to-orange-500",
     questions: [
       {
         question: "Why doesn't the trader use all my available capital?",
         answer:
-          "The system is designed to be conservative and patient. It waits for optimal opportunities rather than rushing to deploy all capital at once. This approach protects you from market volatility and ensures funds are available for better entry points.",
+          "The system is designed to be conservative and patient. It waits for optimal opportunities rather than rushing to deploy all capital at once. This approach protects you from market volatility and ensures funds are available for better entry points. It's frustrating at first, but you learn to trust the patience.",
+      },
+      {
+        question: "How do you decide which cryptocurrencies to trade?",
+        answer:
+          "I focus on coins with good volatility and liquidity. The free training walks through cryptocurrency selection strategies in detail. The key is finding coins that have enough movement to create trading opportunities but aren't so risky that they're unstable.",
+      },
+      {
+        question: "What's your strategy when you withdraw profits?",
+        answer:
+          "I follow a 50/50 rule: 50% of profits stay in the account to compound and reinvest, and 50% I can save or enjoy. This way I'm building wealth while also enjoying the fruits of the system. You can see my complete profit management approach in my trading results above.",
       },
       {
         question: "How does profit management work?",
@@ -125,20 +163,10 @@ const faqData = [
           "The system automatically manages profits, and you control whether to reinvest them or keep them separate. You can choose to compound your gains for faster growth or withdraw profits while keeping your original capital working.",
       },
       {
-        question: "Does the system support dollar cost averaging?",
-        answer:
-          "Yes! There are advanced options where the trader will only buy positions and never sell, effectively creating a dollar cost averaging strategy. This is perfect for long-term accumulation without worrying about exit timing.",
-      },
-      {
         question:
           "Why does the trader buy many positions but not sell during market dips?",
         answer:
-          "Down markets are actually good - this is where you build inventory! The trader takes advantage of lower prices to accumulate positions, creating a well-seasoned portfolio. When markets recover, you'll have multiple profitable positions ready to sell. This patient approach is what produces successful long-term results.",
-      },
-      {
-        question: "Which cryptocurrencies work best for different strategies?",
-        answer:
-          "For active trading, faster-moving currencies often provide more opportunities. However, established coins like BTC and ETH may be better suited for long-term dollar cost averaging strategies due to their stability and growth potential over time. These are examples only - we provide technical support, not investment advice.",
+          "Down markets are actually opportunities—this is where you build inventory! The trader takes advantage of lower prices to accumulate positions, creating a well-seasoned portfolio. When markets recover, you'll have multiple profitable positions ready to sell. This patient approach is what produces successful long-term results.",
       },
     ],
   },
@@ -155,12 +183,12 @@ const faqData = [
       {
         question: "Do I need to keep my computer running?",
         answer:
-          "No! The system runs on cloud servers 24/7 even when your computer is off. Monitor trades and adjust settings from any device through our web platform.",
+          "No! The system runs on cloud servers 24/7 even when your computer is off. Monitor trades and adjust settings from any device through the web platform.",
       },
       {
         question: "What support do you provide?",
         answer:
-          "Comprehensive technical support for setup, configuration, and platform questions.  The provided support is for technical and educational support only - no financial advice.",
+          "Comprehensive technical support for setup, configuration, and platform questions. The provided support is for technical and educational support only - no financial advice.",
       },
     ],
   },
@@ -172,7 +200,7 @@ interface FAQItemProps {
 }
 
 const FAQItem: React.FC<FAQItemProps> = ({ question, answer }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = React.useState(false);
 
   return (
     <div className="bg-white/8 backdrop-blur-sm rounded-xl border border-white/20 overflow-hidden hover:border-white/30 transition-all duration-300 shadow-lg shadow-purple-500/10">
@@ -205,111 +233,84 @@ const FAQItem: React.FC<FAQItemProps> = ({ question, answer }) => {
   );
 };
 
-export const FAQ: React.FC = function () {
+interface FAQCategoryProps {
+  category: string;
+  icon: React.ElementType;
+  color: string;
+  questions: Array<{ question: string; answer: string | React.ReactNode }>;
+}
+
+const FAQCategory: React.FC<FAQCategoryProps> = ({
+  category,
+  icon: Icon,
+  color,
+  questions,
+}) => {
   return (
-    <section className="py-10 px-4 relative">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-purple-400/40 mb-6 mt-4 shadow-lg shadow-purple-500/20">
-            <HelpCircle className="w-4 h-4 text-purple-300" />
-            <span className="text-purple-200 font-medium">FAQ</span>
-          </div>
+    <div className="mb-8">
+      <div className="flex items-center gap-3 mb-4">
+        <div className={`p-2 rounded-lg bg-gradient-to-br ${color} shadow-lg`}>
+          <Icon className="w-5 h-5 text-white" />
+        </div>
+        <h3 className="text-2xl font-bold text-white">{category}</h3>
+      </div>
+      <div className="space-y-3">
+        {questions.map((item, index) => (
+          <FAQItem key={index} question={item.question} answer={item.answer} />
+        ))}
+      </div>
+    </div>
+  );
+};
 
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Everything You Need to Know
-            <span className="block text-transparent bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text">
-              About Robotic Trading
-            </span>
+export const FAQ: React.FC = () => {
+  return (
+    <section className="py-20 px-4 relative overflow-hidden">
+      {/* Background Effects */}
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-purple-900/30 to-slate-900 -z-10"></div>
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl -z-10"></div>
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl -z-10"></div>
+
+      <div className="max-w-4xl mx-auto relative z-10">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            Frequently Asked Questions
           </h2>
-
-          <p className="text-xl text-gray-200 max-w-3xl mx-auto">
-            Common questions about automated cryptocurrency trading answered.
+          <p className="text-xl text-gray-300">
+            Real answers from real experience - no fluff, just transparency
           </p>
         </div>
 
         <div className="space-y-8">
-          {faqData.map((category, categoryIndex) => {
-            const CategoryIcon = category.icon;
-            return (
-              <div key={categoryIndex}>
-                <div className="flex items-center gap-3 mb-6">
-                  <div
-                    className={`w-10 h-10 rounded-xl bg-gradient-to-br ${category.color} p-2.5 shadow-lg`}
-                    style={{
-                      boxShadow: `0 4px 20px rgba(${
-                        category.color.includes("blue")
-                          ? "59, 130, 246"
-                          : category.color.includes("green")
-                          ? "34, 197, 94"
-                          : category.color.includes("purple")
-                          ? "168, 85, 247"
-                          : category.color.includes("emerald")
-                          ? "16, 185, 129"
-                          : "249, 115, 22"
-                      }, 0.3)`,
-                    }}
-                  >
-                    <CategoryIcon className="w-full h-full text-white" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-white">
-                    {category.category}
-                  </h3>
-                </div>
-
-                <div className="space-y-4">
-                  {category.questions.map((item, questionIndex) => (
-                    <FAQItem
-                      key={questionIndex}
-                      question={item.question}
-                      answer={item.answer}
-                    />
-                  ))}
-                </div>
-              </div>
-            );
-          })}
+          {faqData.map((category, index) => (
+            <FAQCategory
+              key={index}
+              category={category.category}
+              icon={category.icon}
+              color={category.color}
+              questions={category.questions}
+            />
+          ))}
         </div>
 
-        <div className="text-center mt-16">
-          <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl p-8 border border-purple-400/30 shadow-lg shadow-purple-500/20">
-            <h3 className="text-2xl font-bold text-white mb-4">
-              Still Have Questions?
-            </h3>
-            <p className="text-gray-200 mb-6 max-w-2xl mx-auto">
-              Our support team is ready to help you get started with automated
-              crypto trading.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href="https://dailyprofits.link/class"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-500/30"
-              >
-                Get Free Training
-                <HelpCircle className="w-4 h-4" />
-              </a>
-              <a
-                href="https://dailyprofits.link/gbt"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 border-2 border-white/40 hover:border-white/60 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 backdrop-blur-sm hover:bg-white/15 shadow-lg shadow-white/10"
-              >
-                Start Trading
-                <Bot className="w-4 h-4" />
-              </a>
-            </div>
-          </div>
-        </div>
-
-        {/* General Disclaimer */}
-        <div className="text-center mt-8">
-          <p className="text-sm text-gray-400 max-w-2xl mx-auto">
-            * All cryptocurrency examples and strategies mentioned are for
-            educational purposes only. We provide technical and platform support
-            - not financial or investment advice. Always do your own research
-            and consult with qualified financial advisors.
+        {/* CTA at bottom */}
+        <div className="mt-12 text-center bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+          <h3 className="text-2xl font-bold text-white mb-4">
+            Still Have Questions?
+          </h3>
+          <p className="text-gray-200 mb-6">
+            Get all your questions answered in the free training. See live
+            demonstrations, ask questions directly, and learn exactly how the
+            system works.
           </p>
+          <a
+            href="https://dailyprofits.link/class"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-4 px-8 rounded-xl hover:from-purple-600 hover:to-pink-600 transform hover:scale-105 transition-all duration-200 shadow-lg shadow-purple-500/50"
+          >
+            Register for Free Masterclass →
+          </a>
         </div>
       </div>
     </section>
