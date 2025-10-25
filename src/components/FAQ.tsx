@@ -37,6 +37,17 @@ const faqData = [
           "Honestly? In the beginning, yes—I checked it all the time. Now, a few months in, I glance at it maybe once a day, sometimes less. The transparency on this site is actually for YOU to see how it works, not because I'm obsessing over every trade. The system handles it.",
       },
       {
+        question:
+          "Your profits seem modest. Shouldn't you be making way more money?",
+        answer:
+          "I get this question a lot, and I appreciate the honesty. Here's my perspective: I'm not trying to get rich quick—I'm building sustainable, consistent income. Those '$50K in a month!' claims you see everywhere? Usually from huge capital, massive risk, or cherry-picked best months. My results are real, transparent, and conservative. I'm focused on steady growth without gambling. If you're looking for 'turn $100 into $10K overnight' promises, this isn't it. If you want realistic, sustainable profits you can actually count on, that's what I'm showing.",
+      },
+      {
+        question: "Why not scale up and make bigger profits faster?",
+        answer:
+          "Fair question. I could throw more money at it, but I'm being strategic. I'm adding capital gradually as I get more comfortable and as the system proves itself month after month. I'd rather grow methodically and sleep well at night than rush to scale and take on more risk than I'm comfortable with. Plus, I have other investments and income streams—this is one piece of my overall strategy, not my entire financial life. Everyone's situation is different, and I'm showing you MY approach, which prioritizes consistency over speed.",
+      },
+      {
         question: "Would you recommend this to a complete beginner?",
         answer:
           "Yes, but with realistic expectations. This isn't a 'get rich quick' scheme. It's systematic investing that requires patience and trust in the process. If you're willing to let the system do its job without constantly interfering, this works. If you need immediate results or want to tinker constantly, you'll struggle with the patience required.",
