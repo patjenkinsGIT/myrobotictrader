@@ -7,7 +7,6 @@ import { useGoogleSheetsData } from "../hooks/useGoogleSheetsData";
 export const Hero: React.FC = () => {
   // Get live trading data
   const { tradingStats, isLoading } = useGoogleSheetsData();
-
   const handleGetFreeTraining = () => {
     trackCTAClick("get_free_training", "hero");
     trackOutboundLink("https://dailyprofits.link/class", "Get Free Training");
@@ -61,7 +60,7 @@ export const Hero: React.FC = () => {
           </div>
 
           {/* Updated headline - Option 2: Curiosity + Proof */}
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-white mb-6 leading-tight px-4">
             How I'm Building Multiple
             <span className="block text-transparent bg-gradient-to-r from-green-300 via-blue-400 to-purple-400 bg-clip-text">
               Revenue Streams
@@ -70,7 +69,7 @@ export const Hero: React.FC = () => {
           </h1>
 
           {/* Updated sub-headline with LIVE profit number */}
-          <p className="text-xl md:text-2xl text-gray-200 mb-4 max-w-4xl mx-auto">
+          <p className="text-lg sm:text-xl md:text-2xl text-gray-200 mb-4 max-w-4xl mx-auto px-4">
             {isLoading ? (
               <span className="text-gray-300">Loading live results...</span>
             ) : (
@@ -92,7 +91,7 @@ export const Hero: React.FC = () => {
               </>
             )}
           </p>
-          <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-4xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-gray-300 mb-8 max-w-4xl mx-auto px-4">
             See my live results below.
           </p>
         </div>
