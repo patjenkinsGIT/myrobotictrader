@@ -16,9 +16,8 @@ import { OGImageGenerator } from "./components/OGImageGenerator";
 
 // Your existing components
 import { Hero } from "./components/Hero";
-import MyStory from "./components/MyStory"; // ✅ FIXED: Default import
+import MyStory from "./components/MyStory";
 import { TradingResults } from "./components/TradingResults";
-import { ProfitManagement } from "./components/ProfitManagement"; // ⭐ NEW COMPONENT
 import { Features } from "./components/Features";
 import { CallToAction } from "./components/CallToAction";
 import { FAQ } from "./components/FAQ";
@@ -170,11 +169,18 @@ const HomePage = () => {
           }
         }
       />
-      {/* ⭐ NEW: Profit Management Dashboard - Only pass if tradingStats exists */}
-      {tradingStats && <ProfitManagement tradingStats={tradingStats} />}
 
-      {/* 🔇 HIDDEN: DynamicSmartMoneyComparison - Too complex for landing page
-          Save detailed comparison for webinar. Uncomment line below to restore if needed. */}
+      {/* 🔇 REMOVED FOR SIMPLICITY: Complex sections moved to webinar
+          
+          These components added friction and complexity to the landing page.
+          The goal is simple: Get visitors to sign up for the webinar.
+          Detailed explanations of profit management and market comparisons 
+          are better suited for the webinar where you have time to explain.
+          
+          To restore either component, uncomment the appropriate line below:
+      */}
+
+      {/* <ProfitManagement tradingStats={tradingStats} /> */}
       {/* <DynamicSmartMoneyComparison /> */}
 
       <Features />
