@@ -20,7 +20,6 @@ import MyStory from "./components/MyStory"; // ✅ FIXED: Default import
 import { TradingResults } from "./components/TradingResults";
 import { ProfitManagement } from "./components/ProfitManagement"; // ⭐ NEW COMPONENT
 import { Features } from "./components/Features";
-import DynamicSmartMoneyComparison from "./components/DynamicSmartMoneyComparison"; // ✅ FIXED: Using correct component
 import { CallToAction } from "./components/CallToAction";
 import { FAQ } from "./components/FAQ";
 import { Footer } from "./components/Footer";
@@ -173,7 +172,11 @@ const HomePage = () => {
       />
       {/* ⭐ NEW: Profit Management Dashboard - Only pass if tradingStats exists */}
       {tradingStats && <ProfitManagement tradingStats={tradingStats} />}
-      <DynamicSmartMoneyComparison />
+
+      {/* 🔇 HIDDEN: DynamicSmartMoneyComparison - Too complex for landing page
+          Save detailed comparison for webinar. Uncomment line below to restore if needed. */}
+      {/* <DynamicSmartMoneyComparison /> */}
+
       <Features />
       <CallToAction />
       <FAQ />
