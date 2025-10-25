@@ -59,13 +59,24 @@ export const Hero: React.FC = () => {
             </span>
           </div>
 
-          {/* Updated headline - Option 2: Curiosity + Proof */}
+          {/* Headline - Mobile gets shorter version, Desktop gets full version */}
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-white mb-6 leading-tight px-4">
-            How I'm Building Multiple
-            <span className="block text-transparent bg-gradient-to-r from-green-300 via-blue-400 to-purple-400 bg-clip-text">
-              Revenue Streams
+            {/* Mobile: Short version */}
+            <span className="block md:hidden">
+              Building Revenue Streams
+              <span className="block text-transparent bg-gradient-to-r from-green-300 via-blue-400 to-purple-400 bg-clip-text">
+                Without Watching Charts
+              </span>
             </span>
-            <span className="block text-white">Without Watching Charts</span>
+
+            {/* Desktop: Full version */}
+            <span className="hidden md:block">
+              How I'm Building Multiple
+              <span className="block text-transparent bg-gradient-to-r from-green-300 via-blue-400 to-purple-400 bg-clip-text">
+                Revenue Streams
+              </span>
+              <span className="block text-white">Without Watching Charts</span>
+            </span>
           </h1>
 
           {/* Updated sub-headline with LIVE profit number */}
