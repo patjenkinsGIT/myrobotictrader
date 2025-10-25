@@ -85,7 +85,7 @@ const faqData = [
       {
         question: "How do I know your trade log is real and not faked?",
         answer:
-          "The data comes directly from my live Google Sheets, which updates in real-time on this site. You can see the timestamps, the coins, the buy/sell prices, the profits—everything. I'm not posting screenshots that could be doctored. This is live data that anyone can verify. Plus, I show the flat weeks and quiet periods too, not just the wins. If I were faking it, why would I show the boring weeks?",
+          "The data comes directly from my live Google Sheets, which I manually update from my robotic trader's transaction log—and everything traces back to my actual Coinbase transaction history. The sheet updates in real-time on this site—you can see the timestamps, the coins, the buy/sell prices, the profits, everything. But here's the kicker: every single trade originates from real Coinbase exchange transactions. I'm not posting screenshots that could be doctored. This is live data pulled from real trades on a real exchange with verifiable transaction records. Plus, I show the flat weeks and quiet periods too, not just the wins. If I were faking it, why would I show the boring weeks?",
       },
       {
         question: "What do all the numbers in the trade log mean?",
