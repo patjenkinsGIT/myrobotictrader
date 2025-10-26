@@ -183,16 +183,16 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
                 </p>
               </div>
 
-              {/* NEW SECTION: Moses - The Lifestyle Benefit with Image */}
-              <div className="bg-gradient-to-r from-pink-500/10 to-purple-500/10 border-l-4 border-pink-400 pl-6 py-4 rounded-r-lg">
+              {/* Section 5: Moses - The Lifestyle Benefit */}
+              <div>
+                <h3 className="text-2xl font-bold text-pink-300 mb-4 flex items-center gap-2">
+                  <Heart className="w-6 h-6" />
+                  The Best Part: Time with Moses
+                </h3>
+
                 {/* Using SAME structure as Patrick's photo above */}
                 <div className="relative">
-                  <h3 className="text-2xl font-bold text-pink-300 mb-4 flex items-center gap-2">
-                    <Heart className="w-6 h-6" />
-                    The Best Part: Time with Moses
-                  </h3>
-
-                  {/* Desktop: Image floated LEFT (opposite of Patrick's right) with text wrapping */}
+                  {/* Desktop: Image floated LEFT with text wrapping */}
                   <div className="hidden lg:block float-left mr-8 mb-6">
                     <div className="relative">
                       <div className="w-64 h-64 rounded-xl overflow-hidden border-3 border-pink-400/30 shadow-xl shadow-pink-500/20">
@@ -209,7 +209,7 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
                     </div>
                   </div>
 
-                  {/* Mobile: Image centered above (same as Patrick's mobile) */}
+                  {/* Mobile: Image centered above */}
                   <div className="flex justify-center mb-8 lg:hidden">
                     <div className="relative">
                       <div className="w-64 h-64 rounded-xl overflow-hidden border-3 border-pink-400/30 shadow-xl shadow-pink-500/20">
@@ -227,29 +227,26 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
                   </div>
 
                   {/* Text content */}
-                  <div className="text-lg text-gray-200 leading-relaxed">
-                    <p>
-                      <span className="text-pink-200 font-semibold">
-                        I recently got a new dog named Moses, and this automated
-                        system gives me something priceless: time.
-                      </span>{" "}
-                      While my trader works 24/7—executing trades, taking
-                      profits, managing positions—I'm at the park with Moses.
-                      I'm not glued to charts or stressed about missing
-                      opportunities.
-                    </p>
-                    <p className="mt-4">
-                      That's what "Set It and Forget It" really means. The
-                      system handles everything while I actually live my life.
-                      No more choosing between making money and spending time
-                      with those I love. I get both.
-                    </p>
-                  </div>
+                  <p>
+                    <span className="text-pink-200 font-semibold">
+                      I recently got a new dog named Moses, and this automated
+                      system gives me something priceless: time.
+                    </span>{" "}
+                    While my trader works 24/7—executing trades, taking profits,
+                    managing positions—I'm at the park with Moses. I'm not glued
+                    to charts or stressed about missing opportunities.
+                  </p>
+                  <p className="mt-4">
+                    That's what "Set It and Forget It" really means. The system
+                    handles everything while I actually live my life. No more
+                    choosing between making money and spending time with those I
+                    love. I get both.
+                  </p>
                 </div>
               </div>
 
-              {/* Section 5: Why I'm Sharing */}
-              <div className="bg-blue-500/10 border-l-4 border-blue-400 pl-6 py-4 rounded-r-lg">
+              {/* Section 6: Why I'm Sharing */}
+              <div>
                 <h3 className="text-2xl font-bold text-blue-300 mb-4 flex items-center gap-2">
                   <CheckCircle className="w-6 h-6" />
                   Why I'm Sharing This With You
