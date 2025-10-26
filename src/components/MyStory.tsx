@@ -1,4 +1,4 @@
-// MyStory.tsx - Enhanced Personal Story Component
+// MyStory.tsx - Enhanced Personal Story Component with Moses Section
 
 import {
   User,
@@ -16,7 +16,7 @@ interface MyStoryProps {
   tradingStats: TradingStats | null;
 }
 
-const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
+export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
   // Calculate time since starting trading (January 8, 2025)
   const timeSinceStart = calculateTimeSinceStart();
 
@@ -177,18 +177,36 @@ const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
                 <p className="mt-4">
                   This isn't paper gains or "what if" projections. This is
                   actual cash that I use for every day living. As of now, it's
-                  giving me the extra moneey to spend for every day expenses and
-                  save for emergencies. I'm also reinvestig a portion of my
+                  giving me the extra money to spend for every day expenses and
+                  save for emergencies. I'm also reinvesting a portion of my
                   profits to scale my investment capital.
                 </p>
               </div>
 
-              {/* NEW SECTION: Moses - The Lifestyle Benefit */}
+              {/* NEW SECTION: Moses - The Lifestyle Benefit with Image */}
               <div className="bg-gradient-to-r from-pink-500/10 to-purple-500/10 border-l-4 border-pink-400 pl-6 py-4 rounded-r-lg">
                 <h3 className="text-2xl font-bold text-pink-300 mb-4 flex items-center gap-2">
                   <Heart className="w-6 h-6" />
                   The Best Part: Time with Moses
                 </h3>
+
+                {/* Moses Sprinkler Photo - Floated right on desktop, centered on mobile */}
+                <div className="flex justify-center mb-6 md:float-right md:ml-6 md:mb-4">
+                  <div className="relative">
+                    <div className="w-64 h-64 md:w-72 md:h-72 rounded-xl overflow-hidden border-3 border-pink-400/30 shadow-xl shadow-pink-500/20">
+                      <img
+                        src="/moses-sprinkler.jpeg"
+                        alt="Moses enjoying the sprinkler"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    {/* Decorative heart accent */}
+                    <div className="absolute -top-3 -right-3 w-8 h-8 bg-gradient-to-r from-pink-400 to-red-400 rounded-full flex items-center justify-center shadow-lg shadow-pink-400/40">
+                      <Heart className="w-5 h-5 text-white fill-white" />
+                    </div>
+                  </div>
+                </div>
+
                 <p>
                   <span className="text-pink-200 font-semibold">
                     I recently got a new dog named Moses, and this automated
@@ -299,5 +317,3 @@ const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
     </section>
   );
 };
-
-export default MyStory; // ✅ Exports the component directly
