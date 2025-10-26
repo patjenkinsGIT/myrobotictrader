@@ -185,9 +185,16 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
             </div>
             {/* END of space-y-6 text container */}
 
-            {/* Moses Section - EXACT copy of Patrick's float structure */}
-            <div className="relative mt-8 clear-both">
-              <div className="hidden lg:block float-left mr-8 mb-6">
+            {/* Moses Section - Using Grid instead of Float */}
+            <div className="mt-8">
+              <h3 className="text-2xl font-bold text-pink-300 mb-4 flex items-center gap-2">
+                <Heart className="w-6 h-6" />
+                The Best Part: Time with Moses
+              </h3>
+
+              {/* Grid layout: image left, text right on desktop */}
+              <div className="grid grid-cols-1 lg:grid-cols-[256px_1fr] gap-6 items-start">
+                {/* Moses Image */}
                 <div className="relative">
                   <div className="w-64 h-64 rounded-xl overflow-hidden border-3 border-pink-400/30 shadow-xl shadow-pink-500/20">
                     <img
@@ -199,29 +206,25 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
                   {/* Decorative heart */}
                   <div className="absolute -top-3 -right-3 w-6 h-6 bg-gradient-to-r from-pink-400 to-red-400 rounded-full shadow-lg shadow-pink-400/40"></div>
                 </div>
-              </div>
 
-              {/* Text content - same structure as Patrick's sections */}
-              <div className="text-lg text-gray-200 leading-relaxed">
-                <h3 className="text-2xl font-bold text-pink-300 mb-4 flex items-center gap-2">
-                  <Heart className="w-6 h-6" />
-                  The Best Part: Time with Moses
-                </h3>
-                <p>
-                  <span className="text-pink-200 font-semibold">
-                    I recently got a new dog named Moses, and this automated
-                    system gives me something priceless: time.
-                  </span>{" "}
-                  While my trader works 24/7—executing trades, taking profits,
-                  managing positions—I'm at the park with Moses. I'm not glued
-                  to charts or stressed about missing opportunities.
-                </p>
-                <p className="mt-4">
-                  That's what "Set It and Forget It" really means. The system
-                  handles everything while I actually live my life. No more
-                  choosing between making money and spending time with those I
-                  love. I get both.
-                </p>
+                {/* Text content */}
+                <div className="text-lg text-gray-200 leading-relaxed">
+                  <p>
+                    <span className="text-pink-200 font-semibold">
+                      I recently got a new dog named Moses, and this automated
+                      system gives me something priceless: time.
+                    </span>{" "}
+                    While my trader works 24/7—executing trades, taking profits,
+                    managing positions—I'm at the park with Moses. I'm not glued
+                    to charts or stressed about missing opportunities.
+                  </p>
+                  <p className="mt-4">
+                    That's what "Set It and Forget It" really means. The system
+                    handles everything while I actually live my life. No more
+                    choosing between making money and spending time with those I
+                    love. I get both.
+                  </p>
+                </div>
               </div>
             </div>
 
