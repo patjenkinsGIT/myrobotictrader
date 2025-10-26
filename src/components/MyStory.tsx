@@ -166,12 +166,23 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
               />
             </div>
 
-            {/* MOSES PHOTO - Float LEFT - Desktop only - comes BEFORE first paragraph */}
-            <img
-              src="/moses-sprinkler.jpeg"
-              alt="Moses enjoying the sprinkler"
-              className="hidden lg:block float-left mr-8 mb-6 w-80 h-80 rounded-2xl object-cover border-4 border-white/20 shadow-2xl shadow-purple-500/20"
-            />
+            {/* MOSES PHOTO - Desktop float with wrapper div */}
+            <div
+              className="hidden lg:block"
+              style={{
+                float: "left",
+                marginRight: "2rem",
+                marginBottom: "1.5rem",
+                width: "320px",
+                height: "320px",
+              }}
+            >
+              <img
+                src="/moses-sprinkler.jpeg"
+                alt="Moses enjoying the sprinkler"
+                className="w-full h-full rounded-2xl object-cover border-4 border-white/20 shadow-2xl shadow-purple-500/20"
+              />
+            </div>
 
             <p className="mb-4">
               <span className="text-pink-200 font-semibold">
