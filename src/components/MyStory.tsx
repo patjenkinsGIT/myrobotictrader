@@ -210,7 +210,7 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
                 {/* Desktop: Image floated LEFT (opposite of Patrick's right float) with text wrapping */}
                 <div className="hidden md:block float-left mr-6 mb-4">
                   <div className="relative">
-                    <div className="w-72 h-72 rounded-xl overflow-hidden border-3 border-pink-400/30 shadow-xl shadow-pink-500/20">
+                    <div className="w-56 h-56 rounded-xl overflow-hidden border-3 border-pink-400/30 shadow-xl shadow-pink-500/20">
                       <img
                         src="/moses-sprinkler.jpeg"
                         alt="Moses enjoying the sprinkler"
