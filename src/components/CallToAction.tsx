@@ -1,4 +1,4 @@
-
+import * as React from "react";
 import { ArrowRight, CheckCircle, Rocket, TrendingUp } from "lucide-react";
 import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
 
@@ -22,7 +22,7 @@ export const CallToAction: React.FC = function () {
       <div className="absolute inset-0 bg-gradient-to-r from-purple-900/60 to-pink-900/60"></div>
 
       {/* Subtle robot accent - top right */}
-      <div className="absolute top-10 right-10 opacity-8 pointer-events-none hidden lg:block">
+      <div className="absolute top-10 right-10 opacity-8 pointer-events-none hidden xl:block">
         <img
           src="/robot-trading.png"
           alt=""
@@ -80,7 +80,7 @@ export const CallToAction: React.FC = function () {
             <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
               <ArrowRight className="w-5 h-5 text-purple-300 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-300 transition-colors" />
               <span className="text-lg">
-                How the system avoids losses—even during market crashes
+                How the system avoids lossesâ€”even during market crashes
               </span>
             </li>
             <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
@@ -112,8 +112,8 @@ export const CallToAction: React.FC = function () {
             <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
               <ArrowRight className="w-5 h-5 text-purple-300 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-300 transition-colors" />
               <span className="text-lg">
-                Stay in complete control—override automation anytime but you
-                won't want to 🤖
+                Stay in complete controlâ€”override automation anytime but you
+                won't want to ðŸ¤–
               </span>
             </li>
             <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
@@ -139,7 +139,7 @@ export const CallToAction: React.FC = function () {
             rel="noopener noreferrer"
             className="group bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2"
           >
-            Get Free Training
+            Watch Free Masterclass
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </a>
 
@@ -150,7 +150,7 @@ export const CallToAction: React.FC = function () {
             rel="noopener noreferrer"
             className="group border-2 border-white/40 hover:border-white/60 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 backdrop-blur-sm hover:bg-white/15 flex items-center justify-center gap-2 shadow-lg shadow-white/10"
           >
-            Start Trading
+            Try Paper Trading Risk-Free
           </a>
         </div>
 
@@ -158,7 +158,7 @@ export const CallToAction: React.FC = function () {
         <div className="flex items-center justify-center gap-3 text-green-300">
           <TrendingUp className="w-6 h-6" />
           <span className="text-lg font-semibold">
-            Start with Paper Trading - Zero Risk
+            Try Paper Trading First - Zero Risk, Real Results
           </span>
         </div>
       </div>
