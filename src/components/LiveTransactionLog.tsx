@@ -128,7 +128,7 @@ export const LiveTransactionLog: React.FC = () => {
     []
   );
 
-  // Parse Google Sheets data from A:G columns - NOW INCLUDES BOTH OPEN AND CLOSED
+  // Parse Google Sheets data from A:G columns
   const parseGoogleSheetsData = useCallback(
     (rows: string[][]): LiveTransaction[] => {
       if (!rows || rows.length === 0) return [];
@@ -178,7 +178,6 @@ export const LiveTransactionLog: React.FC = () => {
     const grouped: { [key: string]: LiveTransaction[] } = {};
 
     transactions.forEach((tx) => {
-      // Extract month/year from timestamp
       const timestamp = tx.timestamp;
       let monthKey = "";
 
@@ -188,7 +187,6 @@ export const LiveTransactionLog: React.FC = () => {
           month: "long",
         })} ${now.getFullYear()}`;
       } else {
-        // Try to parse the date
         try {
           const date = new Date(timestamp);
           if (!isNaN(date.getTime())) {
@@ -196,7 +194,6 @@ export const LiveTransactionLog: React.FC = () => {
               month: "long",
             })} ${date.getFullYear()}`;
           } else {
-            // If parsing fails, try to extract from format like "9/8 12:26 PM"
             const match = timestamp.match(/(\d+)\/(\d+)/);
             if (match) {
               const month = parseInt(match[1]);
@@ -223,12 +220,11 @@ export const LiveTransactionLog: React.FC = () => {
     return grouped;
   }, [transactions]);
 
-  // Get array of months in reverse chronological order (newest first)
+  // Get array of months in reverse chronological order
   const monthKeys = useMemo(() => {
     const keys = Object.keys(transactionsByMonth).filter(
       (key) => key !== "Unknown"
     );
-    // Sort months by date (newest first)
     return keys.sort((a, b) => {
       const dateA = new Date(a);
       const dateB = new Date(b);
@@ -287,7 +283,6 @@ export const LiveTransactionLog: React.FC = () => {
 
   // CSV Download functionality
   const downloadCSV = () => {
-    // Create CSV content from current month's transactions
     const headers = [
       "Coin",
       "Action",
@@ -303,13 +298,13 @@ export const LiveTransactionLog: React.FC = () => {
       const row = [
         tx.coin,
         tx.action,
-        tx.price.replace(/,/g, ""), // Remove commas from price
-        tx.quantity.replace(/,/g, ""), // Remove commas from quantity
+        tx.price.replace(/,/g, ""),
+        tx.quantity.replace(/,/g, ""),
         tx.action === "CLOSE" ? tx.profit.toFixed(2) : "0.00",
         tx.status === "profit_goal_reached"
           ? "Profit Goal Reached"
           : "Completed",
-        `"${tx.timestamp}"`, // Quote timestamp to handle commas
+        `"${tx.timestamp}"`,
       ];
       csvRows.push(row.join(","));
     });
@@ -319,7 +314,6 @@ export const LiveTransactionLog: React.FC = () => {
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
 
-    // Use current month name for filename
     const filename = `${currentMonthName.replace(" ", "_")}_Transactions.csv`;
 
     link.setAttribute("href", url);
@@ -330,11 +324,10 @@ export const LiveTransactionLog: React.FC = () => {
     document.body.removeChild(link);
   };
 
-  // Fallback data with both OPEN and CLOSED transactions
+  // Fallback data
   const getFallbackData = useCallback((): LiveTransaction[] => {
     const mockRows: string[][] = [
-      ["Coin", "Action", "Price", "Quantity", "Status", "Profit", "Timestamp"], // Header
-      // Recent CLOSED transactions
+      ["Coin", "Action", "Price", "Quantity", "Status", "Profit", "Timestamp"],
       [
         "SUI",
         "CLOSE",
@@ -364,7 +357,6 @@ export const LiveTransactionLog: React.FC = () => {
         "9/7 11:45 PM",
       ],
       ["ETH", "CLOSE", "$2,650.75", "1.8", "Completed", "$8.92", "9/7 6:33 PM"],
-      // Current OPEN positions
       [
         "ADA",
         "OPEN",
@@ -394,75 +386,12 @@ export const LiveTransactionLog: React.FC = () => {
       ],
       ["LINK", "CLOSE", "$11.45", "85.3", "Completed", "$9.87", "9/6 7:41 PM"],
       ["DOT", "CLOSE", "$5.67", "180.5", "Completed", "$7.12", "9/6 3:29 PM"],
-      [
-        "AVAX",
-        "CLOSE",
-        "$28.91",
-        "45.2",
-        "Profit Goal Reached",
-        "$11.34",
-        "9/6 10:15 AM",
-      ],
-      ["UNI", "CLOSE", "$6.78", "125.8", "Completed", "$5.89", "9/5 9:47 PM"],
-      ["ATOM", "CLOSE", "$9.23", "95.7", "Completed", "$8.45", "9/5 4:12 PM"],
-      [
-        "FTM",
-        "OPEN",
-        "$0.35",
-        "3,200",
-        "Active Position",
-        "$0.00",
-        "9/5 12:38 PM",
-      ],
-      ["ALGO", "CLOSE", "$0.18", "5,500", "Completed", "$4.67", "9/5 8:55 AM"],
-      [
-        "XRP",
-        "CLOSE",
-        "$0.52",
-        "1,850",
-        "Profit Goal Reached",
-        "$9.12",
-        "9/4 11:23 PM",
-      ],
-      ["LTC", "CLOSE", "$67.89", "18.5", "Completed", "$7.89", "9/4 6:17 PM"],
-      [
-        "BCH",
-        "OPEN",
-        "$234.56",
-        "5.2",
-        "Active Position",
-        "$0.00",
-        "9/4 1:44 PM",
-      ],
-      ["VET", "CLOSE", "$0.02", "12,500", "Completed", "$5.78", "9/4 9:31 AM"],
-      ["THETA", "CLOSE", "$1.23", "450", "Completed", "$8.23", "9/3 10:56 PM"],
-      ["HBAR", "CLOSE", "$0.06", "8,900", "Completed", "$6.45", "9/3 5:42 PM"],
-      [
-        "ICP",
-        "CLOSE",
-        "$4.56",
-        "78.3",
-        "Profit Goal Reached",
-        "$9.67",
-        "9/3 2:18 PM",
-      ],
-      [
-        "NEAR",
-        "OPEN",
-        "$3.45",
-        "125.7",
-        "Active Position",
-        "$0.00",
-        "9/3 10:25 AM",
-      ],
-      ["FLOW", "CLOSE", "$0.78", "650", "Completed", "$4.89", "9/2 8:13 PM"],
-      ["MANA", "CLOSE", "$0.45", "1,100", "Completed", "$6.12", "9/2 3:47 PM"],
     ];
 
     return parseGoogleSheetsData(mockRows);
   }, [parseGoogleSheetsData]);
 
-  // Fetch transactions from Google Sheets Last25Results tab with Smart Cache
+  // Fetch transactions
   const fetchTransactions = useCallback(
     async (showLoading = true) => {
       try {
@@ -470,13 +399,10 @@ export const LiveTransactionLog: React.FC = () => {
         setError(null);
         setIsCacheHit(false);
 
-        // Move environment variables inside the function
         const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
         const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 
-        // Check if we have Google Sheets configuration
         if (SHEET_ID && API_KEY) {
-          // Use smart cache for transaction data
           const cacheKey = `${SHEET_ID}_${SHEET_TAB}_${SHEET_RANGE}`;
           let cachedData = tradingDataCache.get(cacheKey);
 
@@ -494,48 +420,35 @@ export const LiveTransactionLog: React.FC = () => {
             const response = await fetch(url);
 
             if (!response.ok) {
-              console.error(`Google Sheets API error: ${response.status}`);
-              throw new Error(
-                `Google Sheets API error: ${response.status} ${response.statusText}`
-              );
+              throw new Error(`Google Sheets API error: ${response.status}`);
             }
 
             const data = await response.json();
 
             if (data.values && data.values.length > 0) {
               const liveTransactions = parseGoogleSheetsData(data.values);
-
-              // Cache the fresh data
               tradingDataCache.set(cacheKey, liveTransactions);
-
               setTransactions(liveTransactions);
               setLastUpdated(new Date());
               setIsCacheHit(false);
               return;
             } else {
-              setError(
-                "No data found in Last25Results tab. Using sample data."
-              );
+              setError("No data found. Using sample data.");
             }
           } catch (apiError) {
-            console.error("Google Sheets API error:", apiError);
-            setError(
-              `Failed to load from Last25Results tab: ${
-                apiError instanceof Error ? apiError.message : "Unknown error"
-              }`
-            );
+            console.error("API error:", apiError);
+            setError("Failed to load data.");
           }
         }
 
-        // Use fallback data
         await new Promise((resolve) => setTimeout(resolve, 1000));
         const fallbackData = getFallbackData();
         setTransactions(fallbackData);
         setLastUpdated(new Date());
         setIsCacheHit(false);
       } catch (err) {
-        console.error("Failed to fetch transactions:", err);
-        setError("Failed to load transactions. Using sample data.");
+        console.error("Error:", err);
+        setError("Error loading data.");
         setTransactions(getFallbackData());
         setIsCacheHit(false);
       } finally {
@@ -545,7 +458,6 @@ export const LiveTransactionLog: React.FC = () => {
     [SHEET_TAB, SHEET_RANGE, parseGoogleSheetsData, getFallbackData]
   );
 
-  // Fetch on mount - NO AUTO-REFRESH
   useEffect(() => {
     fetchTransactions();
   }, [fetchTransactions]);
@@ -557,13 +469,13 @@ export const LiveTransactionLog: React.FC = () => {
       SUI: "text-purple-400",
       BONK: "text-yellow-400",
       DOGE: "text-yellow-300",
-      ADA: "text-blue-300",
-      SOL: "text-green-400",
-      MATIC: "text-purple-300",
-      LINK: "text-blue-500",
+      SOL: "text-purple-500",
+      MATIC: "text-indigo-400",
+      ADA: "text-blue-500",
+      LINK: "text-blue-600",
       DOT: "text-pink-400",
       AVAX: "text-red-400",
-      UNI: "text-pink-300",
+      UNI: "text-pink-500",
       ATOM: "text-purple-500",
       FTM: "text-blue-600",
       ALGO: "text-gray-400",
@@ -593,7 +505,6 @@ export const LiveTransactionLog: React.FC = () => {
       : "bg-blue-500/20 text-blue-300";
   };
 
-  // Get cache status for display
   const getCacheStatus = () => {
     const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
     const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
@@ -614,9 +525,7 @@ export const LiveTransactionLog: React.FC = () => {
       <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-6 mb-8">
         <div className="flex items-center justify-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-400"></div>
-          <span className="ml-3 text-gray-300">
-            Loading transaction data...
-          </span>
+          <span className="ml-3 text-gray-300">Loading...</span>
         </div>
       </div>
     );
@@ -625,18 +534,18 @@ export const LiveTransactionLog: React.FC = () => {
   const cacheStatus = getCacheStatus();
 
   return (
-    <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-6 mb-8">
-      {/* Header with live indicator and mobile toggle */}
+    <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-6 mb-8 overflow-hidden">
+      {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 p-2 md:p-3 shadow-lg shadow-green-500/40">
+        <div className="flex items-center gap-3 min-w-0 flex-1">
+          <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 p-2 md:p-3 shadow-lg shadow-green-500/40 flex-shrink-0">
             <Activity className="w-full h-full text-white" />
           </div>
-          <div>
-            <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-white">
+          <div className="min-w-0 flex-1">
+            <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-white truncate">
               TRADING SCOREBOARD
             </h3>
-            <p className="text-xs md:text-sm text-gray-400">
+            <p className="text-xs md:text-sm text-gray-400 truncate">
               {currentMonthName ||
                 new Date().toLocaleString("default", {
                   month: "long",
@@ -646,73 +555,68 @@ export const LiveTransactionLog: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          {/* Mobile toggle button */}
+        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-end w-full sm:w-auto">
           <button
             onClick={() => setShowOnMobile(!showOnMobile)}
-            className="md:hidden flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full px-3 py-2 border border-white/20 transition-all duration-200"
+            className="md:hidden flex items-center gap-1.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full px-2.5 py-1.5 border border-white/20 transition-all flex-shrink-0"
           >
             {showOnMobile ? (
               <>
-                <EyeOff className="w-4 h-4 text-gray-300" />
-                <span className="text-xs text-gray-300">Hide Details</span>
+                <EyeOff className="w-3.5 h-3.5 text-gray-300" />
+                <span className="text-xs text-gray-300">Hide</span>
               </>
             ) : (
               <>
-                <Eye className="w-4 h-4 text-gray-300" />
-                <span className="text-xs text-gray-300">Show Details</span>
+                <Eye className="w-3.5 h-3.5 text-gray-300" />
+                <span className="text-xs text-gray-300">Show</span>
               </>
             )}
           </button>
 
-          {/* Smart Cache indicator */}
-          <div className="flex items-center gap-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-full px-3 py-1 border border-green-400/30">
+          <div className="flex items-center gap-1.5 bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-full px-2.5 py-1 border border-green-400/30 flex-shrink-0">
             <div
               className={`w-2 h-2 rounded-full ${
                 isCacheHit ? "bg-blue-400" : "bg-green-400"
               } animate-pulse`}
             ></div>
             <span
-              className={`text-xs md:text-sm font-medium ${cacheStatus.color}`}
+              className={`text-xs font-medium ${cacheStatus.color} whitespace-nowrap`}
             >
               {cacheStatus.text}
             </span>
           </div>
 
-          {/* CSV Download button */}
           <button
             onClick={downloadCSV}
-            className="flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 hover:from-blue-500/30 hover:to-purple-500/30 backdrop-blur-sm rounded-full px-3 py-2 border border-blue-400/30 hover:border-blue-400/50 transition-all duration-200"
-            title={`Download ${currentMonthName} transactions as CSV`}
+            className="flex items-center gap-1.5 bg-gradient-to-r from-blue-500/20 to-purple-500/20 hover:from-blue-500/30 hover:to-purple-500/30 backdrop-blur-sm rounded-full px-2.5 py-1.5 border border-blue-400/30 hover:border-blue-400/50 transition-all flex-shrink-0"
+            title={`Download ${currentMonthName} CSV`}
           >
-            <Download className="w-4 h-4 text-blue-300" />
-            <span className="hidden sm:inline text-xs text-blue-300 font-medium">
+            <Download className="w-3.5 h-3.5 text-blue-300" />
+            <span className="hidden sm:inline text-xs text-blue-300 font-medium whitespace-nowrap">
               CSV
             </span>
           </button>
         </div>
       </div>
 
-      {/* Error message */}
       {error && (
         <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3 mb-4">
-          <p className="text-yellow-400 text-sm">{error}</p>
+          <p className="text-yellow-400 text-sm break-words">{error}</p>
         </div>
       )}
 
-      {/* Month Pagination - Top */}
+      {/* Pagination Top */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2 mb-6">
+        <div className="flex items-center justify-center gap-1 sm:gap-2 mb-6 px-2 overflow-x-hidden">
           <button
             onClick={() => goToPage(currentPage - 1)}
             disabled={currentPage === 1}
-            className="p-2 rounded-lg bg-white/8 hover:bg-white/12 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            aria-label="Previous month"
+            className="p-1.5 sm:p-2 rounded-lg bg-white/8 hover:bg-white/12 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex-shrink-0"
           >
-            <ChevronLeft className="w-5 h-5" />
+            <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
 
-          <div className="flex gap-1 items-center flex-wrap justify-center">
+          <div className="flex gap-0.5 sm:gap-1 items-center flex-wrap justify-center max-w-full">
             {Array.from({ length: Math.min(8, totalPages) }, (_, i) => {
               let pageNum;
               if (totalPages <= 8) {
@@ -728,7 +632,6 @@ export const LiveTransactionLog: React.FC = () => {
               const monthName = monthKeys[pageNum - 1];
               if (!monthName) return null;
 
-              // Format as "Jan 2025"
               const [month, year] = monthName.split(" ");
               const shortMonth = month.substring(0, 3);
               const shortYear = year ? year.substring(2) : "";
@@ -738,7 +641,7 @@ export const LiveTransactionLog: React.FC = () => {
                 <button
                   key={pageNum}
                   onClick={() => goToPage(pageNum)}
-                  className={`px-2 py-1 rounded-lg text-xs font-medium transition-all ${
+                  className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg text-xs font-medium transition-all ${
                     currentPage === pageNum
                       ? "bg-blue-500 text-white shadow-lg"
                       : "bg-white/8 hover:bg-white/12 text-gray-300"
@@ -754,170 +657,135 @@ export const LiveTransactionLog: React.FC = () => {
           <button
             onClick={() => goToPage(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="p-2 rounded-lg bg-white/8 hover:bg-white/12 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            aria-label="Next month"
+            className="p-1.5 sm:p-2 rounded-lg bg-white/8 hover:bg-white/12 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex-shrink-0"
           >
-            <ChevronRight className="w-5 h-5" />
+            <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
         </div>
       )}
 
-      {/* Summary stats - Always visible, optimized for mobile */}
+      {/* Summary Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-2 md:gap-4 mb-6">
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-green-500/15 text-center">
-          <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-500 opacity-0 group-hover:opacity-15 rounded-xl transition-opacity duration-300"></div>
-          <div className="relative text-sm md:text-lg font-bold text-green-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-green-300 group-hover:to-emerald-300 group-hover:bg-clip-text transition-all duration-300">
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all text-center">
+          <div className="text-sm md:text-lg font-bold text-green-300 truncate">
             {monthSummary.totalProfit}
           </div>
-          <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
-            Total Profit
-          </div>
-          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
+          <div className="text-xs text-gray-400">Total Profit</div>
         </div>
-
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-green-500/15 text-center">
-          <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-500 opacity-0 group-hover:opacity-15 rounded-xl transition-opacity duration-300"></div>
-          <div className="relative text-sm md:text-lg font-bold text-green-400 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-green-400 group-hover:to-emerald-400 group-hover:bg-clip-text transition-all duration-300">
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all text-center">
+          <div className="text-sm md:text-lg font-bold text-green-400">
             {monthSummary.closedTrades}
           </div>
-          <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
-            Closed Trades
-          </div>
-          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
+          <div className="text-xs text-gray-400">Closed Trades</div>
         </div>
-
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-blue-500/15 text-center">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-15 rounded-xl transition-opacity duration-300"></div>
-          <div className="relative text-sm md:text-lg font-bold text-blue-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-300 group-hover:to-cyan-300 group-hover:bg-clip-text transition-all duration-300">
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all text-center">
+          <div className="text-sm md:text-lg font-bold text-blue-300">
             {monthSummary.openTrades}
           </div>
-          <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
-            Open Trades
-          </div>
-          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
+          <div className="text-xs text-gray-400">Open Trades</div>
         </div>
-
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/15 text-center">
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-500 opacity-0 group-hover:opacity-15 rounded-xl transition-opacity duration-300"></div>
-          <div className="relative text-sm md:text-lg font-bold text-purple-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-300 group-hover:to-pink-300 group-hover:bg-clip-text transition-all duration-300">
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all text-center">
+          <div className="text-sm md:text-lg font-bold text-purple-300">
             {monthSummary.totalTrades}
           </div>
-          <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
-            Total Trades
-          </div>
-          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
+          <div className="text-xs text-gray-400">Total Trades</div>
         </div>
-
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-orange-500/15 text-center col-span-2 lg:col-span-1">
-          <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-amber-500 opacity-0 group-hover:opacity-15 rounded-xl transition-opacity duration-300"></div>
-          <div className="relative text-sm md:text-lg font-bold text-orange-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-orange-300 group-hover:to-amber-300 group-hover:bg-clip-text transition-all duration-300">
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all text-center col-span-2 lg:col-span-1">
+          <div className="text-sm md:text-lg font-bold text-orange-300">
             {monthSummary.successRate}
           </div>
-          <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
-            Success Rate
-          </div>
-          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
+          <div className="text-xs text-gray-400">Success Rate</div>
         </div>
       </div>
 
-      {/* Last updated info */}
-      <div className="flex items-center justify-center gap-2 mb-4">
-        <Clock className="w-3 h-3 md:w-4 md:h-4 text-gray-400" />
-        <span className="text-xs text-gray-400">
+      {/* Last Updated */}
+      <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-2 mb-4 px-2">
+        <Clock className="w-3 h-3 md:w-4 md:h-4 text-gray-400 flex-shrink-0" />
+        <span className="text-xs text-gray-400 text-center break-words">
           Last updated: {lastUpdated.toLocaleTimeString()}
           {isCacheHit && (
-            <span className="text-blue-400 ml-2">• Smart Cache Hit</span>
+            <span className="text-blue-400 ml-1 sm:ml-2">• Cached</span>
           )}
           {!isCacheHit && cacheStatus.text === "LIVE" && (
-            <span className="text-green-400 ml-2">• Fresh Data Cached</span>
+            <span className="text-green-400 ml-1 sm:ml-2">• Fresh</span>
           )}
         </span>
       </div>
 
-      {/* Transaction log - Conditional rendering for mobile */}
+      {/* Transaction Log */}
       <div
         className={`bg-black/20 rounded-xl border border-white/5 overflow-hidden ${
           !showOnMobile ? "hidden md:block" : ""
         }`}
       >
-        {/* Mobile-first transaction list - Card layout for mobile, table for desktop */}
+        {/* Mobile Cards */}
         <div className="block md:hidden">
-          {/* Mobile Card Layout */}
-          <div className="space-y-2 p-2 max-h-96 overflow-y-auto">
+          <div className="space-y-2 p-2 max-h-96 overflow-y-auto overflow-x-hidden">
             {currentMonthTransactions.length === 0 ? (
               <div className="p-8 text-center text-gray-400">
-                No transactions available for {currentMonthName}
+                No transactions for {currentMonthName}
               </div>
             ) : (
-              currentMonthTransactions.map((transaction) => (
+              currentMonthTransactions.map((tx) => (
                 <div
-                  key={transaction.id}
+                  key={tx.id}
                   className={`bg-white/5 rounded-lg p-3 border border-white/10 ${
-                    transaction.action === "OPEN"
-                      ? "border-l-2 border-l-blue-400"
-                      : ""
-                  }`}
+                    tx.action === "OPEN" ? "border-l-2 border-l-blue-400" : ""
+                  } max-w-full`}
                 >
-                  {/* Top row: Coin and Action */}
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-between mb-2 gap-2 min-w-0">
+                    <div className="flex items-center gap-2 min-w-0 flex-1">
                       <span
                         className={`font-bold text-sm ${getCoinColor(
-                          transaction.coin
-                        )}`}
+                          tx.coin
+                        )} flex-shrink-0`}
                       >
-                        {transaction.coin}
+                        {tx.coin}
                       </span>
                       <span
-                        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getActionColor(
-                          transaction.action
-                        )}`}
+                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getActionColor(
+                          tx.action
+                        )} flex-shrink-0`}
                       >
-                        {transaction.action}
+                        {tx.action}
                       </span>
                     </div>
-                    <div className="text-xs text-gray-400">
-                      {transaction.timestamp}
+                    <div className="text-xs text-gray-400 flex-shrink-0 truncate max-w-[120px]">
+                      {tx.timestamp}
                     </div>
                   </div>
-
-                  {/* Middle row: Price and Quantity */}
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="text-xs text-gray-300">
+                  <div className="flex items-center justify-between mb-2 gap-2">
+                    <div className="text-xs text-gray-300 truncate flex-1 min-w-0">
                       <span className="text-gray-500">Price:</span>{" "}
-                      {transaction.price}
+                      <span className="font-mono">{tx.price}</span>
                     </div>
-                    <div className="text-xs text-gray-300">
+                    <div className="text-xs text-gray-300 truncate flex-1 min-w-0 text-right">
                       <span className="text-gray-500">Qty:</span>{" "}
-                      {transaction.quantity}
+                      <span className="font-mono">{tx.quantity}</span>
                     </div>
                   </div>
-
-                  {/* Bottom row: Profit and Status */}
-                  <div className="flex items-center justify-between">
-                    <div>
-                      {transaction.action === "CLOSE" ? (
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex-shrink-0">
+                      {tx.action === "CLOSE" ? (
                         <div
-                          className={`font-bold text-sm ${getProfitColor(
-                            transaction.profit
+                          className={`font-bold text-sm font-mono ${getProfitColor(
+                            tx.profit
                           )}`}
                         >
-                          +${transaction.profit.toFixed(2)}
+                          +${tx.profit.toFixed(2)}
                         </div>
                       ) : (
-                        <div className="text-gray-500 text-sm">
-                          Active Position
-                        </div>
+                        <div className="text-gray-500 text-sm">Active</div>
                       )}
                     </div>
-                    <div className="flex items-center gap-1">
-                      {transaction.status === "profit_goal_reached" && (
+                    <div className="flex items-center gap-1 flex-shrink-0">
+                      {tx.status === "profit_goal_reached" && (
                         <>
                           <Target className="w-3 h-3 text-yellow-400" />
                           <span className="text-xs text-yellow-400">Goal</span>
                         </>
                       )}
-                      {transaction.action === "OPEN" && (
+                      {tx.action === "OPEN" && (
                         <>
                           <TrendingUp className="w-3 h-3 text-blue-400" />
                           <span className="text-xs text-blue-400">Active</span>
@@ -931,9 +799,8 @@ export const LiveTransactionLog: React.FC = () => {
           </div>
         </div>
 
-        {/* Desktop Table Layout */}
+        {/* Desktop Table */}
         <div className="hidden md:block">
-          {/* Header */}
           <div className="bg-white/5 px-4 py-3 border-b border-white/5">
             <div className="grid grid-cols-12 gap-2 text-xs font-semibold text-gray-300 uppercase tracking-wider">
               <div className="col-span-2">Coin</div>
@@ -944,93 +811,74 @@ export const LiveTransactionLog: React.FC = () => {
               <div className="col-span-2">Time</div>
             </div>
           </div>
-
-          {/* Scrollable transaction list */}
-          <div className="max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
+          <div className="max-h-96 overflow-y-auto">
             {currentMonthTransactions.length === 0 ? (
               <div className="p-8 text-center text-gray-400">
-                No transactions available for {currentMonthName}
+                No transactions for {currentMonthName}
               </div>
             ) : (
-              currentMonthTransactions.map((transaction, index) => (
+              currentMonthTransactions.map((tx, index) => (
                 <div
-                  key={transaction.id}
-                  className={`px-4 py-3 border-b border-white/5 hover:bg-white/5 transition-colors duration-200 ${
+                  key={tx.id}
+                  className={`px-4 py-3 border-b border-white/5 hover:bg-white/5 ${
                     index % 2 === 0 ? "bg-white/2" : ""
                   } ${
-                    transaction.action === "OPEN"
-                      ? "border-l-2 border-l-blue-400"
-                      : ""
+                    tx.action === "OPEN" ? "border-l-2 border-l-blue-400" : ""
                   }`}
                 >
                   <div className="grid grid-cols-12 gap-2 items-center text-sm">
-                    {/* Coin */}
                     <div className="col-span-2">
-                      <div
-                        className={`font-bold ${getCoinColor(
-                          transaction.coin
-                        )}`}
-                      >
-                        {transaction.coin}
+                      <div className={`font-bold ${getCoinColor(tx.coin)}`}>
+                        {tx.coin}
                       </div>
                     </div>
-
-                    {/* Action */}
                     <div className="col-span-2">
                       <span
                         className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getActionColor(
-                          transaction.action
+                          tx.action
                         )}`}
                       >
-                        {transaction.action}
+                        {tx.action}
                       </span>
                     </div>
-
-                    {/* Price */}
                     <div className="col-span-2">
                       <div className="text-gray-200 font-mono text-xs">
-                        {transaction.price}
+                        {tx.price}
                       </div>
                     </div>
-
-                    {/* Quantity */}
                     <div className="col-span-2">
                       <div className="text-gray-300 font-mono text-xs">
-                        {transaction.quantity}
+                        {tx.quantity}
                       </div>
                     </div>
-
-                    {/* Profit */}
                     <div className="col-span-2">
-                      {transaction.action === "CLOSE" ? (
+                      {tx.action === "CLOSE" ? (
                         <div
                           className={`font-bold font-mono ${getProfitColor(
-                            transaction.profit
+                            tx.profit
                           )}`}
                         >
-                          +${transaction.profit.toFixed(2)}
+                          +${tx.profit.toFixed(2)}
                         </div>
                       ) : (
                         <div className="text-gray-500 font-mono text-xs">-</div>
                       )}
-                      {transaction.status === "profit_goal_reached" && (
+                      {tx.status === "profit_goal_reached" && (
                         <div className="text-xs text-yellow-400 flex items-center gap-1 mt-1">
                           <Target className="w-3 h-3" />
-                          <span>Goal Reached</span>
+                          <span>Goal</span>
                         </div>
                       )}
-                      {transaction.action === "OPEN" && (
+                      {tx.action === "OPEN" && (
                         <div className="text-xs text-blue-400 flex items-center gap-1 mt-1">
                           <TrendingUp className="w-3 h-3" />
                           <span>Active</span>
                         </div>
                       )}
                     </div>
-
-                    {/* Time */}
                     <div className="col-span-2">
                       <div className="text-gray-400 text-xs">
-                        {transaction.timestamp}
+                        {tx.timestamp}
                       </div>
                     </div>
                   </div>
@@ -1041,19 +889,18 @@ export const LiveTransactionLog: React.FC = () => {
         </div>
       </div>
 
-      {/* Pagination Controls */}
+      {/* Pagination Bottom */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2 mt-6">
+        <div className="flex items-center justify-center gap-1 sm:gap-2 mt-6 px-2 overflow-x-hidden">
           <button
             onClick={() => goToPage(currentPage - 1)}
             disabled={currentPage === 1}
-            className="p-2 rounded-lg bg-white/8 hover:bg-white/12 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            aria-label="Previous month"
+            className="p-1.5 sm:p-2 rounded-lg bg-white/8 hover:bg-white/12 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex-shrink-0"
           >
-            <ChevronLeft className="w-5 h-5" />
+            <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
 
-          <div className="flex gap-1 items-center">
+          <div className="flex gap-0.5 sm:gap-1 items-center flex-wrap justify-center max-w-full">
             {Array.from({ length: Math.min(8, totalPages) }, (_, i) => {
               let pageNum;
               if (totalPages <= 8) {
@@ -1069,7 +916,6 @@ export const LiveTransactionLog: React.FC = () => {
               const monthName = monthKeys[pageNum - 1];
               if (!monthName) return null;
 
-              // Format as "Jan 2025"
               const [month, year] = monthName.split(" ");
               const shortMonth = month.substring(0, 3);
               const shortYear = year ? year.substring(2) : "";
@@ -1079,7 +925,7 @@ export const LiveTransactionLog: React.FC = () => {
                 <button
                   key={pageNum}
                   onClick={() => goToPage(pageNum)}
-                  className={`px-2 py-1 rounded-lg text-xs font-medium transition-all ${
+                  className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg text-xs font-medium transition-all ${
                     currentPage === pageNum
                       ? "bg-blue-500 text-white shadow-lg"
                       : "bg-white/8 hover:bg-white/12 text-gray-300"
@@ -1095,17 +941,16 @@ export const LiveTransactionLog: React.FC = () => {
           <button
             onClick={() => goToPage(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="p-2 rounded-lg bg-white/8 hover:bg-white/12 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            aria-label="Next month"
+            className="p-1.5 sm:p-2 rounded-lg bg-white/8 hover:bg-white/12 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex-shrink-0"
           >
-            <ChevronRight className="w-5 h-5" />
+            <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
         </div>
       )}
 
-      {/* Footer note - CLEANED UP */}
-      <div className="mt-4 text-center">
-        <p className="text-xs text-gray-500">
+      {/* Footer */}
+      <div className="mt-4 text-center px-2">
+        <p className="text-xs text-gray-500 break-words">
           ✅ Smart Cache enabled • Live data with intelligent caching •{" "}
           <span className="text-green-400 font-medium">
             Shows both Open & Closed positions
@@ -1113,7 +958,7 @@ export const LiveTransactionLog: React.FC = () => {
         </p>
         {!showOnMobile && (
           <p className="text-xs text-gray-500 mt-1 md:hidden">
-            Tap "Show Details" to view transaction history
+            Tap "Show" to view history
           </p>
         )}
       </div>
