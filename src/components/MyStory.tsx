@@ -184,65 +184,62 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
               </div>
 
               {/* Section 5: Moses - The Lifestyle Benefit */}
-              <div>
+              <div className="relative">
                 <h3 className="text-2xl font-bold text-pink-300 mb-4 flex items-center gap-2">
                   <Heart className="w-6 h-6" />
                   The Best Part: Time with Moses
                 </h3>
 
-                {/* Using SAME structure as Patrick's photo above */}
-                <div className="relative">
-                  {/* Desktop: Image floated LEFT with text wrapping */}
-                  <div className="hidden lg:block float-left mr-8 mb-6">
-                    <div className="relative">
-                      <div className="w-64 h-64 rounded-xl overflow-hidden border-3 border-pink-400/30 shadow-xl shadow-pink-500/20">
-                        <img
-                          src="/moses-sprinkler.jpeg"
-                          alt="Moses enjoying the sprinkler"
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      {/* Decorative heart accent */}
-                      <div className="absolute -top-3 -right-3 w-6 h-6 bg-gradient-to-r from-pink-400 to-red-400 rounded-full flex items-center justify-center shadow-lg shadow-pink-400/40">
-                        <Heart className="w-4 h-4 text-white fill-white" />
-                      </div>
+                {/* Desktop: Image floated LEFT with text wrapping */}
+                <div className="hidden lg:block float-left mr-8 mb-6">
+                  <div className="relative">
+                    <div className="w-64 h-64 rounded-xl overflow-hidden border-3 border-pink-400/30 shadow-xl shadow-pink-500/20">
+                      <img
+                        src="/moses-sprinkler.jpeg"
+                        alt="Moses enjoying the sprinkler"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    {/* Decorative heart accent */}
+                    <div className="absolute -top-3 -right-3 w-6 h-6 bg-gradient-to-r from-pink-400 to-red-400 rounded-full flex items-center justify-center shadow-lg shadow-pink-400/40">
+                      <Heart className="w-4 h-4 text-white fill-white" />
                     </div>
                   </div>
-
-                  {/* Mobile: Image centered above */}
-                  <div className="flex justify-center mb-8 lg:hidden">
-                    <div className="relative">
-                      <div className="w-64 h-64 rounded-xl overflow-hidden border-3 border-pink-400/30 shadow-xl shadow-pink-500/20">
-                        <img
-                          src="/moses-sprinkler.jpeg"
-                          alt="Moses enjoying the sprinkler"
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      {/* Decorative heart accent */}
-                      <div className="absolute -top-3 -right-3 w-6 h-6 bg-gradient-to-r from-pink-400 to-red-400 rounded-full flex items-center justify-center shadow-lg shadow-pink-400/40">
-                        <Heart className="w-4 h-4 text-white fill-white" />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Text content */}
-                  <p>
-                    <span className="text-pink-200 font-semibold">
-                      I recently got a new dog named Moses, and this automated
-                      system gives me something priceless: time.
-                    </span>{" "}
-                    While my trader works 24/7—executing trades, taking profits,
-                    managing positions—I'm at the park with Moses. I'm not glued
-                    to charts or stressed about missing opportunities.
-                  </p>
-                  <p className="mt-4">
-                    That's what "Set It and Forget It" really means. The system
-                    handles everything while I actually live my life. No more
-                    choosing between making money and spending time with those I
-                    love. I get both.
-                  </p>
                 </div>
+
+                {/* Mobile: Image centered above */}
+                <div className="flex justify-center mb-8 lg:hidden">
+                  <div className="relative">
+                    <div className="w-64 h-64 rounded-xl overflow-hidden border-3 border-pink-400/30 shadow-xl shadow-pink-500/20">
+                      <img
+                        src="/moses-sprinkler.jpeg"
+                        alt="Moses enjoying the sprinkler"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    {/* Decorative heart accent */}
+                    <div className="absolute -top-3 -right-3 w-6 h-6 bg-gradient-to-r from-pink-400 to-red-400 rounded-full flex items-center justify-center shadow-lg shadow-pink-400/40">
+                      <Heart className="w-4 h-4 text-white fill-white" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Text content */}
+                <p>
+                  <span className="text-pink-200 font-semibold">
+                    I recently got a new dog named Moses, and this automated
+                    system gives me something priceless: time.
+                  </span>{" "}
+                  While my trader works 24/7—executing trades, taking profits,
+                  managing positions—I'm at the park with Moses. I'm not glued
+                  to charts or stressed about missing opportunities.
+                </p>
+                <p className="mt-4">
+                  That's what "Set It and Forget It" really means. The system
+                  handles everything while I actually live my life. No more
+                  choosing between making money and spending time with those I
+                  love. I get both.
+                </p>
               </div>
 
               {/* Section 6: Why I'm Sharing */}
