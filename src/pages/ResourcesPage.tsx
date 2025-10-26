@@ -1,4 +1,4 @@
-
+import * as React from "react";
 import {
   ExternalLink,
   Calculator,
@@ -8,8 +8,17 @@ import {
   CheckCircle,
   ArrowRight,
 } from "lucide-react";
+import { useGoogleSheetsData } from "../hooks/useGoogleSheetsData";
 
 export const ResourcesPage: React.FC = function () {
+  // Get live trading data
+  const { tradingStats } = useGoogleSheetsData();
+
+  // Format profit for display
+  const formattedProfit = tradingStats?.totalProfit
+    ? `$${Math.round(tradingStats.totalProfit).toLocaleString()}+`
+    : "$4,000+";
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
       {/* Hero Section - MATCHING HOMEPAGE STRUCTURE */}
@@ -95,9 +104,9 @@ export const ResourcesPage: React.FC = function () {
               Where I Trade & Why
             </h2>
             <p className="text-gray-300 max-w-2xl mx-auto">
-              You need at least one of these exchanges to work with the robotic
-              trader. Both are reliable, secure, and perfect for automated
-              trading.
+              You need at least one of these exchanges to work with the
+              AI-Enhanced Autonomous Trader. Both are reliable, secure, and
+              perfect for automated trading.
             </p>
           </div>
 
@@ -403,9 +412,9 @@ export const ResourcesPage: React.FC = function () {
               Ready to Start Your Trading Journey?
             </h3>
             <p className="text-gray-200 mb-6 max-w-2xl mx-auto">
-              These tools have been essential to my $4,000+ profit success.
-              Start with the free masterclass to learn the system, then set up
-              your tools.
+              These tools have been essential to my {formattedProfit} profit
+              success. Start with the free masterclass to learn the system, then
+              set up your tools.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
