@@ -184,8 +184,28 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
               </div>
             </div>
             {/* END of space-y-6 text container */}
+          </div>
+          {/* END of relative wrapper for Patrick's section */}
 
-            {/* Moses Section - EXACT COPY of Patrick's structure above */}
+          {/* Moses Section - NEW relative wrapper, separate from above */}
+          <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm rounded-2xl border border-blue-400/20 p-8 shadow-lg shadow-blue-500/10 mb-8">
+            {/* Mobile: Image at top */}
+            <div className="flex justify-center mb-8 lg:hidden">
+              <div className="relative">
+                <div className="w-64 h-64 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
+                  <img
+                    src="/moses-sprinkler.jpeg"
+                    alt="Moses enjoying the sprinkler"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                {/* Decorative elements */}
+                <div className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-pink-400 to-red-400 rounded-full shadow-lg shadow-pink-400/40"></div>
+                <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full shadow-lg shadow-purple-400/40"></div>
+              </div>
+            </div>
+
+            {/* Desktop: Image floated left with text wrapping around */}
             <div className="relative">
               <div className="hidden lg:block float-left mr-8 mb-6">
                 <div className="relative">
@@ -225,7 +245,10 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
                 </p>
               </div>
             </div>
+          </div>
+          {/* END Moses container */}
 
+          <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm rounded-2xl border border-blue-400/20 p-8 shadow-lg shadow-blue-500/10 mb-8">
             {/* Section 6: Why I'm Sharing - Also outside */}
             <div className="mt-6">
               <h3 className="text-2xl font-bold text-blue-300 mb-4 flex items-center gap-2">
