@@ -1,4 +1,3 @@
-
 import {
   DollarSign,
   Target,
@@ -7,21 +6,12 @@ import {
   Smartphone,
   ArrowRight,
 } from "lucide-react";
-import { tradingData, calculateDailyAverage } from "../data/tradingResults";
-import {
-  liveTradingData,
-  calculateLiveDailyAverage,
-} from "../data/liveTrading";
+import { useGoogleSheetsData } from "../hooks/useGoogleSheetsData";
 import { calculateTimeSinceStart } from "../utils/tradingTime";
 
 export const BusinessCardLanding: React.FC = () => {
-  // Use your existing data logic
-  const currentData = liveTradingData.isLiveData
-    ? liveTradingData
-    : tradingData;
-  const dailyAvg = liveTradingData.isLiveData
-    ? calculateLiveDailyAverage()
-    : calculateDailyAverage();
+  // Use live Google Sheets data (same as main page)
+  const { tradingStats, isLoading } = useGoogleSheetsData();
 
   // Get dynamic time since start
   const timeSinceStart = calculateTimeSinceStart();
@@ -29,6 +19,18 @@ export const BusinessCardLanding: React.FC = () => {
   // Your actual affiliate link with tracking
   const affiliateLink =
     "https://dailyprofits.link/class?utm_source=business_card&utm_medium=nfc_qr&utm_campaign=live_results_2024";
+
+  // Show loading state briefly
+  if (isLoading || !tradingStats) {
+    return (
+      <section className="relative min-h-screen flex items-center justify-center px-4">
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900"></div>
+        <div className="relative text-white text-xl">Loading live data...</div>
+      </section>
+    );
+  }
+
+  const dailyAvg = tradingStats.dailyAvg.toFixed(2);
 
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden pb-10 pt-10">
@@ -66,7 +68,7 @@ export const BusinessCardLanding: React.FC = () => {
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-500/30 to-emerald-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-green-400/40 mb-6 shadow-lg shadow-green-500/20">
             <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
             <span className="text-green-200 font-medium">
-              {liveTradingData.isLiveData ? "LIVE DATA" : "REAL RESULTS"}
+              {tradingStats.isLiveData ? "LIVE DATA" : "REAL RESULTS"}
             </span>
           </div>
 
@@ -96,7 +98,7 @@ export const BusinessCardLanding: React.FC = () => {
 
             <div className="relative text-center">
               <div className="text-4xl font-bold text-green-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-green-300 group-hover:to-emerald-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
-                ${currentData.totalProfit.toLocaleString()}
+                ${tradingStats.totalProfit.toLocaleString()}
               </div>
               <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
                 Total Profits
@@ -119,7 +121,7 @@ export const BusinessCardLanding: React.FC = () => {
 
             <div className="relative text-center">
               <div className="text-4xl font-bold text-blue-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-300 group-hover:to-cyan-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
-                {currentData.totalTrades.toLocaleString()}
+                {tradingStats.totalTrades.toLocaleString()}
               </div>
               <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
                 Total Trades
