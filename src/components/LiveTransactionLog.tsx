@@ -537,11 +537,11 @@ export const LiveTransactionLog: React.FC = () => {
     <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-6 mb-8 overflow-hidden">
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
-        <div className="flex items-center gap-3 min-w-0 flex-1">
+        <div className="flex items-center gap-3 min-w-0">
           <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 p-2 md:p-3 shadow-lg shadow-green-500/40 flex-shrink-0">
             <Activity className="w-full h-full text-white" />
           </div>
-          <div className="min-w-0 flex-1">
+          <div className="min-w-0">
             <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-white truncate">
               TRADING SCOREBOARD
             </h3>
@@ -555,10 +555,10 @@ export const LiveTransactionLog: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-end w-full sm:w-auto">
+        <div className="flex items-center gap-2 flex-shrink-0">
           <button
             onClick={() => setShowOnMobile(!showOnMobile)}
-            className="md:hidden flex items-center gap-1.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full px-2.5 py-1.5 border border-white/20 transition-all flex-shrink-0"
+            className="md:hidden flex items-center gap-1.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full px-2.5 py-1.5 border border-white/20 transition-all"
           >
             {showOnMobile ? (
               <>
@@ -573,7 +573,7 @@ export const LiveTransactionLog: React.FC = () => {
             )}
           </button>
 
-          <div className="flex items-center gap-1.5 bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-full px-2.5 py-1 border border-green-400/30 flex-shrink-0">
+          <div className="flex items-center gap-1.5 bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-full px-2.5 py-1 border border-green-400/30">
             <div
               className={`w-2 h-2 rounded-full ${
                 isCacheHit ? "bg-blue-400" : "bg-green-400"
@@ -588,7 +588,7 @@ export const LiveTransactionLog: React.FC = () => {
 
           <button
             onClick={downloadCSV}
-            className="flex items-center gap-1.5 bg-gradient-to-r from-blue-500/20 to-purple-500/20 hover:from-blue-500/30 hover:to-purple-500/30 backdrop-blur-sm rounded-full px-2.5 py-1.5 border border-blue-400/30 hover:border-blue-400/50 transition-all flex-shrink-0"
+            className="flex items-center gap-1.5 bg-gradient-to-r from-blue-500/20 to-purple-500/20 hover:from-blue-500/30 hover:to-purple-500/30 backdrop-blur-sm rounded-full px-2.5 py-1.5 border border-blue-400/30 hover:border-blue-400/50 transition-all"
             title={`Download ${currentMonthName} CSV`}
           >
             <Download className="w-3.5 h-3.5 text-blue-300" />
