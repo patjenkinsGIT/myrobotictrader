@@ -182,79 +182,74 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
                   profits to scale my investment capital.
                 </p>
               </div>
+
+              {/* Section 5: Moses - The Lifestyle Benefit */}
+              <div>
+                <h3 className="text-2xl font-bold text-pink-300 mb-4 flex items-center gap-2">
+                  <Heart className="w-6 h-6" />
+                  The Best Part: Time with Moses
+                </h3>
+                <p>
+                  <span className="text-pink-200 font-semibold">
+                    I recently got a new dog named Moses, and this automated
+                    system gives me something priceless: time.
+                  </span>{" "}
+                  While my trader works 24/7—executing trades, taking profits,
+                  managing positions—I'm at the park with Moses. I'm not glued
+                  to charts or stressed about missing opportunities.
+                </p>
+                <p className="mt-4">
+                  That's what "Set It and Forget It" really means. The system
+                  handles everything while I actually live my life. No more
+                  choosing between making money and spending time with those I
+                  love. I get both.
+                </p>
+                <p className="mt-4">
+                  Moses and I go to the park almost every day now. Whether it's
+                  morning walks, afternoon sprinkler sessions, or just lounging
+                  in the yard, I'm actually present for these moments. The
+                  autonomous trader is working in the background, but my focus
+                  is where it should be—on the simple joys that make life worth
+                  living.
+                </p>
+                <p className="mt-4">
+                  This is the freedom I always wanted: the ability to generate
+                  income without being chained to a screen, constantly watching
+                  markets and second-guessing decisions. The system does the
+                  work. I enjoy the life.
+                </p>
+              </div>
+
+              {/* Section 6: Why I'm Sharing */}
+              <div>
+                <h3 className="text-2xl font-bold text-blue-300 mb-4 flex items-center gap-2">
+                  <CheckCircle className="w-6 h-6" />
+                  Why I'm Sharing This With You
+                </h3>
+                <p>
+                  I see people struggling with finances every day - having too
+                  much month left at the end of the money. Working overtime just
+                  to stay afloat. Missing out on time with family because they
+                  need that extra shift.
+                </p>
+                <p className="mt-4">
+                  <span className="text-blue-200 font-semibold">
+                    This platform could genuinely help, but not many people know
+                    about it.
+                  </span>{" "}
+                  That's why I built this site and share what's working for me.
+                  As you can see, my total profits are not breaking any records,
+                  but it's consistent and reliable - It's truly "Set It and
+                  Forget It." My trader only takes what the market GIVES. I'm
+                  not a financial guru or marketing expert - I'm just someone
+                  who found something that works and wants to help others
+                  discover it too.
+                </p>
+              </div>
             </div>
             {/* END of space-y-6 text container */}
           </div>
           {/* END of relative wrapper for Patrick's section */}
-
-          {/* Moses Section - IMAGE TEMPORARILY REMOVED FOR TESTING */}
-          <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm rounded-2xl border border-blue-400/20 p-8 shadow-lg shadow-blue-500/10 mb-8">
-            {/* Text with header - NO IMAGE */}
-            <div className="text-lg text-gray-200 leading-relaxed">
-              <h3 className="text-2xl font-bold text-pink-300 mb-4 flex items-center gap-2">
-                <Heart className="w-6 h-6" />
-                The Best Part: Time with Moses
-              </h3>
-              <p>
-                <span className="text-pink-200 font-semibold">
-                  I recently got a new dog named Moses, and this automated
-                  system gives me something priceless: time.
-                </span>{" "}
-                While my trader works 24/7—executing trades, taking profits,
-                managing positions—I'm at the park with Moses. I'm not glued to
-                charts or stressed about missing opportunities.
-              </p>
-              <p className="mt-4">
-                That's what "Set It and Forget It" really means. The system
-                handles everything while I actually live my life. No more
-                choosing between making money and spending time with those I
-                love. I get both.
-              </p>
-              <p className="mt-4">
-                Moses and I go to the park almost every day now. Whether it's
-                morning walks, afternoon sprinkler sessions, or just lounging in
-                the yard, I'm actually present for these moments. The autonomous
-                trader is working in the background, but my focus is where it
-                should be—on the simple joys that make life worth living.
-              </p>
-              <p className="mt-4">
-                This is the freedom I always wanted: the ability to generate
-                income without being chained to a screen, constantly watching
-                markets and second-guessing decisions. The system does the work.
-                I enjoy the life.
-              </p>
-            </div>
-          </div>
-          {/* END Moses container */}
-
-          <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm rounded-2xl border border-blue-400/20 p-8 shadow-lg shadow-blue-500/10 mb-8">
-            {/* Section 6: Why I'm Sharing - Also outside */}
-            <div className="mt-6">
-              <h3 className="text-2xl font-bold text-blue-300 mb-4 flex items-center gap-2">
-                <CheckCircle className="w-6 h-6" />
-                Why I'm Sharing This With You
-              </h3>
-              <p className="text-lg text-gray-200">
-                I see people struggling with finances every day - having too
-                much month left at the end of the money. Working overtime just
-                to stay afloat. Missing out on time with family because they
-                need that extra shift.
-              </p>
-              <p className="mt-4 text-lg text-gray-200">
-                <span className="text-blue-200 font-semibold">
-                  This platform could genuinely help, but not many people know
-                  about it.
-                </span>{" "}
-                That's why I built this site and share what's working for me. As
-                you can see, my total profits are not breaking any records, but
-                it's consistent and reliable - It's truly "Set It and Forget
-                It." My trader only takes what the market GIVES. I'm not a
-                financial guru or marketing expert - I'm just someone who found
-                something that works and wants to help others discover it too.
-              </p>
-            </div>
-          </div>
-          {/* END of relative container */}
         </div>
 
         {/* Stats Grid with Dynamic Data */}
