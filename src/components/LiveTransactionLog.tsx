@@ -8,6 +8,7 @@ import {
   EyeOff,
   ChevronLeft,
   ChevronRight,
+  Download,
 } from "lucide-react";
 import { tradingDataCache } from "../utils/smartCache";
 
@@ -224,7 +225,9 @@ export const LiveTransactionLog: React.FC = () => {
 
   // Get array of months in reverse chronological order (newest first)
   const monthKeys = useMemo(() => {
-    const keys = Object.keys(transactionsByMonth);
+    const keys = Object.keys(transactionsByMonth).filter(
+      (key) => key !== "Unknown"
+    );
     // Sort months by date (newest first)
     return keys.sort((a, b) => {
       const dateA = new Date(a);
@@ -280,6 +283,51 @@ export const LiveTransactionLog: React.FC = () => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
+  };
+
+  // CSV Download functionality
+  const downloadCSV = () => {
+    // Create CSV content from current month's transactions
+    const headers = [
+      "Coin",
+      "Action",
+      "Price",
+      "Quantity",
+      "Profit",
+      "Status",
+      "Timestamp",
+    ];
+    const csvRows = [headers.join(",")];
+
+    currentMonthTransactions.forEach((tx) => {
+      const row = [
+        tx.coin,
+        tx.action,
+        tx.price.replace(/,/g, ""), // Remove commas from price
+        tx.quantity.replace(/,/g, ""), // Remove commas from quantity
+        tx.action === "CLOSE" ? tx.profit.toFixed(2) : "0.00",
+        tx.status === "profit_goal_reached"
+          ? "Profit Goal Reached"
+          : "Completed",
+        `"${tx.timestamp}"`, // Quote timestamp to handle commas
+      ];
+      csvRows.push(row.join(","));
+    });
+
+    const csvContent = csvRows.join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+
+    // Use current month name for filename
+    const filename = `${currentMonthName.replace(" ", "_")}_Transactions.csv`;
+
+    link.setAttribute("href", url);
+    link.setAttribute("download", filename);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   // Fallback data with both OPEN and CLOSED transactions
@@ -589,7 +637,11 @@ export const LiveTransactionLog: React.FC = () => {
               TRADING SCOREBOARD
             </h3>
             <p className="text-xs md:text-sm text-gray-400">
-              {currentMonthName}
+              {currentMonthName ||
+                new Date().toLocaleString("default", {
+                  month: "long",
+                  year: "numeric",
+                })}
             </p>
           </div>
         </div>
@@ -626,6 +678,18 @@ export const LiveTransactionLog: React.FC = () => {
               {cacheStatus.text}
             </span>
           </div>
+
+          {/* CSV Download button */}
+          <button
+            onClick={downloadCSV}
+            className="flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 hover:from-blue-500/30 hover:to-purple-500/30 backdrop-blur-sm rounded-full px-3 py-2 border border-blue-400/30 hover:border-blue-400/50 transition-all duration-200"
+            title={`Download ${currentMonthName} transactions as CSV`}
+          >
+            <Download className="w-4 h-4 text-blue-300" />
+            <span className="hidden sm:inline text-xs text-blue-300 font-medium">
+              CSV
+            </span>
+          </button>
         </div>
       </div>
 
@@ -633,6 +697,68 @@ export const LiveTransactionLog: React.FC = () => {
       {error && (
         <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3 mb-4">
           <p className="text-yellow-400 text-sm">{error}</p>
+        </div>
+      )}
+
+      {/* Month Pagination - Top */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-2 mb-6">
+          <button
+            onClick={() => goToPage(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="p-2 rounded-lg bg-white/8 hover:bg-white/12 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            aria-label="Previous month"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+
+          <div className="flex gap-1 items-center flex-wrap justify-center">
+            {Array.from({ length: Math.min(8, totalPages) }, (_, i) => {
+              let pageNum;
+              if (totalPages <= 8) {
+                pageNum = i + 1;
+              } else if (currentPage <= 4) {
+                pageNum = i + 1;
+              } else if (currentPage >= totalPages - 3) {
+                pageNum = totalPages - 7 + i;
+              } else {
+                pageNum = currentPage - 3 + i;
+              }
+
+              const monthName = monthKeys[pageNum - 1];
+              if (!monthName) return null;
+
+              // Format as "Jan 2025"
+              const [month, year] = monthName.split(" ");
+              const shortMonth = month.substring(0, 3);
+              const shortYear = year ? year.substring(2) : "";
+              const displayText = `${shortMonth} ${shortYear}`;
+
+              return (
+                <button
+                  key={pageNum}
+                  onClick={() => goToPage(pageNum)}
+                  className={`px-2 py-1 rounded-lg text-xs font-medium transition-all ${
+                    currentPage === pageNum
+                      ? "bg-blue-500 text-white shadow-lg"
+                      : "bg-white/8 hover:bg-white/12 text-gray-300"
+                  }`}
+                  title={monthName}
+                >
+                  {displayText}
+                </button>
+              );
+            })}
+          </div>
+
+          <button
+            onClick={() => goToPage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="p-2 rounded-lg bg-white/8 hover:bg-white/12 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            aria-label="Next month"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
         </div>
       )}
 
@@ -655,7 +781,7 @@ export const LiveTransactionLog: React.FC = () => {
             {monthSummary.closedTrades}
           </div>
           <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
-            Closed
+            Closed Trades
           </div>
           <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
         </div>
@@ -666,7 +792,7 @@ export const LiveTransactionLog: React.FC = () => {
             {monthSummary.openTrades}
           </div>
           <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
-            Open
+            Open Trades
           </div>
           <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
         </div>
@@ -677,7 +803,7 @@ export const LiveTransactionLog: React.FC = () => {
             {monthSummary.totalTrades}
           </div>
           <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
-            Total
+            Total Trades
           </div>
           <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
         </div>
@@ -688,7 +814,7 @@ export const LiveTransactionLog: React.FC = () => {
             {monthSummary.successRate}
           </div>
           <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
-            Success
+            Success Rate
           </div>
           <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
         </div>
@@ -941,22 +1067,26 @@ export const LiveTransactionLog: React.FC = () => {
               }
 
               const monthName = monthKeys[pageNum - 1];
-              const shortMonth = monthName
-                ? monthName.split(" ")[0].substring(0, 3)
-                : "";
+              if (!monthName) return null;
+
+              // Format as "Jan 2025"
+              const [month, year] = monthName.split(" ");
+              const shortMonth = month.substring(0, 3);
+              const shortYear = year ? year.substring(2) : "";
+              const displayText = `${shortMonth} ${shortYear}`;
 
               return (
                 <button
                   key={pageNum}
                   onClick={() => goToPage(pageNum)}
-                  className={`px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                  className={`px-2 py-1 rounded-lg text-xs font-medium transition-all ${
                     currentPage === pageNum
                       ? "bg-blue-500 text-white shadow-lg"
                       : "bg-white/8 hover:bg-white/12 text-gray-300"
                   }`}
                   title={monthName}
                 >
-                  {shortMonth}
+                  {displayText}
                 </button>
               );
             })}
