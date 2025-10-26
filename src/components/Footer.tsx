@@ -1,5 +1,11 @@
 import * as React from "react";
-import { ExternalLink, Twitter, ArrowRight, Shield } from "lucide-react";
+import {
+  ExternalLink,
+  Twitter,
+  ArrowRight,
+  Shield,
+  ArrowUp,
+} from "lucide-react";
 
 export const Footer: React.FC = function () {
   return (
@@ -114,7 +120,7 @@ export const Footer: React.FC = function () {
                 Crypto trading involves risk. Past performance doesn't guarantee
                 future results. Only trade with funds you can afford to lose.
                 Consider your risk tolerance carefully. Always do your own
-                research (DOR).
+                research (DYOR).
               </p>
             </div>
 
@@ -171,9 +177,18 @@ export const Footer: React.FC = function () {
             Independent affiliate marketing website. Not affiliated with any
             trading platform or exchange unless explicitly disclosed above.
           </div>
+
+          {/* Back to Top Button */}
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="mt-6 inline-flex items-center gap-2 text-purple-300 hover:text-purple-200 transition-colors group"
+            aria-label="Back to top"
+          >
+            <ArrowUp className="w-4 h-4 group-hover:-translate-y-1 transition-transform" />
+            <span className="text-sm font-medium">Back to Top</span>
+          </button>
         </div>
       </div>
     </footer>
   );
 };
-//update
