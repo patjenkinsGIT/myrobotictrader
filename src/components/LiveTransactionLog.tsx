@@ -344,42 +344,55 @@ export const LiveTransactionLog: React.FC = () => {
         </div>
       </div>
 
-      {/* Summary Cards */}
+      {/* Summary Cards - Enhanced for better visibility */}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-6">
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:border-green-500/30 transition-all">
-          <div className="text-lg font-bold text-green-300">
+        {/* Total Profit */}
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:border-green-400/50 transition-all hover:shadow-lg hover:shadow-green-500/20 text-center">
+          <div className="text-2xl md:text-3xl font-bold text-green-400 mb-1">
             ${pageSummary.totalProfit.toFixed(2)}
           </div>
-          <div className="text-xs text-gray-400">Total Profit</div>
+          <div className="text-sm font-medium text-gray-200">Total Profit</div>
           {pageSummary.dateRange && (
-            <div className="text-xs text-gray-500 mt-1">
+            <div className="text-xs text-gray-400 mt-1">
               {pageSummary.dateRange}
             </div>
           )}
         </div>
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:border-green-500/30 transition-all">
-          <div className="text-lg font-bold text-green-300">
+
+        {/* Closed Trades */}
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:border-green-400/50 transition-all hover:shadow-lg hover:shadow-green-500/20 text-center">
+          <div className="text-2xl md:text-3xl font-bold text-green-400 mb-1">
             {pageSummary.closedCount}
           </div>
-          <div className="text-xs text-gray-400">Closed Trades</div>
+          <div className="text-sm font-medium text-gray-200">Closed Trades</div>
         </div>
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:border-blue-500/30 transition-all">
-          <div className="text-lg font-bold text-blue-300">
+
+        {/* Open Positions */}
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:border-blue-400/50 transition-all hover:shadow-lg hover:shadow-blue-500/20 text-center">
+          <div className="text-2xl md:text-3xl font-bold text-blue-400 mb-1">
             {pageSummary.openCount}
           </div>
-          <div className="text-xs text-gray-400">Open Positions</div>
+          <div className="text-sm font-medium text-gray-200">
+            Open Positions
+          </div>
         </div>
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:border-purple-500/30 transition-all">
-          <div className="text-lg font-bold text-purple-300">
+
+        {/* Total Positions */}
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:border-purple-400/50 transition-all hover:shadow-lg hover:shadow-purple-500/20 text-center">
+          <div className="text-2xl md:text-3xl font-bold text-purple-400 mb-1">
             {pageSummary.totalCount}
           </div>
-          <div className="text-xs text-gray-400">Total Positions</div>
+          <div className="text-sm font-medium text-gray-200">
+            Total Positions
+          </div>
         </div>
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:border-orange-500/30 transition-all">
-          <div className="text-lg font-bold text-orange-300">
+
+        {/* Success Rate */}
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:border-orange-400/50 transition-all hover:shadow-lg hover:shadow-orange-500/20 text-center col-span-2 lg:col-span-1">
+          <div className="text-2xl md:text-3xl font-bold text-orange-400 mb-1">
             {pageSummary.successRate}
           </div>
-          <div className="text-xs text-gray-400">Success Rate</div>
+          <div className="text-sm font-medium text-gray-200">Success Rate</div>
         </div>
       </div>
 
