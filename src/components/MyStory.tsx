@@ -193,7 +193,7 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
               The Best Part: Time with Moses
             </h3>
 
-            {/* Moses Photo - Desktop float LEFT (comes AFTER header) */}
+            {/* Moses Photo - Desktop float LEFT - RIGHT AFTER HEADER */}
             <div className="hidden lg:block float-left mr-8 mb-6">
               <div className="relative">
                 <div className="w-80 h-80 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
