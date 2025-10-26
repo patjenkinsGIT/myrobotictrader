@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-
+import * as React from "react";
 import {
   Bot,
   TrendingUp,
@@ -14,20 +13,12 @@ import { trackEvent } from "../utils/analytics";
 
 const features = [
   {
-    icon: Bot,
-    title: "Autonomous Robotic Trading",
+    icon: Clock,
+    title: "Set It & Forget It",
     description:
-      "Analyzes market patterns and executes trades with AI precision, adapting to changing conditions in real-time. Never worry about charts or timing again.",
-    color: "from-purple-500 to-pink-500",
-    stats: "Unattended Trading",
-  },
-  {
-    icon: TrendingUp,
-    title: "Takes What the Market Gives",
-    description:
-      "Capitalizes on market opportunities as they arise, taking profits when favorable and waiting patiently when not. Smart, patient trading.",
-    color: "from-emerald-500 to-green-500",
-    stats: "Market-Driven Results",
+      "Monitors global markets 24/7, executing trades even while you sleep. Never miss profitable opportunities or stare at charts again.",
+    color: "from-orange-500 to-amber-500",
+    stats: "Always Active",
   },
   {
     icon: Shield,
@@ -38,20 +29,12 @@ const features = [
     stats: "0% Loss Trades",
   },
   {
-    icon: Clock,
-    title: "Set It & Forget It",
+    icon: Bot,
+    title: "AI-Enhanced Autonomous Trading",
     description:
-      "Monitors global markets 24/7, executing trades even while you sleep. Never miss profitable opportunities or stare at charts again.",
-    color: "from-orange-500 to-amber-500",
-    stats: "Always Active",
-  },
-  {
-    icon: Zap,
-    title: "Lightning Fast Execution",
-    description:
-      "Executes trades in milliseconds, capitalizing on market movements before human traders can react. Speed gives you the competitive edge.",
-    color: "from-yellow-500 to-orange-500",
-    stats: "100ms Execution",
+      "Analyzes market patterns and executes trades with AI precision, adapting to changing conditions in real-time. Never worry about charts or timing again.",
+    color: "from-purple-500 to-pink-500",
+    stats: "Unattended Trading",
   },
   {
     icon: DollarSign,
@@ -60,6 +43,22 @@ const features = [
       "Funds remain secure in your Kraken/Coinbase accounts. Trading-only API access means we can never withdraw or transfer your money.",
     color: "from-emerald-500 to-teal-500",
     stats: "Your Keys, Your Crypto",
+  },
+  {
+    icon: TrendingUp,
+    title: "Takes What the Market Gives",
+    description:
+      "Capitalizes on market opportunities as they arise, taking profits when favorable and waiting patiently when not. Smart, patient trading.",
+    color: "from-emerald-500 to-green-500",
+    stats: "Market-Driven Results",
+  },
+  {
+    icon: Zap,
+    title: "Lightning Fast Execution",
+    description:
+      "Executes trades in milliseconds, capitalizing on market movements before human traders can react. Speed gives you the competitive edge.",
+    color: "from-yellow-500 to-orange-500",
+    stats: "100ms Execution",
   },
   {
     icon: BarChart3,
@@ -80,11 +79,11 @@ const features = [
 ];
 
 export const Features: React.FC = function () {
-  const [visibleCards, setVisibleCards] = useState<boolean[]>(
+  const [visibleCards, setVisibleCards] = React.useState<boolean[]>(
     new Array(features.length).fill(false)
   );
 
-  useEffect(() => {
+  React.useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
