@@ -186,7 +186,7 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
             {/* END of space-y-6 text container */}
 
             {/* Moses Section - EXACT copy of Patrick's float structure */}
-            <div className="relative">
+            <div className="relative mt-8 clear-both">
               <div className="hidden lg:block float-left mr-8 mb-6">
                 <div className="relative">
                   <div className="w-64 h-64 rounded-xl overflow-hidden border-3 border-pink-400/30 shadow-xl shadow-pink-500/20">
