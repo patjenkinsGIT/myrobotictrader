@@ -187,7 +187,13 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
               </div>
             </div>
 
-            {/* Moses Photo - Desktop float LEFT */}
+            {/* Section 5: Moses */}
+            <h3 className="text-2xl font-bold text-pink-300 mb-4 flex items-center gap-2">
+              <Heart className="w-6 h-6" />
+              The Best Part: Time with Moses
+            </h3>
+
+            {/* Moses Photo - Desktop float LEFT (comes AFTER header) */}
             <div className="hidden lg:block float-left mr-8 mb-6">
               <div className="relative">
                 <div className="w-80 h-80 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
@@ -202,11 +208,6 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
               </div>
             </div>
 
-            {/* Section 5: Moses */}
-            <h3 className="text-2xl font-bold text-pink-300 mb-4 flex items-center gap-2">
-              <Heart className="w-6 h-6" />
-              The Best Part: Time with Moses
-            </h3>
             <p className="mb-4">
               <span className="text-pink-200 font-semibold">
                 I recently got a new dog named Moses, and this automated system
