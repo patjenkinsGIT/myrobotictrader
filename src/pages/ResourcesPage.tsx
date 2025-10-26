@@ -9,10 +9,14 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { useGoogleSheetsData } from "../hooks/useGoogleSheetsData";
+import { calculateTimeSinceStart } from "../utils/tradingTime";
 
 export const ResourcesPage: React.FC = function () {
   // Get live trading data
   const { tradingStats } = useGoogleSheetsData();
+
+  // Calculate time since starting trading
+  const timeSinceStart = calculateTimeSinceStart();
 
   // Format profit for display
   const formattedProfit = tradingStats?.totalProfit
@@ -74,8 +78,8 @@ export const ResourcesPage: React.FC = function () {
             </h1>
 
             <p className="text-xl text-gray-200 mb-8 max-w-3xl mx-auto">
-              After 8 months of successful automated trading, these are the
-              essential tools and services that have made my crypto journey
+              After {timeSinceStart} of successful automated trading, these are
+              the essential tools and services that have made my crypto journey
               profitable and stress-free.
             </p>
 
