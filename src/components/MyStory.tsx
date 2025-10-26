@@ -190,10 +190,27 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
                   The Best Part: Time with Moses
                 </h3>
 
-                {/* Moses Sprinkler Photo - Floated right on desktop, centered on mobile */}
-                <div className="flex justify-center mb-6 md:float-right md:ml-6 md:mb-4">
+                {/* Moses Sprinkler Photo - Mobile: centered above text */}
+                <div className="flex justify-center mb-6 md:hidden">
                   <div className="relative">
-                    <div className="w-64 h-64 md:w-72 md:h-72 rounded-xl overflow-hidden border-3 border-pink-400/30 shadow-xl shadow-pink-500/20">
+                    <div className="w-64 h-64 rounded-xl overflow-hidden border-3 border-pink-400/30 shadow-xl shadow-pink-500/20">
+                      <img
+                        src="/moses-sprinkler.jpeg"
+                        alt="Moses enjoying the sprinkler"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    {/* Decorative heart accent */}
+                    <div className="absolute -top-3 -right-3 w-8 h-8 bg-gradient-to-r from-pink-400 to-red-400 rounded-full flex items-center justify-center shadow-lg shadow-pink-400/40">
+                      <Heart className="w-5 h-5 text-white fill-white" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Desktop: Image floated LEFT (opposite of Patrick's right float) with text wrapping */}
+                <div className="hidden md:block float-left mr-6 mb-4">
+                  <div className="relative">
+                    <div className="w-72 h-72 rounded-xl overflow-hidden border-3 border-pink-400/30 shadow-xl shadow-pink-500/20">
                       <img
                         src="/moses-sprinkler.jpeg"
                         alt="Moses enjoying the sprinkler"
