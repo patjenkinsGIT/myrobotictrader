@@ -317,3 +317,5 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
     </section>
   );
 };
+
+export default MyStory; // Default export for compatibility
