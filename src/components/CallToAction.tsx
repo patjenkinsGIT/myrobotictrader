@@ -80,7 +80,7 @@ export const CallToAction: React.FC = function () {
             <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
               <ArrowRight className="w-5 h-5 text-purple-300 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-300 transition-colors" />
               <span className="text-lg">
-                How the system avoids lossesâ€”even during market crashes
+                How the system avoids losses even during market crashes
               </span>
             </li>
             <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
