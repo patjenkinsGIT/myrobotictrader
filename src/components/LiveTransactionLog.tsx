@@ -607,16 +607,16 @@ export const LiveTransactionLog: React.FC = () => {
 
       {/* Pagination Top */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-1 sm:gap-2 mb-6 px-2 overflow-x-hidden">
+        <div className="flex items-center justify-center gap-2 mb-6 px-2">
           <button
             onClick={() => goToPage(currentPage - 1)}
             disabled={currentPage === 1}
-            className="p-1.5 sm:p-2 rounded-lg bg-white/8 hover:bg-white/12 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex-shrink-0"
+            className="p-2 rounded-lg bg-white/8 hover:bg-white/12 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex-shrink-0"
           >
-            <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+            <ChevronLeft className="w-5 h-5" />
           </button>
 
-          <div className="flex gap-0.5 sm:gap-1 items-center flex-wrap justify-center max-w-full">
+          <div className="flex gap-1 items-center overflow-x-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent max-w-full px-1">
             {Array.from({ length: Math.min(8, totalPages) }, (_, i) => {
               let pageNum;
               if (totalPages <= 8) {
@@ -641,7 +641,7 @@ export const LiveTransactionLog: React.FC = () => {
                 <button
                   key={pageNum}
                   onClick={() => goToPage(pageNum)}
-                  className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg text-xs font-medium transition-all ${
+                  className={`px-3 py-1 rounded-lg text-xs font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                     currentPage === pageNum
                       ? "bg-blue-500 text-white shadow-lg"
                       : "bg-white/8 hover:bg-white/12 text-gray-300"
@@ -657,9 +657,9 @@ export const LiveTransactionLog: React.FC = () => {
           <button
             onClick={() => goToPage(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="p-1.5 sm:p-2 rounded-lg bg-white/8 hover:bg-white/12 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex-shrink-0"
+            className="p-2 rounded-lg bg-white/8 hover:bg-white/12 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex-shrink-0"
           >
-            <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+            <ChevronRight className="w-5 h-5" />
           </button>
         </div>
       )}
@@ -891,16 +891,16 @@ export const LiveTransactionLog: React.FC = () => {
 
       {/* Pagination Bottom */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-1 sm:gap-2 mt-6 px-2 overflow-x-hidden">
+        <div className="flex items-center justify-center gap-2 mt-6 px-2">
           <button
             onClick={() => goToPage(currentPage - 1)}
             disabled={currentPage === 1}
-            className="p-1.5 sm:p-2 rounded-lg bg-white/8 hover:bg-white/12 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex-shrink-0"
+            className="p-2 rounded-lg bg-white/8 hover:bg-white/12 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex-shrink-0"
           >
-            <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+            <ChevronLeft className="w-5 h-5" />
           </button>
 
-          <div className="flex gap-0.5 sm:gap-1 items-center flex-wrap justify-center max-w-full">
+          <div className="flex gap-1 items-center overflow-x-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent max-w-full px-1">
             {Array.from({ length: Math.min(8, totalPages) }, (_, i) => {
               let pageNum;
               if (totalPages <= 8) {
@@ -925,7 +925,7 @@ export const LiveTransactionLog: React.FC = () => {
                 <button
                   key={pageNum}
                   onClick={() => goToPage(pageNum)}
-                  className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg text-xs font-medium transition-all ${
+                  className={`px-3 py-1 rounded-lg text-xs font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                     currentPage === pageNum
                       ? "bg-blue-500 text-white shadow-lg"
                       : "bg-white/8 hover:bg-white/12 text-gray-300"
@@ -941,9 +941,9 @@ export const LiveTransactionLog: React.FC = () => {
           <button
             onClick={() => goToPage(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="p-1.5 sm:p-2 rounded-lg bg-white/8 hover:bg-white/12 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex-shrink-0"
+            className="p-2 rounded-lg bg-white/8 hover:bg-white/12 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex-shrink-0"
           >
-            <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+            <ChevronRight className="w-5 h-5" />
           </button>
         </div>
       )}
