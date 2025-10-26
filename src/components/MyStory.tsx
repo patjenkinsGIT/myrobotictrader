@@ -1,4 +1,4 @@
-// MyStory.tsx - Personal Story Component - ONE CONTAINER VERSION
+// MyStory.tsx - Personal Story Component - PROPERLY STRUCTURED
 
 import {
   User,
@@ -17,25 +17,19 @@ interface MyStoryProps {
 }
 
 export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
-  // Calculate time since starting trading (January 8, 2025)
   const timeSinceStart = calculateTimeSinceStart();
-
-  // Fallback data if Google Sheets is not available
   const fallbackData = {
     totalProfit: 12450,
     totalTrades: 1247,
     isLiveData: false,
     dailyAvg: 89,
   };
-
-  // Use Google Sheets data if available, otherwise fallback
   const currentData = tradingStats || fallbackData;
   const dailyAvg = tradingStats?.dailyAvg?.toFixed(0) || "89";
   const hasLiveData = tradingStats !== null;
 
   return (
     <section className="py-16 px-4 relative overflow-hidden">
-      {/* Background effects */}
       <div className="absolute inset-0 bg-gradient-to-r from-blue-900/20 to-purple-900/20"></div>
 
       <div className="relative max-w-6xl mx-auto">
@@ -45,7 +39,6 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
             <User className="w-4 h-4 text-blue-300" />
             <span className="text-blue-200 font-medium">My Story</span>
           </div>
-
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
             Hi, I'm Patrick
             <span className="block text-transparent bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text">
@@ -54,9 +47,9 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
           </h2>
         </div>
 
-        {/* ONE BIG CONTAINER - All content flows together */}
+        {/* Main Container */}
         <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm rounded-2xl border border-blue-400/20 p-8 shadow-lg shadow-blue-500/10 mb-8">
-          {/* Patrick's Photo - Mobile version */}
+          {/* Patrick Mobile */}
           <div className="flex justify-center mb-8 lg:hidden">
             <div className="relative">
               <div className="w-64 h-64 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
@@ -71,7 +64,7 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
             </div>
           </div>
 
-          {/* Patrick's Photo - Desktop float RIGHT */}
+          {/* Patrick Desktop Float - OUTSIDE text container */}
           <div className="hidden lg:block float-right ml-8 mb-6">
             <div className="relative">
               <div className="w-80 h-80 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
@@ -86,9 +79,8 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
             </div>
           </div>
 
-          {/* All content in one flowing text container */}
+          {/* Sections 1-4 Text */}
           <div className="text-lg text-gray-200 leading-relaxed">
-            {/* Section 1: My Journey */}
             <h3 className="text-2xl font-bold text-blue-300 mb-4 flex items-center gap-2">
               <Target className="w-6 h-6" />
               My Journey Started Like Yours
@@ -102,7 +94,6 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
               funds? Don't get me started on those.
             </p>
 
-            {/* Section 2: Chasing Income */}
             <h3 className="text-2xl font-bold text-blue-300 mb-4 flex items-center gap-2">
               <DollarSign className="w-6 h-6" />
               Chasing the Dream of Extra Income
@@ -125,7 +116,6 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
               didn't have time to analyze the market.
             </p>
 
-            {/* Section 3: Discovery */}
             <h3 className="text-2xl font-bold text-yellow-300 mb-4 flex items-center gap-2">
               <Lightbulb className="w-6 h-6" />
               Then Everything Changed
@@ -148,7 +138,6 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
               time with family.
             </p>
 
-            {/* Section 4: Results */}
             <h3 className="text-2xl font-bold text-green-300 mb-4 flex items-center gap-2">
               <TrendingUp className="w-6 h-6" />
               The Results Speak for Themselves
@@ -171,43 +160,44 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
               emergencies. I'm also reinvesting a portion of my profits to scale
               my investment capital.
             </p>
+          </div>
 
-            {/* Moses Photo - Mobile version */}
-            <div className="flex justify-center my-8 lg:hidden">
-              <div className="relative">
-                <div className="w-64 h-64 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
-                  <img
-                    src="/moses-sprinkler.jpeg"
-                    alt="Moses enjoying the sprinkler"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-pink-400 to-red-400 rounded-full shadow-lg shadow-pink-400/40"></div>
-                <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full shadow-lg shadow-purple-400/40"></div>
+          {/* Moses Mobile */}
+          <div className="flex justify-center my-8 lg:hidden">
+            <div className="relative">
+              <div className="w-64 h-64 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
+                <img
+                  src="/moses-sprinkler.jpeg"
+                  alt="Moses enjoying the sprinkler"
+                  className="w-full h-full object-cover"
+                />
               </div>
+              <div className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-pink-400 to-red-400 rounded-full shadow-lg shadow-pink-400/40"></div>
+              <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full shadow-lg shadow-purple-400/40"></div>
             </div>
+          </div>
 
-            {/* Section 5: Moses */}
+          {/* Moses Desktop Float - OUTSIDE text container (same level as Patrick) */}
+          <div className="hidden lg:block float-left mr-8 mb-6">
+            <div className="relative">
+              <div className="w-80 h-80 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
+                <img
+                  src="/moses-sprinkler.jpeg"
+                  alt="Moses enjoying the sprinkler"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-pink-400 to-red-400 rounded-full shadow-lg shadow-pink-400/40"></div>
+              <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full shadow-lg shadow-purple-400/40"></div>
+            </div>
+          </div>
+
+          {/* Sections 5-6 Text */}
+          <div className="text-lg text-gray-200 leading-relaxed">
             <h3 className="text-2xl font-bold text-pink-300 mb-4 flex items-center gap-2">
               <Heart className="w-6 h-6" />
               The Best Part: Time with Moses
             </h3>
-
-            {/* Moses Photo - Desktop float LEFT - RIGHT AFTER HEADER */}
-            <div className="hidden lg:block float-left mr-8 mb-6">
-              <div className="relative">
-                <div className="w-80 h-80 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
-                  <img
-                    src="/moses-sprinkler.jpeg"
-                    alt="Moses enjoying the sprinkler"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-pink-400 to-red-400 rounded-full shadow-lg shadow-pink-400/40"></div>
-                <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full shadow-lg shadow-purple-400/40"></div>
-              </div>
-            </div>
-
             <p className="mb-4">
               <span className="text-pink-200 font-semibold">
                 I recently got a new dog named Moses, and this automated system
@@ -237,7 +227,6 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
               enjoy the life.
             </p>
 
-            {/* Section 6: Why I'm Sharing */}
             <h3 className="text-2xl font-bold text-blue-300 mb-4 flex items-center gap-2">
               <CheckCircle className="w-6 h-6" />
               Why I'm Sharing This With You
@@ -261,10 +250,9 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
               that works and wants to help others discover it too.
             </p>
           </div>
-          {/* Clear both floats at the end */}
+
           <div className="clear-both"></div>
         </div>
-        {/* End of ONE BIG CONTAINER */}
 
         {/* Closing Note */}
         <div className="text-center bg-gradient-to-r from-purple-500/10 to-blue-500/10 backdrop-blur-sm rounded-2xl border border-purple-400/20 p-8">
