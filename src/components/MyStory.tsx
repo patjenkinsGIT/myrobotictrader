@@ -157,13 +157,6 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
               The Best Part: Time with Moses
             </h3>
 
-            {/* MOSES PHOTO - Float LEFT - Desktop only */}
-            <img
-              src="/moses-sprinkler.jpeg"
-              alt="Moses enjoying the sprinkler"
-              className="hidden lg:block float-left mr-8 mb-6 w-80 h-80 rounded-2xl object-cover border-4 border-white/20 shadow-2xl shadow-purple-500/20"
-            />
-
             {/* MOSES PHOTO - Mobile only (centered, no float) */}
             <div className="lg:hidden flex justify-center mb-6">
               <img
@@ -172,6 +165,13 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
                 className="w-64 h-64 rounded-2xl object-cover border-4 border-white/20 shadow-2xl shadow-purple-500/20"
               />
             </div>
+
+            {/* MOSES PHOTO - Float LEFT - Desktop only - comes BEFORE first paragraph */}
+            <img
+              src="/moses-sprinkler.jpeg"
+              alt="Moses enjoying the sprinkler"
+              className="hidden lg:block float-left mr-8 mb-6 w-80 h-80 rounded-2xl object-cover border-4 border-white/20 shadow-2xl shadow-purple-500/20"
+            />
 
             <p className="mb-4">
               <span className="text-pink-200 font-semibold">
