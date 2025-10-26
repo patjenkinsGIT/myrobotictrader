@@ -182,48 +182,31 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
                   profits to scale my investment capital.
                 </p>
               </div>
+            </div>
+            {/* END of space-y-6 text container */}
 
-              {/* NEW SECTION: Moses - The Lifestyle Benefit with Image */}
-              <div className="bg-gradient-to-r from-pink-500/10 to-purple-500/10 border-l-4 border-pink-400 pl-6 py-4 rounded-r-lg">
+            {/* Moses Section - EXACT copy of Patrick's float structure */}
+            <div className="relative">
+              <div className="hidden lg:block float-left mr-8 mb-6">
+                <div className="relative">
+                  <div className="w-64 h-64 rounded-xl overflow-hidden border-3 border-pink-400/30 shadow-xl shadow-pink-500/20">
+                    <img
+                      src="/moses-sprinkler.jpeg"
+                      alt="Moses enjoying the sprinkler"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  {/* Decorative heart */}
+                  <div className="absolute -top-3 -right-3 w-6 h-6 bg-gradient-to-r from-pink-400 to-red-400 rounded-full shadow-lg shadow-pink-400/40"></div>
+                </div>
+              </div>
+
+              {/* Text content - same structure as Patrick's sections */}
+              <div className="text-lg text-gray-200 leading-relaxed">
                 <h3 className="text-2xl font-bold text-pink-300 mb-4 flex items-center gap-2">
                   <Heart className="w-6 h-6" />
                   The Best Part: Time with Moses
                 </h3>
-
-                {/* Moses Sprinkler Photo - Mobile: centered above text */}
-                <div className="flex justify-center mb-6 md:hidden">
-                  <div className="relative">
-                    <div className="w-48 h-48 rounded-xl overflow-hidden border-3 border-pink-400/30 shadow-xl shadow-pink-500/20">
-                      <img
-                        src="/moses-sprinkler.jpeg"
-                        alt="Moses enjoying the sprinkler"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    {/* Decorative heart accent */}
-                    <div className="absolute -top-3 -right-3 w-6 h-6 bg-gradient-to-r from-pink-400 to-red-400 rounded-full flex items-center justify-center shadow-lg shadow-pink-400/40">
-                      <Heart className="w-4 h-4 text-white fill-white" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Desktop: Image floated LEFT (opposite of Patrick's right float) with text wrapping */}
-                <div className="hidden md:block float-left mr-6 mb-4">
-                  <div className="relative">
-                    <div className="w-48 h-48 rounded-xl overflow-hidden border-3 border-pink-400/30 shadow-xl shadow-pink-500/20">
-                      <img
-                        src="/moses-sprinkler.jpeg"
-                        alt="Moses enjoying the sprinkler"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    {/* Decorative heart accent */}
-                    <div className="absolute -top-3 -right-3 w-6 h-6 bg-gradient-to-r from-pink-400 to-red-400 rounded-full flex items-center justify-center shadow-lg shadow-pink-400/40">
-                      <Heart className="w-4 h-4 text-white fill-white" />
-                    </div>
-                  </div>
-                </div>
-
                 <p>
                   <span className="text-pink-200 font-semibold">
                     I recently got a new dog named Moses, and this automated
@@ -240,35 +223,35 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
                   love. I get both.
                 </p>
               </div>
+            </div>
 
-              {/* Section 5: Why I'm Sharing */}
-              <div className="bg-blue-500/10 border-l-4 border-blue-400 pl-6 py-4 rounded-r-lg">
-                <h3 className="text-2xl font-bold text-blue-300 mb-4 flex items-center gap-2">
-                  <CheckCircle className="w-6 h-6" />
-                  Why I'm Sharing This With You
-                </h3>
-                <p>
-                  I see people struggling with finances every day - having too
-                  much month left at the end of the money. Working overtime just
-                  to stay afloat. Missing out on time with family because they
-                  need that extra shift.
-                </p>
-                <p className="mt-4">
-                  <span className="text-blue-200 font-semibold">
-                    This platform could genuinely help, but not many people know
-                    about it.
-                  </span>{" "}
-                  That's why I built this site and share what's working for me.
-                  As you can see, my total profits are not breaking any records,
-                  but it's consistent and reliable - It's truly "Set It and
-                  Forget It." My trader only takes what the market GIVES. I'm
-                  not a financial guru or marketing expert - I'm just someone
-                  who found something that works and wants to help others
-                  discover it too.
-                </p>
-              </div>
+            {/* Section 6: Why I'm Sharing - Also outside */}
+            <div className="mt-6">
+              <h3 className="text-2xl font-bold text-blue-300 mb-4 flex items-center gap-2">
+                <CheckCircle className="w-6 h-6" />
+                Why I'm Sharing This With You
+              </h3>
+              <p className="text-lg text-gray-200">
+                I see people struggling with finances every day - having too
+                much month left at the end of the money. Working overtime just
+                to stay afloat. Missing out on time with family because they
+                need that extra shift.
+              </p>
+              <p className="mt-4 text-lg text-gray-200">
+                <span className="text-blue-200 font-semibold">
+                  This platform could genuinely help, but not many people know
+                  about it.
+                </span>{" "}
+                That's why I built this site and share what's working for me. As
+                you can see, my total profits are not breaking any records, but
+                it's consistent and reliable - It's truly "Set It and Forget
+                It." My trader only takes what the market GIVES. I'm not a
+                financial guru or marketing expert - I'm just someone who found
+                something that works and wants to help others discover it too.
+              </p>
             </div>
           </div>
+          {/* END of relative container */}
         </div>
 
         {/* Stats Grid with Dynamic Data */}
