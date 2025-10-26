@@ -129,6 +129,11 @@ const faqData = [
         answer:
           "August and September 2025 saw a market-wide correction after July's peak. Bitcoin dominance stayed above 58%, preventing the expected 'alt season' from materializing. During these down markets, the trader accumulates more inventory at better prices—when markets recover, those accumulated positions generate significantly larger profits. Every month remains profitable despite lower activity, which proves the system works in all market conditions.",
       },
+      {
+        question: "Can I download the trading data?",
+        answer:
+          "Yes! You can download the complete trade log as a CSV file for your own analysis. Click the download button on the trade log to export all transactions with timestamps, cryptocurrencies, buy/sell prices, and profit amounts. Perfect for tracking in Excel, importing to your own spreadsheet, or keeping detailed records.",
+      },
     ],
   },
   {
@@ -155,6 +160,25 @@ const faqData = [
         question: "Can I use this outside the USA?",
         answer:
           "Yes! Available worldwide as long as you can trade on Coinbase or Kraken. Simply verify you can create and fund an account with either exchange in your region.",
+      },
+      {
+        question: "Should I get Coinbase One?",
+        answer: (
+          <>
+            Absolutely! Coinbase One saves me hundreds monthly with $0 trading
+            fees. When you're making multiple trades daily, those fees add up
+            fast. The API integration is perfect for automated trading, and it's
+            what I personally use.{" "}
+            <a
+              href="https://dailyprofits.link/coinbase"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-purple-300 hover:text-purple-200 underline transition-colors duration-200"
+            >
+              Get Coinbase One here
+            </a>
+          </>
+        ),
       },
     ],
   },
@@ -243,6 +267,26 @@ const faqData = [
         answer:
           "For active trading, faster-moving currencies often provide more opportunities. However, established coins like BTC and ETH may be better suited for long-term dollar cost averaging strategies due to their stability and growth potential over time. These are examples only - we provide technical support, not investment advice.",
       },
+      {
+        question: "How do I handle taxes on my trading profits?",
+        answer: (
+          <>
+            Crypto taxes can be complex with hundreds of trades. I personally
+            use CoinTracker to automatically track all my trades and generate
+            tax reports. It connects to Coinbase and Kraken, calculates your
+            gains/losses, and creates the forms your accountant needs (8949,
+            Schedule D). Saves me hours of manual work.{" "}
+            <a
+              href="https://dailyprofits.link/cointracker"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-purple-300 hover:text-purple-200 underline transition-colors duration-200"
+            >
+              Get CoinTracker here
+            </a>
+          </>
+        ),
+      },
     ],
   },
   {
@@ -250,6 +294,11 @@ const faqData = [
     icon: Bot,
     color: "from-orange-500 to-red-500",
     questions: [
+      {
+        question: "Why Coinbase and Kraken instead of other exchanges?",
+        answer:
+          "The robotic trading platform was developed specifically for Coinbase and Kraken. These are the only exchanges with approved API integrations from the developer. They also happen to be two of the most reliable and secure exchanges available, which is why the platform was built for them. The API connections are rock-solid for automated trading.",
+      },
       {
         question: "What exchanges do you support?",
         answer:
