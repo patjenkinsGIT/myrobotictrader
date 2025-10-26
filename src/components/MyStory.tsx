@@ -1,4 +1,4 @@
-// MyStory.tsx - Personal Story Component - FRESH REWRITE
+// MyStory.tsx - Personal Story Component - ONE CONTAINER VERSION
 
 import {
   User,
@@ -54,9 +54,9 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
           </h2>
         </div>
 
-        {/* Main Story Container */}
+        {/* ONE BIG CONTAINER - All content flows together */}
         <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm rounded-2xl border border-blue-400/20 p-8 shadow-lg shadow-blue-500/10 mb-8">
-          {/* Patrick's Photo - Mobile Only */}
+          {/* Patrick's Photo - Mobile version */}
           <div className="flex justify-center mb-8 lg:hidden">
             <div className="relative">
               <div className="w-64 h-64 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
@@ -71,7 +71,7 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
             </div>
           </div>
 
-          {/* Patrick's Photo - Desktop Float */}
+          {/* Patrick's Photo - Desktop float RIGHT */}
           <div className="hidden lg:block float-right ml-8 mb-6">
             <div className="relative">
               <div className="w-80 h-80 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
@@ -86,206 +86,184 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
             </div>
           </div>
 
-          {/* Story Content */}
-          <div className="text-lg text-gray-200 leading-relaxed space-y-6">
+          {/* All content in one flowing text container */}
+          <div className="text-lg text-gray-200 leading-relaxed">
             {/* Section 1: My Journey */}
-            <div>
-              <h3 className="text-2xl font-bold text-blue-300 mb-4 flex items-center gap-2">
-                <Target className="w-6 h-6" />
-                My Journey Started Like Yours
-              </h3>
-              <p>
-                I've been following the markets since 2014, and I genuinely love
-                investing. I did okay with my stock investments, but tracking
-                individual stocks became incredibly tedious. I got frustrated
-                with mutual funds because of their fees and average returns -
-                even index funds weren't delivering what I hoped for. Target
-                date funds? Don't get me started on those.
-              </p>
-            </div>
+            <h3 className="text-2xl font-bold text-blue-300 mb-4 flex items-center gap-2">
+              <Target className="w-6 h-6" />
+              My Journey Started Like Yours
+            </h3>
+            <p className="mb-6">
+              I've been following the markets since 2014, and I genuinely love
+              investing. I did okay with my stock investments, but tracking
+              individual stocks became incredibly tedious. I got frustrated with
+              mutual funds because of their fees and average returns - even
+              index funds weren't delivering what I hoped for. Target date
+              funds? Don't get me started on those.
+            </p>
 
             {/* Section 2: Chasing Income */}
-            <div>
-              <h3 className="text-2xl font-bold text-blue-300 mb-4 flex items-center gap-2">
-                <DollarSign className="w-6 h-6" />
-                Chasing the Dream of Extra Income
-              </h3>
-              <p>
-                <span className="text-blue-200 font-semibold">
-                  Like many of you, I've always wanted to make extra income in
-                  addition to my 9-to-5 job.
-                </span>{" "}
-                Over the years, I invested tens of thousands in various courses
-                and systems - email marketing, affiliate marketing, Amazon
-                wholesale, you name it. Some methods seemed unreliable, and
-                honestly, part of the problem was probably me not putting in
-                full effort or knowing how to position myself properly.
-              </p>
-              <p className="mt-4">
-                I was tired of chasing the next "breakthrough" system. Tired of
-                complex strategies that required constant attention. Tired of
-                watching opportunities slip by because I was stuck at work or
-                didn't have time to analyze the market.
-              </p>
-            </div>
+            <h3 className="text-2xl font-bold text-blue-300 mb-4 flex items-center gap-2">
+              <DollarSign className="w-6 h-6" />
+              Chasing the Dream of Extra Income
+            </h3>
+            <p className="mb-4">
+              <span className="text-blue-200 font-semibold">
+                Like many of you, I've always wanted to make extra income in
+                addition to my 9-to-5 job.
+              </span>{" "}
+              Over the years, I invested tens of thousands in various courses
+              and systems - email marketing, affiliate marketing, Amazon
+              wholesale, you name it. Some methods seemed unreliable, and
+              honestly, part of the problem was probably me not putting in full
+              effort or knowing how to position myself properly.
+            </p>
+            <p className="mb-6">
+              I was tired of chasing the next "breakthrough" system. Tired of
+              complex strategies that required constant attention. Tired of
+              watching opportunities slip by because I was stuck at work or
+              didn't have time to analyze the market.
+            </p>
 
             {/* Section 3: Discovery */}
-            <div>
-              <h3 className="text-2xl font-bold text-yellow-300 mb-4 flex items-center gap-2">
-                <Lightbulb className="w-6 h-6" />
-                Then Everything Changed
-              </h3>
-              <p>
-                So when I discovered this autonomous trading system while
-                researching new opportunities, my first thought was:{" "}
-                <span className="italic text-yellow-200 font-semibold">
-                  "Here's just another system promising easy money."
-                </span>{" "}
-                I was naturally skeptical - and you should be too.
-              </p>
-              <p className="mt-4">
-                <span className="text-green-300 font-bold">
-                  But this one is truly automated!
-                </span>{" "}
-                I set it up, connected my exchange accounts with trading-only
-                API permissions, and started with a small amount to test it. The
-                autonomous trader trades while I'm working, sleeping, or
-                spending time with family.
-              </p>
-            </div>
+            <h3 className="text-2xl font-bold text-yellow-300 mb-4 flex items-center gap-2">
+              <Lightbulb className="w-6 h-6" />
+              Then Everything Changed
+            </h3>
+            <p className="mb-4">
+              So when I discovered this autonomous trading system while
+              researching new opportunities, my first thought was:{" "}
+              <span className="italic text-yellow-200 font-semibold">
+                "Here's just another system promising easy money."
+              </span>{" "}
+              I was naturally skeptical - and you should be too.
+            </p>
+            <p className="mb-6">
+              <span className="text-green-300 font-bold">
+                But this one is truly automated!
+              </span>{" "}
+              I set it up, connected my exchange accounts with trading-only API
+              permissions, and started with a small amount to test it. The
+              autonomous trader trades while I'm working, sleeping, or spending
+              time with family.
+            </p>
 
             {/* Section 4: Results */}
-            <div>
-              <h3 className="text-2xl font-bold text-green-300 mb-4 flex items-center gap-2">
-                <TrendingUp className="w-6 h-6" />
-                The Results Speak for Themselves
-              </h3>
-              <p>
-                <span className="text-green-400 font-bold text-xl">
-                  In just {timeSinceStart}, my system has generated $
-                  {currentData.totalProfit.toLocaleString()} in realized
-                  profits.
-                </span>{" "}
-                That's an average of{" "}
-                <span className="text-green-300 font-semibold">
-                  ${dailyAvg} per day
-                </span>{" "}
-                - money that's been withdrawn and spent on real life.
-              </p>
-              <p className="mt-4">
-                This isn't paper gains or "what if" projections. This is actual
-                cash that I use for every day living. As of now, it's giving me
-                the extra money to spend for every day expenses and save for
-                emergencies. I'm also reinvesting a portion of my profits to
-                scale my investment capital.
-              </p>
-            </div>
-          </div>
-          {/* Clear float */}
-          <div className="clear-both"></div>
-        </div>
-        {/* End Main Story Container */}
+            <h3 className="text-2xl font-bold text-green-300 mb-4 flex items-center gap-2">
+              <TrendingUp className="w-6 h-6" />
+              The Results Speak for Themselves
+            </h3>
+            <p className="mb-4">
+              <span className="text-green-400 font-bold text-xl">
+                In just {timeSinceStart}, my system has generated $
+                {currentData.totalProfit.toLocaleString()} in realized profits.
+              </span>{" "}
+              That's an average of{" "}
+              <span className="text-green-300 font-semibold">
+                ${dailyAvg} per day
+              </span>{" "}
+              - money that's been withdrawn and spent on real life.
+            </p>
+            <p className="mb-6">
+              This isn't paper gains or "what if" projections. This is actual
+              cash that I use for every day living. As of now, it's giving me
+              the extra money to spend for every day expenses and save for
+              emergencies. I'm also reinvesting a portion of my profits to scale
+              my investment capital.
+            </p>
 
-        {/* Moses Section - Separate Container */}
-        <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm rounded-2xl border border-blue-400/20 p-8 shadow-lg shadow-blue-500/10 mb-8">
-          {/* Moses Photo - Mobile Only */}
-          <div className="flex justify-center mb-8 lg:hidden">
-            <div className="relative">
-              <div className="w-64 h-64 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
-                <img
-                  src="/moses-sprinkler.jpeg"
-                  alt="Moses enjoying the sprinkler"
-                  className="w-full h-full object-cover"
-                />
+            {/* Moses Photo - Mobile version */}
+            <div className="flex justify-center my-8 lg:hidden">
+              <div className="relative">
+                <div className="w-64 h-64 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
+                  <img
+                    src="/moses-sprinkler.jpeg"
+                    alt="Moses enjoying the sprinkler"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-pink-400 to-red-400 rounded-full shadow-lg shadow-pink-400/40"></div>
+                <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full shadow-lg shadow-purple-400/40"></div>
               </div>
-              <div className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-pink-400 to-red-400 rounded-full shadow-lg shadow-pink-400/40"></div>
-              <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full shadow-lg shadow-purple-400/40"></div>
             </div>
-          </div>
 
-          {/* Moses Photo - Desktop Float */}
-          <div className="hidden lg:block float-left mr-8 mb-6">
-            <div className="relative">
-              <div className="w-80 h-80 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
-                <img
-                  src="/moses-sprinkler.jpeg"
-                  alt="Moses enjoying the sprinkler"
-                  className="w-full h-full object-cover"
-                />
+            {/* Moses Photo - Desktop float LEFT */}
+            <div className="hidden lg:block float-left mr-8 mb-6">
+              <div className="relative">
+                <div className="w-80 h-80 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
+                  <img
+                    src="/moses-sprinkler.jpeg"
+                    alt="Moses enjoying the sprinkler"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-pink-400 to-red-400 rounded-full shadow-lg shadow-pink-400/40"></div>
+                <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full shadow-lg shadow-purple-400/40"></div>
               </div>
-              <div className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-pink-400 to-red-400 rounded-full shadow-lg shadow-pink-400/40"></div>
-              <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full shadow-lg shadow-purple-400/40"></div>
             </div>
-          </div>
 
-          {/* Moses Content */}
-          <div className="text-lg text-gray-200 leading-relaxed space-y-6">
             {/* Section 5: Moses */}
-            <div>
-              <h3 className="text-2xl font-bold text-pink-300 mb-4 flex items-center gap-2">
-                <Heart className="w-6 h-6" />
-                The Best Part: Time with Moses
-              </h3>
-              <p>
-                <span className="text-pink-200 font-semibold">
-                  I recently got a new dog named Moses, and this automated
-                  system gives me something priceless: time.
-                </span>{" "}
-                While my trader works 24/7—executing trades, taking profits,
-                managing positions—I'm at the park with Moses. I'm not glued to
-                charts or stressed about missing opportunities.
-              </p>
-              <p className="mt-4">
-                That's what "Set It and Forget It" really means. The system
-                handles everything while I actually live my life. No more
-                choosing between making money and spending time with those I
-                love. I get both.
-              </p>
-              <p className="mt-4">
-                Moses and I go to the park almost every day now. Whether it's
-                morning walks, afternoon sprinkler sessions, or just lounging in
-                the yard, I'm actually present for these moments. The autonomous
-                trader is working in the background, but my focus is where it
-                should be—on the simple joys that make life worth living.
-              </p>
-              <p className="mt-4">
-                This is the freedom I always wanted: the ability to generate
-                income without being chained to a screen, constantly watching
-                markets and second-guessing decisions. The system does the work.
-                I enjoy the life.
-              </p>
-            </div>
+            <h3 className="text-2xl font-bold text-pink-300 mb-4 flex items-center gap-2">
+              <Heart className="w-6 h-6" />
+              The Best Part: Time with Moses
+            </h3>
+            <p className="mb-4">
+              <span className="text-pink-200 font-semibold">
+                I recently got a new dog named Moses, and this automated system
+                gives me something priceless: time.
+              </span>{" "}
+              While my trader works 24/7—executing trades, taking profits,
+              managing positions—I'm at the park with Moses. I'm not glued to
+              charts or stressed about missing opportunities.
+            </p>
+            <p className="mb-4">
+              That's what "Set It and Forget It" really means. The system
+              handles everything while I actually live my life. No more choosing
+              between making money and spending time with those I love. I get
+              both.
+            </p>
+            <p className="mb-4">
+              Moses and I go to the park almost every day now. Whether it's
+              morning walks, afternoon sprinkler sessions, or just lounging in
+              the yard, I'm actually present for these moments. The autonomous
+              trader is working in the background, but my focus is where it
+              should be—on the simple joys that make life worth living.
+            </p>
+            <p className="mb-6">
+              This is the freedom I always wanted: the ability to generate
+              income without being chained to a screen, constantly watching
+              markets and second-guessing decisions. The system does the work. I
+              enjoy the life.
+            </p>
 
             {/* Section 6: Why I'm Sharing */}
-            <div>
-              <h3 className="text-2xl font-bold text-blue-300 mb-4 flex items-center gap-2">
-                <CheckCircle className="w-6 h-6" />
-                Why I'm Sharing This With You
-              </h3>
-              <p>
-                I see people struggling with finances every day - having too
-                much month left at the end of the money. Working overtime just
-                to stay afloat. Missing out on time with family because they
-                need that extra shift.
-              </p>
-              <p className="mt-4">
-                <span className="text-blue-200 font-semibold">
-                  This platform could genuinely help, but not many people know
-                  about it.
-                </span>{" "}
-                That's why I built this site and share what's working for me. As
-                you can see, my total profits are not breaking any records, but
-                it's consistent and reliable - It's truly "Set It and Forget
-                It." My trader only takes what the market GIVES. I'm not a
-                financial guru or marketing expert - I'm just someone who found
-                something that works and wants to help others discover it too.
-              </p>
-            </div>
+            <h3 className="text-2xl font-bold text-blue-300 mb-4 flex items-center gap-2">
+              <CheckCircle className="w-6 h-6" />
+              Why I'm Sharing This With You
+            </h3>
+            <p className="mb-4">
+              I see people struggling with finances every day - having too much
+              month left at the end of the money. Working overtime just to stay
+              afloat. Missing out on time with family because they need that
+              extra shift.
+            </p>
+            <p className="mb-6">
+              <span className="text-blue-200 font-semibold">
+                This platform could genuinely help, but not many people know
+                about it.
+              </span>{" "}
+              That's why I built this site and share what's working for me. As
+              you can see, my total profits are not breaking any records, but
+              it's consistent and reliable - It's truly "Set It and Forget It."
+              My trader only takes what the market GIVES. I'm not a financial
+              guru or marketing expert - I'm just someone who found something
+              that works and wants to help others discover it too.
+            </p>
           </div>
-          {/* Clear float */}
+          {/* Clear both floats at the end */}
           <div className="clear-both"></div>
         </div>
-        {/* End Moses Container */}
+        {/* End of ONE BIG CONTAINER */}
 
         {/* Closing Note */}
         <div className="text-center bg-gradient-to-r from-purple-500/10 to-blue-500/10 backdrop-blur-sm rounded-2xl border border-purple-400/20 p-8">
