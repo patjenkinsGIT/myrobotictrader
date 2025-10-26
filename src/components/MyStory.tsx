@@ -1,4 +1,4 @@
-// MyStory.tsx - Personal Story Component - PROPERLY STRUCTURED
+// MyStory.tsx - SIMPLE VERSION: One container, two floated images, text flows naturally
 
 import {
   User,
@@ -47,40 +47,27 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
           </h2>
         </div>
 
-        {/* Main Container */}
+        {/* ONE BIG CONTAINER - Everything flows together */}
         <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm rounded-2xl border border-blue-400/20 p-8 shadow-lg shadow-blue-500/10 mb-8">
-          {/* Patrick Mobile */}
-          <div className="flex justify-center mb-8 lg:hidden">
-            <div className="relative">
-              <div className="w-64 h-64 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
-                <img
-                  src="/patrick-and-moses.jpeg"
-                  alt="Patrick Jenkins with Moses"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full shadow-lg shadow-green-400/40"></div>
-              <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full shadow-lg shadow-purple-400/40"></div>
-            </div>
+          {/* PATRICK PHOTO - Float RIGHT - Desktop only */}
+          <img
+            src="/patrick-and-moses.jpeg"
+            alt="Patrick Jenkins with Moses"
+            className="hidden lg:block float-right ml-8 mb-6 w-80 h-80 rounded-2xl object-cover border-4 border-white/20 shadow-2xl shadow-purple-500/20"
+          />
+
+          {/* PATRICK PHOTO - Mobile only (centered, no float) */}
+          <div className="lg:hidden flex justify-center mb-8">
+            <img
+              src="/patrick-and-moses.jpeg"
+              alt="Patrick Jenkins with Moses"
+              className="w-64 h-64 rounded-2xl object-cover border-4 border-white/20 shadow-2xl shadow-purple-500/20"
+            />
           </div>
 
-          {/* Patrick Desktop Float - OUTSIDE text container */}
-          <div className="hidden lg:block float-right ml-8 mb-6">
-            <div className="relative">
-              <div className="w-80 h-80 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
-                <img
-                  src="/patrick-and-moses.jpeg"
-                  alt="Patrick Jenkins with Moses"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full shadow-lg shadow-green-400/40"></div>
-              <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full shadow-lg shadow-purple-400/40"></div>
-            </div>
-          </div>
-
-          {/* Sections 1-4 Text */}
+          {/* ALL TEXT CONTENT - Flows naturally around images */}
           <div className="text-lg text-gray-200 leading-relaxed">
+            {/* Section 1 */}
             <h3 className="text-2xl font-bold text-blue-300 mb-4 flex items-center gap-2">
               <Target className="w-6 h-6" />
               My Journey Started Like Yours
@@ -94,6 +81,7 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
               funds? Don't get me started on those.
             </p>
 
+            {/* Section 2 */}
             <h3 className="text-2xl font-bold text-blue-300 mb-4 flex items-center gap-2">
               <DollarSign className="w-6 h-6" />
               Chasing the Dream of Extra Income
@@ -116,6 +104,7 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
               didn't have time to analyze the market.
             </p>
 
+            {/* Section 3 */}
             <h3 className="text-2xl font-bold text-yellow-300 mb-4 flex items-center gap-2">
               <Lightbulb className="w-6 h-6" />
               Then Everything Changed
@@ -138,6 +127,7 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
               time with family.
             </p>
 
+            {/* Section 4 */}
             <h3 className="text-2xl font-bold text-green-300 mb-4 flex items-center gap-2">
               <TrendingUp className="w-6 h-6" />
               The Results Speak for Themselves
@@ -160,44 +150,29 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
               emergencies. I'm also reinvesting a portion of my profits to scale
               my investment capital.
             </p>
-          </div>
 
-          {/* Moses Mobile */}
-          <div className="flex justify-center my-8 lg:hidden">
-            <div className="relative">
-              <div className="w-64 h-64 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
-                <img
-                  src="/moses-sprinkler.jpeg"
-                  alt="Moses enjoying the sprinkler"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-pink-400 to-red-400 rounded-full shadow-lg shadow-pink-400/40"></div>
-              <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full shadow-lg shadow-purple-400/40"></div>
-            </div>
-          </div>
-
-          {/* Moses Desktop Float - OUTSIDE text container (same level as Patrick) */}
-          <div className="hidden lg:block float-left mr-8 mb-6">
-            <div className="relative">
-              <div className="w-80 h-80 rounded-2xl overflow-hidden border-4 border-white/20 shadow-2xl shadow-purple-500/20">
-                <img
-                  src="/moses-sprinkler.jpeg"
-                  alt="Moses enjoying the sprinkler"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-pink-400 to-red-400 rounded-full shadow-lg shadow-pink-400/40"></div>
-              <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full shadow-lg shadow-purple-400/40"></div>
-            </div>
-          </div>
-
-          {/* Sections 5-6 Text */}
-          <div className="text-lg text-gray-200 leading-relaxed">
+            {/* Section 5 - MOSES */}
             <h3 className="text-2xl font-bold text-pink-300 mb-4 flex items-center gap-2">
               <Heart className="w-6 h-6" />
               The Best Part: Time with Moses
             </h3>
+
+            {/* MOSES PHOTO - Float LEFT - Desktop only */}
+            <img
+              src="/moses-sprinkler.jpeg"
+              alt="Moses enjoying the sprinkler"
+              className="hidden lg:block float-left mr-8 mb-6 w-80 h-80 rounded-2xl object-cover border-4 border-white/20 shadow-2xl shadow-purple-500/20"
+            />
+
+            {/* MOSES PHOTO - Mobile only (centered, no float) */}
+            <div className="lg:hidden flex justify-center mb-6">
+              <img
+                src="/moses-sprinkler.jpeg"
+                alt="Moses enjoying the sprinkler"
+                className="w-64 h-64 rounded-2xl object-cover border-4 border-white/20 shadow-2xl shadow-purple-500/20"
+              />
+            </div>
+
             <p className="mb-4">
               <span className="text-pink-200 font-semibold">
                 I recently got a new dog named Moses, and this automated system
@@ -227,6 +202,7 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
               enjoy the life.
             </p>
 
+            {/* Section 6 */}
             <h3 className="text-2xl font-bold text-blue-300 mb-4 flex items-center gap-2">
               <CheckCircle className="w-6 h-6" />
               Why I'm Sharing This With You
@@ -251,6 +227,7 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
             </p>
           </div>
 
+          {/* Clear floats at the end */}
           <div className="clear-both"></div>
         </div>
 
