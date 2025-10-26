@@ -361,25 +361,25 @@ export const LiveTransactionLog: React.FC = () => {
           <div className="text-lg font-bold text-green-300">
             {pageSummary.closedCount}
           </div>
-          <div className="text-xs text-gray-400">Closed</div>
+          <div className="text-xs text-gray-400">Closed Trades</div>
         </div>
         <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:border-blue-500/30 transition-all">
           <div className="text-lg font-bold text-blue-300">
             {pageSummary.openCount}
           </div>
-          <div className="text-xs text-gray-400">Open</div>
+          <div className="text-xs text-gray-400">Open Positions</div>
         </div>
         <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:border-purple-500/30 transition-all">
           <div className="text-lg font-bold text-purple-300">
             {pageSummary.totalCount}
           </div>
-          <div className="text-xs text-gray-400">Total</div>
+          <div className="text-xs text-gray-400">Total Positions</div>
         </div>
         <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:border-orange-500/30 transition-all">
           <div className="text-lg font-bold text-orange-300">
             {pageSummary.successRate}
           </div>
-          <div className="text-xs text-gray-400">Success</div>
+          <div className="text-xs text-gray-400">Success Rate</div>
         </div>
       </div>
 
