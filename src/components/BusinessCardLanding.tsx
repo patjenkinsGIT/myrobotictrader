@@ -75,13 +75,13 @@ export const BusinessCardLanding: React.FC = () => {
           {/* Welcome message */}
           <div className="mb-6">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
-              Thanks for tapping my card! 👋
+              Thanks for scanning my card! 👋
             </h1>
             <p className="text-xl md:text-2xl text-gray-200 mb-2">
               Here are my LIVE trading results:
             </p>
             <p className="text-lg text-purple-200">
-              "Set It and Forget It" in action
+              Real profits. Real transparency. Zero BS.
             </p>
           </div>
         </div>
@@ -156,6 +156,22 @@ export const BusinessCardLanding: React.FC = () => {
           </div>
         </div>
 
+        {/* Social Proof Badge - NEW */}
+        <div className="max-w-2xl mx-auto mb-10">
+          <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-2xl border border-green-400/30 p-6 shadow-lg shadow-green-500/20">
+            <div className="flex items-center justify-center gap-3 mb-2">
+              <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+              <span className="text-green-300 font-bold text-lg">
+                10 Months. 10 Winning Months.
+              </span>
+              <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+            </div>
+            <p className="text-gray-200 text-sm text-center">
+              100% profitable months since January 2025 • Every. Single. Month.
+            </p>
+          </div>
+        </div>
+
         {/* CTA Buttons - matching your Hero style */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
           <a
@@ -164,7 +180,7 @@ export const BusinessCardLanding: React.FC = () => {
             rel="noopener noreferrer"
             className="group bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2"
           >
-            Get FREE Access Now
+            Watch Free Training
             <ExternalLink className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </a>
 
@@ -173,7 +189,7 @@ export const BusinessCardLanding: React.FC = () => {
             className="group border-2 border-white/40 hover:border-white/60 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 backdrop-blur-sm hover:bg-white/15 flex items-center justify-center gap-2 shadow-lg shadow-white/10"
           >
             <Smartphone className="w-5 h-5" />
-            View Full Site
+            Explore Full Site
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </a>
         </div>
@@ -181,7 +197,7 @@ export const BusinessCardLanding: React.FC = () => {
         {/* Secondary info */}
         <div className="text-center">
           <p className="text-sm text-yellow-300 font-medium mb-4">
-            🔥 Limited Time: Free Access to Daily Profits Class
+            🎯 Watch the free masterclass to see how the system works
           </p>
           <p className="text-xs text-gray-500 max-w-sm mx-auto leading-relaxed">
             * Actual trading results from my personal account. Started January
