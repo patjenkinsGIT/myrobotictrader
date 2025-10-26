@@ -243,6 +243,20 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
                   choosing between making money and spending time with those I
                   love. I get both.
                 </p>
+                <p className="mt-4">
+                  Moses and I go to the park almost every day now. Whether it's
+                  morning walks, afternoon sprinkler sessions, or just lounging
+                  in the yard, I'm actually present for these moments. The
+                  autonomous trader is working in the background, but my focus
+                  is where it should be—on the simple joys that make life worth
+                  living.
+                </p>
+                <p className="mt-4">
+                  This is the freedom I always wanted: the ability to generate
+                  income without being chained to a screen, constantly watching
+                  markets and second-guessing decisions. The system does the
+                  work. I enjoy the life.
+                </p>
               </div>
             </div>
           </div>
