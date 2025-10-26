@@ -1,5 +1,15 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { Activity, Clock, Target, TrendingUp, Eye, EyeOff } from "lucide-react";
+import {
+  Activity,
+  Clock,
+  Target,
+  TrendingUp,
+  Eye,
+  EyeOff,
+  ChevronLeft,
+  ChevronRight,
+  Download,
+} from "lucide-react";
 import { tradingDataCache } from "../utils/smartCache";
 
 export interface LiveTransaction {
@@ -20,9 +30,10 @@ export const LiveTransactionLog: React.FC = () => {
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [showOnMobile, setShowOnMobile] = useState(false);
   const [isCacheHit, setIsCacheHit] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Constants
-  const SHEET_TAB = "Last25Results";
+  const SHEET_TAB = "Transactions Raw Data";
   const SHEET_RANGE = "A:G";
 
   // Format price to display properly
@@ -161,6 +172,163 @@ export const LiveTransactionLog: React.FC = () => {
     },
     [formatPrice, formatQuantity, formatTimestamp, parseStatus]
   );
+
+  // Group transactions by month
+  const transactionsByMonth = useMemo(() => {
+    const grouped: { [key: string]: LiveTransaction[] } = {};
+
+    transactions.forEach((tx) => {
+      // Extract month/year from timestamp
+      const timestamp = tx.timestamp;
+      let monthKey = "";
+
+      if (timestamp.toLowerCase().includes("today")) {
+        const now = new Date();
+        monthKey = `${now.toLocaleString("default", {
+          month: "long",
+        })} ${now.getFullYear()}`;
+      } else {
+        // Try to parse the date
+        try {
+          const date = new Date(timestamp);
+          if (!isNaN(date.getTime())) {
+            monthKey = `${date.toLocaleString("default", {
+              month: "long",
+            })} ${date.getFullYear()}`;
+          } else {
+            // If parsing fails, try to extract from format like "9/8 12:26 PM"
+            const match = timestamp.match(/(\d+)\/(\d+)/);
+            if (match) {
+              const month = parseInt(match[1]);
+              const year = new Date().getFullYear();
+              const date = new Date(year, month - 1);
+              monthKey = `${date.toLocaleString("default", {
+                month: "long",
+              })} ${year}`;
+            } else {
+              monthKey = "Unknown";
+            }
+          }
+        } catch (e) {
+          monthKey = "Unknown";
+        }
+      }
+
+      if (!grouped[monthKey]) {
+        grouped[monthKey] = [];
+      }
+      grouped[monthKey].push(tx);
+    });
+
+    return grouped;
+  }, [transactions]);
+
+  // Get array of months in reverse chronological order (newest first)
+  const monthKeys = useMemo(() => {
+    const keys = Object.keys(transactionsByMonth).filter(
+      (key) => key !== "Unknown"
+    );
+    // Sort months by date (newest first)
+    return keys.sort((a, b) => {
+      const dateA = new Date(a);
+      const dateB = new Date(b);
+      return dateB.getTime() - dateA.getTime();
+    });
+  }, [transactionsByMonth]);
+
+  // Get current month's transactions
+  const currentMonthTransactions = useMemo(() => {
+    const monthKey = monthKeys[currentPage - 1];
+    return monthKey ? transactionsByMonth[monthKey] : [];
+  }, [transactionsByMonth, monthKeys, currentPage]);
+
+  // Calculate totals for current month
+  const monthSummary = useMemo(() => {
+    const closedTransactions = currentMonthTransactions.filter(
+      (tx) => tx.action === "CLOSE"
+    );
+    const openTransactions = currentMonthTransactions.filter(
+      (tx) => tx.action === "OPEN"
+    );
+    const totalProfit = closedTransactions.reduce(
+      (sum, tx) => sum + tx.profit,
+      0
+    );
+    const profitGoalCount = closedTransactions.filter(
+      (tx) => tx.status === "profit_goal_reached"
+    ).length;
+    const successRate =
+      closedTransactions.length > 0
+        ? (
+            (closedTransactions.length / closedTransactions.length) *
+            100
+          ).toFixed(1)
+        : "100.0";
+
+    return {
+      totalProfit: `$${totalProfit.toFixed(2)}`,
+      closedTrades: closedTransactions.length,
+      openTrades: openTransactions.length,
+      totalTrades: currentMonthTransactions.length,
+      successRate: `${successRate}%`,
+      profitGoals: profitGoalCount,
+    };
+  }, [currentMonthTransactions]);
+
+  // Pagination helpers
+  const totalPages = monthKeys.length;
+  const currentMonthName = monthKeys[currentPage - 1] || "Unknown";
+
+  const goToPage = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  // CSV Download functionality
+  const downloadCSV = () => {
+    // Create CSV content from current month's transactions
+    const headers = [
+      "Coin",
+      "Action",
+      "Price",
+      "Quantity",
+      "Profit",
+      "Status",
+      "Timestamp",
+    ];
+    const csvRows = [headers.join(",")];
+
+    currentMonthTransactions.forEach((tx) => {
+      const row = [
+        tx.coin,
+        tx.action,
+        tx.price.replace(/,/g, ""), // Remove commas from price
+        tx.quantity.replace(/,/g, ""), // Remove commas from quantity
+        tx.action === "CLOSE" ? tx.profit.toFixed(2) : "0.00",
+        tx.status === "profit_goal_reached"
+          ? "Profit Goal Reached"
+          : "Completed",
+        `"${tx.timestamp}"`, // Quote timestamp to handle commas
+      ];
+      csvRows.push(row.join(","));
+    });
+
+    const csvContent = csvRows.join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+
+    // Use current month name for filename
+    const filename = `${currentMonthName.replace(" ", "_")}_Transactions.csv`;
+
+    link.setAttribute("href", url);
+    link.setAttribute("download", filename);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   // Fallback data with both OPEN and CLOSED transactions
   const getFallbackData = useCallback((): LiveTransaction[] => {
@@ -382,33 +550,6 @@ export const LiveTransactionLog: React.FC = () => {
     fetchTransactions();
   }, [fetchTransactions]);
 
-  // Calculate summary stats from current transactions - ONLY CLOSED TRADES FOR PROFIT
-  const summary = useMemo(() => {
-    const closedTransactions = transactions.filter(
-      (tx) => tx.action === "CLOSE"
-    );
-    const openTransactions = transactions.filter((tx) => tx.action === "OPEN");
-
-    // Only closed trades have profit
-    const totalProfit = closedTransactions.reduce(
-      (sum, tx) => sum + tx.profit,
-      0
-    );
-
-    const profitGoalReached = closedTransactions.filter(
-      (tx) => tx.status === "profit_goal_reached"
-    ).length;
-
-    return {
-      totalProfit,
-      totalTrades: transactions.length,
-      closedTrades: closedTransactions.length,
-      openTrades: openTransactions.length,
-      profitGoalReached,
-      successRate: "100%",
-    };
-  }, [transactions]);
-
   const getCoinColor = (coin: string) => {
     const colors: { [key: string]: string } = {
       BTC: "text-orange-400",
@@ -484,55 +625,71 @@ export const LiveTransactionLog: React.FC = () => {
   const cacheStatus = getCacheStatus();
 
   return (
-    <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-6 mb-8 overflow-hidden">
+    <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-6 mb-8">
       {/* Header with live indicator and mobile toggle */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 p-2 md:p-3 shadow-lg shadow-green-500/40 flex-shrink-0">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 p-2 md:p-3 shadow-lg shadow-green-500/40">
             <Activity className="w-full h-full text-white" />
           </div>
-          <div className="min-w-0">
-            <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-white truncate">
+          <div>
+            <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-white">
               TRADING SCOREBOARD
             </h3>
-            <p className="text-xs md:text-sm text-gray-400 truncate">
-              Last {transactions.length} Transactions
+            <p className="text-xs md:text-sm text-gray-400">
+              {currentMonthName ||
+                new Date().toLocaleString("default", {
+                  month: "long",
+                  year: "numeric",
+                })}
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+        <div className="flex items-center gap-3">
           {/* Mobile toggle button */}
           <button
             onClick={() => setShowOnMobile(!showOnMobile)}
-            className="md:hidden flex items-center gap-1.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full px-2.5 py-1.5 border border-white/20 transition-all duration-200"
+            className="md:hidden flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full px-3 py-2 border border-white/20 transition-all duration-200"
           >
             {showOnMobile ? (
               <>
-                <EyeOff className="w-3.5 h-3.5 text-gray-300" />
-                <span className="text-xs text-gray-300">Hide</span>
+                <EyeOff className="w-4 h-4 text-gray-300" />
+                <span className="text-xs text-gray-300">Hide Details</span>
               </>
             ) : (
               <>
-                <Eye className="w-3.5 h-3.5 text-gray-300" />
-                <span className="text-xs text-gray-300">Show</span>
+                <Eye className="w-4 h-4 text-gray-300" />
+                <span className="text-xs text-gray-300">Show Details</span>
               </>
             )}
           </button>
 
           {/* Smart Cache indicator */}
-          <div className="flex items-center gap-1.5 bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-full px-2.5 py-1 border border-green-400/30">
+          <div className="flex items-center gap-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-full px-3 py-1 border border-green-400/30">
             <div
               className={`w-2 h-2 rounded-full ${
                 isCacheHit ? "bg-blue-400" : "bg-green-400"
-              } animate-pulse flex-shrink-0`}
+              } animate-pulse`}
             ></div>
             <span
-              className={`text-xs font-medium ${cacheStatus.color} whitespace-nowrap`}
+              className={`text-xs md:text-sm font-medium ${cacheStatus.color}`}
             >
               {cacheStatus.text}
             </span>
           </div>
+
+          {/* CSV Download button */}
+          <button
+            onClick={downloadCSV}
+            className="flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 hover:from-blue-500/30 hover:to-purple-500/30 backdrop-blur-sm rounded-full px-3 py-2 border border-blue-400/30 hover:border-blue-400/50 transition-all duration-200"
+            title={`Download ${currentMonthName} transactions as CSV`}
+          >
+            <Download className="w-4 h-4 text-blue-300" />
+            <span className="hidden sm:inline text-xs text-blue-300 font-medium">
+              CSV
+            </span>
+          </button>
         </div>
       </div>
 
@@ -543,12 +700,74 @@ export const LiveTransactionLog: React.FC = () => {
         </div>
       )}
 
+      {/* Month Pagination - Top */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-2 mb-6">
+          <button
+            onClick={() => goToPage(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="p-2 rounded-lg bg-white/8 hover:bg-white/12 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            aria-label="Previous month"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+
+          <div className="flex gap-1 items-center flex-wrap justify-center">
+            {Array.from({ length: Math.min(8, totalPages) }, (_, i) => {
+              let pageNum;
+              if (totalPages <= 8) {
+                pageNum = i + 1;
+              } else if (currentPage <= 4) {
+                pageNum = i + 1;
+              } else if (currentPage >= totalPages - 3) {
+                pageNum = totalPages - 7 + i;
+              } else {
+                pageNum = currentPage - 3 + i;
+              }
+
+              const monthName = monthKeys[pageNum - 1];
+              if (!monthName) return null;
+
+              // Format as "Jan 2025"
+              const [month, year] = monthName.split(" ");
+              const shortMonth = month.substring(0, 3);
+              const shortYear = year ? year.substring(2) : "";
+              const displayText = `${shortMonth} ${shortYear}`;
+
+              return (
+                <button
+                  key={pageNum}
+                  onClick={() => goToPage(pageNum)}
+                  className={`px-2 py-1 rounded-lg text-xs font-medium transition-all ${
+                    currentPage === pageNum
+                      ? "bg-blue-500 text-white shadow-lg"
+                      : "bg-white/8 hover:bg-white/12 text-gray-300"
+                  }`}
+                  title={monthName}
+                >
+                  {displayText}
+                </button>
+              );
+            })}
+          </div>
+
+          <button
+            onClick={() => goToPage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="p-2 rounded-lg bg-white/8 hover:bg-white/12 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            aria-label="Next month"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </div>
+      )}
+
       {/* Summary stats - Always visible, optimized for mobile */}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-2 md:gap-4 mb-6">
         <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-green-500/15 text-center">
           <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-500 opacity-0 group-hover:opacity-15 rounded-xl transition-opacity duration-300"></div>
           <div className="relative text-sm md:text-lg font-bold text-green-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-green-300 group-hover:to-emerald-300 group-hover:bg-clip-text transition-all duration-300">
-            ${summary.totalProfit.toFixed(2)}
+            {monthSummary.totalProfit}
           </div>
           <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
             Total Profit
@@ -559,10 +778,10 @@ export const LiveTransactionLog: React.FC = () => {
         <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-green-500/15 text-center">
           <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-500 opacity-0 group-hover:opacity-15 rounded-xl transition-opacity duration-300"></div>
           <div className="relative text-sm md:text-lg font-bold text-green-400 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-green-400 group-hover:to-emerald-400 group-hover:bg-clip-text transition-all duration-300">
-            {summary.closedTrades}
+            {monthSummary.closedTrades}
           </div>
           <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
-            Closed
+            Closed Trades
           </div>
           <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
         </div>
@@ -570,10 +789,10 @@ export const LiveTransactionLog: React.FC = () => {
         <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-blue-500/15 text-center">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-15 rounded-xl transition-opacity duration-300"></div>
           <div className="relative text-sm md:text-lg font-bold text-blue-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-300 group-hover:to-cyan-300 group-hover:bg-clip-text transition-all duration-300">
-            {summary.openTrades}
+            {monthSummary.openTrades}
           </div>
           <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
-            Open
+            Open Trades
           </div>
           <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
         </div>
@@ -581,10 +800,10 @@ export const LiveTransactionLog: React.FC = () => {
         <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/15 text-center">
           <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-500 opacity-0 group-hover:opacity-15 rounded-xl transition-opacity duration-300"></div>
           <div className="relative text-sm md:text-lg font-bold text-purple-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-300 group-hover:to-pink-300 group-hover:bg-clip-text transition-all duration-300">
-            {summary.totalTrades}
+            {monthSummary.totalTrades}
           </div>
           <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
-            Total
+            Total Trades
           </div>
           <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
         </div>
@@ -592,29 +811,25 @@ export const LiveTransactionLog: React.FC = () => {
         <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-orange-500/15 text-center col-span-2 lg:col-span-1">
           <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-amber-500 opacity-0 group-hover:opacity-15 rounded-xl transition-opacity duration-300"></div>
           <div className="relative text-sm md:text-lg font-bold text-orange-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-orange-300 group-hover:to-amber-300 group-hover:bg-clip-text transition-all duration-300">
-            {summary.successRate}
+            {monthSummary.successRate}
           </div>
           <div className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
-            Success
+            Success Rate
           </div>
           <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
         </div>
       </div>
 
       {/* Last updated info */}
-      <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-2 mb-4 px-2">
-        <Clock className="w-3 h-3 md:w-4 md:h-4 text-gray-400 flex-shrink-0" />
-        <span className="text-xs text-gray-400 text-center break-words">
+      <div className="flex items-center justify-center gap-2 mb-4">
+        <Clock className="w-3 h-3 md:w-4 md:h-4 text-gray-400" />
+        <span className="text-xs text-gray-400">
           Last updated: {lastUpdated.toLocaleTimeString()}
           {isCacheHit && (
-            <span className="text-blue-400 ml-1 sm:ml-2">
-              • Smart Cache Hit
-            </span>
+            <span className="text-blue-400 ml-2">• Smart Cache Hit</span>
           )}
           {!isCacheHit && cacheStatus.text === "LIVE" && (
-            <span className="text-green-400 ml-1 sm:ml-2">
-              • Fresh Data Cached
-            </span>
+            <span className="text-green-400 ml-2">• Fresh Data Cached</span>
           )}
         </span>
       </div>
@@ -628,72 +843,74 @@ export const LiveTransactionLog: React.FC = () => {
         {/* Mobile-first transaction list - Card layout for mobile, table for desktop */}
         <div className="block md:hidden">
           {/* Mobile Card Layout */}
-          <div className="space-y-2 p-2 max-h-96 overflow-y-auto overflow-x-hidden">
-            {transactions.length === 0 ? (
+          <div className="space-y-2 p-2 max-h-96 overflow-y-auto">
+            {currentMonthTransactions.length === 0 ? (
               <div className="p-8 text-center text-gray-400">
-                No transactions available
+                No transactions available for {currentMonthName}
               </div>
             ) : (
-              transactions.map((transaction) => (
+              currentMonthTransactions.map((transaction) => (
                 <div
                   key={transaction.id}
                   className={`bg-white/5 rounded-lg p-3 border border-white/10 ${
                     transaction.action === "OPEN"
                       ? "border-l-2 border-l-blue-400"
                       : ""
-                  } max-w-full`}
+                  }`}
                 >
                   {/* Top row: Coin and Action */}
-                  <div className="flex items-center justify-between mb-2 gap-2 min-w-0">
-                    <div className="flex items-center gap-2 min-w-0 flex-1">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
                       <span
                         className={`font-bold text-sm ${getCoinColor(
                           transaction.coin
-                        )} flex-shrink-0`}
+                        )}`}
                       >
                         {transaction.coin}
                       </span>
                       <span
-                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getActionColor(
+                        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getActionColor(
                           transaction.action
-                        )} flex-shrink-0`}
+                        )}`}
                       >
                         {transaction.action}
                       </span>
                     </div>
-                    <div className="text-xs text-gray-400 flex-shrink-0 truncate max-w-[120px]">
+                    <div className="text-xs text-gray-400">
                       {transaction.timestamp}
                     </div>
                   </div>
 
                   {/* Middle row: Price and Quantity */}
-                  <div className="flex items-center justify-between mb-2 gap-2">
-                    <div className="text-xs text-gray-300 truncate flex-1 min-w-0">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="text-xs text-gray-300">
                       <span className="text-gray-500">Price:</span>{" "}
-                      <span className="font-mono">{transaction.price}</span>
+                      {transaction.price}
                     </div>
-                    <div className="text-xs text-gray-300 truncate flex-1 min-w-0 text-right">
+                    <div className="text-xs text-gray-300">
                       <span className="text-gray-500">Qty:</span>{" "}
-                      <span className="font-mono">{transaction.quantity}</span>
+                      {transaction.quantity}
                     </div>
                   </div>
 
                   {/* Bottom row: Profit and Status */}
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="flex-shrink-0">
+                  <div className="flex items-center justify-between">
+                    <div>
                       {transaction.action === "CLOSE" ? (
                         <div
-                          className={`font-bold text-sm font-mono ${getProfitColor(
+                          className={`font-bold text-sm ${getProfitColor(
                             transaction.profit
                           )}`}
                         >
                           +${transaction.profit.toFixed(2)}
                         </div>
                       ) : (
-                        <div className="text-gray-500 text-sm">Active</div>
+                        <div className="text-gray-500 text-sm">
+                          Active Position
+                        </div>
                       )}
                     </div>
-                    <div className="flex items-center gap-1 flex-shrink-0">
+                    <div className="flex items-center gap-1">
                       {transaction.status === "profit_goal_reached" && (
                         <>
                           <Target className="w-3 h-3 text-yellow-400" />
@@ -730,12 +947,12 @@ export const LiveTransactionLog: React.FC = () => {
 
           {/* Scrollable transaction list */}
           <div className="max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
-            {transactions.length === 0 ? (
+            {currentMonthTransactions.length === 0 ? (
               <div className="p-8 text-center text-gray-400">
-                No transactions available
+                No transactions available for {currentMonthName}
               </div>
             ) : (
-              transactions.map((transaction, index) => (
+              currentMonthTransactions.map((transaction, index) => (
                 <div
                   key={transaction.id}
                   className={`px-4 py-3 border-b border-white/5 hover:bg-white/5 transition-colors duration-200 ${
@@ -824,9 +1041,71 @@ export const LiveTransactionLog: React.FC = () => {
         </div>
       </div>
 
-      {/* Footer note - CLEANED UP AND MOBILE OPTIMIZED */}
-      <div className="mt-4 text-center px-2">
-        <p className="text-xs text-gray-500 break-words">
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-2 mt-6">
+          <button
+            onClick={() => goToPage(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="p-2 rounded-lg bg-white/8 hover:bg-white/12 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            aria-label="Previous month"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+
+          <div className="flex gap-1 items-center">
+            {Array.from({ length: Math.min(8, totalPages) }, (_, i) => {
+              let pageNum;
+              if (totalPages <= 8) {
+                pageNum = i + 1;
+              } else if (currentPage <= 4) {
+                pageNum = i + 1;
+              } else if (currentPage >= totalPages - 3) {
+                pageNum = totalPages - 7 + i;
+              } else {
+                pageNum = currentPage - 3 + i;
+              }
+
+              const monthName = monthKeys[pageNum - 1];
+              if (!monthName) return null;
+
+              // Format as "Jan 2025"
+              const [month, year] = monthName.split(" ");
+              const shortMonth = month.substring(0, 3);
+              const shortYear = year ? year.substring(2) : "";
+              const displayText = `${shortMonth} ${shortYear}`;
+
+              return (
+                <button
+                  key={pageNum}
+                  onClick={() => goToPage(pageNum)}
+                  className={`px-2 py-1 rounded-lg text-xs font-medium transition-all ${
+                    currentPage === pageNum
+                      ? "bg-blue-500 text-white shadow-lg"
+                      : "bg-white/8 hover:bg-white/12 text-gray-300"
+                  }`}
+                  title={monthName}
+                >
+                  {displayText}
+                </button>
+              );
+            })}
+          </div>
+
+          <button
+            onClick={() => goToPage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="p-2 rounded-lg bg-white/8 hover:bg-white/12 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            aria-label="Next month"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </div>
+      )}
+
+      {/* Footer note - CLEANED UP */}
+      <div className="mt-4 text-center">
+        <p className="text-xs text-gray-500">
           ✅ Smart Cache enabled • Live data with intelligent caching •{" "}
           <span className="text-green-400 font-medium">
             Shows both Open & Closed positions
@@ -834,7 +1113,7 @@ export const LiveTransactionLog: React.FC = () => {
         </p>
         {!showOnMobile && (
           <p className="text-xs text-gray-500 mt-1 md:hidden">
-            Tap "Show" to view transaction history
+            Tap "Show Details" to view transaction history
           </p>
         )}
       </div>
