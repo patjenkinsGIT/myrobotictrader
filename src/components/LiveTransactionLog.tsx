@@ -555,32 +555,32 @@ export const LiveTransactionLog: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-2 flex-shrink-0">
+        <div className="flex items-center gap-3 flex-shrink-0">
           <button
             onClick={() => setShowOnMobile(!showOnMobile)}
-            className="md:hidden flex items-center gap-1.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full px-2.5 py-1.5 border border-white/20 transition-all"
+            className="md:hidden flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full px-3 py-2 border border-white/20 transition-all"
           >
             {showOnMobile ? (
               <>
-                <EyeOff className="w-3.5 h-3.5 text-gray-300" />
-                <span className="text-xs text-gray-300">Hide</span>
+                <EyeOff className="w-4 h-4 text-gray-300" />
+                <span className="text-sm text-gray-300">Hide</span>
               </>
             ) : (
               <>
-                <Eye className="w-3.5 h-3.5 text-gray-300" />
-                <span className="text-xs text-gray-300">Show</span>
+                <Eye className="w-4 h-4 text-gray-300" />
+                <span className="text-sm text-gray-300">Show</span>
               </>
             )}
           </button>
 
-          <div className="flex items-center gap-1.5 bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-full px-2.5 py-1 border border-green-400/30">
+          <div className="flex items-center gap-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-full px-4 py-2 border border-green-400/30">
             <div
-              className={`w-2 h-2 rounded-full ${
+              className={`w-2.5 h-2.5 rounded-full ${
                 isCacheHit ? "bg-blue-400" : "bg-green-400"
               } animate-pulse`}
             ></div>
             <span
-              className={`text-xs font-medium ${cacheStatus.color} whitespace-nowrap`}
+              className={`text-sm font-semibold ${cacheStatus.color} whitespace-nowrap`}
             >
               {cacheStatus.text}
             </span>
@@ -588,11 +588,14 @@ export const LiveTransactionLog: React.FC = () => {
 
           <button
             onClick={downloadCSV}
-            className="flex items-center gap-1.5 bg-gradient-to-r from-blue-500/20 to-purple-500/20 hover:from-blue-500/30 hover:to-purple-500/30 backdrop-blur-sm rounded-full px-2.5 py-1.5 border border-blue-400/30 hover:border-blue-400/50 transition-all"
+            className="flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 hover:from-blue-500/30 hover:to-purple-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-blue-400/30 hover:border-blue-400/50 transition-all shadow-lg"
             title={`Download ${currentMonthName} CSV`}
           >
-            <Download className="w-3.5 h-3.5 text-blue-300" />
-            <span className="hidden sm:inline text-xs text-blue-300 font-medium whitespace-nowrap">
+            <Download className="w-4 h-4 text-blue-300" />
+            <span className="hidden sm:inline text-sm text-blue-300 font-semibold whitespace-nowrap">
+              Download CSV
+            </span>
+            <span className="sm:hidden text-sm text-blue-300 font-semibold">
               CSV
             </span>
           </button>
