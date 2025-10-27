@@ -735,7 +735,7 @@ export const LiveTransactionLog: React.FC = () => {
                   className={`bg-white/5 rounded-lg p-3 border-t border-r border-b border-white/10 ${
                     tx.action === "OPEN"
                       ? "border-l-4 border-l-blue-400"
-                      : "border-l-4 border-l-green-400"
+                      : "border-l-4 border-l-green-300"
                   } max-w-full`}
                 >
                   <div className="flex items-center justify-between mb-2 gap-2 min-w-0">
@@ -830,7 +830,7 @@ export const LiveTransactionLog: React.FC = () => {
                   } ${
                     tx.action === "OPEN"
                       ? "border-l-4 border-l-blue-400"
-                      : "border-l-4 border-l-green-400"
+                      : "border-l-4 border-l-green-300"
                   }`}
                 >
                   <div className="grid grid-cols-12 gap-2 items-center text-sm">
