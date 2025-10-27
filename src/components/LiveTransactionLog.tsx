@@ -564,7 +564,7 @@ export const LiveTransactionLog: React.FC = () => {
       >
         {/* Mobile Cards */}
         <div className="block md:hidden">
-          <div className="space-y-2 p-2 max-h-96 overflow-y-auto">
+          <div className="space-y-2 p-2 max-h-96 overflow-y-auto overflow-x-hidden">
             {currentMonthTransactions.length === 0 ? (
               <div className="p-8 text-center text-gray-400">
                 No transactions for {currentMonthName}
@@ -573,18 +573,16 @@ export const LiveTransactionLog: React.FC = () => {
               currentMonthTransactions.map((tx) => (
                 <div
                   key={tx.id}
-                  className={`bg-white/5 rounded-lg p-3 border-l-2 ${
+                  className={`bg-white/5 rounded-lg p-3 border border-white/10 ${
                     tx.action === "OPEN"
-                      ? "border-l-blue-400"
-                      : "border-l-green-400"
-                  }`}
+                      ? "border-l-2 border-l-blue-400"
+                      : "border-l-2 border-l-green-400"
+                  } max-w-full`}
                 >
-                  <div className="flex items-center justify-between mb-2 gap-2">
-                    <div className="flex items-center gap-2 flex-1 min-w-0">
+                  <div className="flex items-center justify-between mb-2 gap-2 min-w-0">
+                    <div className="flex items-center gap-2 min-w-0 flex-1">
                       <span
-                        className={`font-bold text-sm truncate ${getCoinColor(
-                          tx.coin
-                        )}`}
+                        className={`font-bold text-sm ${getCoinColor(tx.coin)}`}
                       >
                         {tx.coin}
                       </span>
