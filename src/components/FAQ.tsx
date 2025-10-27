@@ -418,7 +418,7 @@ export const FAQ: React.FC = () => {
         </div>
 
         {/* CTA at bottom */}
-        <div className="mt-12 text-center bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+        <div className="mt-20 text-center bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
           <h3 className="text-2xl font-bold text-white mb-4">
             Still Have Questions?
           </h3>
