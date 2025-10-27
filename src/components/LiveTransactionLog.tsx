@@ -732,11 +732,12 @@ export const LiveTransactionLog: React.FC = () => {
               currentMonthTransactions.map((tx) => (
                 <div
                   key={tx.id}
-                  className={`bg-white/5 rounded-lg p-3 border-t border-r border-b border-white/10 ${
+                  className="bg-white/5 rounded-lg p-3 border-t border-r border-b border-white/10 border-l-4 max-w-full"
+                  style={
                     tx.action === "OPEN"
-                      ? "border-l-4 border-l-blue-400"
-                      : "border-l-4 border-l-green-300"
-                  } max-w-full`}
+                      ? { borderLeftColor: "#60a5fa" }
+                      : { borderLeftColor: "#4ade80" }
+                  }
                 >
                   <div className="flex items-center justify-between mb-2 gap-2 min-w-0">
                     <div className="flex items-center gap-2 min-w-0 flex-1">
@@ -827,11 +828,12 @@ export const LiveTransactionLog: React.FC = () => {
                   key={tx.id}
                   className={`px-4 py-3 border-b border-white/5 hover:bg-white/5 ${
                     index % 2 === 0 ? "bg-white/2" : ""
-                  } ${
+                  } border-l-4`}
+                  style={
                     tx.action === "OPEN"
-                      ? "border-l-4 border-l-blue-400"
-                      : "border-l-4 border-l-green-300"
-                  }`}
+                      ? { borderLeftColor: "#60a5fa" }
+                      : { borderLeftColor: "#4ade80" }
+                  }
                 >
                   <div className="grid grid-cols-12 gap-2 items-center text-sm">
                     <div className="col-span-2">
