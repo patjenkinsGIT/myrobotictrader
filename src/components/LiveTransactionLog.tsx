@@ -8,6 +8,7 @@ import {
   EyeOff,
   ChevronLeft,
   ChevronRight,
+  Download,
 } from "lucide-react";
 import { tradingDataCache } from "../utils/smartCache";
 
@@ -25,6 +26,7 @@ export interface LiveTransaction {
 export const LiveTransactionLog: React.FC = () => {
   const [transactions, setTransactions] = useState<LiveTransaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [showOnMobile, setShowOnMobile] = useState(false);
   const [isCacheHit, setIsCacheHit] = useState(false);
@@ -220,46 +222,107 @@ export const LiveTransactionLog: React.FC = () => {
 
   // Get array of months in reverse chronological order
   const monthKeys = useMemo(() => {
-    return Object.keys(transactionsByMonth).sort((a, b) => {
-      if (a === "Unknown") return 1;
-      if (b === "Unknown") return -1;
-
+    const keys = Object.keys(transactionsByMonth).filter(
+      (key) => key !== "Unknown"
+    );
+    return keys.sort((a, b) => {
       const dateA = new Date(a);
       const dateB = new Date(b);
       return dateB.getTime() - dateA.getTime();
     });
   }, [transactionsByMonth]);
 
-  const totalPages = monthKeys.length;
-
   // Get current month's transactions
-  const currentMonthName = monthKeys[currentPage - 1] || "";
-  const currentMonthTransactions = transactionsByMonth[currentMonthName] || [];
+  const currentMonthTransactions = useMemo(() => {
+    const monthKey = monthKeys[currentPage - 1];
+    return monthKey ? transactionsByMonth[monthKey] : [];
+  }, [transactionsByMonth, monthKeys, currentPage]);
 
   // Calculate totals for current month
-  const { totalProfit, closedCount, openCount } = useMemo(() => {
-    const closed = currentMonthTransactions.filter(
+  const monthSummary = useMemo(() => {
+    const closedTransactions = currentMonthTransactions.filter(
       (tx) => tx.action === "CLOSE"
     );
-    const open = currentMonthTransactions.filter((tx) => tx.action === "OPEN");
-    const profit = closed.reduce((sum, tx) => sum + tx.profit, 0);
+    const openTransactions = currentMonthTransactions.filter(
+      (tx) => tx.action === "OPEN"
+    );
+    const totalProfit = closedTransactions.reduce(
+      (sum, tx) => sum + tx.profit,
+      0
+    );
+    const profitGoalCount = closedTransactions.filter(
+      (tx) => tx.status === "profit_goal_reached"
+    ).length;
+    const successRate =
+      closedTransactions.length > 0
+        ? (
+            (closedTransactions.length / closedTransactions.length) *
+            100
+          ).toFixed(1)
+        : "100.0";
 
     return {
-      totalProfit: profit,
-      closedCount: closed.length,
-      openCount: open.length,
+      totalProfit: `$${totalProfit.toFixed(2)}`,
+      closedTrades: closedTransactions.length,
+      openTrades: openTransactions.length,
+      totalTrades: currentMonthTransactions.length,
+      successRate: `${successRate}%`,
+      profitGoals: profitGoalCount,
     };
   }, [currentMonthTransactions]);
 
-  // Navigation handlers
-  const goToPage = useCallback(
-    (page: number) => {
-      if (page >= 1 && page <= totalPages) {
-        setCurrentPage(page);
-      }
-    },
-    [totalPages]
-  );
+  // Pagination helpers
+  const totalPages = monthKeys.length;
+  const currentMonthName = monthKeys[currentPage - 1] || "Unknown";
+
+  const goToPage = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  // CSV Download functionality
+  const downloadCSV = () => {
+    const headers = [
+      "Coin",
+      "Action",
+      "Price",
+      "Quantity",
+      "Profit",
+      "Status",
+      "Timestamp",
+    ];
+    const csvRows = [headers.join(",")];
+
+    currentMonthTransactions.forEach((tx) => {
+      const row = [
+        tx.coin,
+        tx.action,
+        tx.price.replace(/,/g, ""),
+        tx.quantity.replace(/,/g, ""),
+        tx.action === "CLOSE" ? tx.profit.toFixed(2) : "0.00",
+        tx.status === "profit_goal_reached"
+          ? "Profit Goal Reached"
+          : "Completed",
+        `"${tx.timestamp}"`,
+      ];
+      csvRows.push(row.join(","));
+    });
+
+    const csvContent = csvRows.join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+
+    const filename = `${currentMonthName.replace(" ", "_")}_Transactions.csv`;
+
+    link.setAttribute("href", url);
+    link.setAttribute("download", filename);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   // Fallback data
   const getFallbackData = useCallback((): LiveTransaction[] => {
@@ -324,171 +387,230 @@ export const LiveTransactionLog: React.FC = () => {
       ["LINK", "CLOSE", "$11.45", "85.3", "Completed", "$9.87", "9/6 7:41 PM"],
       ["DOT", "CLOSE", "$5.67", "180.5", "Completed", "$7.12", "9/6 3:29 PM"],
     ];
+
     return parseGoogleSheetsData(mockRows);
   }, [parseGoogleSheetsData]);
 
-  // Fetch live transactions
-  const fetchLiveTransactions = useCallback(async () => {
-    try {
-      setIsLoading(true);
-
-      const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
-      if (!SHEET_ID) {
-        console.warn("No Sheet ID - using fallback data");
-        setTransactions(getFallbackData());
-        setIsLoading(false);
-        return;
-      }
-
-      const cacheKey = `transactions_${SHEET_TAB}`;
-      const cachedData = tradingDataCache.get(cacheKey);
-
-      if (cachedData) {
-        console.log("✅ Using cached transaction data");
-        setTransactions(cachedData);
-        setIsCacheHit(true);
-        setIsLoading(false);
-        setLastUpdated(new Date());
-        return;
-      }
-
-      const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
-      const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_TAB}!${SHEET_RANGE}?key=${API_KEY}`;
-
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      const rows = data.values || [];
-
-      if (rows.length === 0) {
-        setTransactions(getFallbackData());
-        setIsLoading(false);
-        return;
-      }
-
-      const parsedTransactions = parseGoogleSheetsData(rows);
-
-      if (parsedTransactions.length === 0) {
-        setTransactions(getFallbackData());
-      } else {
-        setTransactions(parsedTransactions);
-        tradingDataCache.set(cacheKey, parsedTransactions);
+  // Fetch transactions
+  const fetchTransactions = useCallback(
+    async (showLoading = true) => {
+      try {
+        if (showLoading) setIsLoading(true);
+        setError(null);
         setIsCacheHit(false);
-      }
 
-      setLastUpdated(new Date());
-    } catch (err) {
-      console.error("Error fetching transactions:", err);
-      setTransactions(getFallbackData());
-    } finally {
-      setIsLoading(false);
-    }
-  }, [SHEET_TAB, SHEET_RANGE, getFallbackData, parseGoogleSheetsData]);
+        const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
+        const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
+
+        if (SHEET_ID && API_KEY) {
+          const cacheKey = `${SHEET_ID}_${SHEET_TAB}_${SHEET_RANGE}`;
+          let cachedData = tradingDataCache.get(cacheKey);
+
+          if (cachedData) {
+            setTransactions(cachedData as LiveTransaction[]);
+            setLastUpdated(new Date());
+            setIsCacheHit(true);
+            setIsLoading(false);
+            return;
+          }
+
+          const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_TAB}!${SHEET_RANGE}?key=${API_KEY}`;
+
+          try {
+            const response = await fetch(url);
+
+            if (!response.ok) {
+              throw new Error(`Google Sheets API error: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            if (data.values && data.values.length > 0) {
+              const liveTransactions = parseGoogleSheetsData(data.values);
+              tradingDataCache.set(cacheKey, liveTransactions);
+              setTransactions(liveTransactions);
+              setLastUpdated(new Date());
+              setIsCacheHit(false);
+              return;
+            } else {
+              setError("No data found. Using sample data.");
+            }
+          } catch (apiError) {
+            console.error("API error:", apiError);
+            setError("Failed to load data.");
+          }
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        const fallbackData = getFallbackData();
+        setTransactions(fallbackData);
+        setLastUpdated(new Date());
+        setIsCacheHit(false);
+      } catch (err) {
+        console.error("Error:", err);
+        setError("Error loading data.");
+        setTransactions(getFallbackData());
+        setIsCacheHit(false);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [SHEET_TAB, SHEET_RANGE, parseGoogleSheetsData, getFallbackData]
+  );
 
   useEffect(() => {
-    fetchLiveTransactions();
-    const interval = setInterval(fetchLiveTransactions, 4 * 60 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, [fetchLiveTransactions]);
+    fetchTransactions();
+  }, [fetchTransactions]);
 
-  // Helper functions
-  const getCoinColor = (coin: string): string => {
+  const getCoinColor = (coin: string) => {
     const colors: { [key: string]: string } = {
       BTC: "text-orange-400",
       ETH: "text-blue-400",
-      SOL: "text-purple-400",
-      ADA: "text-cyan-400",
-      DOGE: "text-yellow-400",
+      SUI: "text-purple-400",
+      BONK: "text-yellow-400",
+      DOGE: "text-yellow-300",
+      SOL: "text-purple-500",
       MATIC: "text-indigo-400",
-      LINK: "text-blue-300",
+      ADA: "text-blue-500",
+      LINK: "text-blue-600",
       DOT: "text-pink-400",
       AVAX: "text-red-400",
-      SUI: "text-blue-300",
-      BONK: "text-orange-300",
+      UNI: "text-pink-500",
+      ATOM: "text-purple-500",
+      FTM: "text-blue-600",
+      ALGO: "text-gray-400",
+      XRP: "text-gray-300",
+      LTC: "text-gray-500",
+      BCH: "text-green-500",
+      VET: "text-blue-700",
+      THETA: "text-purple-600",
+      HBAR: "text-gray-600",
+      ICP: "text-orange-300",
+      NEAR: "text-green-300",
+      FLOW: "text-blue-800",
+      MANA: "text-red-300",
     };
-    return colors[coin.toUpperCase()] || "text-gray-300";
+    return colors[coin] || "text-gray-400";
   };
 
-  const getActionColor = (action: string): string => {
-    return action === "OPEN"
-      ? "bg-blue-500/20 text-blue-400 border border-blue-500/30"
-      : "bg-green-500/20 text-green-400 border border-green-500/30";
+  const getProfitColor = (profit: number) => {
+    if (profit >= 10) return "text-green-300";
+    if (profit >= 7) return "text-green-400";
+    return "text-green-500";
   };
 
-  const getProfitColor = (profit: number): string => {
-    if (profit > 10) return "text-green-400";
-    if (profit > 5) return "text-green-300";
-    return "text-green-200";
+  const getActionColor = (action: string) => {
+    return action === "CLOSE"
+      ? "bg-green-500/20 text-green-300"
+      : "bg-blue-500/20 text-blue-300";
+  };
+
+  const getCacheStatus = () => {
+    const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
+    const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
+
+    if (!SHEET_ID || !API_KEY || error) {
+      return { text: "SAMPLE", color: "text-gray-300" };
+    }
+
+    if (isCacheHit) {
+      return { text: "CACHED", color: "text-blue-300" };
+    }
+
+    return { text: "LIVE", color: "text-green-300" };
   };
 
   if (isLoading && transactions.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-[200px]">
-        <div className="text-gray-400 flex items-center gap-2">
-          <Activity className="w-5 h-5 animate-pulse" />
-          <span>Loading transaction history...</span>
+      <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-6 mb-8">
+        <div className="flex items-center justify-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-400"></div>
+          <span className="ml-3 text-gray-300">Loading...</span>
         </div>
       </div>
     );
   }
 
+  const cacheStatus = getCacheStatus();
+
   return (
-    <div className="w-full">
-      {/* Header with Month Stats */}
-      <div className="mb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3 px-2">
-        <div className="flex items-center gap-3 justify-between md:justify-start flex-wrap">
-          <div className="flex items-center gap-2">
-            <Activity className="w-5 h-5 text-blue-400" />
-            <h3 className="text-lg font-bold text-white">
-              Transaction History
-            </h3>
+    <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-6 mb-8 overflow-hidden">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 p-2 md:p-3 shadow-lg shadow-green-500/40 flex-shrink-0">
+            <Activity className="w-full h-full text-white" />
           </div>
+          <div className="min-w-0">
+            <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-white truncate">
+              TRADING SCOREBOARD
+            </h3>
+            <p className="text-xs md:text-sm text-gray-400 truncate">
+              {currentMonthName ||
+                new Date().toLocaleString("default", {
+                  month: "long",
+                  year: "numeric",
+                })}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3 flex-shrink-0">
           <button
             onClick={() => setShowOnMobile(!showOnMobile)}
-            className="md:hidden flex items-center gap-2 px-3 py-1.5 bg-blue-500/20 rounded-lg text-blue-400 text-sm font-medium hover:bg-blue-500/30 transition-colors flex-shrink-0"
+            className="md:hidden flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full px-3 py-2 border border-white/20 transition-all"
           >
             {showOnMobile ? (
               <>
-                <EyeOff className="w-4 h-4" />
-                <span>Hide</span>
+                <EyeOff className="w-4 h-4 text-gray-300" />
+                <span className="text-sm text-gray-300">Hide</span>
               </>
             ) : (
               <>
-                <Eye className="w-4 h-4" />
-                <span>Show</span>
+                <Eye className="w-4 h-4 text-gray-300" />
+                <span className="text-sm text-gray-300">Show</span>
               </>
             )}
           </button>
-        </div>
 
-        {/* Month Summary Stats */}
-        <div className="flex items-center gap-4 text-sm flex-wrap">
-          <div className="text-gray-400">
-            <span className="font-medium text-white">{currentMonthName}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-gray-400">Closed:</span>
-            <span className="font-bold text-green-400">{closedCount}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-gray-400">Open:</span>
-            <span className="font-bold text-blue-400">{openCount}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-gray-400">Profit:</span>
-            <span className="font-bold text-green-400">
-              +${totalProfit.toFixed(2)}
+          <div className="flex items-center gap-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-full px-4 py-2 border border-green-400/30">
+            <div
+              className={`w-2.5 h-2.5 rounded-full ${
+                isCacheHit ? "bg-blue-400" : "bg-green-400"
+              } animate-pulse`}
+            ></div>
+            <span
+              className={`text-sm font-semibold ${cacheStatus.color} whitespace-nowrap`}
+            >
+              {cacheStatus.text}
             </span>
           </div>
+
+          <button
+            onClick={downloadCSV}
+            className="flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 hover:from-blue-500/30 hover:to-purple-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-blue-400/30 hover:border-blue-400/50 transition-all shadow-lg"
+            title={`Download ${currentMonthName} CSV`}
+          >
+            <Download className="w-4 h-4 text-blue-300" />
+            <span className="hidden sm:inline text-sm text-blue-300 font-semibold whitespace-nowrap">
+              Download CSV
+            </span>
+            <span className="sm:hidden text-sm text-blue-300 font-semibold">
+              CSV
+            </span>
+          </button>
         </div>
       </div>
 
+      {error && (
+        <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3 mb-4">
+          <p className="text-yellow-400 text-sm break-words">{error}</p>
+        </div>
+      )}
+
       {/* Pagination Top */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2 mb-4 px-2">
+        <div className="flex items-center justify-center gap-2 mb-6 px-2">
           <button
             onClick={() => goToPage(currentPage - 1)}
             disabled={currentPage === 1}
@@ -545,18 +667,55 @@ export const LiveTransactionLog: React.FC = () => {
         </div>
       )}
 
-      {/* Cache Status */}
-      <div className="mb-3 px-2">
-        <span className="text-xs text-gray-500 flex items-center gap-2 justify-center md:justify-start flex-wrap">
-          <Clock className="w-3 h-3" />
+      {/* Summary Stats */}
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-2 md:gap-4 mb-6">
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all text-center">
+          <div className="text-sm md:text-lg font-bold text-green-300 truncate">
+            {monthSummary.totalProfit}
+          </div>
+          <div className="text-xs text-gray-400">Total Profit</div>
+        </div>
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all text-center">
+          <div className="text-sm md:text-lg font-bold text-green-400">
+            {monthSummary.closedTrades}
+          </div>
+          <div className="text-xs text-gray-400">Closed Trades</div>
+        </div>
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all text-center">
+          <div className="text-sm md:text-lg font-bold text-blue-300">
+            {monthSummary.openTrades}
+          </div>
+          <div className="text-xs text-gray-400">Open Trades</div>
+        </div>
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all text-center">
+          <div className="text-sm md:text-lg font-bold text-purple-300">
+            {monthSummary.totalTrades}
+          </div>
+          <div className="text-xs text-gray-400">Total Trades</div>
+        </div>
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all text-center col-span-2 lg:col-span-1">
+          <div className="text-sm md:text-lg font-bold text-orange-300">
+            {monthSummary.successRate}
+          </div>
+          <div className="text-xs text-gray-400">Success Rate</div>
+        </div>
+      </div>
+
+      {/* Last Updated */}
+      <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-2 mb-4 px-2">
+        <Clock className="w-3 h-3 md:w-4 md:h-4 text-gray-400 flex-shrink-0" />
+        <span className="text-xs text-gray-400 text-center break-words">
           Last updated: {lastUpdated.toLocaleTimeString()}
           {isCacheHit && (
-            <span className="text-green-400 ml-2">• Fresh Data Cached</span>
+            <span className="text-blue-400 ml-1 sm:ml-2">• Cached</span>
+          )}
+          {!isCacheHit && cacheStatus.text === "LIVE" && (
+            <span className="text-green-400 ml-1 sm:ml-2">• Fresh</span>
           )}
         </span>
       </div>
 
-      {/* Transaction Display */}
+      {/* Transaction Log */}
       <div
         className={`bg-black/20 rounded-xl border border-white/5 overflow-hidden ${
           !showOnMobile ? "hidden md:block" : ""
@@ -582,7 +741,9 @@ export const LiveTransactionLog: React.FC = () => {
                   <div className="flex items-center justify-between mb-2 gap-2 min-w-0">
                     <div className="flex items-center gap-2 min-w-0 flex-1">
                       <span
-                        className={`font-bold text-sm ${getCoinColor(tx.coin)}`}
+                        className={`font-bold text-sm ${getCoinColor(
+                          tx.coin
+                        )} flex-shrink-0`}
                       >
                         {tx.coin}
                       </span>
