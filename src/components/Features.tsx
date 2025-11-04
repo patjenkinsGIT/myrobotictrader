@@ -14,67 +14,67 @@ import { trackEvent } from "../utils/analytics";
 const features = [
   {
     icon: Clock,
-    title: "Set It & Forget It",
+    title: "Trades While You Sleep",
     description:
-      "Monitors global markets 24/7, executing trades even while you sleep. Never miss profitable opportunities or stare at charts again.",
+      "You can't watch charts 24/7. The system does it for you—monitoring markets and executing trades automatically. Wake up to profits.",
     color: "from-orange-500 to-amber-500",
     stats: "Always Active",
   },
   {
     icon: Shield,
-    title: "Never Trades at a Loss",
+    title: "Zero Losing Trades",
     description:
-      "Only sells when your position is profitable—never at a loss unless you choose otherwise. Protects investments while capitalizing on market swings.",
+      "Tired of panic-selling? The system only sells when you're in profit. Market dips? It waits. No losses locked in. Period.",
     color: "from-blue-500 to-cyan-500",
     stats: "0% Loss Trades",
   },
   {
     icon: Bot,
-    title: "AI-Enhanced Autonomous Trading",
+    title: "Fully Automated",
     description:
-      "Analyzes market patterns and executes trades with AI precision, adapting to changing conditions in real-time. Never worry about charts or timing again.",
-    color: "from-purple-500 to-pink-500",
-    stats: "Unattended Trading",
+      "Bad at timing the market? Let the system handle it. Trades when conditions are right, sits idle when they're not. No guessing.",
+    color: "from-slate-500 to-slate-600",
+    stats: "Hands-Free",
   },
   {
     icon: DollarSign,
-    title: "Your Funds Stay Safe",
+    title: "Your Money Stays Safe",
     description:
-      "Funds remain secure in your Kraken/Coinbase accounts. Trading-only API access means we can never withdraw or transfer your money.",
+      "Your funds never leave Coinbase or Kraken. Trading-only API access means we can trade but never withdraw. You stay in control.",
     color: "from-emerald-500 to-teal-500",
     stats: "Your Keys, Your Crypto",
   },
   {
     icon: TrendingUp,
-    title: "Takes What the Market Gives",
+    title: "Patient, Not Greedy",
     description:
-      "Capitalizes on market opportunities as they arise, taking profits when favorable and waiting patiently when not. Smart, patient trading.",
+      "Chasing pumps never works. The system takes profits when available, waits when the market's flat. No FOMO. No panic.",
     color: "from-emerald-500 to-green-500",
-    stats: "Market-Driven Results",
+    stats: "Steady Growth",
   },
   {
     icon: Zap,
-    title: "Lightning Fast Execution",
+    title: "Faster Than You Can Click",
     description:
-      "Executes trades in milliseconds, capitalizing on market movements before human traders can react. Speed gives you the competitive edge.",
+      "By the time you click buy, the opportunity's gone. The system executes in milliseconds. No hesitation. No missed trades.",
     color: "from-yellow-500 to-orange-500",
-    stats: "100ms Execution",
+    stats: "Instant Trades",
   },
   {
     icon: BarChart3,
-    title: "Real-Time Analytics",
+    title: "Complete Transparency",
     description:
-      "Simple position and profit reporting gives you clear visibility into performance and total profits across Coinbase and Kraken.",
-    color: "from-indigo-500 to-purple-500",
+      "See everything. Every buy, every sell, every dollar of profit. Real-time updates. No mystery, no black box.",
+    color: "from-cyan-500 to-blue-500",
     stats: "Live Tracking",
   },
   {
     icon: Users,
-    title: "Start with Paper Trading",
+    title: "Try It Risk-Free",
     description:
-      "Test the system risk-free with paper trading before going live. Build confidence and see performance without risking real money.",
-    color: "from-pink-500 to-rose-500",
-    stats: "Risk-Free Testing",
+      "Not ready for real money? Test with paper trading first. See how it performs for a week or month. Then decide.",
+    color: "from-slate-500 to-slate-700",
+    stats: "Zero Risk",
   },
 ];
 
@@ -116,30 +116,29 @@ export const Features: React.FC = function () {
   };
 
   return (
-    <section className="py-10 px-4 relative">
+    <section className="py-16 px-4 relative">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-purple-400/40 mb-6 mt-4 shadow-lg shadow-purple-500/20">
-            <Zap className="w-4 h-4 text-purple-300" />
-            <span className="text-purple-200 font-medium">
+        <div className="text-center mb-20">
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500/20 to-teal-500/20 backdrop-blur-sm rounded-full px-4 py-2 border border-emerald-400/40 mb-6 mt-4 shadow-lg shadow-emerald-500/20">
+            <Zap className="w-4 h-4 text-emerald-300" />
+            <span className="text-emerald-100 font-medium">
               Powerful Features
             </span>
           </div>
 
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Why Choose This
-            <span className="block text-transparent bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text">
-              Autonomous Trading Platform
+            Why This Works
+            <span className="block text-emerald-400">
+              When Manual Trading Doesn't
             </span>
           </h2>
 
           <p className="text-xl text-gray-200 max-w-3xl mx-auto">
-            Advanced autonomous technology with comprehensive risk management on
-            trusted exchanges like Coinbase and Kraken.
+            Stop watching charts and second-guessing yourself. Let the system handle the hard parts while you sleep.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feature, index) => {
             const FeatureIcon = feature.icon;
             return (
@@ -147,7 +146,7 @@ export const Features: React.FC = function () {
                 key={index}
                 data-card-index={index}
                 onClick={() => handleFeatureClick(feature.title, index)}
-                className={`group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-500 transform hover:scale-105 hover:shadow-2xl shadow-lg cursor-pointer ${
+                className={`group relative bg-white/8 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-white/30 transition-all duration-500 transform hover:scale-105 hover:shadow-2xl shadow-lg cursor-pointer ${
                   visibleCards[index]
                     ? "opacity-100 translate-y-0"
                     : "opacity-0 translate-y-10"
@@ -155,7 +154,7 @@ export const Features: React.FC = function () {
                 style={{
                   transitionDelay: `${index * 100}ms`,
                   boxShadow: `0 8px 32px rgba(${
-                    index % 2 === 0 ? "168, 85, 247" : "236, 72, 153"
+                    index % 2 === 0 ? "16, 185, 129" : "20, 184, 166"
                   }, 0.15)`,
                 }}
               >
@@ -189,11 +188,11 @@ export const Features: React.FC = function () {
                 </div>
 
                 <div className="relative">
-                  <h3 className="text-xl font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-300 group-hover:to-pink-300 group-hover:bg-clip-text transition-all duration-300">
+                  <h3 className="text-xl font-bold text-white mb-4 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-emerald-300 group-hover:to-teal-300 group-hover:bg-clip-text transition-all duration-300">
                     {feature.title}
                   </h3>
 
-                  <p className="text-gray-300 text-sm leading-relaxed mb-4 group-hover:text-gray-200 transition-colors duration-300">
+                  <p className="text-gray-300 text-base leading-relaxed mb-5 group-hover:text-gray-200 transition-colors duration-300">
                     {feature.description}
                   </p>
 

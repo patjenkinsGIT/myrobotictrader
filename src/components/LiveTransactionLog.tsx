@@ -543,7 +543,7 @@ export const LiveTransactionLog: React.FC = () => {
           </div>
           <div className="min-w-0">
             <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-white truncate">
-              TRADING SCOREBOARD
+              Live Trading Log
             </h3>
             <p className="text-xs md:text-sm text-gray-400 truncate">
               {currentMonthName ||
@@ -960,14 +960,14 @@ export const LiveTransactionLog: React.FC = () => {
       {/* Footer */}
       <div className="mt-4 text-center px-2">
         <p className="text-xs text-gray-500 break-words">
-          ✅ Smart Cache enabled • Live data with intelligent caching •{" "}
           <span className="text-green-400 font-medium">
-            Shows both Open & Closed positions
+            Every trade shown • Open & Closed positions
           </span>
+          {" • "}Real-time updates
         </p>
         {!showOnMobile && (
           <p className="text-xs text-gray-500 mt-1 md:hidden">
-            Tap "Show" to view history
+            Tap "Show" to view full log
           </p>
         )}
       </div>

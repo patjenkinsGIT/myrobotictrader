@@ -205,11 +205,11 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
   };
 
   return (
-    <section className="py-16 px-4 relative overflow-hidden">
+    <section className="py-20 px-4 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-r from-green-900/20 to-blue-900/20"></div>
 
       <div className="relative max-w-6xl mx-auto">
-        <div className="text-center mb-12">
+        <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-600/20 to-blue-600/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20 mb-6">
             <BarChart3 className="w-4 h-4 text-green-400" />
             <span className="text-green-300 font-medium">
@@ -224,27 +224,16 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
             My Trading Results
           </h2>
 
-          {/* Sub-headline with bouncing graph */}
-          <div className="mb-6">
-            <p className="text-xl text-purple-200 font-medium mb-4">
-              Don't just take my word for it - here are my actual trading
-              results:
-            </p>
-            <div>
-              <TrendingUp className="w-8 h-8 text-green-300 mx-auto animate-bounce" />
-            </div>
-          </div>
-
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            These are my actual profits from using my robotic trader.
-            <span className="text-green-400 font-semibold">
-              {" "}
-              Started January 8, 2025
+          {/* Sub-headline */}
+          <p className="text-xl text-gray-200 max-w-3xl mx-auto mb-6 leading-relaxed">
+            Don't just take my word for it. Here are my actual results from{" "}
+            <span className="text-emerald-400 font-semibold">
+              January 8, 2025
             </span>{" "}
-            -{" "}
-            {currentData.isLiveData
-              ? "Live Updates!"
-              : "Stats Updated Monthly!"}
+            to now.
+            {currentData.isLiveData && (
+              <span className="text-green-300"> Updated live.</span>
+            )}
           </p>
 
           {/* Clean Live Data Indicator with Professional Cache Status */}
@@ -290,7 +279,7 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
         </div>
 
         {/* First row - BRIGHTENED CARDS like Hero style */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-green-500/15">
             <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
 
@@ -359,7 +348,7 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
         <LiveTransactionLog />
 
         {/* Second row - Monthly Average, Daily Average, Best Month */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-emerald-500/15">
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
 
@@ -567,24 +556,23 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
             </div>
 
             {/* CTA BUTTON */}
-            <div className="text-center mt-8">
-              <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl p-6 border border-purple-400/30 shadow-lg shadow-purple-500/20">
-                <h4 className="text-xl font-bold text-white mb-3">
-                  Ready to Experience Autonomous Trading?
+            <div className="text-center mt-10">
+              <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl p-8 border border-purple-400/30 shadow-lg shadow-purple-500/20">
+                <h4 className="text-2xl font-bold text-white mb-4">
+                  Want Results Like These?
                 </h4>
-                <p className="text-gray-200 mb-4 max-w-xl mx-auto">
-                  Join successful traders using set-it-and-forget-it
-                  cryptocurrency trading.
+                <p className="text-gray-200 mb-6 max-w-xl mx-auto text-lg">
+                  See how the system works in the free masterclass.
                 </p>
                 <a
                   href="https://dailyprofits.link/class"
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={handleJoinMasterclass}
-                  className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-500/30"
+                  className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-500/30"
                 >
-                  Join Free Masterclass
-                  <TrendingUp className="w-4 h-4" />
+                  Watch Free Masterclass
+                  <TrendingUp className="w-5 h-5" />
                 </a>
               </div>
             </div>

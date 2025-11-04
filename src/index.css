@@ -24,10 +24,10 @@ body,
   height: 100%;
 }
 
-/* Ensure dark background for the app */
+/* Modern sophisticated dark background */
 .App {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+  background: linear-gradient(135deg, #020617 0%, #0f172a 50%, #020617 100%);
 }
 
 /* Minimal animations for floating icons only */

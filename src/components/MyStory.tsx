@@ -29,26 +29,26 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
   const hasLiveData = tradingStats !== null;
 
   return (
-    <section className="py-16 px-4 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-900/20 to-purple-900/20"></div>
+    <section className="py-20 px-4 relative overflow-hidden">
+      <div className="absolute inset-0 bg-slate-900/20"></div>
 
       <div className="relative max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/30 to-purple-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-blue-400/40 mb-6 shadow-lg shadow-blue-500/20">
-            <User className="w-4 h-4 text-blue-300" />
-            <span className="text-blue-200 font-medium">My Story</span>
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 bg-emerald-500/20 backdrop-blur-sm rounded-full px-4 py-2 border border-emerald-400/40 mb-6 shadow-lg shadow-emerald-500/20">
+            <User className="w-4 h-4 text-emerald-300" />
+            <span className="text-emerald-100 font-medium">My Story</span>
           </div>
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
-            Hi, I'm Patrick
-            <span className="block text-transparent bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text">
-              Here's How I Discovered This System
+            I'm Patrick
+            <span className="block text-emerald-400">
+              Here's Why I Built This Site
             </span>
           </h2>
         </div>
 
         {/* ONE BIG CONTAINER - Everything flows together */}
-        <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm rounded-2xl border border-blue-400/20 p-8 shadow-lg shadow-blue-500/10 mb-8">
+        <div className="bg-slate-800/40 backdrop-blur-sm rounded-2xl border border-slate-600/30 p-8 shadow-2xl shadow-emerald-500/20 mb-8 hover:border-emerald-500/40 transition-all duration-300">
           {/* PATRICK PHOTO - Float RIGHT - Desktop only */}
           <img
             src="/patrick-and-moses.jpeg"
@@ -68,93 +68,108 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
           {/* ALL TEXT CONTENT - Flows naturally around images */}
           <div className="text-lg text-gray-200 leading-relaxed">
             {/* Section 1 */}
-            <h3 className="text-2xl font-bold text-blue-300 mb-4 flex items-center gap-2">
-              <Target className="w-6 h-6" />
-              My Journey Started Like Yours
+            <h3 className="text-2xl font-bold text-emerald-300 mb-4 flex items-center gap-2">
+              <Target className="w-6 h-6 text-emerald-400" />
+              I Was Tired of Average Returns
             </h3>
             <p className="mb-6">
-              I've been following the markets since 2014, and I genuinely love
-              investing. I did okay with my stock investments, but tracking
-              individual stocks became incredibly tedious. I got frustrated with
-              mutual funds because of their fees and average returns - even
-              index funds weren't delivering what I hoped for. Target date
-              funds? Don't get me started on those.
+              Been investing since 2014. Stocks took too much time. Mutual funds had high fees and mediocre returns. Index funds were... fine, but nothing special. Target date funds? Even worse.
             </p>
 
             {/* Section 2 */}
-            <h3 className="text-2xl font-bold text-blue-300 mb-4 flex items-center gap-2">
-              <DollarSign className="w-6 h-6" />
-              Chasing the Dream of Extra Income
+            <h3 className="text-2xl font-bold text-emerald-300 mb-4 flex items-center gap-2">
+              <DollarSign className="w-6 h-6 text-emerald-400" />
+              I Wasted Thousands on Side Hustles
             </h3>
-            <p className="mb-4">
-              <span className="text-blue-200 font-semibold">
-                Like many of you, I've always wanted to make extra income in
-                addition to my 9-to-5 job.
+            <p className="mb-5">
+              <span className="text-emerald-200 font-semibold">
+                Like you, I wanted extra income beyond my day job.
               </span>{" "}
-              Over the years, I invested tens of thousands in various courses
-              and systems - email marketing, affiliate marketing, Amazon
-              wholesale, you name it. Some methods seemed unreliable, and
-              honestly, part of the problem was probably me not putting in full
-              effort or knowing how to position myself properly.
+              Spent tens of thousands on courses:
             </p>
-            <p className="mb-6">
-              I was tired of chasing the next "breakthrough" system. Tired of
-              complex strategies that required constant attention. Tired of
-              watching opportunities slip by because I was stuck at work or
-              didn't have time to analyze the market.
+
+            <ul className="list-disc list-inside mb-5 ml-4 text-gray-200 space-y-2">
+              <li>Email marketing</li>
+              <li>Affiliate marketing</li>
+              <li>Amazon wholesale</li>
+              <li>You name it</li>
+            </ul>
+
+            <p className="mb-5">
+              Some didn't work. Some probably could have worked if I'd put in more effort.
+            </p>
+
+            <p className="mb-6 text-gray-100 font-medium">
+              But who has time for that with a full-time job?
+            </p>
+
+            <p className="mb-8">
+              I was sick of "breakthrough systems" that needed constant attention. Sick of missing opportunities because I was at work.
             </p>
 
             {/* Section 3 */}
-            <h3 className="text-2xl font-bold text-yellow-300 mb-4 flex items-center gap-2">
-              <Lightbulb className="w-6 h-6" />
-              Then Everything Changed
+            <h3 className="text-2xl font-bold text-emerald-300 mb-4 flex items-center gap-2">
+              <Lightbulb className="w-6 h-6 text-emerald-400" />
+              Then I Found This
             </h3>
-            <p className="mb-4">
-              So when I discovered this autonomous trading system while
-              researching new opportunities, my first thought was:{" "}
-              <span className="italic text-yellow-200 font-semibold">
-                "Here's just another system promising easy money."
-              </span>{" "}
-              I was naturally skeptical - and you should be too.
+            <p className="mb-5">
+              Found this automated trading system while researching.
             </p>
+
+            <p className="mb-5 text-xl">
+              First thought: {" "}
+              <span className="italic text-yellow-200 font-semibold">
+                "Another get-rich-quick scheme."
+              </span>
+            </p>
+
             <p className="mb-6">
-              <span className="text-green-300 font-bold">
-                But this one is truly automated!
-              </span>{" "}
-              I set it up, connected my exchange accounts with trading-only API
-              permissions, and started with a small amount to test it. The
-              autonomous trader trades while I'm working, sleeping, or spending
-              time with family.
+              You're probably thinking that right now. Good. Stay skeptical.
+            </p>
+
+            <div className="bg-emerald-900/30 border-l-4 border-emerald-400 p-5 mb-6 rounded-r-lg">
+              <p className="text-green-300 font-bold text-lg mb-3">
+                But this one actually works while you sleep.
+              </p>
+              <p className="text-gray-200">
+                Set it up once. Connected my Coinbase and Kraken accounts with trading-only permissions (can't withdraw my money). Started small to test it.
+              </p>
+            </div>
+
+            <p className="mb-8">
+              It trades while I'm working. While I'm sleeping. While I'm with my dog. I don't watch charts. I don't time markets. I just check the results.
             </p>
 
             {/* Section 4 */}
-            <h3 className="text-2xl font-bold text-green-300 mb-4 flex items-center gap-2">
-              <TrendingUp className="w-6 h-6" />
-              The Results Speak for Themselves
+            <h3 className="text-2xl font-bold text-emerald-300 mb-4 flex items-center gap-2">
+              <TrendingUp className="w-6 h-6 text-emerald-400" />
+              The Numbers Don't Lie
             </h3>
-            <p className="mb-4">
-              <span className="text-green-400 font-bold text-xl">
-                In just {timeSinceStart}, my system has generated $
-                {currentData.totalProfit.toLocaleString()} in realized profits.
-              </span>{" "}
-              That's an average of{" "}
-              <span className="text-green-300 font-semibold">
-                ${dailyAvg} per day
-              </span>{" "}
-              - money that's been withdrawn and spent on real life.
-            </p>
-            <p className="mb-6">
-              This isn't paper gains or "what if" projections. This is actual
-              cash that I use for every day living. As of now, it's giving me
-              the extra money to spend for every day expenses and save for
-              emergencies. I'm also reinvesting a portion of my profits to scale
-              my investment capital.
+
+            <div className="bg-slate-700/30 border border-emerald-500/30 rounded-xl p-6 mb-6">
+              <p className="text-green-400 font-bold text-2xl mb-3">
+                ${currentData.totalProfit.toLocaleString()} profit in {timeSinceStart}
+              </p>
+              <p className="text-lg text-gray-200 mb-2">
+                That's{" "}
+                <span className="text-green-300 font-semibold text-xl">
+                  ${dailyAvg} per day
+                </span>{" "}
+                on average
+              </p>
+              <p className="text-emerald-200">
+                Real money. Withdrawn and spent.
+              </p>
+            </div>
+
+            <p className="mb-8">
+              Not paper gains. Not "what if" projections. Actual cash I use for bills, groceries, emergencies. Some I reinvest to grow the account.
             </p>
 
             {/* Section 5 - MOSES */}
-            <h3 className="text-2xl font-bold text-pink-300 mb-4 flex items-center gap-2">
-              <Heart className="w-6 h-6" />
-              The Best Part: Time with Moses
+            <h3 className="text-2xl font-bold text-emerald-300 mb-4 flex items-center gap-2">
+              <Heart className="w-6 h-6 text-emerald-400" />
+              The Best Part? Time with My Dog
             </h3>
 
             {/* MOSES PHOTO - Mobile only (centered, no float) */}
@@ -184,57 +199,59 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
               />
             </div>
 
-            <p className="mb-4">
-              <span className="text-pink-200 font-semibold">
-                I recently got a new dog named Moses, and this automated system
-                gives me something priceless: time.
-              </span>{" "}
-              While my trader works 24/7—executing trades, taking profits,
-              managing positions—I'm at the park with Moses. I'm not glued to
-              charts or stressed about missing opportunities.
-            </p>
-            <p className="mb-4">
-              That's what "Set It and Forget It" really means. The system
-              handles everything while I actually live my life. No more choosing
-              between making money and spending time with those I love. I get
-              both.
-            </p>
-            <p className="mb-4">
-              Moses and I go to the park almost every day now. Whether it's
-              morning walks, afternoon sprinkler sessions, or just lounging in
-              the yard, I'm actually present for these moments. The autonomous
-              trader is working in the background, but my focus is where it
-              should be—on the simple joys that make life worth living.
-            </p>
-            <p className="mb-6">
-              This is the freedom I always wanted: the ability to generate
-              income without being chained to a screen, constantly watching
-              markets and second-guessing decisions. The system does the work. I
-              enjoy the life.
+            <p className="mb-5">
+              <span className="text-pink-200 font-semibold text-lg">
+                Got a dog named Moses recently.
+              </span>
             </p>
 
-            {/* Section 6 */}
-            <h3 className="text-2xl font-bold text-blue-300 mb-4 flex items-center gap-2">
-              <CheckCircle className="w-6 h-6" />
-              Why I'm Sharing This With You
-            </h3>
-            <p className="mb-4">
-              I see people struggling with finances every day - having too much
-              month left at the end of the money. Working overtime just to stay
-              afloat. Missing out on time with family because they need that
-              extra shift.
+            <p className="mb-5">
+              This system gives me time to actually hang out with him. While it's trading 24/7, I'm at the park. Not watching charts. Not stressed about missing some pump.
             </p>
+
+            <p className="mb-6 text-gray-100 font-medium text-lg">
+              That's what "set it and forget it" actually means.
+            </p>
+
+            <p className="mb-5">
+              The system works. I live my life.
+            </p>
+
+            <p className="mb-5">
+              We hit the park almost every day. Morning walks. Sprinkler sessions. Just hanging in the yard.
+            </p>
+
             <p className="mb-6">
-              <span className="text-blue-200 font-semibold">
-                This platform could genuinely help, but not many people know
-                about it.
-              </span>{" "}
-              That's why I built this site and share what's working for me. As
-              you can see, my total profits are not breaking any records, but
-              it's consistent and reliable - It's truly "Set It and Forget It."
-              My trader only takes what the market GIVES. I'm not a financial
-              guru or marketing expert - I'm just someone who found something
-              that works and wants to help others discover it too.
+              I'm present for it because I'm not glued to a screen.
+            </p>
+
+            <div className="bg-pink-900/20 border-l-4 border-pink-400 p-5 mb-8 rounded-r-lg">
+              <p className="text-pink-200 font-medium text-lg">
+                That's the freedom I wanted. Income without being chained to my laptop second-guessing every trade. System does the work. I enjoy the results.
+              </p>
+            </div>
+
+            {/* Section 6 */}
+            <h3 className="text-2xl font-bold text-emerald-300 mb-4 flex items-center gap-2">
+              <CheckCircle className="w-6 h-6 text-emerald-400" />
+              Why I'm Telling You This
+            </h3>
+            <p className="mb-6">
+              I see people grinding. Working overtime to barely get by. Missing family time for an extra shift. Running out of money before the month ends.
+            </p>
+
+            <div className="bg-emerald-900/30 border-l-4 border-emerald-400 p-5 mb-6 rounded-r-lg">
+              <p className="text-emerald-200 font-semibold text-lg">
+                This could help. But most people don't know it exists.
+              </p>
+            </div>
+
+            <p className="mb-6">
+              That's why I built this site. My profits aren't huge—you can see the exact numbers below. But it's consistent. Reliable. Truly hands-off.
+            </p>
+
+            <p className="mb-8 text-gray-100 text-lg">
+              I'm not a financial guru. Not a marketing expert. Just someone who found something that works and wants to share it.
             </p>
           </div>
 
@@ -243,18 +260,14 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
         </div>
 
         {/* Closing Note */}
-        <div className="text-center bg-gradient-to-r from-purple-500/10 to-blue-500/10 backdrop-blur-sm rounded-2xl border border-purple-400/20 p-8">
+        <div className="text-center bg-slate-800/40 backdrop-blur-sm rounded-2xl border border-slate-600/30 p-8 shadow-2xl shadow-teal-500/20 hover:border-teal-500/40 transition-all duration-300">
           <p className="text-gray-200 max-w-3xl mx-auto text-lg leading-relaxed">
-            <span className="text-white font-semibold">Here's the truth:</span>{" "}
-            I'm not a financial advisor, and I can't promise you'll get the same
-            results I have. But I can show you exactly what's working for me,
-            with real numbers that are updated{" "}
-            {hasLiveData ? "live" : "regularly"} from my actual trading accounts
-            below.
+            <span className="text-white font-semibold">The truth:</span>{" "}
+            I'm not a financial advisor. I can't promise you'll get the same results. But I'll show you exactly what's working for me - real numbers updated{" "}
+            {hasLiveData ? "live" : "regularly"} from my actual accounts below.
           </p>
-          <p className="text-blue-300 mt-4 font-medium">
-            If you're ready to explore a different path to financial growth,
-            keep reading.
+          <p className="text-emerald-300 mt-4 font-medium">
+            Want to see if this could work for you? Keep reading.
           </p>
         </div>
       </div>

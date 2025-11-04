@@ -17,9 +17,9 @@ export const CallToAction: React.FC = function () {
   };
 
   return (
-    <section className="py-10 px-4 relative overflow-hidden">
+    <section className="py-20 px-4 relative overflow-hidden">
       {/* Background effects */}
-      <div className="absolute inset-0 bg-gradient-to-r from-purple-900/60 to-pink-900/60"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-slate-900/60 to-slate-800/60"></div>
 
       {/* Subtle robot accent - top right */}
       <div className="absolute top-10 right-10 opacity-8 pointer-events-none hidden xl:block">
@@ -31,26 +31,25 @@ export const CallToAction: React.FC = function () {
       </div>
 
       <div className="relative max-w-4xl mx-auto text-center">
-        <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-purple-400/40 mb-6 mt-4 shadow-lg shadow-purple-500/20">
-          <Rocket className="w-4 h-4 text-purple-300" />
-          <span className="text-purple-200 font-medium">Ready to Start?</span>
+        <div className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500/20 to-teal-500/20 backdrop-blur-sm rounded-full px-4 py-2 border border-emerald-400/40 mb-6 mt-4 shadow-lg shadow-emerald-500/20">
+          <Rocket className="w-4 h-4 text-emerald-300" />
+          <span className="text-emerald-100 font-medium">Ready to Start?</span>
         </div>
 
-        {/* Updated headline - Option A: Ready for True Set-It-and-Forget-It Trading? */}
+        {/* Updated headline - Direct and benefit-focused */}
         <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-          Ready for True
-          <span className="block text-transparent bg-gradient-to-r from-green-300 via-blue-400 to-purple-400 bg-clip-text">
-            Set-It-and-Forget-It Trading?
+          Stop Trading.
+          <span className="block text-emerald-400">
+            Start Profiting.
           </span>
         </h2>
 
-        <p className="text-xl text-gray-200 mb-8 max-w-3xl mx-auto">
-          Autonomous trading that protects your capital while maximizing
-          profits. Start with paper trading risk-free.
+        <p className="text-xl text-gray-200 mb-10 max-w-3xl mx-auto leading-relaxed">
+          See how it works in the free masterclass. Then test it risk-free with paper trading before risking a single dollar.
         </p>
 
         {/* Benefits */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
           <div className="flex items-center justify-center gap-3">
             <CheckCircle className="w-6 h-6 text-green-300 flex-shrink-0" />
             <span className="text-gray-200">Never trades at a loss</span>
@@ -66,78 +65,68 @@ export const CallToAction: React.FC = function () {
         </div>
 
         {/* Masterclass Bullet List */}
-        <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl border border-purple-400/30 p-8 mb-8 max-w-3xl mx-auto shadow-lg shadow-purple-500/20 relative">
+        <div className="bg-gradient-to-r from-slate-800/40 to-slate-700/40 backdrop-blur-sm rounded-2xl border border-slate-600/30 p-10 mb-10 max-w-3xl mx-auto shadow-lg shadow-slate-500/20 relative">
           {/* Small robot accent inside the box */}
           <div className="absolute bottom-4 right-4 opacity-10 pointer-events-none hidden md:block">
             <img src="/robot-trading.png" alt="" className="w-12 h-12" />
           </div>
 
-          <h3 className="text-2xl md:text-3xl font-bold text-white mb-6">
-            Free Masterclass Reveals:
+          <h3 className="text-2xl md:text-3xl font-bold text-white mb-8">
+            What You'll Learn:
           </h3>
 
-          <ul className="text-left space-y-4 mb-6">
+          <ul className="text-left space-y-5 mb-8">
             <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
-              <ArrowRight className="w-5 h-5 text-purple-300 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-300 transition-colors" />
+              <ArrowRight className="w-5 h-5 text-emerald-300 mr-3 mt-1 flex-shrink-0 group-hover:text-teal-300 transition-colors" />
               <span className="text-lg">
-                How the system avoids losses even during market crashes
+                Why the system never sells at a loss (even during crashes)
               </span>
             </li>
             <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
-              <ArrowRight className="w-5 h-5 text-purple-300 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-300 transition-colors" />
+              <ArrowRight className="w-5 h-5 text-emerald-300 mr-3 mt-1 flex-shrink-0 group-hover:text-teal-300 transition-colors" />
               <span className="text-lg">
-                Set-and-forget strategy that trades profitably without screen
-                time
+                How to profit while you sleep (no chart-watching)
               </span>
             </li>
             <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
-              <ArrowRight className="w-5 h-5 text-purple-300 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-300 transition-colors" />
+              <ArrowRight className="w-5 h-5 text-emerald-300 mr-3 mt-1 flex-shrink-0 group-hover:text-teal-300 transition-colors" />
               <span className="text-lg">
-                Real examples: What happens when crypto markets drop
+                What happens when markets drop 30% overnight
               </span>
             </li>
             <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
-              <ArrowRight className="w-5 h-5 text-purple-300 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-300 transition-colors" />
+              <ArrowRight className="w-5 h-5 text-emerald-300 mr-3 mt-1 flex-shrink-0 group-hover:text-teal-300 transition-colors" />
               <span className="text-lg">
-                The truth about "never trading at a loss" (and how it can work
-                for you)
+                Why you'll never panic-sell or miss a recovery
               </span>
             </li>
             <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
-              <ArrowRight className="w-5 h-5 text-purple-300 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-300 transition-colors" />
+              <ArrowRight className="w-5 h-5 text-emerald-300 mr-3 mt-1 flex-shrink-0 group-hover:text-teal-300 transition-colors" />
               <span className="text-lg">
-                Why you never worry about selling early or missing recoveries
+                Stay in complete control—override anytime (but you won't want to)
               </span>
             </li>
             <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
-              <ArrowRight className="w-5 h-5 text-purple-300 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-300 transition-colors" />
+              <ArrowRight className="w-5 h-5 text-emerald-300 mr-3 mt-1 flex-shrink-0 group-hover:text-teal-300 transition-colors" />
               <span className="text-lg">
-                Stay in complete controlâ€”override automation anytime but you
-                won't want to ðŸ¤–
-              </span>
-            </li>
-            <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
-              <ArrowRight className="w-5 h-5 text-purple-300 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-300 transition-colors" />
-              <span className="text-lg">
-                Common crypto trading myths debunked with real data
+                Real data from 8+ months (not cherry-picked wins)
               </span>
             </li>
           </ul>
 
-          <p className="text-lg text-purple-200 font-medium">
-            Free access. Real strategies you can implement immediately after the
-            masterclass!
+          <p className="text-lg text-emerald-200 font-medium">
+            Free masterclass. Real strategies. No fluff or sales pitch.
           </p>
         </div>
 
         {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+        <div className="flex flex-col sm:flex-row gap-6 justify-center mb-10">
           <a
             href="https://dailyprofits.link/class"
             onClick={handleGetFreeTraining}
             target="_blank"
             rel="noopener noreferrer"
-            className="group bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2"
+            className="group bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-emerald-500/30 flex items-center justify-center gap-2"
           >
             Watch Free Masterclass
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
