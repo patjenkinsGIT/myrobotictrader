@@ -4,7 +4,6 @@ import {
   ChevronUp,
   HelpCircle,
   Shield,
-  Bot,
   TrendingUp,
   DollarSign,
   User,
