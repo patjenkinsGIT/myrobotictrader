@@ -28,11 +28,11 @@ export const Footer: React.FC = function () {
               </div>
             </div>
             <div className="text-xl font-bold group-hover:scale-105 transition-transform">
-              <span className="text-gray-300">My</span>
-              <span className="text-transparent bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text">
+              <span className="text-white">My</span>
+              <span className="text-emerald-400 font-bold">
                 Robotic
               </span>
-              <span className="text-gray-300">Trader</span>
+              <span className="text-white">Trader</span>
               <span className="text-emerald-400 text-sm ml-1">.com</span>
             </div>
           </a>
@@ -153,7 +153,7 @@ export const Footer: React.FC = function () {
             </div>
             <span className="text-gray-400 text-sm group-hover:text-emerald-400 transition-colors">
               © 2025{" "}
-              <span className="text-transparent bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text font-semibold">
+              <span className="text-white font-semibold">
                 MyRoboticTrader
               </span>
               .com
