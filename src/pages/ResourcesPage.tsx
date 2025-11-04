@@ -24,10 +24,10 @@ export const ResourcesPage: React.FC = function () {
     : "$4,000+";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
       {/* Hero Section - MATCHING HOMEPAGE STRUCTURE */}
       <section className="py-16 px-4 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-900/40 to-pink-900/40"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-emerald-900/20 to-teal-900/20"></div>
 
         {/* Subtle robot accent */}
         <div className="absolute top-10 right-10 opacity-10 pointer-events-none hidden lg:block">
@@ -41,7 +41,7 @@ export const ResourcesPage: React.FC = function () {
         {/* Logo at top - CLICKABLE VERSION */}
         <div className="absolute top-8 left-1/2 transform -translate-x-1/2 z-20">
           <a href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-purple-500/40 bg-gradient-to-br from-purple-500 to-pink-500 p-0.5 group-hover:scale-105 transition-transform">
+            <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-emerald-500/40 bg-gradient-to-br from-emerald-500 to-teal-500 p-0.5 group-hover:scale-105 transition-transform">
               <div className="w-full h-full rounded-lg overflow-hidden bg-white/10 backdrop-blur-sm">
                 <img
                   src="/robot-logo.png"
@@ -52,27 +52,27 @@ export const ResourcesPage: React.FC = function () {
             </div>
             <div className="text-2xl font-bold group-hover:scale-105 transition-transform">
               <span className="text-white">My</span>
-              <span className="text-transparent bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text">
+              <span className="text-emerald-400 font-bold">
                 Robotic
               </span>
               <span className="text-white">Trader</span>
-              <span className="text-purple-300 text-sm ml-1">.com</span>
+              <span className="text-emerald-400 text-sm ml-1">.com</span>
             </div>
           </a>
         </div>
 
         <div className="relative max-w-6xl mx-auto text-center z-10 mt-16">
           <div className="mb-8">
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-purple-400/40 mb-6 shadow-lg shadow-purple-500/20">
-              <BookOpen className="w-4 h-4 text-purple-300" />
-              <span className="text-purple-200 font-medium">
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500/30 to-teal-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-emerald-400/40 mb-6 shadow-lg shadow-emerald-500/20">
+              <BookOpen className="w-4 h-4 text-emerald-300" />
+              <span className="text-emerald-200 font-medium">
                 Recommended Tools
               </span>
             </div>
 
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
               Tools I Use &
-              <span className="block text-transparent bg-gradient-to-r from-green-300 via-blue-400 to-purple-400 bg-clip-text">
+              <span className="block text-emerald-400">
                 Personally Recommend
               </span>
             </h1>
@@ -83,9 +83,9 @@ export const ResourcesPage: React.FC = function () {
               profitable and stress-free.
             </p>
 
-            <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm rounded-2xl border border-blue-400/20 p-6 max-w-2xl mx-auto">
-              <p className="text-blue-200 font-medium">
-                💡 <strong>My Promise:</strong> I only recommend tools I
+            <div className="bg-gradient-to-r from-emerald-500/10 to-teal-500/10 backdrop-blur-sm rounded-2xl border border-emerald-400/20 p-6 max-w-2xl mx-auto">
+              <p className="text-emerald-200 font-medium">
+                <strong>My Promise:</strong> I only recommend tools I
                 personally use and believe provide real value. Your success is
                 my success.
               </p>
@@ -207,10 +207,10 @@ export const ResourcesPage: React.FC = function () {
           </div>
 
           {/* Kraken Card */}
-          <div className="bg-gradient-to-r from-indigo-500/10 to-purple-500/10 backdrop-blur-sm rounded-2xl border border-indigo-400/20 p-8 shadow-lg shadow-indigo-500/10 relative">
+          <div className="bg-gradient-to-r from-cyan-500/10 to-teal-500/10 backdrop-blur-sm rounded-2xl border border-cyan-400/20 p-8 shadow-lg shadow-cyan-500/10 relative">
             {/* FIXED: Better mobile positioning for badge */}
             <div className="absolute top-4 right-4 md:top-6 md:right-6">
-              <div className="bg-gradient-to-r from-blue-400 to-indigo-400 text-white px-2 py-1 md:px-3 md:py-1 rounded-full text-xs md:text-sm font-bold">
+              <div className="bg-gradient-to-r from-cyan-400 to-teal-400 text-white px-2 py-1 md:px-3 md:py-1 rounded-full text-xs md:text-sm font-bold">
                 GREAT ALTERNATIVE
               </div>
             </div>
@@ -219,7 +219,7 @@ export const ResourcesPage: React.FC = function () {
               {/* FIXED: Added top margin to prevent badge overlap on mobile */}
               <div className="mt-8 md:mt-0">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl p-3">
+                  <div className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-teal-500 rounded-xl p-3">
                     <Wallet className="w-full h-full text-white" />
                   </div>
                   <h3 className="text-2xl font-bold text-white">Kraken</h3>
@@ -263,14 +263,14 @@ export const ResourcesPage: React.FC = function () {
                   href="https://dailyprofits.link/krak"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-indigo-500/30"
+                  className="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-cyan-500/30"
                 >
                   Get Kraken Account
                   <ExternalLink className="w-4 h-4" />
                 </a>
               </div>
 
-              <div className="bg-gradient-to-r from-indigo-500/5 to-purple-500/5 rounded-xl p-6 border border-indigo-400/10">
+              <div className="bg-gradient-to-r from-cyan-500/5 to-teal-500/5 rounded-xl p-6 border border-cyan-400/10">
                 <h4 className="text-lg font-semibold text-white mb-4">
                   Why Kraken Works Great:
                 </h4>
@@ -411,7 +411,7 @@ export const ResourcesPage: React.FC = function () {
       {/* CTA Section */}
       <section className="py-16 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl border border-purple-400/30 p-8 shadow-lg shadow-purple-500/20">
+          <div className="bg-gradient-to-r from-emerald-500/20 to-teal-500/20 backdrop-blur-sm rounded-2xl border border-emerald-400/30 p-8 shadow-lg shadow-emerald-500/20">
             <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
               Ready to Start Your Trading Journey?
             </h3>
@@ -425,7 +425,7 @@ export const ResourcesPage: React.FC = function () {
                 href="https://dailyprofits.link/class"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-500/30"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-emerald-500/30"
               >
                 Free Masterclass First
                 <ArrowRight className="w-4 h-4" />

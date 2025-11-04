@@ -53,7 +53,7 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
           <img
             src="/patrick-and-moses.jpeg"
             alt="Patrick Jenkins with Moses"
-            className="hidden lg:block float-right ml-8 mb-6 w-80 h-80 rounded-2xl object-cover border-4 border-white/20 shadow-2xl shadow-purple-500/20"
+            className="hidden lg:block float-right ml-8 mb-6 w-80 h-80 rounded-2xl object-cover border-4 border-white/20 shadow-2xl shadow-emerald-500/20"
           />
 
           {/* PATRICK PHOTO - Mobile only (centered, no float) */}
@@ -61,7 +61,7 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
             <img
               src="/patrick-and-moses.jpeg"
               alt="Patrick Jenkins with Moses"
-              className="w-64 h-64 rounded-2xl object-cover border-4 border-white/20 shadow-2xl shadow-purple-500/20"
+              className="w-64 h-64 rounded-2xl object-cover border-4 border-white/20 shadow-2xl shadow-emerald-500/20"
             />
           </div>
 
@@ -177,7 +177,7 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
               <img
                 src="/moses-sprinkler.jpeg"
                 alt="Moses enjoying the sprinkler"
-                className="w-64 h-64 rounded-2xl object-cover border-4 border-white/20 shadow-2xl shadow-purple-500/20"
+                className="w-64 h-64 rounded-2xl object-cover border-4 border-white/20 shadow-2xl shadow-emerald-500/20"
               />
             </div>
 
@@ -195,12 +195,12 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
               <img
                 src="/moses-sprinkler.jpeg"
                 alt="Moses enjoying the sprinkler"
-                className="w-full h-full rounded-2xl object-cover border-4 border-white/20 shadow-2xl shadow-purple-500/20"
+                className="w-full h-full rounded-2xl object-cover border-4 border-white/20 shadow-2xl shadow-emerald-500/20"
               />
             </div>
 
             <p className="mb-5">
-              <span className="text-pink-200 font-semibold text-lg">
+              <span className="text-emerald-200 font-semibold text-lg">
                 Got a dog named Moses recently.
               </span>
             </p>
@@ -225,8 +225,8 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
               I'm present for it because I'm not glued to a screen.
             </p>
 
-            <div className="bg-pink-900/20 border-l-4 border-pink-400 p-5 mb-8 rounded-r-lg">
-              <p className="text-pink-200 font-medium text-lg">
+            <div className="bg-emerald-900/20 border-l-4 border-emerald-400 p-5 mb-8 rounded-r-lg">
+              <p className="text-emerald-200 font-medium text-lg">
                 That's the freedom I wanted. Income without being chained to my laptop second-guessing every trade. System does the work. I enjoy the results.
               </p>
             </div>

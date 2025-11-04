@@ -3,11 +3,11 @@ import { ArrowLeft, Shield, Eye, Link, Mail } from "lucide-react";
 
 export const PrivacyPage: React.FC = function () {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
       {/* Logo at top - CLICKABLE */}
       <div className="absolute top-8 left-1/2 transform -translate-x-1/2 z-20">
         <a href="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-purple-500/40 bg-gradient-to-br from-purple-500 to-pink-500 p-0.5 group-hover:scale-105 transition-transform">
+          <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-emerald-500/40 bg-gradient-to-br from-emerald-500 to-teal-500 p-0.5 group-hover:scale-105 transition-transform">
             <div className="w-full h-full rounded-lg overflow-hidden bg-white/10 backdrop-blur-sm">
               <img
                 src="/robot-logo.png"
@@ -18,11 +18,11 @@ export const PrivacyPage: React.FC = function () {
           </div>
           <div className="text-2xl font-bold group-hover:scale-105 transition-transform">
             <span className="text-white">My</span>
-            <span className="text-transparent bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text">
+            <span className="text-emerald-400 font-bold">
               Robotic
             </span>
             <span className="text-white">Trader</span>
-            <span className="text-purple-300 text-sm ml-1">.com</span>
+            <span className="text-emerald-400 text-sm ml-1">.com</span>
           </div>
         </a>
       </div>
@@ -32,16 +32,16 @@ export const PrivacyPage: React.FC = function () {
         <div className="max-w-4xl mx-auto">
           <a
             href="/"
-            className="inline-flex items-center gap-2 text-blue-300 hover:text-blue-200 transition-colors mb-6"
+            className="inline-flex items-center gap-2 text-emerald-300 hover:text-emerald-200 transition-colors mb-6"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Home
           </a>
 
           <div className="text-center">
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/30 to-purple-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-blue-400/40 mb-6 shadow-lg shadow-blue-500/20">
-              <Shield className="w-4 h-4 text-blue-300" />
-              <span className="text-blue-200 font-medium">Privacy Policy</span>
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500/30 to-teal-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-emerald-400/40 mb-6 shadow-lg shadow-emerald-500/20">
+              <Shield className="w-4 h-4 text-emerald-300" />
+              <span className="text-emerald-200 font-medium">Privacy Policy</span>
             </div>
 
             <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
@@ -65,7 +65,7 @@ export const PrivacyPage: React.FC = function () {
             {/* Information We Collect */}
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <Eye className="w-6 h-6 text-blue-300" />
+                <Eye className="w-6 h-6 text-emerald-300" />
                 <h2 className="text-2xl font-bold text-white">
                   Information We Collect
                 </h2>
@@ -119,7 +119,7 @@ export const PrivacyPage: React.FC = function () {
             {/* Affiliate Links */}
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <Link className="w-6 h-6 text-purple-300" />
+                <Link className="w-6 h-6 text-emerald-300" />
                 <h2 className="text-2xl font-bold text-white">
                   Affiliate Links & Disclosures
                 </h2>
@@ -147,8 +147,8 @@ export const PrivacyPage: React.FC = function () {
                     results
                   </li>
                 </ul>
-                <div className="bg-blue-500/10 border border-blue-400/20 rounded-lg p-4 mt-4">
-                  <p className="text-blue-200">
+                <div className="bg-emerald-500/10 border border-emerald-400/20 rounded-lg p-4 mt-4">
+                  <p className="text-emerald-200">
                     <strong>Transparency Promise:</strong> All trading results
                     shown are real and from Patrick's personal trading account.
                     We believe in complete transparency about both our results
@@ -177,9 +177,9 @@ export const PrivacyPage: React.FC = function () {
                       href="https://policies.google.com/privacy"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-300 hover:text-blue-200 text-sm"
+                      className="text-emerald-300 hover:text-emerald-200 text-sm"
                     >
-                      Google Privacy Policy â†’
+                      Google Privacy Policy â†'
                     </a>
                   </div>
                   <div className="bg-white/5 rounded-lg p-4">
@@ -193,7 +193,7 @@ export const PrivacyPage: React.FC = function () {
                       href="https://www.cloudflare.com/privacy/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-300 hover:text-blue-200 text-sm"
+                      className="text-emerald-300 hover:text-emerald-200 text-sm"
                     >
                       Cloudflare Privacy Policy â†’
                     </a>
@@ -229,7 +229,7 @@ export const PrivacyPage: React.FC = function () {
             {/* Contact Information */}
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <Mail className="w-6 h-6 text-yellow-300" />
+                <Mail className="w-6 h-6 text-emerald-300" />
                 <h2 className="text-2xl font-bold text-white">Contact Us</h2>
               </div>
               <div className="space-y-4 text-gray-300">
@@ -277,7 +277,7 @@ export const PrivacyPage: React.FC = function () {
         <div className="max-w-4xl mx-auto text-center">
           <a
             href="/"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-500/30"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-emerald-500/30"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to MyRoboticTrader

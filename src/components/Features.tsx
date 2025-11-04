@@ -25,7 +25,7 @@ const features = [
     title: "Zero Losing Trades",
     description:
       "Tired of panic-selling? The system only sells when you're in profit. Market dips? It waits. No losses locked in. Period.",
-    color: "from-blue-500 to-cyan-500",
+    color: "from-teal-500 to-cyan-500",
     stats: "0% Loss Trades",
   },
   {
@@ -65,7 +65,7 @@ const features = [
     title: "Complete Transparency",
     description:
       "See everything. Every buy, every sell, every dollar of profit. Real-time updates. No mystery, no black box.",
-    color: "from-cyan-500 to-blue-500",
+    color: "from-cyan-500 to-teal-500",
     stats: "Live Tracking",
   },
   {

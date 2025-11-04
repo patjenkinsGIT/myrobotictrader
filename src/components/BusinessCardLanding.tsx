@@ -24,7 +24,7 @@ export const BusinessCardLanding: React.FC = () => {
   if (isLoading || !tradingStats) {
     return (
       <section className="relative min-h-screen flex items-center justify-center px-4">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
         <div className="relative text-white text-xl">Loading live data...</div>
       </section>
     );
@@ -35,13 +35,13 @@ export const BusinessCardLanding: React.FC = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden pb-10 pt-10">
       {/* Background effects - matching your Hero */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900"></div>
-      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-transparent via-purple-500/15 to-transparent"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
+      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-transparent via-emerald-500/15 to-transparent"></div>
 
       {/* Logo at top - Same as your Hero */}
       <div className="absolute top-8 left-1/2 transform -translate-x-1/2 z-20">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-purple-500/40 bg-gradient-to-br from-purple-500 to-pink-500 p-0.5">
+          <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-emerald-500/40 bg-gradient-to-br from-emerald-500 to-teal-500 p-0.5">
             <div className="w-full h-full rounded-lg overflow-hidden bg-white/10 backdrop-blur-sm">
               <img
                 src="/robot-logo.png"
@@ -52,11 +52,11 @@ export const BusinessCardLanding: React.FC = () => {
           </div>
           <div className="text-2xl font-bold">
             <span className="text-white">My</span>
-            <span className="text-transparent bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text">
+            <span className="text-emerald-400 font-bold">
               Robotic
             </span>
             <span className="text-white">Trader</span>
-            <span className="text-purple-300 text-sm ml-1">.com</span>
+            <span className="text-emerald-400 text-sm ml-1">.com</span>
           </div>
         </div>
       </div>
@@ -80,7 +80,7 @@ export const BusinessCardLanding: React.FC = () => {
             <p className="text-xl md:text-2xl text-gray-200 mb-2">
               Here are my LIVE trading results:
             </p>
-            <p className="text-lg text-purple-200">
+            <p className="text-lg text-emerald-200">
               Real profits. Real transparency. Zero BS.
             </p>
           </div>
@@ -135,24 +135,24 @@ export const BusinessCardLanding: React.FC = () => {
           </div>
 
           {/* Daily Average - More impactful! */}
-          <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/15">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
+          <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-emerald-500/15">
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
 
-            <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-purple-500/40">
+            <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-emerald-500/40">
               <TrendingUp className="w-full h-full text-white" />
             </div>
 
             <div className="relative text-center">
-              <div className="text-4xl font-bold text-purple-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-300 group-hover:to-pink-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
+              <div className="text-4xl font-bold text-emerald-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-emerald-300 group-hover:to-teal-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
                 ${dailyAvg}
               </div>
               <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
                 Daily Average
               </div>
-              <div className="text-purple-300 text-sm mt-1">Steady Growth</div>
+              <div className="text-emerald-300 text-sm mt-1">Steady Growth</div>
             </div>
 
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
         </div>
 
@@ -178,7 +178,7 @@ export const BusinessCardLanding: React.FC = () => {
             href={affiliateLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="group bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2"
+            className="group bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-emerald-500/30 flex items-center justify-center gap-2"
           >
             Watch Free Training
             <ExternalLink className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
