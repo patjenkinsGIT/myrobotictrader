@@ -112,7 +112,7 @@ export const FullNav: React.FC = () => {
               ))}
               <a
                 href="https://dailyprofits.link/class"
-                onClick={(e) => {
+                onClick={() => {
                   handleWatchWebinar();
                   setMobileMenuOpen(false);
                 }}
