@@ -18,9 +18,6 @@ export const CallToAction: React.FC = function () {
 
   return (
     <section className="py-10 px-4 relative overflow-hidden">
-      {/* Background effects */}
-      <div className="absolute inset-0 bg-gradient-to-r from-purple-900/60 to-pink-900/60"></div>
-
       {/* Subtle robot accent - top right */}
       <div className="absolute top-10 right-10 opacity-8 pointer-events-none hidden xl:block">
         <img
@@ -66,7 +63,7 @@ export const CallToAction: React.FC = function () {
         </div>
 
         {/* Masterclass Bullet List */}
-        <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl border border-purple-400/30 p-8 mb-8 max-w-3xl mx-auto shadow-lg shadow-purple-500/20 relative">
+        <div className="bg-gray-900/50 rounded-2xl border border-white/10 p-8 mb-8 max-w-3xl mx-auto shadow-lg shadow-purple-500/10 relative">
           {/* Small robot accent inside the box */}
           <div className="absolute bottom-4 right-4 opacity-10 pointer-events-none hidden md:block">
             <img src="/robot-trading.png" alt="" className="w-12 h-12" />
@@ -137,7 +134,7 @@ export const CallToAction: React.FC = function () {
             onClick={handleGetFreeTraining}
             target="_blank"
             rel="noopener noreferrer"
-            className="group bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2"
+            className="group bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2"
           >
             Watch Free Masterclass
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -148,7 +145,7 @@ export const CallToAction: React.FC = function () {
             onClick={handleStartTrading}
             target="_blank"
             rel="noopener noreferrer"
-            className="group border-2 border-white/40 hover:border-white/60 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 backdrop-blur-sm hover:bg-white/15 flex items-center justify-center gap-2 shadow-lg shadow-white/10"
+            className="group border-2 border-white/40 hover:border-white/60 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 backdrop-blur-sm hover:bg-white/15 flex items-center justify-center gap-2 shadow-lg shadow-white/10"
           >
             Try Paper Trading Risk-Free
           </a>

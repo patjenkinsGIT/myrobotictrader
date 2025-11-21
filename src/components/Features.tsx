@@ -159,31 +159,14 @@ export const Features: React.FC = function () {
                   }, 0.15)`,
                 }}
               >
+                {/* Gradient overlay on hover */}
                 <div
                   className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300`}
                 ></div>
 
+                {/* Icon container with color gradient */}
                 <div
                   className={`relative w-12 h-12 rounded-xl bg-gradient-to-br ${feature.color} p-3 mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg`}
-                  style={{
-                    boxShadow: `0 4px 20px rgba(${
-                      feature.color.includes("purple")
-                        ? "168, 85, 247"
-                        : feature.color.includes("emerald")
-                        ? "16, 185, 129"
-                        : feature.color.includes("blue")
-                        ? "59, 130, 246"
-                        : feature.color.includes("orange")
-                        ? "249, 115, 22"
-                        : feature.color.includes("yellow")
-                        ? "245, 158, 11"
-                        : feature.color.includes("teal")
-                        ? "20, 184, 166"
-                        : feature.color.includes("indigo")
-                        ? "99, 102, 241"
-                        : "236, 72, 153"
-                    }, 0.4)`,
-                  }}
                 >
                   <FeatureIcon className="w-full h-full text-white" />
                 </div>
@@ -197,13 +180,12 @@ export const Features: React.FC = function () {
                     {feature.description}
                   </p>
 
-                  <div
-                    className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ${feature.color} text-white shadow-md`}
-                  >
+                  <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ${feature.color} text-white shadow-md`}>
                     {feature.stats}
                   </div>
                 </div>
 
+                {/* Blur glow effect */}
                 <div
                   className={`absolute inset-0 rounded-2xl bg-gradient-to-r ${feature.color} opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl`}
                 ></div>

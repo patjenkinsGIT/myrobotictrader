@@ -277,7 +277,7 @@ export const PrivacyPage: React.FC = function () {
         <div className="max-w-4xl mx-auto text-center">
           <a
             href="/"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-500/30"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-500/30"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to MyRoboticTrader

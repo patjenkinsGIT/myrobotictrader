@@ -27,6 +27,8 @@ import { Footer } from "./components/Footer";
 import { ResourcesPage } from "./pages/ResourcesPage";
 import { PrivacyPage } from "./pages/PrivacyPage";
 import { BusinessCardLanding } from "./components/BusinessCardLanding";
+import { BlogListPage } from "./BlogListPage";
+import { BlogPostPage } from "./BlogPostPage";
 
 // SEO configurations for different pages with structured data
 const seoConfigs = {
@@ -109,6 +111,26 @@ const seoConfigs = {
     canonicalUrl: "https://rd6xolh11t0gmjdo-default.preview.taskade.app/card",
     pageType: "card" as const,
   },
+  blog: {
+    title:
+      "Trading Education Blog | Real Insights from Autonomous Crypto Trading",
+    description:
+      "Learn systematic crypto trading strategies from real results. No hype, just transparent insights from building an AI-enhanced autonomous trading system.",
+    keywords:
+      "crypto trading blog, automated trading education, systematic trading, AI trading insights, crypto trading strategies, trading transparency",
+    ogTitle: "Trading Education Blog - Real Insights, Real Results",
+    ogDescription:
+      "Learn from real trading results and transparent insights about autonomous crypto trading systems.",
+    ogImage:
+      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/og-image.png",
+    twitterTitle: "Trading Education Blog - MyRoboticTrader",
+    twitterDescription:
+      "Real insights from building transparent, systematic crypto trading systems.",
+    twitterImage:
+      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/twitter-image.png",
+    canonicalUrl: "https://rd6xolh11t0gmjdo-default.preview.taskade.app/blog",
+    pageType: "blog" as const,
+  },
 };
 
 // SEO Wrapper Component
@@ -116,7 +138,12 @@ const SEOWrapper = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
 
   const getSEOConfig = () => {
+    if (location.pathname.startsWith("/blog/")) {
+      return seoConfigs.blog; // Individual blog posts use blog SEO
+    }
     switch (location.pathname) {
+      case "/blog":
+        return seoConfigs.blog;
       case "/resources":
         return seoConfigs.resources;
       case "/privacy":
@@ -208,6 +235,8 @@ function App() {
             <Route path="/resources" element={<ResourcesPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/card" element={<BusinessCardLanding />} />
+            <Route path="/blog" element={<BlogListPage />} />
+            <Route path="/blog/:slug" element={<BlogPostPage />} />
           </Routes>
           <Footer />
         </SEOWrapper>

@@ -327,7 +327,7 @@ const FAQItem: React.FC<FAQItemProps> = ({ question, answer }) => {
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (
-    <div className="bg-white/8 backdrop-blur-sm rounded-xl border border-white/20 overflow-hidden hover:border-white/30 transition-all duration-300 shadow-lg shadow-purple-500/10">
+    <div className="bg-gray-900/50 rounded-xl border border-white/10 overflow-hidden hover:border-purple-400/40 transition-all duration-300 shadow-lg shadow-purple-500/10">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-white/10 transition-colors duration-200"
@@ -418,7 +418,7 @@ export const FAQ: React.FC = () => {
         </div>
 
         {/* CTA at bottom */}
-        <div className="mt-16 text-center bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+        <div className="mt-16 text-center bg-gradient-to-r from-gray-900/30 to-purple-900/20 rounded-2xl p-8 border border-white/10 shadow-lg shadow-purple-500/10">
           <h3 className="text-2xl font-bold text-white mb-4">
             Still Have Questions?
           </h3>
