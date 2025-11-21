@@ -1,8 +1,13 @@
 import * as React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ArrowRight, Menu, X } from "lucide-react";
+import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
 
 export const FullNav: React.FC = () => {
+  const handleWatchWebinar = () => {
+    trackCTAClick("get_free_training", "full_nav");
+    trackOutboundLink("https://dailyprofits.link/class", "Watch Webinar Nav");
+  };
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
@@ -61,13 +66,16 @@ export const FullNav: React.FC = () => {
             ))}
 
             {/* CTA Button */}
-            <Link
-              to="/"
+            <a
+              href="https://dailyprofits.link/class"
+              onClick={handleWatchWebinar}
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-4 py-2 rounded-full font-semibold text-sm transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-500/30"
             >
-              Start Trading
+              Watch Free Webinar
               <ArrowRight className="w-4 h-4" />
-            </Link>
+            </a>
           </div>
 
           {/* Mobile Menu Button */}
@@ -102,14 +110,19 @@ export const FullNav: React.FC = () => {
                   {item.label}
                 </Link>
               ))}
-              <Link
-                to="/"
-                onClick={() => setMobileMenuOpen(false)}
+              <a
+                href="https://dailyprofits.link/class"
+                onClick={(e) => {
+                  handleWatchWebinar();
+                  setMobileMenuOpen(false);
+                }}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-4 py-2 rounded-full font-semibold text-sm transition-all duration-300 shadow-lg shadow-purple-500/30"
               >
-                Start Trading
+                Watch Free Webinar
                 <ArrowRight className="w-4 h-4" />
-              </Link>
+              </a>
             </div>
           </div>
         )}
