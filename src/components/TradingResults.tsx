@@ -205,7 +205,7 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
   };
 
   return (
-    <section className="py-16 px-4 relative overflow-hidden">
+    <section id="trading-results" className="py-16 px-4 relative overflow-hidden">
       <div className="relative max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-600/20 to-blue-600/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20 mb-6">

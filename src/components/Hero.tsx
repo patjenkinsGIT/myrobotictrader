@@ -26,7 +26,7 @@ export const Hero: React.FC = () => {
       {/* Floating Icons - only in hero section */}
       <FloatingIcons />
 
-      <div className="relative max-w-6xl mx-auto text-center z-10 mt-24">
+      <div className="relative max-w-6xl mx-auto text-center z-10 mt-32">
         <div className="mb-8">
           {/* Updated badge to AI-Enhanced Autonomous Trading */}
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-purple-400/40 mb-6 mt-4 shadow-lg shadow-purple-500/20">
