@@ -15,7 +15,6 @@ export const FullNav: React.FC = () => {
     { label: "Home", path: "/" },
     { label: "Blog", path: "/blog" },
     { label: "Resources", path: "/resources" },
-    { label: "Privacy", path: "/privacy" },
   ];
 
   const isActive = (path: string) => {
@@ -40,7 +39,7 @@ export const FullNav: React.FC = () => {
                 />
               </div>
             </div>
-            <div className="text-lg font-bold hidden sm:block">
+            <div className="text-lg font-bold">
               <span className="text-white">My</span>
               <span className="text-transparent bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text">
                 Robotic

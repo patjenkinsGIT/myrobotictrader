@@ -1,12 +1,26 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
 
 export const MinimalNav: React.FC = () => {
+  const location = useLocation();
   const handleWatchWebinar = () => {
     trackCTAClick("get_free_training", "minimal_nav");
     trackOutboundLink("https://dailyprofits.link/class", "Watch Webinar Nav");
+  };
+
+  const navItems = [
+    { label: "Home", path: "/" },
+    { label: "Blog", path: "/blog" },
+    { label: "Resources", path: "/resources" },
+  ];
+
+  const isActive = (path: string) => {
+    if (path === "/") {
+      return location.pathname === "/";
+    }
+    return location.pathname.startsWith(path);
   };
 
   return (
@@ -24,7 +38,7 @@ export const MinimalNav: React.FC = () => {
                 />
               </div>
             </div>
-            <div className="text-lg font-bold hidden sm:block">
+            <div className="text-lg font-bold">
               <span className="text-white">My</span>
               <span className="text-transparent bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text">
                 Robotic
@@ -35,24 +49,19 @@ export const MinimalNav: React.FC = () => {
 
           {/* Navigation Links */}
           <div className="hidden md:flex items-center gap-6">
-            <Link
-              to="/resources"
-              className="text-gray-200 hover:text-white transition-colors duration-300 text-sm font-medium"
-            >
-              Resources
-            </Link>
-            <Link
-              to="/blog"
-              className="text-gray-200 hover:text-white transition-colors duration-300 text-sm font-medium"
-            >
-              Blog
-            </Link>
-            <Link
-              to="/privacy"
-              className="text-gray-200 hover:text-white transition-colors duration-300 text-sm font-medium"
-            >
-              Privacy
-            </Link>
+            {navItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`text-sm font-medium transition-colors duration-300 ${
+                  isActive(item.path)
+                    ? "text-purple-300"
+                    : "text-gray-200 hover:text-white"
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
           </div>
 
           {/* CTA Button */}
