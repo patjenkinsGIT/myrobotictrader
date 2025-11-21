@@ -11,7 +11,7 @@ interface SEOHeadProps {
   twitterDescription?: string;
   twitterImage?: string;
   canonicalUrl?: string;
-  pageType?: "home" | "resources" | "privacy" | "card";
+  pageType?: "home" | "resources" | "privacy" | "card" | "blog";
 }
 
 export const SEOHead: React.FC<SEOHeadProps> = ({

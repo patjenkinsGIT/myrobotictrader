@@ -108,7 +108,7 @@ export const BlogListPage: React.FC = () => {
       {/* Blog Posts Grid - Enhanced with Features-style cards */}
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 mb-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {sortedPosts.map((post, index) => (
+          {sortedPosts.map((post) => (
             <Link
               key={post.slug}
               to={`/blog/${post.slug}`}
