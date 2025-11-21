@@ -1,32 +1,11 @@
 import * as React from "react";
 import { ArrowLeft, Shield, Eye, Link, Mail } from "lucide-react";
+import { FullNav } from "../components/FullNav";
 
 export const PrivacyPage: React.FC = function () {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
-      {/* Logo at top - CLICKABLE */}
-      <div className="absolute top-8 left-1/2 transform -translate-x-1/2 z-20">
-        <a href="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-purple-500/40 bg-gradient-to-br from-purple-500 to-pink-500 p-0.5 group-hover:scale-105 transition-transform">
-            <div className="w-full h-full rounded-lg overflow-hidden bg-white/10 backdrop-blur-sm">
-              <img
-                src="/robot-logo.png"
-                alt="MyRoboticTrader Robot"
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </div>
-          <div className="text-2xl font-bold group-hover:scale-105 transition-transform">
-            <span className="text-white">My</span>
-            <span className="text-transparent bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text">
-              Robotic
-            </span>
-            <span className="text-white">Trader</span>
-            <span className="text-purple-300 text-sm ml-1">.com</span>
-          </div>
-        </a>
-      </div>
-
+      <FullNav />
       {/* Header with Back Button */}
       <section className="py-8 px-4 border-b border-white/10 pt-24">
         <div className="max-w-4xl mx-auto">

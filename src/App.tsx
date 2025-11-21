@@ -29,6 +29,7 @@ import { PrivacyPage } from "./pages/PrivacyPage";
 import { BusinessCardLanding } from "./components/BusinessCardLanding";
 import { BlogListPage } from "./BlogListPage";
 import { BlogPostPage } from "./BlogPostPage";
+import { MinimalNav } from "./components/MinimalNav";
 
 // SEO configurations for different pages with structured data
 const seoConfigs = {
@@ -181,6 +182,7 @@ const HomePage = () => {
 
   return (
     <>
+      <MinimalNav />
       <Hero />
       <MyStory tradingStats={tradingStats} />
       <TradingResults

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { Lightbulb, TrendingUp, Target, AlertCircle, CheckCircle, Info } from "lucide-react";
 import postsData from "./data/posts.json";
+import { FullNav } from "./components/FullNav";
 
 interface BlogPost {
   title: string;
@@ -269,6 +270,7 @@ export const BlogPostPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      <FullNav />
       {/* Back to Blog Link */}
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         <Link

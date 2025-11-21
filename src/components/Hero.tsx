@@ -26,30 +26,7 @@ export const Hero: React.FC = () => {
       {/* Floating Icons - only in hero section */}
       <FloatingIcons />
 
-      {/* Logo at top - Keep custom robot here */}
-      <div className="absolute top-8 left-1/2 transform -translate-x-1/2 z-20">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-purple-500/40 bg-gradient-to-br from-purple-500 to-pink-500 p-0.5">
-            <div className="w-full h-full rounded-lg overflow-hidden bg-white/10 backdrop-blur-sm">
-              <img
-                src="/robot-logo.png"
-                alt="MyRoboticTrader Robot"
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </div>
-          <div className="text-2xl font-bold">
-            <span className="text-white">My</span>
-            <span className="text-transparent bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text">
-              Robotic
-            </span>
-            <span className="text-white">Trader</span>
-            <span className="text-purple-300 text-sm ml-1">.com</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="relative max-w-6xl mx-auto text-center z-10 mt-16">
+      <div className="relative max-w-6xl mx-auto text-center z-10 mt-24">
         <div className="mb-8">
           {/* Updated badge to AI-Enhanced Autonomous Trading */}
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-purple-400/40 mb-6 mt-4 shadow-lg shadow-purple-500/20">

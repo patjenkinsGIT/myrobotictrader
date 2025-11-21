@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { useGoogleSheetsData } from "../hooks/useGoogleSheetsData";
 import { calculateTimeSinceStart } from "../utils/tradingTime";
+import { FullNav } from "../components/FullNav";
 
 export const ResourcesPage: React.FC = function () {
   // Get live trading data
@@ -25,6 +26,7 @@ export const ResourcesPage: React.FC = function () {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
+      <FullNav />
       {/* Hero Section - MATCHING HOMEPAGE STRUCTURE */}
       <section className="py-16 px-4 relative overflow-hidden">
 

@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import postsData from "./data/posts.json";
+import { FullNav } from "./components/FullNav";
 
 interface BlogPost {
   title: string;
@@ -51,6 +52,7 @@ export const BlogListPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
+      <FullNav />
       {/* Hero Section */}
       <div className="relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
