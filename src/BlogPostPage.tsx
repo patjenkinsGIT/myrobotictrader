@@ -272,7 +272,7 @@ export const BlogPostPage: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <FullNav />
       {/* Back to Blog Link */}
-      <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+      <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-16">
         <Link
           to="/blog"
           className="inline-flex items-center px-4 py-2 rounded-full border border-purple-400/40 hover:border-purple-400/60 text-purple-300 hover:text-purple-200 transition-all duration-300 font-medium hover:scale-105"
