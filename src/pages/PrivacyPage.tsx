@@ -6,17 +6,9 @@ export const PrivacyPage: React.FC = function () {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
       <FullNav />
-      {/* Header with Back Button */}
-      <section className="py-8 px-4 border-b border-white/10 pt-24">
+      {/* Header */}
+      <section className="px-4 border-b border-white/10 pt-16 pb-8">
         <div className="max-w-4xl mx-auto">
-          <a
-            href="/"
-            className="inline-flex items-center gap-2 text-blue-300 hover:text-blue-200 transition-colors mb-6"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Home
-          </a>
-
           <div className="text-center">
             <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/30 to-purple-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-blue-400/40 mb-6 shadow-lg shadow-blue-500/20">
               <Shield className="w-4 h-4 text-blue-300" />
