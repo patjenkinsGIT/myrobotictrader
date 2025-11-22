@@ -9,9 +9,10 @@ export const PrivacyPage: React.FC = function () {
       {/* Header */}
       <section className="py-12 px-4 border-b border-white/10 relative overflow-hidden">
         <div className="relative max-w-4xl mx-auto text-center mt-8">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/30 to-purple-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-blue-400/40 mb-6 shadow-lg shadow-blue-500/20">
-              <Shield className="w-4 h-4 text-blue-300" />
-              <span className="text-blue-200 font-medium">Privacy Policy</span>
+          <div className="mb-8">
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-purple-400/40 mb-6 shadow-lg shadow-purple-500/20">
+              <Shield className="w-4 h-4 text-purple-300" />
+              <span className="text-purple-200 font-medium">Privacy Policy</span>
             </div>
 
             <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">

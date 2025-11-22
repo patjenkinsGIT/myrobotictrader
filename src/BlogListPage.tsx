@@ -56,8 +56,9 @@ export const BlogListPage: React.FC = () => {
       {/* Hero Section */}
       <section className="py-12 px-4 relative overflow-hidden">
         <div className="relative max-w-7xl mx-auto text-center mt-8">
-          {/* Badge matching Hero style */}
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-purple-400/40 mb-6 shadow-lg shadow-purple-500/20">
+          <div className="mb-8">
+            {/* Badge matching Hero style */}
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-purple-400/40 mb-6 shadow-lg shadow-purple-500/20">
               <span className="text-purple-200 font-medium">
                 Trading Education
               </span>
@@ -73,6 +74,7 @@ export const BlogListPage: React.FC = () => {
               Real insights from building transparent, systematic crypto trading
               systems. No hype, just facts and lessons learned.
             </p>
+          </div>
         </div>
       </section>
 
