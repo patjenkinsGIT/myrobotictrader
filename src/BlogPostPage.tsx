@@ -127,16 +127,49 @@ export const BlogPostPage: React.FC = () => {
           </h3>
         );
       }
-      // Horizontal rule
+      // Horizontal rule (skip rendering, just add spacing)
       else if (line.trim() === "---") {
         flushParagraph();
         flushList();
-        elements.push(
-          <hr
-            key={`hr-${index}`}
-            className="my-12 border-t-2 border-purple-500/30"
-          />
-        );
+        // Skip rendering the divider - just treat as whitespace
+      }
+      // Image ![alt](url)
+      else if (line.trim().match(/^!\[([^\]]*)\]\(([^)]+)\)$/)) {
+        flushParagraph();
+        flushList();
+        const match = line.trim().match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+        if (match) {
+          // Check if next line is a caption (starts and ends with *)
+          const nextLine = lines[index + 1];
+          const isCaption = nextLine && nextLine.trim().match(/^\*(.+)\*$/);
+
+          if (isCaption) {
+            const captionMatch = nextLine.trim().match(/^\*(.+)\*$/);
+            elements.push(
+              <figure key={`fig-${index}`} className="my-8">
+                <img
+                  src={match[2]}
+                  alt={match[1]}
+                  className="w-full rounded-xl border border-purple-400/30"
+                />
+                <figcaption className="text-center text-slate-400 text-sm italic mt-3">
+                  {captionMatch ? captionMatch[1] : ''}
+                </figcaption>
+              </figure>
+            );
+            // Skip the next line since we've consumed the caption
+            lines[index + 1] = '';
+          } else {
+            elements.push(
+              <img
+                key={`img-${index}`}
+                src={match[2]}
+                alt={match[1]}
+                className="w-full rounded-xl my-6 border border-purple-400/30"
+              />
+            );
+          }
+        }
       }
       // List items
       else if (line.trim().startsWith("- ")) {
