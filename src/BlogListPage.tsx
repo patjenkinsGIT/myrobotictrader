@@ -55,7 +55,7 @@ export const BlogListPage: React.FC = () => {
       <FullNav />
       {/* Hero Section */}
       <section className="py-12 px-4 relative overflow-hidden">
-        <div className="relative max-w-7xl mx-auto text-center mt-8">
+        <div className="relative max-w-6xl mx-auto text-center mt-8">
           <div className="mb-8">
             {/* Badge matching Hero style */}
             <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-purple-400/40 mb-6 shadow-lg shadow-purple-500/20">
@@ -79,7 +79,7 @@ export const BlogListPage: React.FC = () => {
       </section>
 
       {/* Category Filter - Enhanced sizing and styling */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-wrap gap-4 justify-center">
           <button
             onClick={() => setSelectedCategory(null)}
@@ -108,7 +108,7 @@ export const BlogListPage: React.FC = () => {
       </div>
 
       {/* Blog Posts Grid - Enhanced with Features-style cards */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 mb-16">
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 mb-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {sortedPosts.map((post) => (
             <Link
