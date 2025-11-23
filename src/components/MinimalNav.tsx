@@ -155,12 +155,24 @@ export const MinimalNav: React.FC = () => {
                 )}
               </Link>
             ))}
+
+            {/* CTA Button - Inside Desktop Nav */}
+            <a
+              href="https://dailyprofits.link/class"
+              onClick={handleWatchWebinar}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 via-purple-600 to-pink-500 hover:from-purple-600 hover:via-pink-500 hover:to-pink-600 text-white px-5 py-2.5 rounded-full font-bold text-sm transition-all duration-200 hover:scale-[1.02] hover:shadow-xl shadow-lg shadow-purple-500/40 hover:shadow-purple-500/60 flex-shrink-0"
+            >
+              Watch Free Webinar
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+            </a>
           </div>
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden ml-auto text-white hover:text-purple-300 transition-colors p-2"
+            className="md:hidden text-white hover:text-purple-300 transition-colors p-2"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? (
@@ -169,18 +181,6 @@ export const MinimalNav: React.FC = () => {
               <Menu className="w-6 h-6" />
             )}
           </button>
-
-          {/* CTA Button - Right Aligned with Nav */}
-          <a
-            href="https://dailyprofits.link/class"
-            onClick={handleWatchWebinar}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="max-md:hidden inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 via-purple-600 to-pink-500 hover:from-purple-600 hover:via-pink-500 hover:to-pink-600 text-white px-5 py-2.5 rounded-full font-bold text-sm transition-all duration-200 hover:scale-[1.02] hover:shadow-xl shadow-lg shadow-purple-500/40 hover:shadow-purple-500/60 flex-shrink-0"
-          >
-            Watch Free Webinar
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-          </a>
         </div>
 
         {/* Mobile Menu Dropdown */}
