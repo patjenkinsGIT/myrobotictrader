@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import postsData from "./data/posts.json";
 import { FullNav } from "./components/FullNav";
+import { RecentPosts } from "./components/RecentPosts";
 
 interface BlogPost {
   title: string;
@@ -10,6 +11,8 @@ interface BlogPost {
   content: string;
   category: string;
   metaDescription: string;
+  heroImage: string;
+  imageAlt: string;
 }
 
 export const BlogPostPage: React.FC = () => {
@@ -279,6 +282,16 @@ export const BlogPostPage: React.FC = () => {
             </div>
           </header>
 
+          {/* Hero Image Banner */}
+          <div className="mb-8 rounded-2xl overflow-hidden h-48 md:h-56">
+            <img
+              src={post.heroImage}
+              alt={post.imageAlt}
+              className="w-full h-full object-cover"
+              style={{ filter: 'brightness(0.85)' }}
+            />
+          </div>
+
           {/* Article Content */}
           <div className="prose prose-invert prose-lg max-w-none">
             <div className="bg-slate-900/95 backdrop-blur-sm rounded-2xl p-8 md:p-12 mb-8 border border-purple-400/30">
@@ -287,7 +300,7 @@ export const BlogPostPage: React.FC = () => {
           </div>
 
           {/* CTA at the end */}
-          <div className="mt-16 mb-8 bg-slate-900/95 backdrop-blur-sm rounded-2xl p-8 border border-purple-400/30">
+          <div className="bg-slate-900/95 backdrop-blur-sm rounded-2xl p-8 border border-purple-400/30">
             <h3 className="text-2xl font-bold mb-4 text-white">
               Ready to See Real Trading Results?
             </h3>
@@ -318,7 +331,7 @@ export const BlogPostPage: React.FC = () => {
           </div>
 
           {/* Share Section - More personal */}
-          <div className="mt-16 pt-8 border-t border-purple-400/30">
+          <div className="mt-8 pt-8 border-t border-purple-400/30">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
                 <p className="text-slate-300 font-medium mb-1">
@@ -358,6 +371,11 @@ export const BlogPostPage: React.FC = () => {
                 </svg>
               </a>
             </div>
+          </div>
+
+          {/* Recent Posts */}
+          <div className="mt-12">
+            <RecentPosts currentSlug={post.slug} />
           </div>
         </article>
       </section>

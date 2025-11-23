@@ -10,6 +10,8 @@ interface BlogPost {
   content: string;
   category: string;
   metaDescription: string;
+  heroImage: string;
+  imageAlt: string;
 }
 
 export const BlogListPage: React.FC = () => {
@@ -116,16 +118,26 @@ export const BlogListPage: React.FC = () => {
               to={`/blog/${post.slug}`}
               className="group"
             >
-              <article className="h-full rounded-2xl p-6 border border-white/10 hover:border-purple-400/40 transition-all duration-500 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/10 cursor-pointer relative bg-gray-900/50">
-                {/* Category Badge - enhanced */}
-                <div className="relative mb-4">
+              <article className="h-full rounded-2xl overflow-hidden border border-white/10 hover:border-purple-400/40 transition-all duration-500 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/10 cursor-pointer relative bg-gray-900/50">
+                {/* Hero Image Preview */}
+                <div className="h-40 overflow-hidden">
+                  <img
+                    src={post.heroImage}
+                    alt={post.imageAlt}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-all duration-300"
+                    style={{ filter: 'brightness(0.85)' }}
+                  />
+                </div>
+
+                {/* Category Badge - positioned over image */}
+                <div className="absolute top-4 left-4">
                   <span className="inline-flex items-center px-3 py-1.5 text-xs font-semibold rounded-full bg-purple-500 text-white shadow-md">
                     {post.category}
                   </span>
                 </div>
 
                 {/* Content */}
-                <div className="relative">
+                <div className="p-6 relative">
                   <h2 className="text-2xl font-bold mb-3 text-white group-hover:text-purple-200 transition-colors duration-300">
                     {post.title}
                   </h2>
