@@ -62,8 +62,8 @@ export const FullNav: React.FC = () => {
             </div>
           </Link>
 
-          {/* Desktop Trading Stats - Center Aligned */}
-          <div className="hidden md:!flex md:items-center md:gap-4 md:flex-1 md:justify-center md:max-w-4xl">
+          {/* Desktop Trading Stats - Center Aligned - DESKTOP ONLY */}
+          <div className="md:flex items-center gap-4 flex-1 justify-center max-w-4xl hidden">
             {/* Total Profit */}
             <div className="flex items-center gap-3 bg-white/10 rounded-lg px-4 py-2 border border-white/20 shadow-sm hover:shadow-md hover:bg-white/[0.12] transition-all duration-200 cursor-default">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-green-400 to-emerald-500 p-1.5 flex-shrink-0 shadow-md">
@@ -131,8 +131,8 @@ export const FullNav: React.FC = () => {
             </div>
           </div>
 
-          {/* Desktop Navigation - Right Aligned */}
-          <div className="hidden md:!flex md:items-center md:gap-6">
+          {/* Desktop Navigation - Right Aligned - DESKTOP ONLY */}
+          <div className="md:flex items-center gap-6 hidden">
             {navItems.map((item) => (
               <Link
                 key={item.path}

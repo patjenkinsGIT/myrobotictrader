@@ -50,8 +50,8 @@ export const MinimalNav: React.FC = () => {
             </div>
           </Link>
 
-          {/* Desktop Navigation Links - Right Aligned */}
-          <div className="hidden md:!flex md:items-center md:gap-6">
+          {/* Desktop Navigation Links - Right Aligned - DESKTOP ONLY */}
+          <div className="md:flex items-center gap-6 hidden">
             {navItems.map((item) => (
               <Link
                 key={item.path}
