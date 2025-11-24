@@ -30,6 +30,7 @@ import { BusinessCardLanding } from "./components/BusinessCardLanding";
 import { BlogListPage } from "./BlogListPage";
 import { BlogPostPage } from "./BlogPostPage";
 import { MinimalNav } from "./components/MinimalNav";
+import { FullNav } from "./components/FullNav";
 
 // SEO configurations for different pages with structured data
 const seoConfigs = {
@@ -182,7 +183,7 @@ const HomePage = () => {
 
   return (
     <>
-      <MinimalNav />
+      <FullNav />
       <Hero />
       <MyStory tradingStats={tradingStats} />
       <TradingResults
