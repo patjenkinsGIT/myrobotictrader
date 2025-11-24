@@ -29,7 +29,6 @@ import { PrivacyPage } from "./pages/PrivacyPage";
 import { BusinessCardLanding } from "./components/BusinessCardLanding";
 import { BlogListPage } from "./BlogListPage";
 import { BlogPostPage } from "./BlogPostPage";
-import { MinimalNav } from "./components/MinimalNav";
 import { FullNav } from "./components/FullNav";
 
 // SEO configurations for different pages with structured data
