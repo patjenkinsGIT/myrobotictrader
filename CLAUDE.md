@@ -1,6 +1,7 @@
 # CLAUDE.md - AI Assistant Guide for MyRoboticTrader
 
 **Last Updated**: 2025-11-24
+**Documentation Version**: 1.1.0
 **Codebase Version**: 1.0.0
 **Total Lines of Code**: ~11,794 TypeScript lines
 
@@ -18,6 +19,7 @@
 8. [API Integrations](#api-integrations)
 9. [Deployment](#deployment)
 10. [Troubleshooting](#troubleshooting)
+11. [Maintaining This Documentation](#maintaining-this-documentation)
 
 ---
 
@@ -1095,6 +1097,147 @@ interface LiveTransaction {
   timestamp: string;
 }
 ```
+
+---
+
+## Maintaining This Documentation
+
+### When to Update CLAUDE.md
+
+This documentation should evolve with the codebase. Here's when updates are needed:
+
+#### **Major Updates Required** (Every 3-6 months or when):
+
+- ✅ **Architectural changes** - New state management, routing changes, major refactors
+- ✅ **New patterns adopted** - Different component structure, new conventions
+- ✅ **Major features added** - New API integrations, significant components (10+ files)
+- ✅ **Dependency upgrades** - React 19, Router v8, major library changes
+- ✅ **File structure reorganization** - Moving directories, splitting large files
+- ✅ **New team members struggle** - If onboarding reveals documentation gaps
+
+#### **Minor Updates** (As needed):
+
+- 📝 **Quick fixes** - Typos, outdated commands, incorrect file paths
+- 📝 **New troubleshooting tips** - Common errors discovered
+- 📝 **Environment variable changes** - New API keys, config updates
+- 📝 **Deployment procedure updates** - CI/CD workflow changes
+
+#### **Skip Updates For**:
+
+- ❌ Individual bug fixes
+- ❌ Content updates (blog posts, copy changes)
+- ❌ Minor styling tweaks
+- ❌ Single component additions that follow existing patterns
+
+### Update Workflow Options
+
+#### **Option 1: Regular Feature Branch** (Recommended for most updates)
+
+```bash
+# Create feature branch
+git checkout main
+git pull origin main
+git checkout -b docs/update-claude-md
+
+# Update CLAUDE.md
+# (Edit the file with your changes)
+
+# Commit and push
+git add CLAUDE.md
+git commit -m "Update: CLAUDE.md with new API integration details"
+git push origin docs/update-claude-md
+
+# Create PR and merge to main
+```
+
+#### **Option 2: Direct to Main** (For quick fixes only)
+
+```bash
+# Quick typo fixes or minor corrections
+git checkout main
+git pull origin main
+
+# Fix issue in CLAUDE.md
+# (Edit the file)
+
+git add CLAUDE.md
+git commit -m "Fix: Correct command syntax in CLAUDE.md"
+git push origin main
+```
+
+#### **Option 3: Claude Code Session Branch** (AI assistant updates)
+
+```bash
+# This is specifically for Claude Code AI sessions
+# Branch format: claude/claude-md-<session-id>
+# Claude Code handles this automatically when you ask it to update
+
+# Example: "Claude, update CLAUDE.md to reflect the new auth system"
+# Claude will create: claude/claude-md-<new-session-id>
+```
+
+**Note**: The `claude/` prefix branch pattern is specific to Claude Code AI assistant sessions. For human developers or routine updates, use Option 1 or 2.
+
+### Recommended Maintenance Schedule
+
+| Frequency | Action | Example Trigger |
+|-----------|--------|-----------------|
+| **Quarterly** | Full review & update | Major version releases, significant features |
+| **Monthly** | Quick scan for outdated info | Check commands still work, paths correct |
+| **As Needed** | Add troubleshooting tips | New common errors discovered |
+| **Immediate** | Critical fixes | Wrong commands, broken workflows |
+
+### Maintenance Best Practices
+
+1. **Update the "Last Updated" date**: Always change the date at the bottom when making updates
+2. **Test all commands**: Verify bash commands actually work before committing
+3. **Verify file paths**: Ensure all referenced files still exist at those locations
+4. **Check file sizes**: Update file size references if files have grown significantly
+5. **Update line counts**: If major code changes occur, update the "Total Lines of Code" metric
+6. **Get feedback**: Ask team members what was confusing or missing
+7. **Keep it practical**: Focus on what helps developers understand the codebase quickly
+
+### Documentation Health Check
+
+Run this quick check periodically:
+
+```bash
+# 1. Verify key files still exist
+ls src/hooks/useGoogleSheetsData.ts
+ls src/utils/smartCache.ts
+ls src/components/TradingResults.tsx
+
+# 2. Check build commands work
+npm run build
+npm run lint
+
+# 3. Verify dev server starts
+npm run dev
+# (Ctrl+C to stop)
+
+# 4. Check environment variables
+cat .env.example
+```
+
+### For AI Assistants: Updating This File
+
+If you're an AI assistant asked to update CLAUDE.md:
+
+1. **Read the entire file first** - Understand current structure
+2. **Check what changed** - Use git diff, file search to see recent changes
+3. **Update relevant sections** - Don't rewrite everything, update specific parts
+4. **Preserve formatting** - Keep the same markdown style and structure
+5. **Update metadata** - Change "Last Updated" date
+6. **Test references** - Verify file paths and commands are still accurate
+7. **Keep it concise** - Add new info without unnecessary verbosity
+
+### Version History
+
+| Date | Version | Changes |
+|------|---------|---------|
+| 2025-11-24 | 1.0.0 | Initial comprehensive documentation created |
+| 2025-11-24 | 1.1.0 | Added "Maintaining This Documentation" section with update workflows and schedule |
+| - | - | (Future updates will be logged here) |
 
 ---
 
