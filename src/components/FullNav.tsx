@@ -171,7 +171,7 @@ export const FullNav: React.FC = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden text-white hover:text-purple-300 transition-colors"
+            className="md:hidden ml-auto text-white hover:text-purple-300 transition-colors p-2"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? (
