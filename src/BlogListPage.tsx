@@ -12,6 +12,7 @@ interface BlogPost {
   metaDescription: string;
   heroImage: string;
   imageAlt: string;
+  excerpt?: string;
 }
 
 export const BlogListPage: React.FC = () => {
@@ -147,7 +148,7 @@ export const BlogListPage: React.FC = () => {
                   </p>
 
                   <p className="text-gray-300 leading-relaxed mb-6 group-hover:text-gray-200 transition-colors duration-300">
-                    {getExcerpt(post.content, 150)}
+                    {post.excerpt || getExcerpt(post.content, 150)}
                   </p>
 
                   <div className="flex items-center text-purple-400 font-semibold group-hover:text-purple-300 transition-colors">
