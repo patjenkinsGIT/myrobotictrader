@@ -30,14 +30,23 @@
 
 ### Claude Code Skills (6)
 
+#### Global Skills (available in all projects)
+*Location: `~/.claude/skills/`*
+
+| Skill | Invoke With | Use For |
+|-------|-------------|---------|
+| **design-guide** | `/skill design-guide` | UI/component design, ensuring modern clean look |
+| **idea-validator** | `/skill idea-validator` | Validate new ideas before building |
+| **roadmap-builder** | `/skill roadmap-builder` | Prioritize features, decide what to build next |
+
+#### Project Skills (myrobotictrader only)
+*Location: `.claude/skills/`*
+
 | Skill | Invoke With | Use For |
 |-------|-------------|---------|
 | **myrobotictrader-skill** | `/skill myrobotictrader-skill` | Brand voice content, blog posts, social media for MRT |
 | **marketing-writer** | `/skill marketing-writer` | Landing pages, launch emails, feature announcements |
 | **affiliate-marketing** | `/skill affiliate-marketing` | Affiliate content, product reviews, comparisons |
-| **design-guide** | `/skill design-guide` | UI/component design, ensuring modern clean look |
-| **idea-validator** | `/skill idea-validator` | Validate new ideas before building |
-| **roadmap-builder** | `/skill roadmap-builder` | Prioritize features, decide what to build next |
 
 ### MCP Server: myrobotictrader-mcp
 
