@@ -54,6 +54,7 @@ export const BlogPostPage: React.FC = () => {
     const elements: JSX.Element[] = [];
     let currentParagraph: string[] = [];
     let inList = false;
+    let isOrderedList = false;
     let listItems: string[] = [];
     let inTable = false;
     let tableRows: string[] = [];
@@ -74,18 +75,20 @@ export const BlogPostPage: React.FC = () => {
 
     const flushList = () => {
       if (listItems.length > 0) {
+        const ListTag = isOrderedList ? 'ol' : 'ul';
         elements.push(
-          <ul
-            key={`ul-${elements.length}`}
-            className="mb-6 space-y-2 text-slate-300 text-lg list-disc list-inside ml-4"
+          <ListTag
+            key={`${isOrderedList ? 'ol' : 'ul'}-${elements.length}`}
+            className={`mb-6 space-y-2 text-slate-300 text-lg ${isOrderedList ? 'list-decimal' : 'list-disc'} list-inside ml-4`}
           >
             {listItems.map((item, idx) => (
               <li key={idx}>{renderInlineMarkdown(item)}</li>
             ))}
-          </ul>
+          </ListTag>
         );
         listItems = [];
         inList = false;
+        isOrderedList = false;
       }
     };
 
@@ -229,12 +232,23 @@ export const BlogPostPage: React.FC = () => {
           }
         }
       }
-      // List items
+      // Unordered list items (- item)
       else if (line.trim().startsWith("- ")) {
         flushParagraph();
         flushTable();
+        if (inList && isOrderedList) flushList(); // Flush if switching list type
         inList = true;
+        isOrderedList = false;
         listItems.push(line.trim().substring(2));
+      }
+      // Ordered list items (1. item, 2. item, etc.)
+      else if (/^\d+\.\s/.test(line.trim())) {
+        flushParagraph();
+        flushTable();
+        if (inList && !isOrderedList) flushList(); // Flush if switching list type
+        inList = true;
+        isOrderedList = true;
+        listItems.push(line.trim().replace(/^\d+\.\s/, ''));
       }
       // Table rows (lines starting and ending with |)
       else if (line.trim().startsWith("|") && line.trim().endsWith("|")) {
