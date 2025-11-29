@@ -55,6 +55,8 @@ export const BlogPostPage: React.FC = () => {
     let currentParagraph: string[] = [];
     let inList = false;
     let listItems: string[] = [];
+    let inTable = false;
+    let tableRows: string[] = [];
 
     const flushParagraph = () => {
       if (currentParagraph.length > 0) {
@@ -84,6 +86,62 @@ export const BlogPostPage: React.FC = () => {
         );
         listItems = [];
         inList = false;
+      }
+    };
+
+    const flushTable = () => {
+      if (tableRows.length > 0) {
+        // Parse table: first row is header, second is separator, rest are data
+        const headerRow = tableRows[0];
+        const dataRows = tableRows.slice(2); // Skip header and separator
+
+        const parseRow = (row: string) => {
+          return row
+            .split("|")
+            .slice(1, -1) // Remove empty first/last from | splits
+            .map((cell) => cell.trim());
+        };
+
+        const headers = parseRow(headerRow);
+        const rows = dataRows.map(parseRow);
+
+        elements.push(
+          <div key={`table-${elements.length}`} className="mb-6 overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-purple-400/30">
+                  {headers.map((header, idx) => (
+                    <th
+                      key={idx}
+                      className="py-3 px-4 text-purple-300 font-semibold text-sm"
+                    >
+                      {renderInlineMarkdown(header)}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((row, rowIdx) => (
+                  <tr
+                    key={rowIdx}
+                    className="border-b border-slate-700/50 hover:bg-slate-800/30"
+                  >
+                    {row.map((cell, cellIdx) => (
+                      <td
+                        key={cellIdx}
+                        className="py-3 px-4 text-slate-300 text-sm"
+                      >
+                        {renderInlineMarkdown(cell)}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        );
+        tableRows = [];
+        inTable = false;
       }
     };
 
@@ -174,18 +232,30 @@ export const BlogPostPage: React.FC = () => {
       // List items
       else if (line.trim().startsWith("- ")) {
         flushParagraph();
+        flushTable();
         inList = true;
         listItems.push(line.trim().substring(2));
+      }
+      // Table rows (lines starting and ending with |)
+      else if (line.trim().startsWith("|") && line.trim().endsWith("|")) {
+        flushParagraph();
+        flushList();
+        inTable = true;
+        tableRows.push(line.trim());
       }
       // Empty line
       else if (line.trim() === "") {
         flushParagraph();
         if (!inList) flushList();
+        if (inTable) flushTable();
       }
       // Regular paragraph text
       else {
         if (inList) {
           flushList();
+        }
+        if (inTable) {
+          flushTable();
         }
         currentParagraph.push(line);
       }
@@ -193,6 +263,7 @@ export const BlogPostPage: React.FC = () => {
 
     flushParagraph();
     flushList();
+    flushTable();
 
     return elements;
   };
