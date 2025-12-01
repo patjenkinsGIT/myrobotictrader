@@ -96,31 +96,41 @@ export const useGoogleSheetsData = () => {
   // Parse Calculations data with dynamic Grand Total finding
   const parseCalculationsData = useCallback(
     (rows: string[][], fetchTimestamp: string): TradingStats => {
+      // DEBUG: Log raw data received
+      console.log('[parseCalculationsData] Rows received:', rows?.length, 'rows');
+      console.log('[parseCalculationsData] First row (headers):', rows?.[0]);
+      console.log('[parseCalculationsData] Last 3 rows:', rows?.slice(-3));
+
       if (!rows || rows.length < 3) {
+        console.warn('[parseCalculationsData] FALLBACK: Not enough rows (need 3, got', rows?.length, ')');
         return getMockTradingStatsBase();
       }
 
       // Find Grand Total row (searches from bottom up)
+      // FIXED: Reduced minimum column requirement from 6 to 2 (just need month + profit)
       let grandTotalRow = null;
       let grandTotalIndex = -1;
 
       for (let i = rows.length - 1; i >= 0; i--) {
         const row = rows[i];
-        if (
-          row &&
-          row.length >= 6 &&
-          row[0]?.toString().toLowerCase().includes("grand total")
-        ) {
+        const firstCell = row?.[0]?.toString().toLowerCase() || '';
+        console.log(`[parseCalculationsData] Row ${i}: length=${row?.length}, firstCell="${row?.[0]}"`);
+
+        if (row && row.length >= 2 && firstCell.includes("grand total")) {
           grandTotalRow = row;
           grandTotalIndex = i;
+          console.log('[parseCalculationsData] FOUND Grand Total at row', i, ':', row);
           break;
         }
       }
 
-      if (!grandTotalRow || grandTotalRow.length < 6) {
+      if (!grandTotalRow || grandTotalRow.length < 2) {
+        console.warn('[parseCalculationsData] FALLBACK: Grand Total row not found or too short');
+        console.warn('[parseCalculationsData] grandTotalRow:', grandTotalRow);
         return getMockTradingStatsBase();
       }
 
+      // Parse Grand Total values - handle missing columns gracefully
       const totalProfit =
         parseFloat(grandTotalRow[1]?.toString().replace(/[$,]/g, "")) || 0;
       const totalTrades =
@@ -134,22 +144,34 @@ export const useGoogleSheetsData = () => {
       const bestMonthProfit =
         parseFloat(grandTotalRow[6]?.toString().replace(/[$,]/g, "")) || 0;
 
+      console.log('[parseCalculationsData] Parsed Grand Total:', {
+        totalProfit,
+        totalTrades,
+        avgProfitPerTrade,
+        monthlyAverage,
+        dailyAvg,
+        bestMonthProfit
+      });
+
       // Parse monthly data (all rows before Grand Total)
       const monthlyData: TradingDataPoint[] = [];
+      console.log('[parseCalculationsData] Parsing monthly data, rows 1 to', grandTotalIndex - 1);
 
       for (let i = 1; i < grandTotalIndex; i++) {
         const row = rows[i];
-        if (row && row.length >= 3) {
+        if (row && row.length >= 2) {  // FIXED: Reduced from 3 to 2
           const monthRaw = row[0]?.toString().trim();
           const profit =
             parseFloat(row[1]?.toString().replace(/[$,]/g, "")) || 0;
           const trades = parseInt(row[2]?.toString().replace(/[,]/g, "")) || 0;
 
+          // FIXED: Include months with $0 profit but valid month names (like future months)
+          // Only skip truly empty/invalid rows
           if (
             monthRaw &&
             monthRaw !== "Grand Total" &&
             monthRaw !== "" &&
-            profit > 0
+            !monthRaw.toLowerCase().includes("month")  // Skip header row if it slipped through
           ) {
             let shortMonth = monthRaw;
 
@@ -184,9 +206,13 @@ export const useGoogleSheetsData = () => {
               profit,
               trades,
             });
+            console.log(`[parseCalculationsData] Added month: ${shortMonth}, profit: $${profit}, trades: ${trades}`);
           }
         }
       }
+
+      console.log('[parseCalculationsData] SUCCESS: Parsed', monthlyData.length, 'months of data');
+      console.log('[parseCalculationsData] Final totals: $' + totalProfit.toFixed(2) + ', ' + totalTrades + ' trades');
 
       return {
         totalProfit,
@@ -203,8 +229,13 @@ export const useGoogleSheetsData = () => {
     []
   );
 
-  // Base mock trading stats
+  // Base mock trading stats - ONLY used as fallback when API fails
   const getMockTradingStatsBase = (): TradingStats => {
+    // CRITICAL: This is mock data! If you see this in production, the API is failing
+    console.error('⚠️ [getMockTradingStatsBase] USING MOCK DATA - API parsing failed!');
+    console.error('⚠️ This means the site is showing FAKE data of $3,905.39 instead of real data.');
+    console.error('⚠️ Check the parsing logs above to see why.');
+
     const monthlyData: TradingDataPoint[] = [
       { month: "Jan", profit: 477.23, trades: 89 },
       { month: "Feb", profit: 686.71, trades: 124 },
@@ -226,15 +257,15 @@ export const useGoogleSheetsData = () => {
     );
 
     return {
-      totalProfit,
-      totalTrades,
+      totalProfit,  // $3,905.39 - THIS IS FAKE DATA
+      totalTrades,  // 785 - THIS IS FAKE DATA
       avgProfitPerTrade: totalTrades > 0 ? totalProfit / totalTrades : 0,
       monthlyAverage:
         monthlyData.length > 0 ? totalProfit / monthlyData.length : 0,
       dailyAvg: 15.5,
       bestMonthProfit: Math.max(...monthlyData.map((m) => m.profit)),
       monthlyData,
-      isLiveData: false,
+      isLiveData: false,  // FALSE = mock data is being used
       lastUpdated: new Date().toISOString(),
     };
   };
@@ -270,13 +301,24 @@ export const useGoogleSheetsData = () => {
           ]);
 
         // Parse calculations data
+        console.log('[fetchEnhancedTradingStats] Calculations API response status:', calculationsResponse.status);
         const calculationsData =
           calculationsResponse.status === "fulfilled"
             ? await calculationsResponse.value.json()
             : null;
-        const originalStats = calculationsData
-          ? parseCalculationsData(calculationsData.values || [], fetchTimestamp)
+
+        if (!calculationsData) {
+          console.error('[fetchEnhancedTradingStats] Calculations API call failed completely');
+        } else {
+          console.log('[fetchEnhancedTradingStats] Calculations data received:', calculationsData.values?.length, 'rows');
+        }
+
+        const originalStats = calculationsData?.values
+          ? parseCalculationsData(calculationsData.values, fetchTimestamp)
           : getMockTradingStatsBase();
+
+        // Log whether we got live or mock data
+        console.log('[fetchEnhancedTradingStats] Using', originalStats.isLiveData ? '✅ LIVE DATA' : '❌ MOCK DATA');
 
         // Parse portfolio data
         const portfolioData =
@@ -312,8 +354,10 @@ export const useGoogleSheetsData = () => {
     [parseCalculationsData, parseCoinbaseBalance]
   );
 
-  // Enhanced mock data
+  // Enhanced mock data - ONLY used when API completely fails
   const getEnhancedMockTradingStats = (): EnhancedTradingStats => {
+    console.error('⚠️ [getEnhancedMockTradingStats] USING ENHANCED MOCK DATA - Complete API failure!');
+
     const monthlyData: TradingDataPoint[] = [
       { month: "Jan", profit: 477.23, trades: 89 },
       { month: "Feb", profit: 686.71, trades: 124 },
