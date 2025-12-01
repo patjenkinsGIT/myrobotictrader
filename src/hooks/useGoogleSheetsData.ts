@@ -130,28 +130,51 @@ export const useGoogleSheetsData = () => {
         return getMockTradingStatsBase();
       }
 
-      // Parse Grand Total values - handle missing columns gracefully
+      // Parse Grand Total values - only totalProfit and totalTrades are here
       const totalProfit =
         parseFloat(grandTotalRow[1]?.toString().replace(/[$,]/g, "")) || 0;
       const totalTrades =
         parseInt(grandTotalRow[2]?.toString().replace(/[,]/g, "")) || 0;
-      const avgProfitPerTrade =
-        parseFloat(grandTotalRow[3]?.toString().replace(/[$,]/g, "")) || 0;
-      const monthlyAverage =
-        parseFloat(grandTotalRow[4]?.toString().replace(/[$,]/g, "")) || 0;
-      const dailyAvg =
-        parseFloat(grandTotalRow[5]?.toString().replace(/[$,]/g, "")) || 0;
-      const bestMonthProfit =
-        parseFloat(grandTotalRow[6]?.toString().replace(/[$,]/g, "")) || 0;
 
-      console.log('[parseCalculationsData] Parsed Grand Total:', {
-        totalProfit,
-        totalTrades,
-        avgProfitPerTrade,
-        monthlyAverage,
-        dailyAvg,
-        bestMonthProfit
-      });
+      console.log('[parseCalculationsData] Grand Total: $' + totalProfit + ', ' + totalTrades + ' trades');
+
+      // Find calculated fields (D-G) in the most recent month row
+      // These fields are ALWAYS in the current month's row, not Grand Total
+      let avgProfitPerTrade = 0;
+      let monthlyAverage = 0;
+      let dailyAvg = 0;
+      let bestMonthProfit = 0;
+
+      // Search backwards from Grand Total to find a row with calculated fields in columns D-G
+      for (let i = grandTotalIndex - 1; i >= 1; i--) {
+        const row = rows[i];
+        if (row && row.length >= 7) {
+          const colD = parseFloat(row[3]?.toString().replace(/[$,]/g, "")) || 0;
+          const colE = parseFloat(row[4]?.toString().replace(/[$,]/g, "")) || 0;
+          const colF = parseFloat(row[5]?.toString().replace(/[$,]/g, "")) || 0;
+          const colG = parseFloat(row[6]?.toString().replace(/[$,]/g, "")) || 0;
+
+          // Found row with calculated fields
+          if (colD > 0 || colE > 0 || colF > 0 || colG > 0) {
+            avgProfitPerTrade = colD;
+            monthlyAverage = colE;
+            dailyAvg = colF;
+            bestMonthProfit = colG;
+            console.log('[parseCalculationsData] Found calculated fields in row', i, ':', row[0]);
+            console.log('[parseCalculationsData] Calculated fields:', {
+              avgProfitPerTrade,
+              monthlyAverage,
+              dailyAvg,
+              bestMonthProfit
+            });
+            break;
+          }
+        }
+      }
+
+      if (avgProfitPerTrade === 0 && monthlyAverage === 0) {
+        console.warn('[parseCalculationsData] WARNING: Calculated fields not found in any month row');
+      }
 
       // Parse monthly data (all rows before Grand Total)
       const monthlyData: TradingDataPoint[] = [];
