@@ -13,7 +13,8 @@ export const blogStyles = {
   // ============================================
 
   // Main slide container - matches ResourcesPage card style with generous spacing
-  slideContainer: "my-20 rounded-2xl overflow-hidden bg-gradient-to-r from-gray-900/80 to-purple-900/40 p-8 md:p-10 border border-white/10 backdrop-blur-sm",
+  // Note: Using explicit margin classes for clear separation from text
+  slideContainer: "rounded-2xl overflow-hidden bg-gradient-to-r from-gray-900/80 to-purple-900/40 p-8 md:p-10 border border-white/10 backdrop-blur-sm",
 
   // ============================================
   // CARDS

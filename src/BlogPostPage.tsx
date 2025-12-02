@@ -205,7 +205,7 @@ export const BlogPostPage: React.FC = () => {
         if (slideMatch) {
           const variant = slideMatch[1].trim() as 'returns-1928' | 'reality-check' | 'lost-decades' | 'irs-tax' | 'tax-impact' | 'storage-fees' | 'free-gold-trap' | 'coins-vs-bars' | 'celebrity-machine' | 'gold-vs-trading';
           elements.push(
-            <div key={`slide-wrapper-${index}`} className="my-12">
+            <div key={`slide-wrapper-${index}`} style={{ marginTop: '80px', marginBottom: '80px' }}>
               <GoldBlogSlide key={`slide-${index}`} variant={variant} />
             </div>
           );

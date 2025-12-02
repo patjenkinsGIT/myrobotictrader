@@ -47,13 +47,12 @@ const Returns1928: React.FC = () => (
       title="Annualized Returns Since 1928"
       subtitle="Nearly a century of data tells the story"
     />
-    <div className="flex justify-center items-end gap-20 mt-8">
+    <div className="flex justify-center items-end mt-8" style={{ gap: '80px' }}>
       {/* S&P 500 Bar - Bright Green (taller = 9.9%) */}
       <div className="flex flex-col items-center">
         <span className="text-3xl font-bold text-green-400 mb-2">9.9%</span>
         <div
-          className="w-20 rounded-t-lg"
-          style={{ height: '180px', backgroundColor: '#4ade80' }}
+          style={{ height: '180px', width: '80px', backgroundColor: '#4ade80', borderRadius: '8px 8px 0 0' }}
         ></div>
         <span className="text-green-400 font-medium mt-3">S&P 500</span>
       </div>
@@ -61,8 +60,7 @@ const Returns1928: React.FC = () => (
       <div className="flex flex-col items-center">
         <span className="text-3xl font-bold text-yellow-500 mb-2">5.0%</span>
         <div
-          className="w-20 rounded-t-lg"
-          style={{ height: '90px', backgroundColor: '#eab308' }}
+          style={{ height: '90px', width: '80px', backgroundColor: '#eab308', borderRadius: '8px 8px 0 0' }}
         ></div>
         <span className="text-yellow-500 font-medium mt-3">Gold</span>
       </div>
