@@ -14,7 +14,8 @@ export const blogStyles = {
 
   // Main slide container - matches ResourcesPage card style with generous spacing
   // Note: Using explicit margin classes for clear separation from text
-  slideContainer: "rounded-2xl overflow-hidden bg-gradient-to-r from-gray-900/80 to-purple-900/40 p-8 md:p-10 border border-white/10 backdrop-blur-sm",
+  // Mobile: p-4 (16px), Desktop: p-8 (32px) to p-10 (40px)
+  slideContainer: "rounded-2xl overflow-hidden bg-gradient-to-r from-gray-900/80 to-purple-900/40 p-4 md:p-8 lg:p-10 border border-white/10 backdrop-blur-sm",
 
   // ============================================
   // CARDS
@@ -59,11 +60,11 @@ export const blogStyles = {
   // TYPOGRAPHY
   // ============================================
 
-  // Slide title - large, white, bold
-  slideTitle: "text-2xl md:text-3xl font-bold text-white mb-2",
+  // Slide title - large, white, bold (responsive sizing for mobile)
+  slideTitle: "text-xl md:text-2xl lg:text-3xl font-bold text-white mb-1 md:mb-2",
 
-  // Slide subtitle - gray, smaller
-  slideSubtitle: "text-gray-300 text-base",
+  // Slide subtitle - gray, smaller (responsive)
+  slideSubtitle: "text-gray-300 text-sm md:text-base",
 
   // Source citation
   source: "text-center text-gray-500 text-xs italic mt-6",

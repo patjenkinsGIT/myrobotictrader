@@ -32,9 +32,9 @@ const SlideContainer: React.FC<{ children: React.ReactNode; source?: string }> =
   </div>
 );
 
-// Title component using shared styles
+// Title component using shared styles (responsive margins)
 const SlideTitle: React.FC<{ title: string; subtitle?: string }> = ({ title, subtitle }) => (
-  <div className="text-center mb-8">
+  <div className="text-center mb-4 md:mb-8">
     <h3 className={blogStyles.slideTitle}>{title}</h3>
     {subtitle && <p className={blogStyles.slideSubtitle}>{subtitle}</p>}
   </div>
@@ -47,22 +47,24 @@ const Returns1928: React.FC = () => (
       title="Annualized Returns Since 1928"
       subtitle="Nearly a century of data tells the story"
     />
-    <div className="flex justify-center items-end mt-8" style={{ gap: '80px' }}>
+    <div className="flex justify-center items-end gap-10 md:gap-20 mt-6 md:mt-8">
       {/* S&P 500 Bar - Bright Green (taller = 9.9%) */}
       <div className="flex flex-col items-center">
-        <span className="text-3xl font-bold text-green-400 mb-2">9.9%</span>
+        <span className="text-2xl md:text-3xl font-bold text-green-400 mb-2">9.9%</span>
         <div
-          style={{ height: '180px', width: '80px', backgroundColor: '#4ade80', borderRadius: '8px 8px 0 0' }}
+          className="w-12 md:w-20 rounded-t-lg"
+          style={{ height: '140px', backgroundColor: '#4ade80' }}
         ></div>
-        <span className="text-green-400 font-medium mt-3">S&P 500</span>
+        <span className="text-green-400 font-medium mt-2 md:mt-3 text-sm md:text-base">S&P 500</span>
       </div>
       {/* Gold Bar - Bright Yellow (shorter = 5.0%) */}
       <div className="flex flex-col items-center">
-        <span className="text-3xl font-bold text-yellow-500 mb-2">5.0%</span>
+        <span className="text-2xl md:text-3xl font-bold text-yellow-500 mb-2">5.0%</span>
         <div
-          style={{ height: '90px', width: '80px', backgroundColor: '#eab308', borderRadius: '8px 8px 0 0' }}
+          className="w-12 md:w-20 rounded-t-lg"
+          style={{ height: '70px', backgroundColor: '#eab308' }}
         ></div>
-        <span className="text-yellow-500 font-medium mt-3">Gold</span>
+        <span className="text-yellow-500 font-medium mt-2 md:mt-3 text-sm md:text-base">Gold</span>
       </div>
     </div>
   </SlideContainer>
@@ -75,50 +77,50 @@ const RealityCheck: React.FC = () => (
       title="40-Year Reality Check"
       subtitle="1984-2024 Returns: Nominal vs After Inflation"
     />
-    <div className="flex justify-center items-end gap-6 md:gap-12 mt-8">
+    <div className="flex justify-center items-end gap-4 md:gap-12 mt-4 md:mt-8">
       {/* Gold Group */}
       <div className="text-center">
-        <div className="flex items-end gap-2 justify-center">
+        <div className="flex items-end gap-1 md:gap-2 justify-center">
           <div className="flex flex-col items-center">
-            <span className={`text-lg font-bold ${blogStyles.gold} mb-2`}>4.3%</span>
+            <span className={`text-sm md:text-lg font-bold ${blogStyles.gold} mb-1 md:mb-2`}>4.3%</span>
             <div
-              className="w-16 md:w-20 rounded-t-lg"
-              style={{ height: '86px', background: blogStyles.barGold }}
+              className="w-10 md:w-20 rounded-t-lg"
+              style={{ height: '65px', background: blogStyles.barGold }}
             />
           </div>
           <div className="flex flex-col items-center">
-            <span className={`text-lg font-bold ${blogStyles.negative} mb-2`}>1.5%</span>
+            <span className={`text-sm md:text-lg font-bold ${blogStyles.negative} mb-1 md:mb-2`}>1.5%</span>
             <div
-              className="w-16 md:w-20 rounded-t-lg"
-              style={{ height: '30px', background: blogStyles.barRed }}
+              className="w-10 md:w-20 rounded-t-lg"
+              style={{ height: '23px', background: blogStyles.barRed }}
             />
           </div>
         </div>
-        <span className={`${blogStyles.goldBold} mt-4 block`}>GOLD</span>
+        <span className={`${blogStyles.goldBold} mt-2 md:mt-4 block text-sm md:text-base`}>GOLD</span>
       </div>
 
       {/* S&P Group */}
       <div className="text-center">
-        <div className="flex items-end gap-2 justify-center">
+        <div className="flex items-end gap-1 md:gap-2 justify-center">
           <div className="flex flex-col items-center">
-            <span className={`text-lg font-bold ${blogStyles.positive} mb-2`}>11.6%</span>
+            <span className={`text-sm md:text-lg font-bold ${blogStyles.positive} mb-1 md:mb-2`}>11.6%</span>
             <div
-              className="w-16 md:w-20 rounded-t-lg"
-              style={{ height: '165px', background: blogStyles.barBlue }}
+              className="w-10 md:w-20 rounded-t-lg"
+              style={{ height: '125px', background: blogStyles.barBlue }}
             />
           </div>
           <div className="flex flex-col items-center">
-            <span className={`text-lg font-bold ${blogStyles.positive} mb-2`}>8.6%</span>
+            <span className={`text-sm md:text-lg font-bold ${blogStyles.positive} mb-1 md:mb-2`}>8.6%</span>
             <div
-              className="w-16 md:w-20 rounded-t-lg"
-              style={{ height: '122px', background: blogStyles.barGreen }}
+              className="w-10 md:w-20 rounded-t-lg"
+              style={{ height: '92px', background: blogStyles.barGreen }}
             />
           </div>
         </div>
-        <span className={`${blogStyles.blueBold} mt-4 block`}>S&P 500</span>
+        <span className={`${blogStyles.blueBold} mt-2 md:mt-4 block text-sm md:text-base`}>S&P 500</span>
       </div>
     </div>
-    <p className={`${blogStyles.muted} text-sm text-center mt-6`}>
+    <p className={`${blogStyles.muted} text-xs md:text-sm text-center mt-4 md:mt-6`}>
       Darker = Nominal &nbsp;&nbsp;|&nbsp;&nbsp; Lighter = After Inflation
     </p>
   </SlideContainer>
@@ -246,26 +248,26 @@ const StorageFees: React.FC = () => (
   <SlideContainer>
     <SlideTitle title="Storage Fees Eat Your Gains" />
 
-    <div className="space-y-6 mt-8">
-      <div className="flex items-baseline gap-4">
-        <span className={`${blogStyles.goldBold} text-5xl md:text-6xl`}>0.5%</span>
-        <span className="text-white text-xl">annual storage fee</span>
+    <div className="space-y-4 md:space-y-6 mt-6 md:mt-8">
+      <div className="flex flex-wrap items-baseline gap-2 md:gap-4">
+        <span className={`${blogStyles.goldBold} text-4xl md:text-6xl`}>0.5%</span>
+        <span className="text-white text-lg md:text-xl">annual storage fee</span>
       </div>
 
-      <div className="flex items-baseline gap-4">
-        <span className="text-gray-500 text-3xl">=</span>
-        <span className={`${blogStyles.negativeBold} text-3xl`}>$500/year</span>
-        <span className={blogStyles.muted}>on $100,000</span>
+      <div className="flex flex-wrap items-baseline gap-2 md:gap-4">
+        <span className="text-gray-500 text-2xl md:text-3xl">=</span>
+        <span className={`${blogStyles.negativeBold} text-2xl md:text-3xl`}>$500/year</span>
+        <span className={`${blogStyles.muted} text-sm md:text-base`}>on $100,000</span>
       </div>
     </div>
 
     {/* 20 year box */}
-    <div className={`${blogStyles.calloutWarning} mt-8 text-center`}>
-      <p className={`${blogStyles.negativeBold} text-xl md:text-2xl mb-2`}>
+    <div className={`${blogStyles.calloutWarning} mt-6 md:mt-8 text-center`}>
+      <p className={`${blogStyles.negativeBold} text-lg md:text-2xl mb-2`}>
         Over 20 years = $10,000+ in storage fees alone
       </p>
-      <p className={`${blogStyles.muted} mb-2`}>With gold returning only ~5% annually...</p>
-      <p className="text-white font-bold">Storage eats 10-20% of your total gains!</p>
+      <p className={`${blogStyles.muted} text-sm md:text-base mb-2`}>With gold returning only ~5% annually...</p>
+      <p className="text-white font-bold text-sm md:text-base">Storage eats 10-20% of your total gains!</p>
     </div>
   </SlideContainer>
 );
