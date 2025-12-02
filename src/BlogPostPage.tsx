@@ -65,7 +65,7 @@ export const BlogPostPage: React.FC = () => {
         elements.push(
           <p
             key={`p-${elements.length}`}
-            className="mb-6 text-slate-300 leading-relaxed text-lg"
+            className="mb-8 text-slate-300 leading-relaxed text-lg"
           >
             {renderInlineMarkdown(currentParagraph.join(" "))}
           </p>
@@ -205,7 +205,9 @@ export const BlogPostPage: React.FC = () => {
         if (slideMatch) {
           const variant = slideMatch[1].trim() as 'returns-1928' | 'reality-check' | 'lost-decades' | 'irs-tax' | 'tax-impact' | 'storage-fees' | 'free-gold-trap' | 'coins-vs-bars' | 'celebrity-machine' | 'gold-vs-trading';
           elements.push(
-            <GoldBlogSlide key={`slide-${index}`} variant={variant} />
+            <div key={`slide-wrapper-${index}`} className="my-12">
+              <GoldBlogSlide key={`slide-${index}`} variant={variant} />
+            </div>
           );
         } else {
           // Regular image

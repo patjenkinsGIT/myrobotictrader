@@ -47,7 +47,7 @@ const Returns1928: React.FC = () => (
       title="Annualized Returns Since 1928"
       subtitle="Nearly a century of data tells the story"
     />
-    <div className="flex justify-center items-end gap-12 mt-8">
+    <div className="flex justify-center items-end gap-20 mt-8">
       {/* S&P 500 Bar - Bright Green (taller = 9.9%) */}
       <div className="flex flex-col items-center">
         <span className="text-3xl font-bold text-green-400 mb-2">9.9%</span>
