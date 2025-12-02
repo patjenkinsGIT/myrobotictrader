@@ -47,18 +47,24 @@ const Returns1928: React.FC = () => (
       title="Annualized Returns Since 1928"
       subtitle="Nearly a century of data tells the story"
     />
-    <div className="flex justify-center items-end gap-12 md:gap-20 mt-8">
-      {/* S&P 500 Bar - Bright Green */}
+    <div className="flex justify-center items-end gap-12 mt-8">
+      {/* S&P 500 Bar - Bright Green (taller = 9.9%) */}
       <div className="flex flex-col items-center">
-        <span className="text-2xl md:text-3xl font-bold text-green-400 mb-2">9.9%</span>
-        <div className="w-20 md:w-24 h-48 bg-green-400 rounded-t-lg"></div>
-        <span className="text-green-400 font-semibold mt-3 text-base">S&P 500</span>
+        <span className="text-3xl font-bold text-green-400 mb-2">9.9%</span>
+        <div
+          className="w-20 rounded-t-lg"
+          style={{ height: '180px', backgroundColor: '#4ade80' }}
+        ></div>
+        <span className="text-green-400 font-medium mt-3">S&P 500</span>
       </div>
-      {/* Gold Bar - Bright Yellow */}
+      {/* Gold Bar - Bright Yellow (shorter = 5.0%) */}
       <div className="flex flex-col items-center">
-        <span className="text-2xl md:text-3xl font-bold text-yellow-500 mb-2">5.0%</span>
-        <div className="w-20 md:w-24 h-24 bg-yellow-500 rounded-t-lg"></div>
-        <span className="text-yellow-500 font-semibold mt-3 text-base">Gold</span>
+        <span className="text-3xl font-bold text-yellow-500 mb-2">5.0%</span>
+        <div
+          className="w-20 rounded-t-lg"
+          style={{ height: '90px', backgroundColor: '#eab308' }}
+        ></div>
+        <span className="text-yellow-500 font-medium mt-3">Gold</span>
       </div>
     </div>
   </SlideContainer>
