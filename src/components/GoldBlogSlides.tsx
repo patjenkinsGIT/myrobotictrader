@@ -48,21 +48,21 @@ const Returns1928: React.FC = () => (
       subtitle="Nearly a century of data tells the story"
     />
     <div className="flex justify-center items-end gap-8 md:gap-16 mt-8">
-      {/* S&P 500 Bar */}
+      {/* S&P 500 Bar - Bright Green */}
       <div className="flex flex-col items-center">
         <span className={`text-3xl md:text-4xl font-bold ${blogStyles.positive} mb-3`}>9.9%</span>
         <div
           className="w-28 md:w-36 rounded-t-xl"
-          style={{ height: '200px', background: blogStyles.barBlue }}
+          style={{ height: '200px', background: 'linear-gradient(to top, #22c55e, #4ade80)' }}
         />
-        <span className={`${blogStyles.blueBold} mt-4 text-lg`}>S&P 500</span>
+        <span className={`${blogStyles.positiveBold} mt-4 text-lg`}>S&P 500</span>
       </div>
-      {/* Gold Bar */}
+      {/* Gold Bar - Bright Yellow */}
       <div className="flex flex-col items-center">
         <span className={`text-3xl md:text-4xl font-bold ${blogStyles.gold} mb-3`}>5.0%</span>
         <div
           className="w-28 md:w-36 rounded-t-xl"
-          style={{ height: '100px', background: blogStyles.barGold }}
+          style={{ height: '100px', background: 'linear-gradient(to top, #ca8a04, #eab308)' }}
         />
         <span className={`${blogStyles.goldBold} mt-4 text-lg`}>Gold</span>
       </div>

@@ -12,8 +12,8 @@ export const blogStyles = {
   // SLIDE CONTAINERS
   // ============================================
 
-  // Main slide container - matches ResourcesPage card style
-  slideContainer: "my-8 rounded-2xl overflow-hidden bg-gradient-to-r from-gray-900/80 to-purple-900/40 p-8 md:p-10 border border-white/10 backdrop-blur-sm",
+  // Main slide container - matches ResourcesPage card style with generous spacing
+  slideContainer: "my-12 rounded-2xl overflow-hidden bg-gradient-to-r from-gray-900/80 to-purple-900/40 p-8 md:p-10 border border-white/10 backdrop-blur-sm",
 
   // ============================================
   // CARDS
@@ -134,6 +134,19 @@ export const blogStyles = {
 
   divider: "border-b border-slate-700/50 pb-2 mb-2",
   dividerLight: "border-b border-white/10 pb-2 mb-2",
+
+  // ============================================
+  // SPACING (for slides and text flow)
+  // ============================================
+
+  // Wrapper for slides - adds breathing room around each slide
+  slideWrapper: "my-10",
+
+  // Space between slide and following paragraph
+  textAfterSlide: "mt-8",
+
+  // Space between paragraph and following slide
+  textBeforeSlide: "mb-6",
 };
 
 // Convenience type for TypeScript autocomplete
