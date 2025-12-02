@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import postsData from "./data/posts.json";
 import { FullNav } from "./components/FullNav";
 import { RecentPosts } from "./components/RecentPosts";
+import { GoldBlogSlide } from "./components/GoldBlogSlides";
 
 interface BlogPost {
   title: string;
@@ -194,41 +195,52 @@ export const BlogPostPage: React.FC = () => {
         flushList();
         // Skip rendering the divider - just treat as whitespace
       }
-      // Image ![alt](url)
-      else if (line.trim().match(/^!\[([^\]]*)\]\(([^)]+)\)$/)) {
+      // Image ![alt](url) or Slide component ![Slide: variant]
+      else if (line.trim().match(/^!\[([^\]]*)\]\(([^)]+)\)$/) || line.trim().match(/^!\[Slide:\s*([^\]]+)\]$/)) {
         flushParagraph();
         flushList();
-        const match = line.trim().match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
-        if (match) {
-          // Check if next line is a caption (starts and ends with *)
-          const nextLine = lines[index + 1];
-          const isCaption = nextLine && nextLine.trim().match(/^\*(.+)\*$/);
 
-          if (isCaption) {
-            const captionMatch = nextLine.trim().match(/^\*(.+)\*$/);
-            elements.push(
-              <figure key={`fig-${index}`} className="my-8">
+        // Check for slide component syntax: ![Slide: variant]
+        const slideMatch = line.trim().match(/^!\[Slide:\s*([^\]]+)\]$/);
+        if (slideMatch) {
+          const variant = slideMatch[1].trim() as 'returns-1928' | 'reality-check' | 'lost-decades' | 'irs-tax' | 'tax-impact' | 'storage-fees' | 'free-gold-trap' | 'coins-vs-bars' | 'celebrity-machine' | 'gold-vs-trading';
+          elements.push(
+            <GoldBlogSlide key={`slide-${index}`} variant={variant} />
+          );
+        } else {
+          // Regular image
+          const match = line.trim().match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+          if (match) {
+            // Check if next line is a caption (starts and ends with *)
+            const nextLine = lines[index + 1];
+            const isCaption = nextLine && nextLine.trim().match(/^\*(.+)\*$/);
+
+            if (isCaption) {
+              const captionMatch = nextLine.trim().match(/^\*(.+)\*$/);
+              elements.push(
+                <figure key={`fig-${index}`} className="my-8">
+                  <img
+                    src={match[2]}
+                    alt={match[1]}
+                    className="w-full rounded-xl border border-purple-400/30"
+                  />
+                  <figcaption className="text-center text-slate-400 text-sm italic mt-3">
+                    {captionMatch ? captionMatch[1] : ''}
+                  </figcaption>
+                </figure>
+              );
+              // Skip the next line since we've consumed the caption
+              lines[index + 1] = '';
+            } else {
+              elements.push(
                 <img
+                  key={`img-${index}`}
                   src={match[2]}
                   alt={match[1]}
-                  className="w-full rounded-xl border border-purple-400/30"
+                  className="w-full rounded-xl my-6 border border-purple-400/30"
                 />
-                <figcaption className="text-center text-slate-400 text-sm italic mt-3">
-                  {captionMatch ? captionMatch[1] : ''}
-                </figcaption>
-              </figure>
-            );
-            // Skip the next line since we've consumed the caption
-            lines[index + 1] = '';
-          } else {
-            elements.push(
-              <img
-                key={`img-${index}`}
-                src={match[2]}
-                alt={match[1]}
-                className="w-full rounded-xl my-6 border border-purple-400/30"
-              />
-            );
+              );
+            }
           }
         }
       }
