@@ -19,6 +19,7 @@ export interface LiveTransaction {
   price: string;
   quantity: string;
   profit: number;
+  percentGain: number | null; // Column T - % Gain (only for CLOSE trades)
   timestamp: string;
   status: "completed" | "profit_goal_reached";
 }
@@ -34,7 +35,7 @@ export const LiveTransactionLog: React.FC = () => {
 
   // Constants
   const SHEET_TAB = "Transactions Raw Data";
-  const SHEET_RANGE = "A:G";
+  const SHEET_RANGE = "A:T"; // Extended to include Column T (% Gain)
 
   // Format price to display properly
   const formatPrice = useCallback((price: string): string => {
@@ -128,7 +129,7 @@ export const LiveTransactionLog: React.FC = () => {
     []
   );
 
-  // Parse Google Sheets data from A:G columns
+  // Parse Google Sheets data from A:T columns
   const parseGoogleSheetsData = useCallback(
     (rows: string[][]): LiveTransaction[] => {
       if (!rows || rows.length === 0) return [];
@@ -143,6 +144,9 @@ export const LiveTransactionLog: React.FC = () => {
           const [coin, action, price, quantity, status, profit, timestamp] =
             row;
 
+          // Column T is index 19 (% Gain)
+          const percentGainRaw = row[19];
+
           // Skip empty rows
           if (!coin || !profit) {
             return null;
@@ -152,6 +156,16 @@ export const LiveTransactionLog: React.FC = () => {
           const parsedProfit =
             parseFloat(profit.toString().replace(/[$,]/g, "")) || 0;
 
+          // Parse percent gain from string like "2.17%" or "2.17"
+          let parsedPercentGain: number | null = null;
+          if (percentGainRaw) {
+            const cleanedPercent = percentGainRaw.toString().replace(/[%]/g, "").trim();
+            const numValue = parseFloat(cleanedPercent);
+            if (!isNaN(numValue)) {
+              parsedPercentGain = numValue;
+            }
+          }
+
           const transaction = {
             id: `tx_${Date.now()}_${index}`,
             coin: coin?.toString().trim() || "",
@@ -159,6 +173,7 @@ export const LiveTransactionLog: React.FC = () => {
             price: formatPrice(price?.toString() || ""),
             quantity: formatQuantity(quantity?.toString() || ""),
             profit: parsedProfit,
+            percentGain: parsedPercentGain,
             timestamp: formatTimestamp(timestamp?.toString() || ""),
             status: parseStatus(status?.toString() || ""),
           };
@@ -289,6 +304,7 @@ export const LiveTransactionLog: React.FC = () => {
       "Price",
       "Quantity",
       "Profit",
+      "% Gain",
       "Status",
       "Timestamp",
     ];
@@ -301,6 +317,7 @@ export const LiveTransactionLog: React.FC = () => {
         tx.price.replace(/,/g, ""),
         tx.quantity.replace(/,/g, ""),
         tx.action === "CLOSE" ? tx.profit.toFixed(2) : "0.00",
+        tx.action === "CLOSE" && tx.percentGain !== null ? tx.percentGain.toFixed(2) + "%" : "",
         tx.status === "profit_goal_reached"
           ? "Profit Goal Reached"
           : "Completed",
@@ -326,66 +343,20 @@ export const LiveTransactionLog: React.FC = () => {
 
   // Fallback data
   const getFallbackData = useCallback((): LiveTransaction[] => {
+    // Column T (% Gain) is at index 19, so we pad columns 7-18 with empty strings
+    const pad = ["", "", "", "", "", "", "", "", "", "", "", ""];
     const mockRows: string[][] = [
-      ["Coin", "Action", "Price", "Quantity", "Status", "Profit", "Timestamp"],
-      [
-        "SUI",
-        "CLOSE",
-        "$3.60",
-        "50.9",
-        "Profit Goal Reached",
-        "$7.34",
-        "Today 2:48 AM",
-      ],
-      [
-        "BONK",
-        "CLOSE",
-        "$0.00002",
-        "10.2M",
-        "Profit Goal Reached",
-        "$9.03",
-        "9/8 12:26 PM",
-      ],
-      ["DOGE", "CLOSE", "$0.24", "710", "Completed", "$5.16", "9/8 9:19 AM"],
-      [
-        "BTC",
-        "CLOSE",
-        "$43,250.00",
-        "0.025",
-        "Profit Goal Reached",
-        "$12.45",
-        "9/7 11:45 PM",
-      ],
-      ["ETH", "CLOSE", "$2,650.75", "1.8", "Completed", "$8.92", "9/7 6:33 PM"],
-      [
-        "ADA",
-        "OPEN",
-        "$0.45",
-        "2,450",
-        "Active Position",
-        "$0.00",
-        "9/7 2:15 PM",
-      ],
-      [
-        "SOL",
-        "OPEN",
-        "$145.32",
-        "12.5",
-        "Active Position",
-        "$0.00",
-        "9/7 8:22 AM",
-      ],
-      [
-        "MATIC",
-        "OPEN",
-        "$0.89",
-        "1,200",
-        "Active Position",
-        "$0.00",
-        "9/6 11:58 PM",
-      ],
-      ["LINK", "CLOSE", "$11.45", "85.3", "Completed", "$9.87", "9/6 7:41 PM"],
-      ["DOT", "CLOSE", "$5.67", "180.5", "Completed", "$7.12", "9/6 3:29 PM"],
+      ["Coin", "Action", "Price", "Quantity", "Status", "Profit", "Timestamp", ...pad, "% Gain"],
+      ["SUI", "CLOSE", "$3.60", "50.9", "Profit Goal Reached", "$7.34", "Today 2:48 AM", ...pad, "4.01%"],
+      ["BONK", "CLOSE", "$0.00002", "10.2M", "Profit Goal Reached", "$9.03", "9/8 12:26 PM", ...pad, "4.43%"],
+      ["DOGE", "CLOSE", "$0.24", "710", "Completed", "$5.16", "9/8 9:19 AM", ...pad, "3.03%"],
+      ["BTC", "CLOSE", "$43,250.00", "0.025", "Profit Goal Reached", "$12.45", "9/7 11:45 PM", ...pad, "1.15%"],
+      ["ETH", "CLOSE", "$2,650.75", "1.8", "Completed", "$8.92", "9/7 6:33 PM", ...pad, "0.19%"],
+      ["ADA", "OPEN", "$0.45", "2,450", "Active Position", "$0.00", "9/7 2:15 PM", ...pad, ""],
+      ["SOL", "OPEN", "$145.32", "12.5", "Active Position", "$0.00", "9/7 8:22 AM", ...pad, ""],
+      ["MATIC", "OPEN", "$0.89", "1,200", "Active Position", "$0.00", "9/6 11:58 PM", ...pad, ""],
+      ["LINK", "CLOSE", "$11.45", "85.3", "Completed", "$9.87", "9/6 7:41 PM", ...pad, "1.01%"],
+      ["DOT", "CLOSE", "$5.67", "180.5", "Completed", "$7.12", "9/6 3:29 PM", ...pad, "0.70%"],
     ];
 
     return parseGoogleSheetsData(mockRows);
@@ -771,15 +742,22 @@ export const LiveTransactionLog: React.FC = () => {
                     </div>
                   </div>
                   <div className="flex items-center justify-between gap-2">
-                    <div className="flex-shrink-0">
+                    <div className="flex items-center gap-3 flex-shrink-0">
                       {tx.action === "CLOSE" ? (
-                        <div
-                          className={`font-bold text-sm font-mono ${getProfitColor(
-                            tx.profit
-                          )}`}
-                        >
-                          +${tx.profit.toFixed(2)}
-                        </div>
+                        <>
+                          <div
+                            className={`font-bold text-sm font-mono ${getProfitColor(
+                              tx.profit
+                            )}`}
+                          >
+                            +${tx.profit.toFixed(2)}
+                          </div>
+                          {tx.percentGain !== null && (
+                            <div className="font-bold text-sm font-mono text-green-400">
+                              ({tx.percentGain.toFixed(2)}%)
+                            </div>
+                          )}
+                        </>
                       ) : (
                         <div className="text-gray-500 text-sm">Active</div>
                       )}
@@ -809,11 +787,12 @@ export const LiveTransactionLog: React.FC = () => {
         <div className="hidden md:block">
           <div className="bg-white/5 px-4 py-3 border-b border-white/5">
             <div className="grid grid-cols-12 gap-2 text-xs font-semibold text-gray-300 uppercase tracking-wider">
-              <div className="col-span-2">Coin</div>
+              <div className="col-span-1">Coin</div>
               <div className="col-span-2">Action</div>
               <div className="col-span-2">Price</div>
               <div className="col-span-2">Quantity</div>
               <div className="col-span-2">Profit</div>
+              <div className="col-span-1">% Gain</div>
               <div className="col-span-2">Time</div>
             </div>
           </div>
@@ -836,7 +815,7 @@ export const LiveTransactionLog: React.FC = () => {
                   }
                 >
                   <div className="grid grid-cols-12 gap-2 items-center text-sm">
-                    <div className="col-span-2">
+                    <div className="col-span-1">
                       <div className={`font-bold ${getCoinColor(tx.coin)}`}>
                         {tx.coin}
                       </div>
@@ -883,6 +862,15 @@ export const LiveTransactionLog: React.FC = () => {
                           <TrendingUp className="w-3 h-3" />
                           <span>Active</span>
                         </div>
+                      )}
+                    </div>
+                    <div className="col-span-1">
+                      {tx.action === "CLOSE" && tx.percentGain !== null ? (
+                        <div className="font-bold font-mono text-green-400 text-xs">
+                          {tx.percentGain.toFixed(2)}%
+                        </div>
+                      ) : (
+                        <div className="text-gray-500 font-mono text-xs">-</div>
                       )}
                     </div>
                     <div className="col-span-2">
