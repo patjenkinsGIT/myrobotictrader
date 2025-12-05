@@ -10,6 +10,7 @@ import {
   Clock,
   Database,
   Wifi,
+  Percent,
 } from "lucide-react";
 import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
 import { calculateTimeSinceStart } from "../utils/tradingTime";
@@ -350,8 +351,8 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
         {/* Live Transaction Log */}
         <LiveTransactionLog />
 
-        {/* Second row - Monthly Average, Daily Average, Best Month */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        {/* Second row - Monthly Average, Daily Average, Best Month, Avg % Gain */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-emerald-500/15">
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
             <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-emerald-500/40">
@@ -403,11 +404,28 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
                 Best Month
               </div>
               <div className="text-amber-300 text-sm mt-1">
-                {bestMonthData ? getFullMonthName(bestMonthData.month) : "N/A"}{" "}
-                2025
+                {bestMonthData ? `${getFullMonthName(bestMonthData.month)} ${bestMonthData.year}` : "N/A"}
               </div>
             </div>
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
+          </div>
+
+          <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-blue-500/15">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
+            <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-blue-500/40">
+              <Percent className="w-full h-full text-white" />
+            </div>
+
+            <div className="relative text-center">
+              <div className="text-2xl font-bold text-cyan-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-300 group-hover:to-cyan-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
+                {currentData.avgPercentGain?.toFixed(2) || "0.00"}%
+              </div>
+              <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
+                Avg % Gain
+              </div>
+              <div className="text-cyan-300 text-sm mt-1">Per Trade</div>
+            </div>
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
         </div>
 
@@ -435,10 +453,10 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
               Recent Performance (Last {recentMonths.length} Months)
             </h3>
 
-            <div className="w-full overflow-x-auto">
+            <div className="w-full overflow-x-auto overflow-y-visible">
               <div
-                className="flex items-end justify-center gap-2 md:gap-6 mb-4 md:mb-6 min-w-max mx-auto px-2"
-                style={{ height: "200px" }}
+                className="flex items-end justify-center gap-2 md:gap-6 mb-4 md:mb-6 min-w-max mx-auto px-2 pt-6"
+                style={{ minHeight: "220px" }}
               >
                 {recentMonths.map((month: TradingDataPoint) => {
                   const maxBarHeight = 140;
@@ -453,7 +471,7 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
 
                   return (
                     <div
-                      key={month.month}
+                      key={`${month.month}-${month.year}`}
                       className="flex flex-col items-center min-w-0"
                     >
                       <div
@@ -481,8 +499,11 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
                           {getShortMonthName(month.month)}
                         </span>
                         <span className="hidden md:inline">
-                          {getFullMonthName(month.month)}
+                          {getFullMonthName(month.month)} '{String(month.year).slice(-2)}
                         </span>
+                      </div>
+                      <div className={`text-xs mt-1 ${isHighest ? "text-yellow-400" : "text-gray-400"}`}>
+                        {month.trades} trades
                       </div>
                     </div>
                   );
@@ -495,89 +516,133 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
                 📈 {currentData.totalTrades || 0} trades • $
                 {currentData.avgProfitPerTrade?.toFixed(2) || "0.00"} avg
                 profit/trade • Best month:{" "}
-                {bestMonthData ? getFullMonthName(bestMonthData.month) : "N/A"}{" "}
+                {bestMonthData ? `${getFullMonthName(bestMonthData.month)} '${String(bestMonthData.year).slice(-2)}` : "N/A"}{" "}
                 with ${currentData.bestMonthProfit?.toFixed(2) || "0.00"}
               </p>
             </div>
           </div>
         )}
 
-        {/* Previous Months Table - DYNAMIC: Shows everything before recent months */}
-        {olderMonths.length > 0 && (
-          <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8 mb-8">
-            <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6 text-center">
-              Previous Months Performance
-            </h3>
+        {/* Previous Months - Grouped by Year */}
+        {olderMonths.length > 0 && (() => {
+          // Group months by year
+          const monthsByYear = olderMonths.reduce((acc: Record<number, TradingDataPoint[]>, month: TradingDataPoint) => {
+            const year = month.year;
+            if (!acc[year]) acc[year] = [];
+            acc[year].push(month);
+            return acc;
+          }, {} as Record<number, TradingDataPoint[]>);
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead>
-                  <tr className="border-b border-white/10">
-                    <th className="text-gray-300 font-semibold py-3 px-4">
-                      Month
-                    </th>
-                    <th className="text-gray-300 font-semibold py-3 px-4 text-right">
-                      Profit
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {olderMonths.map((month: TradingDataPoint, index: number) => (
-                    <tr
-                      key={month.month}
-                      className={`border-b border-white/5 ${
-                        index % 2 === 0 ? "bg-white/5" : ""
-                      }`}
-                    >
-                      <td className="text-gray-200 py-3 px-4 font-medium">
-                        {getFullMonthName(month.month)} 2025
-                      </td>
-                      <td className="text-emerald-300 py-3 px-4 text-right font-mono font-semibold">
-                        ${month.profit.toFixed(2)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+          // Sort years descending (newest first)
+          const sortedYears = Object.keys(monthsByYear).map(Number).sort((a, b) => b - a);
 
-            <div className="text-center mt-4">
-              <p className="text-gray-400 text-sm">
-                Showing {olderMonths.length} previous months • Total: $
-                {olderMonths
-                  .reduce(
-                    (sum: number, month: TradingDataPoint) =>
-                      sum + month.profit,
-                    0
-                  )
-                  .toFixed(2)}
-              </p>
-            </div>
+          // Get global max profit across all older months for consistent bar scaling
+          const globalMaxProfit = Math.max(...olderMonths.map((m: TradingDataPoint) => m.profit));
 
-            {/* CTA BUTTON */}
-            <div className="text-center mt-8">
-              <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl p-6 border border-purple-400/30 shadow-lg shadow-purple-500/20">
-                <h4 className="text-xl font-bold text-white mb-3">
-                  Ready to Experience Autonomous Trading?
-                </h4>
-                <p className="text-gray-200 mb-4 max-w-xl mx-auto">
-                  Join successful traders using set-it-and-forget-it
-                  cryptocurrency trading.
+          return (
+            <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8 mb-8">
+              <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6 text-center">
+                Previous Months Performance
+              </h3>
+
+              {sortedYears.map((year) => {
+                const yearMonths = monthsByYear[year];
+                const yearTotalProfit = yearMonths.reduce((sum: number, m: TradingDataPoint) => sum + m.profit, 0);
+                const yearTotalTrades = yearMonths.reduce((sum: number, m: TradingDataPoint) => sum + m.trades, 0);
+
+                return (
+                  <div key={year} className="mb-6 last:mb-0">
+                    {/* Year Header */}
+                    <div className="flex items-center justify-between mb-3 pb-2 border-b border-white/10">
+                      <h4 className="text-lg font-bold flex items-center gap-2 text-white">
+                        <span>{year}</span>
+                        <span className="text-sm text-gray-400 font-normal">
+                          ({yearMonths.length} {yearMonths.length === 1 ? 'month' : 'months'})
+                        </span>
+                      </h4>
+                      <span className="text-sm font-semibold text-emerald-300">
+                        ${yearTotalProfit.toFixed(2)} • {yearTotalTrades} trades
+                      </span>
+                    </div>
+
+                    {/* Months for this year */}
+                    <div className="space-y-3">
+                      {yearMonths.map((month: TradingDataPoint) => {
+                        const barWidth = Math.max((month.profit / globalMaxProfit) * 100, 10);
+
+                        return (
+                          <div
+                            key={`${month.month}-${month.year}`}
+                            className="bg-white/5 rounded-xl p-3 md:p-4 border border-white/10 hover:border-white/20 transition-all"
+                          >
+                            {/* Month name and stats row */}
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="font-semibold text-sm md:text-base text-gray-200">
+                                {getFullMonthName(month.month)}
+                              </span>
+                              <div className="flex items-center gap-3 md:gap-4">
+                                <span className="text-xs md:text-sm text-gray-400">
+                                  {month.trades} trades
+                                </span>
+                                <span className="font-bold font-mono text-sm md:text-base text-emerald-300">
+                                  ${month.profit.toFixed(2)}
+                                </span>
+                              </div>
+                            </div>
+                            {/* Progress bar - solid green */}
+                            <div className="h-3 md:h-4 bg-gray-700/50 rounded-full overflow-hidden">
+                              <div
+                                className="h-full rounded-full bg-emerald-500"
+                                style={{ width: `${barWidth}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+
+              <div className="text-center mt-4 pt-4 border-t border-white/10">
+                <p className="text-gray-400 text-sm">
+                  Showing {olderMonths.length} previous months • Total: $
+                  {olderMonths
+                    .reduce(
+                      (sum: number, month: TradingDataPoint) =>
+                        sum + month.profit,
+                      0
+                    )
+                    .toFixed(2)}
+                  {" "}• {olderMonths.reduce((sum: number, month: TradingDataPoint) => sum + month.trades, 0)} trades
                 </p>
-                <a
-                  href="https://dailyprofits.link/class"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={handleJoinMasterclass}
-                  className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-500/30"
-                >
-                  Join Free Masterclass
-                  <TrendingUp className="w-4 h-4" />
-                </a>
+              </div>
+
+              {/* CTA BUTTON */}
+              <div className="text-center mt-8">
+                <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl p-6 border border-purple-400/30 shadow-lg shadow-purple-500/20">
+                  <h4 className="text-xl font-bold text-white mb-3">
+                    Ready to Experience Autonomous Trading?
+                  </h4>
+                  <p className="text-gray-200 mb-4 max-w-xl mx-auto">
+                    Join successful traders using set-it-and-forget-it
+                    cryptocurrency trading.
+                  </p>
+                  <a
+                    href="https://dailyprofits.link/class"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={handleJoinMasterclass}
+                    className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-500/30"
+                  >
+                    Join Free Masterclass
+                    <TrendingUp className="w-4 h-4" />
+                  </a>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         <div className="text-center mt-8">
           <p className="text-sm text-gray-400 max-w-2xl mx-auto">
