@@ -130,22 +130,22 @@ export const BlogListPage: React.FC = () => {
                   />
                 </div>
 
-                {/* Category Badge - positioned over image */}
-                <div className="absolute top-4 left-4">
-                  <span className="inline-flex items-center px-3 py-1.5 text-xs font-semibold rounded-full bg-purple-500 text-white shadow-md">
-                    {post.category}
-                  </span>
-                </div>
-
                 {/* Content */}
                 <div className="p-6 relative">
                   <h2 className="text-2xl font-bold mb-3 text-white group-hover:text-purple-200 transition-colors duration-300">
                     {post.title}
                   </h2>
 
-                  <p className="text-gray-400 text-sm mb-4">
-                    {formatDate(post.date)}
-                  </p>
+                  {/* Category + Date row */}
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="inline-flex items-center px-2.5 py-1 text-xs font-semibold rounded-full bg-purple-500/20 text-purple-300 border border-purple-400/30">
+                      {post.category}
+                    </span>
+                    <span className="text-gray-500">•</span>
+                    <span className="text-gray-400 text-sm">
+                      {formatDate(post.date)}
+                    </span>
+                  </div>
 
                   <p className="text-gray-300 leading-relaxed mb-6 group-hover:text-gray-200 transition-colors duration-300">
                     {post.excerpt || getExcerpt(post.content, 150)}
