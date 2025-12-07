@@ -142,12 +142,12 @@ export const Features: React.FC = function () {
         {/* Feature Infographics */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-12">
           <img
-            src="/graphics/homepage-features-01.png"
+            src="/graphics/homepage-features-01.webp"
             alt="The Never-Sell-At-A-Loss Rule - How the system protects your capital"
             className="w-full rounded-2xl shadow-xl shadow-blue-500/10 border border-white/10 hover:scale-[1.02] transition-transform duration-300"
           />
           <img
-            src="/graphics/homepage-features-02.png"
+            src="/graphics/homepage-features-02.webp"
             alt="24/7 Trading - Markets never sleep, neither does your robot"
             className="w-full rounded-2xl shadow-xl shadow-purple-500/10 border border-white/10 hover:scale-[1.02] transition-transform duration-300"
           />

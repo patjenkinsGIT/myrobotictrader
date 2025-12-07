@@ -32,7 +32,7 @@ export const PrivacyPage: React.FC = function () {
       {/* Data Collection Infographic */}
       <div className="max-w-xl mx-auto mb-12 px-4">
         <img
-          src="/graphics/privacy-data-01.png"
+          src="/graphics/privacy-data-01.webp"
           alt="What We Collect vs What We Don't - Privacy protection overview"
           className="w-full rounded-2xl shadow-xl shadow-blue-500/10 border border-white/10"
         />
@@ -108,7 +108,7 @@ export const PrivacyPage: React.FC = function () {
               {/* Affiliate Transparency Infographic */}
               <div className="max-w-lg mx-auto mb-6">
                 <img
-                  src="/graphics/privacy-affiliate-01.png"
+                  src="/graphics/privacy-affiliate-01.webp"
                   alt="How Affiliate Links Work - Transparency explanation"
                   className="w-full rounded-xl shadow-lg shadow-purple-500/10 border border-white/10"
                 />

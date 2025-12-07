@@ -408,7 +408,7 @@ export const FAQ: React.FC = () => {
         {/* 3 Steps Infographic */}
         <div className="max-w-2xl mx-auto mb-12">
           <img
-            src="/graphics/homepage-faq-01.png"
+            src="/graphics/homepage-faq-01.webp"
             alt="3 Steps to Passive Income - Connect, Configure, Collect"
             className="w-full rounded-2xl shadow-xl shadow-purple-500/10 border border-white/10"
           />

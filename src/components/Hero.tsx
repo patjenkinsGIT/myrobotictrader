@@ -201,7 +201,7 @@ export const Hero: React.FC = () => {
         {/* Hero Infographic */}
         <div className="max-w-2xl mx-auto">
           <img
-            src="/graphics/homepage-hero-01.png"
+            src="/graphics/homepage-hero-01.webp"
             alt="Set It and Forget It - Manual Trading vs Autonomous Trading comparison"
             className="w-full rounded-2xl shadow-2xl shadow-purple-500/20 border border-white/10"
           />

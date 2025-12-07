@@ -95,7 +95,7 @@ export const ResourcesPage: React.FC = function () {
           {/* Coinbase Infographic */}
           <div className="max-w-2xl mx-auto mb-10">
             <img
-              src="/graphics/resources-coinbase-01.png"
+              src="/graphics/resources-coinbase-01.webp"
               alt="Why Coinbase One - Zero fees comparison showing $3,300+ annual savings"
               className="w-full rounded-2xl shadow-xl shadow-blue-500/10 border border-white/10"
             />
@@ -306,7 +306,7 @@ export const ResourcesPage: React.FC = function () {
           {/* Tax Tracking Infographic */}
           <div className="max-w-2xl mx-auto mb-10">
             <img
-              src="/graphics/resources-taxes-01.png"
+              src="/graphics/resources-taxes-01.webp"
               alt="500 Trades Tax Nightmare - DIY vs CoinTracker comparison"
               className="w-full rounded-2xl shadow-xl shadow-orange-500/10 border border-white/10"
             />
