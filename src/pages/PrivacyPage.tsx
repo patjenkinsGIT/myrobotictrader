@@ -23,11 +23,20 @@ export const PrivacyPage: React.FC = function () {
               collect, use, and protect your information.
             </p>
             <p className="text-sm text-gray-400 mt-2">
-              Last updated: September 7, 2025
+              Last updated: December 6, 2025
             </p>
           </div>
         </div>
       </section>
+
+      {/* Data Collection Infographic */}
+      <div className="max-w-xl mx-auto mb-12 px-4">
+        <img
+          src="/graphics/privacy-data-01.png"
+          alt="What We Collect vs What We Don't - Privacy protection overview"
+          className="w-full rounded-2xl shadow-xl shadow-blue-500/10 border border-white/10"
+        />
+      </div>
 
       {/* Privacy Policy Content */}
       <section className="py-16 px-4">
@@ -95,6 +104,16 @@ export const PrivacyPage: React.FC = function () {
                   Affiliate Links & Disclosures
                 </h2>
               </div>
+
+              {/* Affiliate Transparency Infographic */}
+              <div className="max-w-lg mx-auto mb-6">
+                <img
+                  src="/graphics/privacy-affiliate-01.png"
+                  alt="How Affiliate Links Work - Transparency explanation"
+                  className="w-full rounded-xl shadow-lg shadow-purple-500/10 border border-white/10"
+                />
+              </div>
+
               <div className="space-y-4 text-gray-300">
                 <p>
                   <strong className="text-white">

@@ -197,6 +197,15 @@ export const Hero: React.FC = () => {
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
         </div>
+
+        {/* Hero Infographic */}
+        <div className="max-w-2xl mx-auto">
+          <img
+            src="/graphics/homepage-hero-01.png"
+            alt="Set It and Forget It - Manual Trading vs Autonomous Trading comparison"
+            className="w-full rounded-2xl shadow-2xl shadow-purple-500/20 border border-white/10"
+          />
+        </div>
       </div>
     </section>
   );

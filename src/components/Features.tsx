@@ -118,7 +118,7 @@ export const Features: React.FC = function () {
   return (
     <section className="py-10 px-4 relative">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
+        <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-purple-400/40 mb-6 mt-4 shadow-lg shadow-purple-500/20">
             <Zap className="w-4 h-4 text-purple-300" />
             <span className="text-purple-200 font-medium">
@@ -137,6 +137,20 @@ export const Features: React.FC = function () {
             Advanced autonomous technology with comprehensive risk management on
             trusted exchanges like Coinbase and Kraken.
           </p>
+        </div>
+
+        {/* Feature Infographics */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-12">
+          <img
+            src="/graphics/homepage-features-01.png"
+            alt="The Never-Sell-At-A-Loss Rule - How the system protects your capital"
+            className="w-full rounded-2xl shadow-xl shadow-blue-500/10 border border-white/10 hover:scale-[1.02] transition-transform duration-300"
+          />
+          <img
+            src="/graphics/homepage-features-02.png"
+            alt="24/7 Trading - Markets never sleep, neither does your robot"
+            className="w-full rounded-2xl shadow-xl shadow-purple-500/10 border border-white/10 hover:scale-[1.02] transition-transform duration-300"
+          />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

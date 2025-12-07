@@ -22,7 +22,7 @@ export const ResourcesPage: React.FC = function () {
   // Format profit for display
   const formattedProfit = tradingStats?.totalProfit
     ? `$${Math.round(tradingStats.totalProfit).toLocaleString()}+`
-    : "$4,000+";
+    : "$5,000+";
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
@@ -90,6 +90,15 @@ export const ResourcesPage: React.FC = function () {
               AI-Enhanced Autonomous Trader. Both are reliable, secure, and
               perfect for automated trading.
             </p>
+          </div>
+
+          {/* Coinbase Infographic */}
+          <div className="max-w-2xl mx-auto mb-10">
+            <img
+              src="/graphics/resources-coinbase-01.png"
+              alt="Why Coinbase One - Zero fees comparison showing $3,300+ annual savings"
+              className="w-full rounded-2xl shadow-xl shadow-blue-500/10 border border-white/10"
+            />
           </div>
 
           {/* Coinbase One Card */}
@@ -292,6 +301,15 @@ export const ResourcesPage: React.FC = function () {
               Crypto taxes can be complex. These tools make it simple and ensure
               you're always compliant with tax regulations.
             </p>
+          </div>
+
+          {/* Tax Tracking Infographic */}
+          <div className="max-w-2xl mx-auto mb-10">
+            <img
+              src="/graphics/resources-taxes-01.png"
+              alt="500 Trades Tax Nightmare - DIY vs CoinTracker comparison"
+              className="w-full rounded-2xl shadow-xl shadow-orange-500/10 border border-white/10"
+            />
           </div>
 
           {/* CoinTracker Card */}

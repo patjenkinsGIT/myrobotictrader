@@ -405,6 +405,15 @@ export const FAQ: React.FC = () => {
           </p>
         </div>
 
+        {/* 3 Steps Infographic */}
+        <div className="max-w-2xl mx-auto mb-12">
+          <img
+            src="/graphics/homepage-faq-01.png"
+            alt="3 Steps to Passive Income - Connect, Configure, Collect"
+            className="w-full rounded-2xl shadow-xl shadow-purple-500/10 border border-white/10"
+          />
+        </div>
+
         <div className="space-y-8 mb-20">
           {faqData.map((category, index) => (
             <FAQCategory
