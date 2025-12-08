@@ -268,8 +268,7 @@ npm run dev
 
 - Live Site: MyRoboticTrader.com
 - Complete Documentation: Project Documentation Gist
-- Masterclass: Financial Intelligence 4U
-- Trading Platform: GoBabyTrade
+- Trading Platform: [GoBabyTrade](https://dailyprofits.link/gbt) (Save $1,000 with this link)
 
 ## 🤝 Contributing
 
