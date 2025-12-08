@@ -53,19 +53,18 @@ const faqData = [
           "Yes, but with realistic expectations. This isn't a 'get rich quick' scheme. It's systematic investing that requires patience and trust in the process. If you're willing to let the system do its job without constantly interfering, this works. If you need immediate results or want to tinker constantly, you'll struggle with the patience required.",
       },
       {
-        question: "How do I learn more about this system?",
+        question: "How do I get started with this system?",
         answer: (
           <>
-            The best way is to attend the free training where they walk through
-            exactly how the system works, show live demonstrations, and answer
-            all your questions. That's where you'll get the full picture:{" "}
+            The system I use is called GoBabyTrade. You can start with paper trading
+            to test it risk-free before going live. Use my referral link to save $1,000:{" "}
             <a
-              href="https://dailyprofits.link/class"
+              href="https://dailyprofits.link/gbt"
               target="_blank"
               rel="noopener noreferrer"
               className="text-purple-300 hover:text-purple-200 underline transition-colors duration-200"
             >
-              Register for the free masterclass here
+              Get GoBabyTrade – Save $1,000
             </a>
           </>
         ),
@@ -429,20 +428,19 @@ export const FAQ: React.FC = () => {
         {/* CTA at bottom */}
         <div className="mt-16 text-center bg-gradient-to-r from-gray-900/30 to-purple-900/20 rounded-2xl p-8 border border-white/10 shadow-lg shadow-purple-500/10">
           <h3 className="text-2xl font-bold text-white mb-4">
-            Still Have Questions?
+            Ready to Start Trading?
           </h3>
           <p className="text-gray-200 mb-6">
-            Get all your questions answered in the free training. See live
-            demonstrations, ask questions directly, and learn exactly how the
-            system works.
+            Get started with GoBabyTrade – the same AI-enhanced autonomous trading
+            system I use. Try paper trading first, risk-free.
           </p>
           <a
-            href="https://dailyprofits.link/class"
+            href="https://dailyprofits.link/gbt"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-4 px-8 rounded-xl hover:from-purple-600 hover:to-pink-600 transform hover:scale-105 transition-all duration-200 shadow-lg shadow-purple-500/50"
           >
-            Register for Free Masterclass →
+            Start Trading – Save $1,000 →
           </a>
         </div>
       </div>

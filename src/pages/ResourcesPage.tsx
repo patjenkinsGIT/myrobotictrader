@@ -413,27 +413,18 @@ export const ResourcesPage: React.FC = function () {
             </h3>
             <p className="text-gray-200 mb-6 max-w-2xl mx-auto">
               These tools have been essential to my {formattedProfit} profit
-              success. Start with the free masterclass to learn the system, then
-              set up your tools.
+              success. GoBabyTrade is the AI-enhanced autonomous trading system I use.
+              Use my link to save $1,000!
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href="https://dailyprofits.link/class"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-500/30"
-              >
-                Free Masterclass First
-                <ArrowRight className="w-4 h-4" />
-              </a>
               <a
                 href="https://dailyprofits.link/gbt"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 border-2 border-white/40 hover:border-white/60 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 backdrop-blur-sm hover:bg-white/15 shadow-lg shadow-white/10"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-500/30"
               >
-                Start Trading Now
-                <TrendingUp className="w-4 h-4" />
+                Start Trading – Save $1,000
+                <ArrowRight className="w-4 h-4" />
               </a>
             </div>
           </div>

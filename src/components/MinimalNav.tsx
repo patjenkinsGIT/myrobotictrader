@@ -9,9 +9,9 @@ export const MinimalNav: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
-  const handleWatchWebinar = () => {
-    trackCTAClick("get_free_training", "minimal_nav");
-    trackOutboundLink("https://dailyprofits.link/class", "Watch Webinar Nav");
+  const handleStartTrading = () => {
+    trackCTAClick("start_trading_save_1000", "minimal_nav");
+    trackOutboundLink("https://dailyprofits.link/gbt", "Start Trading Save $1000 Nav");
   };
 
   const navItems = [
@@ -78,13 +78,13 @@ export const MinimalNav: React.FC = () => {
 
               {/* CTA Button */}
               <a
-                href="https://dailyprofits.link/class"
-                onClick={handleWatchWebinar}
+                href="https://dailyprofits.link/gbt"
+                onClick={handleStartTrading}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 via-purple-600 to-pink-500 hover:from-purple-600 hover:via-pink-500 hover:to-pink-600 text-white px-5 py-2.5 rounded-full font-bold text-sm transition-all duration-200 hover:scale-[1.02] hover:shadow-xl shadow-lg shadow-purple-500/40 hover:shadow-purple-500/60 flex-shrink-0"
               >
-                Watch Free Webinar
+                Start Trading – Save $1,000
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </a>
             </div>
@@ -125,16 +125,16 @@ export const MinimalNav: React.FC = () => {
                 </Link>
               ))}
               <a
-                href="https://dailyprofits.link/class"
+                href="https://dailyprofits.link/gbt"
                 onClick={() => {
-                  handleWatchWebinar();
+                  handleStartTrading();
                   setMobileMenuOpen(false);
                 }}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-4 py-2 rounded-full font-semibold text-sm transition-all duration-200 shadow-lg shadow-purple-500/30"
               >
-                Watch Free Webinar
+                Start Trading – Save $1,000
                 <ArrowRight className="w-4 h-4" />
               </a>
             </div>

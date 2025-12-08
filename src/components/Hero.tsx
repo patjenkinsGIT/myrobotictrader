@@ -7,14 +7,9 @@ import { useGoogleSheetsData } from "../hooks/useGoogleSheetsData";
 export const Hero: React.FC = () => {
   // Get live trading data
   const { tradingStats, isLoading } = useGoogleSheetsData();
-  const handleGetFreeTraining = () => {
-    trackCTAClick("get_free_training", "hero");
-    trackOutboundLink("https://dailyprofits.link/class", "Get Free Training");
-  };
-
   const handleStartTrading = () => {
-    trackCTAClick("start_trading", "hero");
-    trackOutboundLink("https://dailyprofits.link/gbt", "Start Trading");
+    trackCTAClick("start_trading_save_1000", "hero");
+    trackOutboundLink("https://dailyprofits.link/gbt", "Start Trading Save $1000");
   };
 
   return (
@@ -84,27 +79,17 @@ export const Hero: React.FC = () => {
           </p>
         </div>
 
-        {/* CTA Buttons */}
+        {/* CTA Button */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-          <a
-            href="https://dailyprofits.link/class"
-            onClick={handleGetFreeTraining}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2"
-          >
-            Get Free Training
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </a>
-
           <a
             href="https://dailyprofits.link/gbt"
             onClick={handleStartTrading}
             target="_blank"
             rel="noopener noreferrer"
-            className="group border-2 border-white/40 hover:border-white/60 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 backdrop-blur-sm hover:bg-white/15 flex items-center justify-center gap-2 shadow-lg shadow-white/10"
+            className="group bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2"
           >
-            Start Trading
+            Start Trading – Save $1,000
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </a>
         </div>
 

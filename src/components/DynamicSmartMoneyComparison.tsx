@@ -134,11 +134,11 @@ export const DynamicSmartMoneyComparison = () => {
     };
   };
 
-  const handleMasterclassClick = (location: string) => {
-    trackCTAClick("join_free_masterclass", `dynamic_comparison_${location}`);
+  const handleStartTradingClick = (location: string) => {
+    trackCTAClick("start_trading_save_1000", `dynamic_comparison_${location}`);
     trackOutboundLink(
-      "https://dailyprofits.link/class",
-      `Masterclass from Dynamic Comparison ${location}`
+      "https://dailyprofits.link/gbt",
+      `Start Trading Save $1000 from Dynamic Comparison ${location}`
     );
   };
 
@@ -477,12 +477,15 @@ export const DynamicSmartMoneyComparison = () => {
         </div>
 
         <div className="text-center">
-          <button
-            onClick={() => handleMasterclassClick("comparison_bottom")}
-            className="bg-gradient-to-r from-blue-500 to-purple-500 text-white text-lg font-bold py-4 px-8 rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all transform hover:scale-105 shadow-lg"
+          <a
+            href="https://dailyprofits.link/gbt"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => handleStartTradingClick("comparison_bottom")}
+            className="inline-block bg-gradient-to-r from-blue-500 to-purple-500 text-white text-lg font-bold py-4 px-8 rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all transform hover:scale-105 shadow-lg"
           >
-            Learn My Complete System (Free Masterclass)
-          </button>
+            Start Trading with GoBabyTrade – Save $1,000
+          </a>
         </div>
       </div>
     </section>

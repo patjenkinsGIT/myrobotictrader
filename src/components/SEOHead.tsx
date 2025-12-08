@@ -265,9 +265,9 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
       const courseSchema = {
         "@context": "https://schema.org",
         "@type": "Course",
-        name: "AI-Enhanced Crypto Trading Masterclass",
+        name: "AI-Enhanced Autonomous Crypto Trading with GoBabyTrade",
         description:
-          "Free comprehensive training on automated cryptocurrency trading strategies",
+          "Comprehensive resources and tools for automated cryptocurrency trading with GoBabyTrade",
         provider: {
           "@type": "Organization",
           name: "MyRoboticTrader",
@@ -278,7 +278,7 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
         },
         courseMode: "online",
         educationalLevel: "Beginner to Advanced",
-        about: "Automated Trading, Cryptocurrency, AI Trading Systems",
+        about: "Automated Trading, Cryptocurrency, AI Trading Systems, GoBabyTrade",
       };
 
       addStructuredData(courseSchema, "course");

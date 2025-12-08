@@ -186,11 +186,11 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
   };
 
   // CTA tracking handler
-  const handleJoinMasterclass = () => {
-    trackCTAClick("join_free_masterclass", "trading_results_section");
+  const handleStartTrading = () => {
+    trackCTAClick("start_trading_save_1000", "trading_results_section");
     trackOutboundLink(
-      "https://dailyprofits.link/class",
-      "Join Free Masterclass Trading Results"
+      "https://dailyprofits.link/gbt",
+      "Start Trading Save $1000 Trading Results"
     );
   };
 
@@ -625,17 +625,16 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
                     Ready to Experience Autonomous Trading?
                   </h4>
                   <p className="text-gray-200 mb-4 max-w-xl mx-auto">
-                    Join successful traders using set-it-and-forget-it
-                    cryptocurrency trading.
+                    GoBabyTrade is the same AI-enhanced system I use. Use my link to save $1,000!
                   </p>
                   <a
-                    href="https://dailyprofits.link/class"
+                    href="https://dailyprofits.link/gbt"
                     target="_blank"
                     rel="noopener noreferrer"
-                    onClick={handleJoinMasterclass}
+                    onClick={handleStartTrading}
                     className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-500/30"
                   >
-                    Join Free Masterclass
+                    Start Trading – Save $1,000
                     <TrendingUp className="w-4 h-4" />
                   </a>
                 </div>

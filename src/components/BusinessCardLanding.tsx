@@ -18,7 +18,7 @@ export const BusinessCardLanding: React.FC = () => {
 
   // Your actual affiliate link with tracking
   const affiliateLink =
-    "https://dailyprofits.link/class?utm_source=business_card&utm_medium=nfc_qr&utm_campaign=live_results_2024";
+    "https://dailyprofits.link/gbt?utm_source=business_card&utm_medium=nfc_qr&utm_campaign=live_results_2025";
 
   // Show loading state briefly
   if (isLoading || !tradingStats) {
@@ -180,7 +180,7 @@ export const BusinessCardLanding: React.FC = () => {
             rel="noopener noreferrer"
             className="group bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2"
           >
-            Watch Free Training
+            Start Trading – Save $1,000
             <ExternalLink className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </a>
 
@@ -197,7 +197,7 @@ export const BusinessCardLanding: React.FC = () => {
         {/* Secondary info */}
         <div className="text-center">
           <p className="text-sm text-yellow-300 font-medium mb-4">
-            🎯 Watch the free masterclass to see how the system works
+            🎯 GoBabyTrade is the AI-enhanced system I use – save $1,000 with my link!
           </p>
           <p className="text-xs text-gray-500 max-w-sm mx-auto leading-relaxed">
             * Actual trading results from my personal account. Started January

@@ -59,7 +59,7 @@ const seoConfigs = {
     title:
       "Trading Resources & AI-Enhanced Crypto Guides | Build Your Revenue Stream",
     description:
-      "Free AI-enhanced crypto trading resources, guides, and masterclasses. Learn the automated trading strategies to build sustainable revenue streams.",
+      "Free AI-enhanced crypto trading resources and guides. Learn the automated trading strategies to build sustainable revenue streams with GoBabyTrade.",
     keywords:
       "trading guides, crypto resources, trading education, automated trading strategies, financial education",
     ogTitle: "Free Trading Resources & Guides | MyRoboticTrader",
@@ -199,13 +199,13 @@ const HomePage = () => {
         }
       />
 
-      {/* 🔇 REMOVED FOR SIMPLICITY: Complex sections moved to webinar
-          
+      {/* 🔇 REMOVED FOR SIMPLICITY: Complex sections
+
           These components added friction and complexity to the landing page.
-          The goal is simple: Get visitors to sign up for the webinar.
-          Detailed explanations of profit management and market comparisons 
-          are better suited for the webinar where you have time to explain.
-          
+          The goal is simple: Get visitors to try GoBabyTrade.
+          Detailed explanations of profit management and market comparisons
+          are available on the full site and in GoBabyTrade's training.
+
           To restore either component, uncomment the appropriate line below:
       */}
 

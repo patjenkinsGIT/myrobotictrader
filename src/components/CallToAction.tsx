@@ -1,19 +1,11 @@
 import * as React from "react";
-import { ArrowRight, CheckCircle, Rocket, TrendingUp } from "lucide-react";
+import { ArrowRight, CheckCircle, Rocket, TrendingUp, Gift } from "lucide-react";
 import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
 
 export const CallToAction: React.FC = function () {
-  const handleGetFreeTraining = () => {
-    trackCTAClick("get_free_training", "cta_section");
-    trackOutboundLink(
-      "https://dailyprofits.link/class",
-      "Get Free Training CTA"
-    );
-  };
-
   const handleStartTrading = () => {
-    trackCTAClick("start_trading", "cta_section");
-    trackOutboundLink("https://dailyprofits.link/gbt", "Start Trading CTA");
+    trackCTAClick("start_trading_save_1000", "cta_section");
+    trackOutboundLink("https://dailyprofits.link/gbt", "Start Trading Save $1000 CTA");
   };
 
   return (
@@ -33,7 +25,7 @@ export const CallToAction: React.FC = function () {
           <span className="text-purple-200 font-medium">Ready to Start?</span>
         </div>
 
-        {/* Updated headline - Option A: Ready for True Set-It-and-Forget-It Trading? */}
+        {/* Updated headline */}
         <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
           Ready for True
           <span className="block text-transparent bg-gradient-to-r from-green-300 via-blue-400 to-purple-400 bg-clip-text">
@@ -42,8 +34,8 @@ export const CallToAction: React.FC = function () {
         </h2>
 
         <p className="text-xl text-gray-200 mb-8 max-w-3xl mx-auto">
-          Autonomous trading that protects your capital while maximizing
-          profits. Start with paper trading risk-free.
+          GoBabyTrade is an AI-enhanced autonomous trading system that protects your capital
+          while maximizing profits. Start with paper trading risk-free.
         </p>
 
         {/* Benefits */}
@@ -62,92 +54,69 @@ export const CallToAction: React.FC = function () {
           </div>
         </div>
 
-        {/* Masterclass Bullet List */}
+        {/* GoBabyTrade Benefits Box */}
         <div className="bg-gray-900/50 rounded-2xl border border-white/10 p-8 mb-8 max-w-3xl mx-auto shadow-lg shadow-purple-500/10 relative">
           {/* Small robot accent inside the box */}
           <div className="absolute bottom-4 right-4 opacity-10 pointer-events-none hidden md:block">
             <img src="/robot-trading.png" alt="" className="w-12 h-12" />
           </div>
 
-          <h3 className="text-2xl md:text-3xl font-bold text-white mb-6">
-            Free Masterclass Reveals:
-          </h3>
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <Gift className="w-8 h-8 text-green-300" />
+            <h3 className="text-2xl md:text-3xl font-bold text-white">
+              Save $1,000 With My Link
+            </h3>
+          </div>
 
           <ul className="text-left space-y-4 mb-6">
             <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
               <ArrowRight className="w-5 h-5 text-purple-300 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-300 transition-colors" />
               <span className="text-lg">
-                How the system avoids losses even during market crashes
+                AI-enhanced autonomous trading that works 24/7
               </span>
             </li>
             <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
               <ArrowRight className="w-5 h-5 text-purple-300 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-300 transition-colors" />
               <span className="text-lg">
-                Set-and-forget strategy that trades profitably without screen
-                time
+                Never sells at a loss – waits for profitable opportunities
               </span>
             </li>
             <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
               <ArrowRight className="w-5 h-5 text-purple-300 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-300 transition-colors" />
               <span className="text-lg">
-                Real examples: What happens when crypto markets drop
+                Your funds stay in your own Coinbase or Kraken account
               </span>
             </li>
             <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
               <ArrowRight className="w-5 h-5 text-purple-300 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-300 transition-colors" />
               <span className="text-lg">
-                The truth about "never trading at a loss" (and how it can work
-                for you)
+                Start with paper trading – zero risk to test the system
               </span>
             </li>
             <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
               <ArrowRight className="w-5 h-5 text-purple-300 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-300 transition-colors" />
               <span className="text-lg">
-                Why you never worry about selling early or missing recoveries
-              </span>
-            </li>
-            <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
-              <ArrowRight className="w-5 h-5 text-purple-300 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-300 transition-colors" />
-              <span className="text-lg">
-                Stay in complete controlâ€”override automation anytime but you
-                won't want to ðŸ¤–
-              </span>
-            </li>
-            <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
-              <ArrowRight className="w-5 h-5 text-purple-300 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-300 transition-colors" />
-              <span className="text-lg">
-                Common crypto trading myths debunked with real data
+                Same system I use – see my live results above
               </span>
             </li>
           </ul>
 
-          <p className="text-lg text-purple-200 font-medium">
-            Free access. Real strategies you can implement immediately after the
-            masterclass!
+          <p className="text-lg text-green-300 font-medium">
+            Use my referral link to get $1,000 off GoBabyTrade!
           </p>
         </div>
 
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-          <a
-            href="https://dailyprofits.link/class"
-            onClick={handleGetFreeTraining}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2"
-          >
-            Watch Free Masterclass
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </a>
-
+        {/* CTA Button */}
+        <div className="flex justify-center mb-8">
           <a
             href="https://dailyprofits.link/gbt"
             onClick={handleStartTrading}
             target="_blank"
             rel="noopener noreferrer"
-            className="group border-2 border-white/40 hover:border-white/60 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 backdrop-blur-sm hover:bg-white/15 flex items-center justify-center gap-2 shadow-lg shadow-white/10"
+            className="group bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2"
           >
-            Try Paper Trading Risk-Free
+            Start Trading – Save $1,000
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </a>
         </div>
 
@@ -155,7 +124,7 @@ export const CallToAction: React.FC = function () {
         <div className="flex items-center justify-center gap-3 text-green-300">
           <TrendingUp className="w-6 h-6" />
           <span className="text-lg font-semibold">
-            Try Paper Trading First - Zero Risk, Real Results
+            Try Paper Trading First – Zero Risk, Real Results
           </span>
         </div>
       </div>

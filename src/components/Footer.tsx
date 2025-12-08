@@ -47,21 +47,12 @@ export const Footer: React.FC = function () {
           {/* Links - WITH PRIVACY POLICY LINK ADDED */}
           <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mb-8">
             <a
-              href="https://dailyprofits.link/class"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-400 hover:text-purple-400 transition-colors flex items-center gap-2 group"
-            >
-              Free Masterclass
-              <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-            </a>
-            <a
               href="https://dailyprofits.link/gbt"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-400 hover:text-purple-400 transition-colors flex items-center gap-2 group"
             >
-              Start Trading Now
+              Start Trading – Save $1,000
               <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
             </a>
             <a
@@ -107,9 +98,8 @@ export const Footer: React.FC = function () {
               </p>
               <p className="leading-relaxed text-purple-300">
                 <strong>Specific Disclosure:</strong> We are an affiliate of
-                Financial Intelligence 4U (financialintelligence4u.com) and earn
-                commissions when you register for their masterclass or purchase
-                their products through our links.
+                GoBabyTrade and earn commissions when you sign up through our
+                referral link. Use our link to save $1,000 on your subscription.
               </p>
             </div>
 
