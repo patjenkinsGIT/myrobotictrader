@@ -19,6 +19,7 @@ export const FullNav: React.FC = () => {
   const navItems = [
     { label: "Home", path: "/" },
     { label: "Blog", path: "/blog" },
+    { label: "FAQ", path: "/faq" },
     { label: "Resources", path: "/resources" },
   ];
 

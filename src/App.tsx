@@ -20,7 +20,8 @@ import MyStory from "./components/MyStory";
 import { TradingResults } from "./components/TradingResults";
 import { Features } from "./components/Features";
 import { CallToAction } from "./components/CallToAction";
-import { FAQ } from "./components/FAQ";
+import { FAQPreview } from "./components/FAQPreview";
+import FAQPage from "./pages/FAQPage";
 import { Footer } from "./components/Footer";
 
 // Your page components
@@ -132,6 +133,25 @@ const seoConfigs = {
     canonicalUrl: "https://rd6xolh11t0gmjdo-default.preview.taskade.app/blog",
     pageType: "blog" as const,
   },
+  faq: {
+    title: "FAQ - Frequently Asked Questions | MyRoboticTrader",
+    description:
+      "Get answers to common questions about automated crypto trading, AI-enhanced systems, safety, profits, and how to get started with GoBabyTrade.",
+    keywords:
+      "crypto trading FAQ, automated trading questions, trading bot FAQ, GoBabyTrade FAQ, robotic trading help",
+    ogTitle: "Frequently Asked Questions | MyRoboticTrader",
+    ogDescription:
+      "Answers to 30+ questions about automated crypto trading, safety, profits, and getting started.",
+    ogImage:
+      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/og-image.png",
+    twitterTitle: "FAQ - MyRoboticTrader",
+    twitterDescription:
+      "Get answers to common questions about automated crypto trading and AI-enhanced systems.",
+    twitterImage:
+      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/twitter-image.png",
+    canonicalUrl: "https://rd6xolh11t0gmjdo-default.preview.taskade.app/faq",
+    pageType: "faq" as const,
+  },
 };
 
 // SEO Wrapper Component
@@ -145,6 +165,8 @@ const SEOWrapper = ({ children }: { children: React.ReactNode }) => {
     switch (location.pathname) {
       case "/blog":
         return seoConfigs.blog;
+      case "/faq":
+        return seoConfigs.faq;
       case "/resources":
         return seoConfigs.resources;
       case "/privacy":
@@ -214,7 +236,7 @@ const HomePage = () => {
 
       <Features />
       <CallToAction />
-      <FAQ />
+      <FAQPreview />
     </>
   );
 };
@@ -234,6 +256,7 @@ function App() {
         <SEOWrapper>
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/faq" element={<FAQPage />} />
             <Route path="/resources" element={<ResourcesPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/card" element={<BusinessCardLanding />} />
