@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Link } from "react-router-dom";
 import {
   ChevronDown,
   ChevronUp,
@@ -10,6 +11,16 @@ import {
   User,
 } from "lucide-react";
 
+// Helper component for internal blog links
+const BlogLink: React.FC<{ to: string; children: React.ReactNode }> = ({ to, children }) => (
+  <Link
+    to={to}
+    className="text-purple-300 hover:text-purple-200 underline transition-colors duration-200"
+  >
+    {children}
+  </Link>
+);
+
 const faqData = [
   {
     category: "My Personal Experience",
@@ -18,13 +29,19 @@ const faqData = [
     questions: [
       {
         question: "Why did you start automated trading in January 2025?",
-        answer:
-          "I was tired of watching charts and trying to time the market perfectly. I wanted a systematic approach that could work while I lived my life. The idea of a system that only trades when conditions are favorable—and sits patiently when they're not—made sense to me. I started tracking every single trade publicly on this site to prove it works.",
+        answer: (
+          <>
+            I was tired of watching charts and trying to time the market perfectly. I wanted a systematic approach that could work while I lived my life. The idea of a system that only trades when conditions are favorable—and sits patiently when they're not—made sense to me. I started tracking every single trade publicly on this site to prove it works. <BlogLink to="/blog/trading-disorders-ai-solution">Learn why I let an AI make every trade →</BlogLink>
+          </>
+        ),
       },
       {
         question: "What surprised you most in your first months of trading?",
-        answer:
-          "Two things: First, how truly hands-off it is. I genuinely don't watch it constantly. Second, how patience is everything. Some weeks are quiet with few trades, and that used to make me nervous. Now I understand that's the system being smart—waiting for the right opportunities instead of forcing trades.",
+        answer: (
+          <>
+            Two things: First, how truly hands-off it is. I genuinely don't watch it constantly. Second, how patience is everything. Some weeks are quiet with few trades, and that used to make me nervous. Now I understand that's the system being smart—waiting for the right opportunities instead of forcing trades. <BlogLink to="/blog/trading-disorders-ai-solution">Read more about overcoming trading emotions →</BlogLink>
+          </>
+        ),
       },
       {
         question: "What happens during flat or low volatility weeks?",
@@ -39,8 +56,11 @@ const faqData = [
       {
         question:
           "Your profits seem modest. Shouldn't you be making way more money?",
-        answer:
-          "I get this question a lot, and I appreciate the honesty. Here's my perspective: I'm not trying to get rich quick—I'm building sustainable, consistent income. Those '$50K in a month!' claims you see everywhere? Usually from huge capital, massive risk, or cherry-picked best months. My results are real, transparent, and conservative. I'm focused on steady growth without gambling. If you're looking for 'turn $100 into $10K overnight' promises, this isn't it. If you want realistic, sustainable profits you can actually count on, that's what I'm showing.",
+        answer: (
+          <>
+            I get this question a lot, and I appreciate the honesty. Here's my perspective: I'm not trying to get rich quick—I'm building sustainable, consistent income. Those '$50K in a month!' claims you see everywhere? Usually from huge capital, massive risk, or cherry-picked best months. My results are real, transparent, and conservative. I'm focused on steady growth without gambling. If you're looking for 'turn $100 into $10K overnight' promises, this isn't it. If you want realistic, sustainable profits you can actually count on, that's what I'm showing. <BlogLink to="/blog/percent-gain-vs-roi">Why I show % gain instead of ROI →</BlogLink>
+          </>
+        ),
       },
       {
         question: "Why not scale up and make bigger profits faster?",
@@ -49,8 +69,11 @@ const faqData = [
       },
       {
         question: "Would you recommend this to a complete beginner?",
-        answer:
-          "Yes, but with realistic expectations. This isn't a 'get rich quick' scheme. It's systematic investing that requires patience and trust in the process. If you're willing to let the system do its job without constantly interfering, this works. If you need immediate results or want to tinker constantly, you'll struggle with the patience required.",
+        answer: (
+          <>
+            Yes, but with realistic expectations. This isn't a 'get rich quick' scheme. It's systematic investing that requires patience and trust in the process. If you're willing to let the system do its job without constantly interfering, this works. If you need immediate results or want to tinker constantly, you'll struggle with the patience required. <BlogLink to="/blog/how-to-make-passive-income-crypto">Read the complete beginner's guide →</BlogLink>
+          </>
+        ),
       },
       {
         question: "How do I get started with this system?",
@@ -99,19 +122,28 @@ const faqData = [
       {
         question:
           "What happens during down markets? Shouldn't the system stop trading?",
-        answer:
-          "Actually, down markets are where the system shines! When prices drop, the trader accumulates inventory at lower prices—building up positions strategically. This might look quiet on the surface because there are fewer sells, but the system is actively buying and preparing for the eventual market recovery. When prices turn around, you'll have a portfolio of positions ready to sell for profit. This patient approach of 'buy low, wait, sell high' is what produces successful long-term results. The quiet periods are actually the setup for bigger wins later.",
+        answer: (
+          <>
+            Actually, down markets are where the system shines! When prices drop, the trader accumulates inventory at lower prices—building up positions strategically. This might look quiet on the surface because there are fewer sells, but the system is actively buying and preparing for the eventual market recovery. When prices turn around, you'll have a portfolio of positions ready to sell for profit. This patient approach of 'buy low, wait, sell high' is what produces successful long-term results. The quiet periods are actually the setup for bigger wins later. <BlogLink to="/blog/why-start-automated-trading-in-down-markets">Why down markets are the best time to start →</BlogLink>
+          </>
+        ),
       },
       {
         question:
           "Your average profit per trade seems small. Why only a few dollars per trade?",
-        answer:
-          "Here's what matters more than average profit per trade: I've been profitable every single month since I started. Every. Single. Month. How many traders can say that? The system isn't trying to hit home runs on every trade—it's focused on consistency and never selling at a loss. Small, consistent profits compound over time. I'd rather make $4 per trade with 100% winning months than chase $100 per trade and have losing months. The math works out, trust me. And as I scale up capital, those per-trade numbers naturally increase.",
+        answer: (
+          <>
+            Here's what matters more than average profit per trade: I've been profitable every single month since I started. Every. Single. Month. How many traders can say that? The system isn't trying to hit home runs on every trade—it's focused on consistency and never selling at a loss. Small, consistent profits compound over time. I'd rather make $4 per trade with 100% winning months than chase $100 per trade and have losing months. The math works out, trust me. And as I scale up capital, those per-trade numbers naturally increase. <BlogLink to="/blog/percent-gain-vs-roi">Understanding % gain vs "how much should I invest" →</BlogLink>
+          </>
+        ),
       },
       {
         question: "Do you ever hide losing trades?",
-        answer:
-          "No. Every single trade is shown. However, the system is designed to only sell positions when they're profitable, so you'll rarely see actual losses. If a position goes underwater, the system holds it until it can sell for a profit. That's the whole point—patience over panic. You'll see flat weeks, you'll see small profits, you'll see big profits—but you won't see me panic-selling at a loss because the system doesn't do that.",
+        answer: (
+          <>
+            No. Every single trade is shown. However, the system is designed to only sell positions when they're profitable, so you'll rarely see actual losses. If a position goes underwater, the system holds it until it can sell for a profit. That's the whole point—patience over panic. You'll see flat weeks, you'll see small profits, you'll see big profits—but you won't see me panic-selling at a loss because the system doesn't do that. <BlogLink to="/blog/never-sell-at-loss-crypto-trading">Why the system never sells at a loss →</BlogLink>
+          </>
+        ),
       },
       {
         question: "Can I see trades from specific cryptocurrencies?",
@@ -142,8 +174,11 @@ const faqData = [
     questions: [
       {
         question: "What is robotic crypto trading?",
-        answer:
-          "A robotic trader is an automated trading platform that executes buy and sell decisions based on market conditions and your settings. The system monitors markets 24/7 and executes trades in milliseconds without human intervention. While AI enhancement helps optimize timing for potentially better profits or entry prices, the core trading platform operates on proven algorithms and market analysis that adapt to changing market conditions.",
+        answer: (
+          <>
+            A robotic trader is an automated trading platform that executes buy and sell decisions based on market conditions and your settings. The system monitors markets 24/7 and executes trades in milliseconds without human intervention. While AI enhancement helps optimize timing for potentially better profits or entry prices, the core trading platform operates on proven algorithms and market analysis that adapt to changing market conditions. <BlogLink to="/blog/bucket-and-well-automated-trading-analogy">Read the simple analogy that explains how it works →</BlogLink>
+          </>
+        ),
       },
       {
         question: "Do I need trading experience?",
@@ -193,8 +228,11 @@ const faqData = [
       },
       {
         question: "What if the system makes losing trades?",
-        answer:
-          "Our protection system never executes losing trades. It waits for profitable opportunities or doesn't trade at all, safeguarding your capital.",
+        answer: (
+          <>
+            Our protection system never executes losing trades. It waits for profitable opportunities or doesn't trade at all, safeguarding your capital. <BlogLink to="/blog/never-sell-at-loss-crypto-trading">Learn how the never-sell-at-loss strategy works →</BlogLink>
+          </>
+        ),
       },
       {
         question: "Can I pause or stop the automated trading anytime?",
@@ -220,13 +258,19 @@ const faqData = [
       },
       {
         question: "What about ROI?",
-        answer:
-          "ROI calculations can be misleading since most successful traders grow capital over time. Focus on overall portfolio growth and consistent profitable trades rather than ROI percentages.",
+        answer: (
+          <>
+            ROI calculations can be misleading since most successful traders grow capital over time. Focus on overall portfolio growth and consistent profitable trades rather than ROI percentages. <BlogLink to="/blog/percent-gain-vs-roi">Why I show % gain instead of "how much should I invest" →</BlogLink>
+          </>
+        ),
       },
       {
         question: "Does it ever sell at a loss?",
-        answer:
-          "Positions are only sold when profitable, unless you manually choose otherwise. The system waits patiently for opportunities to sell for gains, avoiding locked-in losses.",
+        answer: (
+          <>
+            Positions are only sold when profitable, unless you manually choose otherwise. The system waits patiently for opportunities to sell for gains, avoiding locked-in losses. <BlogLink to="/blog/never-sell-at-loss-crypto-trading">Deep dive: Why never selling at a loss is actually possible →</BlogLink>
+          </>
+        ),
       },
       {
         question: "Do you guarantee profits?",
@@ -258,8 +302,11 @@ const faqData = [
       {
         question:
           "Why does the trader buy many positions but not sell during market dips?",
-        answer:
-          "Down markets are actually good - this is where you build inventory! The trader takes advantage of lower prices to accumulate positions, creating a well-seasoned portfolio. When markets recover, you'll have multiple profitable positions ready to sell. This patient approach is what produces successful long-term results.",
+        answer: (
+          <>
+            Down markets are actually good - this is where you build inventory! The trader takes advantage of lower prices to accumulate positions, creating a well-seasoned portfolio. When markets recover, you'll have multiple profitable positions ready to sell. This patient approach is what produces successful long-term results. <BlogLink to="/blog/why-start-automated-trading-in-down-markets">Why down markets are the best time to start (with real numbers) →</BlogLink>
+          </>
+        ),
       },
       {
         question: "Which cryptocurrencies work best for different strategies?",
