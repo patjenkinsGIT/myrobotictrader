@@ -4,9 +4,20 @@ import { FloatingIcons } from "./FloatingIcons";
 import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
 import { useGoogleSheetsData } from "../hooks/useGoogleSheetsData";
 
+// Calculate months since trading started (January 8, 2025)
+const getMonthsSinceStart = (): number => {
+  const startDate = new Date(2025, 0, 8); // January 8, 2025
+  const now = new Date();
+  let months = (now.getFullYear() - startDate.getFullYear()) * 12;
+  months += now.getMonth() - startDate.getMonth();
+  if (now.getDate() < startDate.getDate()) months--;
+  return Math.max(0, months);
+};
+
 export const Hero: React.FC = () => {
   // Get live trading data
   const { tradingStats, isLoading } = useGoogleSheetsData();
+  const monthsTrading = getMonthsSinceStart();
   const handleStartTrading = () => {
     trackCTAClick("start_trading_save_1000", "hero");
     trackOutboundLink("https://dailyprofits.link/gbt", "Start Trading Save $1000");
@@ -67,7 +78,7 @@ export const Hero: React.FC = () => {
                 </span>{" "}
                 in{" "}
                 <span className="text-blue-300 font-bold">
-                  {tradingStats?.monthlyData.length || 8}+ months
+                  {monthsTrading}+ months
                 </span>{" "}
                 using AI-enhanced autonomous trading most people don't know
                 exists.
@@ -153,7 +164,7 @@ export const Hero: React.FC = () => {
               ) : (
                 <>
                   <div className="text-4xl font-bold text-blue-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-300 group-hover:to-cyan-300 group-hover:bg-clip-text transition-all duration-300">
-                    {tradingStats?.monthlyData.length || 8}+ Months
+                    {monthsTrading}+ Months
                   </div>
                   <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
                     Profitable

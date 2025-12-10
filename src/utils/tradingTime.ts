@@ -1,79 +1,113 @@
+// Trading start date: January 8, 2025
+const TRADING_START_DATE = new Date(2025, 0, 8); // Month is 0-indexed (0 = January)
+
 // Calculate time since trading started (January 8, 2025)
 export const calculateTimeSinceStart = (): string => {
-  const startDate = new Date("2025-01-08");
   const currentDate = new Date();
 
-  // Calculate the difference in milliseconds
-  const diffTime = Math.abs(currentDate.getTime() - startDate.getTime());
+  // Calculate calendar months difference
+  let months =
+    (currentDate.getFullYear() - TRADING_START_DATE.getFullYear()) * 12;
+  months += currentDate.getMonth() - TRADING_START_DATE.getMonth();
 
-  // Calculate days
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  // Calculate remaining days
+  let days = currentDate.getDate() - TRADING_START_DATE.getDate();
 
-  // Calculate months (approximate)
-  const diffMonths = Math.floor(diffDays / 30);
-  const remainingDays = diffDays % 30;
+  // Adjust if days is negative (haven't reached the day of month yet)
+  if (days < 0) {
+    months--;
+    // Get days in the previous month
+    const prevMonth = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      0
+    );
+    days += prevMonth.getDate();
+  }
 
-  if (diffMonths >= 1) {
-    if (remainingDays > 0) {
-      return `${diffMonths} month${
-        diffMonths > 1 ? "s" : ""
-      }, ${remainingDays} day${remainingDays > 1 ? "s" : ""}`;
+  if (months >= 1) {
+    if (days > 0) {
+      return `${months} month${months > 1 ? "s" : ""}, ${days} day${
+        days > 1 ? "s" : ""
+      }`;
     } else {
-      return `${diffMonths} month${diffMonths > 1 ? "s" : ""}`;
+      return `${months} month${months > 1 ? "s" : ""}`;
     }
   } else {
+    // Calculate total days for periods less than a month
+    const diffTime = Math.abs(
+      currentDate.getTime() - TRADING_START_DATE.getTime()
+    );
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return `${diffDays} day${diffDays > 1 ? "s" : ""}`;
   }
 };
 
 // Alternative version that shows weeks for shorter periods
 export const calculateTimeSinceStartDetailed = (): string => {
-  const startDate = new Date("2025-01-08");
   const currentDate = new Date();
 
-  const diffTime = Math.abs(currentDate.getTime() - startDate.getTime());
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  // Calculate calendar months and years
+  let totalMonths =
+    (currentDate.getFullYear() - TRADING_START_DATE.getFullYear()) * 12;
+  totalMonths += currentDate.getMonth() - TRADING_START_DATE.getMonth();
 
-  if (diffDays >= 365) {
-    const years = Math.floor(diffDays / 365);
-    const remainingDays = diffDays % 365;
-    const months = Math.floor(remainingDays / 30);
+  let days = currentDate.getDate() - TRADING_START_DATE.getDate();
+  if (days < 0) {
+    totalMonths--;
+    const prevMonth = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      0
+    );
+    days += prevMonth.getDate();
+  }
+
+  const years = Math.floor(totalMonths / 12);
+  const months = totalMonths % 12;
+
+  if (years >= 1) {
     return `${years} year${years > 1 ? "s" : ""}${
       months > 0 ? `, ${months} month${months > 1 ? "s" : ""}` : ""
     }`;
-  } else if (diffDays >= 30) {
-    const months = Math.floor(diffDays / 30);
-    const remainingDays = diffDays % 30;
+  } else if (months >= 1) {
     return `${months} month${months > 1 ? "s" : ""}${
-      remainingDays > 0
-        ? `, ${remainingDays} day${remainingDays > 1 ? "s" : ""}`
-        : ""
+      days > 0 ? `, ${days} day${days > 1 ? "s" : ""}` : ""
     }`;
-  } else if (diffDays >= 7) {
-    const weeks = Math.floor(diffDays / 7);
-    const remainingDays = diffDays % 7;
+  } else if (days >= 7) {
+    const weeks = Math.floor(days / 7);
+    const remainingDays = days % 7;
     return `${weeks} week${weeks > 1 ? "s" : ""}${
       remainingDays > 0
         ? `, ${remainingDays} day${remainingDays > 1 ? "s" : ""}`
         : ""
     }`;
   } else {
-    return `${diffDays} day${diffDays > 1 ? "s" : ""}`;
+    return `${days} day${days > 1 ? "s" : ""}`;
   }
 };
 
 // Simple version that just shows "X months trading"
 export const getSimpleTradingDuration = (): string => {
-  const startDate = new Date("2025-01-08");
   const currentDate = new Date();
 
-  const diffTime = Math.abs(currentDate.getTime() - startDate.getTime());
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  const diffMonths = Math.floor(diffDays / 30);
+  // Calculate calendar months
+  let months =
+    (currentDate.getFullYear() - TRADING_START_DATE.getFullYear()) * 12;
+  months += currentDate.getMonth() - TRADING_START_DATE.getMonth();
 
-  if (diffMonths >= 1) {
-    return `${diffMonths}+ Months Trading`;
+  // Adjust if we haven't reached the start day yet this month
+  if (currentDate.getDate() < TRADING_START_DATE.getDate()) {
+    months--;
+  }
+
+  if (months >= 1) {
+    return `${months}+ Months Trading`;
   } else {
+    const diffTime = Math.abs(
+      currentDate.getTime() - TRADING_START_DATE.getTime()
+    );
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return `${diffDays} Days Trading`;
   }
 };
