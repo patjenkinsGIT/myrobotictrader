@@ -9,6 +9,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Download,
+  Shield,
 } from "lucide-react";
 import { tradingDataCache } from "../utils/smartCache";
 
@@ -32,10 +33,13 @@ export const LiveTransactionLog: React.FC = () => {
   const [showOnMobile, setShowOnMobile] = useState(false);
   const [isCacheHit, setIsCacheHit] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [profitsProtected, setProfitsProtected] = useState<number | null>(null);
 
   // Constants
   const SHEET_TAB = "Transactions Raw Data";
   const SHEET_RANGE = "A:T"; // Extended to include Column T (% Gain)
+  const CALCULATIONS_TAB = "Calculations";
+  const PROFITS_PROTECTED_CELL = "H14";
 
   // Format price to display properly
   const formatPrice = useCallback((price: string): string => {
@@ -51,15 +55,15 @@ export const LiveTransactionLog: React.FC = () => {
 
     // Format based on price range
     if (numPrice < 0.00001) {
-      return `$${numPrice.toFixed(8)}`;
+      return `${numPrice.toFixed(8)}`;
     } else if (numPrice < 0.001) {
-      return `$${numPrice.toFixed(5)}`;
+      return `${numPrice.toFixed(5)}`;
     } else if (numPrice < 1) {
-      return `$${numPrice.toFixed(4)}`;
+      return `${numPrice.toFixed(4)}`;
     } else if (numPrice < 100) {
-      return `$${numPrice.toFixed(2)}`;
+      return `${numPrice.toFixed(2)}`;
     } else {
-      return `$${numPrice.toLocaleString()}`;
+      return `${numPrice.toLocaleString()}`;
     }
   }, []);
 
@@ -277,7 +281,7 @@ export const LiveTransactionLog: React.FC = () => {
         : "100.0";
 
     return {
-      totalProfit: `$${totalProfit.toFixed(2)}`,
+      totalProfit: `${totalProfit.toFixed(2)}`,
       closedTrades: closedTransactions.length,
       openTrades: openTransactions.length,
       totalTrades: currentMonthTransactions.length,
@@ -362,6 +366,40 @@ export const LiveTransactionLog: React.FC = () => {
     return parseGoogleSheetsData(mockRows);
   }, [parseGoogleSheetsData]);
 
+  // Fetch Profits Protected from Calculations!H14
+  const fetchProfitsProtected = useCallback(async () => {
+    const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
+    const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
+
+    if (!SHEET_ID || !API_KEY) {
+      // Fallback value for demo/sample mode
+      setProfitsProtected(1741.43);
+      return;
+    }
+
+    try {
+      const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${CALCULATIONS_TAB}!${PROFITS_PROTECTED_CELL}?key=${API_KEY}`;
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        console.error("Failed to fetch Profits Protected");
+        setProfitsProtected(null);
+        return;
+      }
+
+      const data = await response.json();
+      if (data.values && data.values[0] && data.values[0][0]) {
+        const value = parseFloat(String(data.values[0][0]).replace(/[$,]/g, ""));
+        if (!isNaN(value)) {
+          setProfitsProtected(value);
+        }
+      }
+    } catch (err) {
+      console.error("Error fetching Profits Protected:", err);
+      setProfitsProtected(null);
+    }
+  }, [CALCULATIONS_TAB, PROFITS_PROTECTED_CELL]);
+
   // Fetch transactions
   const fetchTransactions = useCallback(
     async (showLoading = true) => {
@@ -431,7 +469,8 @@ export const LiveTransactionLog: React.FC = () => {
 
   useEffect(() => {
     fetchTransactions();
-  }, [fetchTransactions]);
+    fetchProfitsProtected();
+  }, [fetchTransactions, fetchProfitsProtected]);
 
   const getCoinColor = (coin: string) => {
     const colors: { [key: string]: string } = {
@@ -638,37 +677,45 @@ export const LiveTransactionLog: React.FC = () => {
         </div>
       )}
 
-      {/* Summary Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-2 md:gap-4 mb-6">
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all text-center">
-          <div className="text-sm md:text-lg font-bold text-green-300 truncate">
+      {/* Summary Stats - 6 Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 mb-6">
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
+          <div className="text-sm lg:text-base font-bold text-green-300 truncate">
             {monthSummary.totalProfit}
           </div>
-          <div className="text-xs text-gray-400">Total Profit</div>
+          <div className="text-[10px] lg:text-xs text-gray-400">Total Profit</div>
         </div>
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all text-center">
-          <div className="text-sm md:text-lg font-bold text-green-400">
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
+          <div className="text-sm lg:text-base font-bold text-green-400">
             {monthSummary.closedTrades}
           </div>
-          <div className="text-xs text-gray-400">Closed Trades</div>
+          <div className="text-[10px] lg:text-xs text-gray-400">Closed</div>
         </div>
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all text-center">
-          <div className="text-sm md:text-lg font-bold text-blue-300">
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
+          <div className="text-sm lg:text-base font-bold text-blue-300">
             {monthSummary.openTrades}
           </div>
-          <div className="text-xs text-gray-400">Open Trades</div>
+          <div className="text-[10px] lg:text-xs text-gray-400">Open</div>
         </div>
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all text-center">
-          <div className="text-sm md:text-lg font-bold text-purple-300">
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
+          <div className="text-sm lg:text-base font-bold text-purple-300">
             {monthSummary.totalTrades}
           </div>
-          <div className="text-xs text-gray-400">Total Trades</div>
+          <div className="text-[10px] lg:text-xs text-gray-400">Total</div>
         </div>
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-xl p-2 md:p-3 border border-white/20 hover:border-white/30 transition-all text-center col-span-2 lg:col-span-1">
-          <div className="text-sm md:text-lg font-bold text-orange-300">
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
+          <div className="text-sm lg:text-base font-bold text-orange-300">
             {monthSummary.successRate}
           </div>
-          <div className="text-xs text-gray-400">Success Rate</div>
+          <div className="text-[10px] lg:text-xs text-gray-400">Success</div>
+        </div>
+        {/* Profits Protected Card - Dynamic from Calculations!H14 */}
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
+          <div className="text-sm lg:text-base font-bold text-emerald-300 truncate flex items-center justify-center gap-1">
+            <Shield className="w-3 h-3 text-emerald-400 flex-shrink-0" />
+            <span>{profitsProtected !== null ? `$${profitsProtected.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}` : '...'}</span>
+          </div>
+          <div className="text-[10px] lg:text-xs text-emerald-400/80">Protected</div>
         </div>
       </div>
 
