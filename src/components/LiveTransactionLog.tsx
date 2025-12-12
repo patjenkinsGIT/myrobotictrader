@@ -709,14 +709,22 @@ export const LiveTransactionLog: React.FC = () => {
           </div>
           <div className="text-[10px] lg:text-xs text-gray-400">Success</div>
         </div>
-        {/* Profits Protected Card - Dynamic from Calculations!H14 */}
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
+        {/* Profits Saved Card - Dynamic from Calculations!H14 */}
+        <a
+          href="/blog/the-50-50-strategy"
+          className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-emerald-400/50 transition-all text-center cursor-pointer"
+        >
           <div className="text-sm lg:text-base font-bold text-emerald-300 truncate flex items-center justify-center gap-1">
             <Shield className="w-3 h-3 text-emerald-400 flex-shrink-0" />
-            <span>{profitsProtected !== null ? `$${profitsProtected.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}` : '...'}</span>
+            <span>50% → {profitsProtected !== null ? `$${profitsProtected.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}` : '...'}</span>
           </div>
-          <div className="text-[10px] lg:text-xs text-emerald-400/80">Protected</div>
-        </div>
+          <div className="text-[10px] lg:text-xs text-emerald-400/80">Profits Saved</div>
+          {/* Tooltip */}
+          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 border border-white/20 rounded-lg text-xs text-gray-200 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10">
+            Half of all profits are automatically saved. Learn more →
+            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+          </div>
+        </a>
       </div>
 
       {/* Last Updated */}
