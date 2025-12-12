@@ -198,7 +198,7 @@ const faqData = [
           <>
             Absolutely! Coinbase One saves me hundreds monthly with $0 trading fees. When you're making multiple trades daily, those fees add up fast.{" "}
             <a
-              href="https://dailyprofits.link/coinbase"
+              href="https://dailyprofits.link/cba"
               target="_blank"
               rel="noopener noreferrer"
               className="text-purple-300 hover:text-purple-200 underline transition-colors duration-200"

@@ -157,7 +157,7 @@ export const ResourcesPage: React.FC = function () {
                 </div>
 
                 <a
-                  href="https://dailyprofits.link/coinbase"
+                  href="https://dailyprofits.link/cba"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-500/30"
