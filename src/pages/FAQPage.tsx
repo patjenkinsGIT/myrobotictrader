@@ -304,7 +304,7 @@ const faqData = [
       {
         question: "Which cryptocurrencies work best for different strategies?",
         answer:
-          "For active trading, faster-moving currencies often provide more opportunities. However, established coins like BTC and ETH may be better suited for long-term dollar cost averaging strategies. These are examples only - we provide technical support, not investment advice.",
+          "For active trading, faster-moving currencies often provide more opportunities. However, established coins like BTC and ETH may be better suited for long-term dollar cost averaging strategies. These are examples only - GoBabyTrade provides technical support, not investment advice.",
       },
       {
         question: "How do I handle taxes on my trading profits?",
