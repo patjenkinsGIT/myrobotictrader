@@ -7,7 +7,7 @@ const previewQuestions = [
   {
     question: "Is my money safe?",
     answer:
-      "Yes! Your funds stay in your own Kraken/Coinbase accounts. We only connect via API with trading permissions - we can never withdraw or transfer your funds.",
+      "Yes! Your funds stay in your own Kraken/Coinbase accounts. The system only connects via API with trading permissions - it can never withdraw or transfer your funds.",
   },
   {
     question: "Do I need trading experience?",
@@ -17,12 +17,12 @@ const previewQuestions = [
   {
     question: "How much money do I need to start?",
     answer:
-      "Start with as little as $100. We recommend starting small to get familiar with the platform before scaling up your investment.",
+      "Start with as little as $100. It's recommended to start small to get familiar with the platform before scaling up your investment.",
   },
   {
     question: "What if the system makes losing trades?",
     answer:
-      "Our protection system never executes losing trades. It waits for profitable opportunities or doesn't trade at all, safeguarding your capital.",
+      "The GoBabyTrade protection system never executes losing trades. It waits for profitable opportunities or doesn't trade at all, safeguarding your capital.",
   },
   {
     question: "Can I pause or stop the automated trading anytime?",
@@ -121,7 +121,7 @@ export const FAQPreview: React.FC = () => {
             system I use. Try paper trading first, risk-free.
           </p>
           <a
-            href="https://dailyprofits.link/gbt"
+            href="https://gobabytrade.com/432706BE"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-4 px-8 rounded-xl hover:from-purple-600 hover:to-pink-600 transform hover:scale-105 transition-all duration-200 shadow-lg shadow-purple-500/50"

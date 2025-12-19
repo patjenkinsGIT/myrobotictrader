@@ -5,7 +5,7 @@ import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
 export const CallToAction: React.FC = function () {
   const handleStartTrading = () => {
     trackCTAClick("start_trading_save_1000", "cta_section");
-    trackOutboundLink("https://dailyprofits.link/gbt", "Start Trading Save $1000 CTA");
+    trackOutboundLink("https://gobabytrade.com/432706BE", "Start Trading Save $1000 CTA");
   };
 
   return (
@@ -109,7 +109,7 @@ export const CallToAction: React.FC = function () {
         {/* CTA Button */}
         <div className="flex justify-center mb-8">
           <a
-            href="https://dailyprofits.link/gbt"
+            href="https://gobabytrade.com/432706BE"
             onClick={handleStartTrading}
             target="_blank"
             rel="noopener noreferrer"

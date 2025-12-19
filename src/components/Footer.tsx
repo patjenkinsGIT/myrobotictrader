@@ -47,7 +47,7 @@ export const Footer: React.FC = function () {
           {/* Links - WITH PRIVACY POLICY LINK ADDED */}
           <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mb-8">
             <a
-              href="https://dailyprofits.link/gbt"
+              href="https://gobabytrade.com/432706BE"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-400 hover:text-purple-400 transition-colors flex items-center gap-2 group"

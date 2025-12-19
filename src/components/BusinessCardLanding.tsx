@@ -18,7 +18,7 @@ export const BusinessCardLanding: React.FC = () => {
 
   // Your actual affiliate link with tracking
   const affiliateLink =
-    "https://dailyprofits.link/gbt?utm_source=business_card&utm_medium=nfc_qr&utm_campaign=live_results_2025";
+    "https://gobabytrade.com/432706BE?utm_source=business_card&utm_medium=nfc_qr&utm_campaign=live_results_2025";
 
   // Show loading state briefly
   if (isLoading || !tradingStats) {

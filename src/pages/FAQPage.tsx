@@ -81,7 +81,7 @@ const faqData = [
           <>
             The system I use is called GoBabyTrade. You can start with paper trading to test it risk-free before going live. Use my referral link to save $1,000:{" "}
             <a
-              href="https://dailyprofits.link/gbt"
+              href="https://gobabytrade.com/432706BE"
               target="_blank"
               rel="noopener noreferrer"
               className="text-purple-300 hover:text-purple-200 underline transition-colors duration-200"
@@ -180,12 +180,12 @@ const faqData = [
       {
         question: "Do I need trading experience?",
         answer:
-          "No experience required! The AI handles all analysis and decisions. You set your preferences and investment amount - the platform does the rest. We provide support and resources to help you understand the process.",
+          "No experience required! The AI handles all analysis and decisions. You set your preferences and investment amount - the platform does the rest. GoBabyTrade provides support and resources to help you understand the process.",
       },
       {
         question: "How much money do I need to start?",
         answer:
-          "Start with as little as $100. We recommend starting small to get familiar with the platform before scaling up your investment.",
+          "Start with as little as $100. It's recommended to start small to get familiar with the platform before scaling up your investment.",
       },
       {
         question: "Can I use this outside the USA?",
@@ -218,13 +218,13 @@ const faqData = [
       {
         question: "Is my money safe?",
         answer:
-          "Yes! Your funds stay in your own Kraken/Coinbase accounts. We only connect via API with trading permissions - we can never withdraw or transfer your funds.",
+          "Yes! Your funds stay in your own Kraken/Coinbase accounts. The system only connects via API with trading permissions - it can never withdraw or transfer your funds.",
       },
       {
         question: "What if the system makes losing trades?",
         answer: (
           <>
-            Our protection system never executes losing trades. It waits for profitable opportunities or doesn't trade at all, safeguarding your capital. <BlogLink to="/blog/never-sell-at-loss-crypto-trading">Learn how the never-sell-at-loss strategy works →</BlogLink>
+            The GoBabyTrade protection system never executes losing trades. It waits for profitable opportunities or doesn't trade at all, safeguarding your capital. <BlogLink to="/blog/never-sell-at-loss-crypto-trading">Learn how the never-sell-at-loss strategy works →</BlogLink>
           </>
         ),
       },
@@ -243,7 +243,7 @@ const faqData = [
       {
         question: "What returns can I expect?",
         answer:
-          "While past performance doesn't guarantee future results, our platform achieves consistent profits by only trading when conditions are favorable. Results vary based on market conditions and your settings.",
+          "While past performance doesn't guarantee future results, the GoBabyTrade platform achieves consistent profits by only trading when conditions are favorable. Results vary based on market conditions and your settings.",
       },
       {
         question: "How often does it trade?",
@@ -269,7 +269,7 @@ const faqData = [
       {
         question: "Do you guarantee profits?",
         answer:
-          "No legitimate system can guarantee profits. However, our approach of never trading at a loss significantly improves your probability of success.",
+          "No legitimate system can guarantee profits. However, the GoBabyTrade approach of never trading at a loss significantly improves your probability of success.",
       },
     ],
   },
@@ -335,7 +335,7 @@ const faqData = [
           "The robotic trading platform was developed specifically for Coinbase and Kraken. These are the only exchanges with approved API integrations from the developer. They also happen to be two of the most reliable and secure exchanges available.",
       },
       {
-        question: "What exchanges do you support?",
+        question: "What exchanges does GoBabyTrade support?",
         answer:
           "Coinbase and Kraken exclusively. Seamless integration through secure API connections while keeping your funds safe in your own accounts.",
       },
@@ -345,9 +345,9 @@ const faqData = [
           "No! The system runs on cloud servers 24/7 even when your computer is off. Monitor trades and adjust settings from any device through the web platform.",
       },
       {
-        question: "What support do you provide?",
+        question: "What support is available?",
         answer:
-          "Comprehensive technical support for setup, configuration, and platform questions. The provided support is for technical and educational support only - no financial advice.",
+          "GoBabyTrade provides comprehensive technical support for setup, configuration, and platform questions. Support is for technical and educational purposes only - no financial advice.",
       },
     ],
   },
@@ -470,7 +470,7 @@ const FAQPage: React.FC = () => {
               system I use. Try paper trading first, risk-free.
             </p>
             <a
-              href="https://dailyprofits.link/gbt"
+              href="https://gobabytrade.com/432706BE"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-4 px-8 rounded-xl hover:from-purple-600 hover:to-pink-600 transform hover:scale-105 transition-all duration-200 shadow-lg shadow-purple-500/50"

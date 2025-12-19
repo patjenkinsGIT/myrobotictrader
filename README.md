@@ -268,7 +268,7 @@ npm run dev
 
 - Live Site: MyRoboticTrader.com
 - Complete Documentation: Project Documentation Gist
-- Trading Platform: [GoBabyTrade](https://dailyprofits.link/gbt) (Save $1,000 with this link)
+- Trading Platform: [GoBabyTrade](https://gobabytrade.com/432706BE) (Save $1,000 with this link)
 
 ## 🤝 Contributing
 

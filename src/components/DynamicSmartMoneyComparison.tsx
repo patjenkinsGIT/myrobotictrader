@@ -137,7 +137,7 @@ export const DynamicSmartMoneyComparison = () => {
   const handleStartTradingClick = (location: string) => {
     trackCTAClick("start_trading_save_1000", `dynamic_comparison_${location}`);
     trackOutboundLink(
-      "https://dailyprofits.link/gbt",
+      "https://gobabytrade.com/432706BE",
       `Start Trading Save $1000 from Dynamic Comparison ${location}`
     );
   };
@@ -478,7 +478,7 @@ export const DynamicSmartMoneyComparison = () => {
 
         <div className="text-center">
           <a
-            href="https://dailyprofits.link/gbt"
+            href="https://gobabytrade.com/432706BE"
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => handleStartTradingClick("comparison_bottom")}

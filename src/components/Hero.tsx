@@ -20,7 +20,7 @@ export const Hero: React.FC = () => {
   const monthsTrading = getMonthsSinceStart();
   const handleStartTrading = () => {
     trackCTAClick("start_trading_save_1000", "hero");
-    trackOutboundLink("https://dailyprofits.link/gbt", "Start Trading Save $1000");
+    trackOutboundLink("https://gobabytrade.com/432706BE", "Start Trading Save $1000");
   };
 
   return (
@@ -35,12 +35,24 @@ export const Hero: React.FC = () => {
       <div className="relative max-w-6xl mx-auto text-center z-10 mt-32">
         <div className="mb-8">
           {/* Updated badge to AI-Enhanced Autonomous Trading */}
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-purple-400/40 mb-6 mt-4 shadow-lg shadow-purple-500/20">
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-purple-400/40 mb-2 mt-4 shadow-lg shadow-purple-500/20">
             <Bot className="w-4 h-4 text-purple-300" />
             <span className="text-purple-200 font-medium">
               AI-Enhanced Autonomous Trading
             </span>
           </div>
+          {/* Powered by GoBabyTrade - SEO and AI discoverability */}
+          <p className="text-sm text-gray-400 mb-4">
+            Powered by{" "}
+            <a
+              href="https://gobabytrade.com/432706BE"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-purple-300 hover:text-purple-200 transition-colors"
+            >
+              GoBabyTrade
+            </a>
+          </p>
 
           {/* Headline - Mobile gets shorter version, Desktop gets full version */}
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-white mb-6 leading-tight px-4">
@@ -93,7 +105,7 @@ export const Hero: React.FC = () => {
         {/* CTA Button */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
           <a
-            href="https://dailyprofits.link/gbt"
+            href="https://gobabytrade.com/432706BE"
             onClick={handleStartTrading}
             target="_blank"
             rel="noopener noreferrer"
