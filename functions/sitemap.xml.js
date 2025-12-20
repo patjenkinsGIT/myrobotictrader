@@ -22,7 +22,8 @@ export async function onRequest(context) {
 
     if (postsResponse.ok) {
       const data = await postsResponse.json();
-      posts = data.posts || [];
+      // posts.json is a plain array, not { posts: [...] }
+      posts = Array.isArray(data) ? data : (data.posts || []);
     }
 
     // Static pages with priorities
