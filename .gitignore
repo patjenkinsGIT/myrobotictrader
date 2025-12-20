@@ -11,3 +11,8 @@ Thumbs.db
 .claude/
 .mcp.json
 
+# ENV
+.env
+.env.local
+.env.*.local
+
