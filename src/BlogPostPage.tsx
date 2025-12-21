@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import postsData from "./data/posts.json";
 import { FullNav } from "./components/FullNav";
 import { RecentPosts } from "./components/RecentPosts";
@@ -365,8 +366,38 @@ export const BlogPostPage: React.FC = () => {
     return parts;
   };
 
+  // Generate full image URL for OG tags
+  const ogImageUrl = `https://myrobotictrader.com${post.heroImage}`;
+  const canonicalUrl = `https://myrobotictrader.com/blog/${post.slug}`;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      {/* Dynamic SEO Meta Tags for this blog post */}
+      <Helmet>
+        <title>{post.title} | MyRoboticTrader</title>
+        <meta name="description" content={post.metaDescription} />
+        <link rel="canonical" href={canonicalUrl} />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={post.title} />
+        <meta property="og:description" content={post.metaDescription} />
+        <meta property="og:image" content={ogImageUrl} />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:site_name" content="MyRoboticTrader" />
+        <meta property="article:published_time" content={post.date} />
+        <meta property="article:author" content="Patrick Jenkins" />
+
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@myrobotictrader" />
+        <meta name="twitter:creator" content="@myrobotictrader" />
+        <meta name="twitter:title" content={post.title} />
+        <meta name="twitter:description" content={post.metaDescription} />
+        <meta name="twitter:image" content={ogImageUrl} />
+        <meta name="twitter:image:alt" content={post.imageAlt} />
+      </Helmet>
+
       <FullNav />
 
       {/* Blog Post Content */}

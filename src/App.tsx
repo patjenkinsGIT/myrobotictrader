@@ -46,14 +46,14 @@ const seoConfigs = {
     ogDescription:
       "Discover how I built multiple revenue streams with AI-Enhanced autonomous robotic crypto trading. Real results, proven system.",
     ogImage:
-      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/og-image.png",
+      "https://myrobotictrader.com/api/og-image",
     twitterTitle:
       "MyRoboticTrader - Set It and Forget It Crypto Trading | Build New Revenue Streams",
     twitterDescription:
       "Discover how I built multiple revenue streams with AI-Enhanced autonomous robotic crypto trading. Real results, proven system.",
     twitterImage:
-      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/twitter-image.png",
-    canonicalUrl: "https://rd6xolh11t0gmjdo-default.preview.taskade.app/",
+      "https://myrobotictrader.com/api/og-image",
+    canonicalUrl: "https://myrobotictrader.com/",
     pageType: "home" as const,
   },
   resources: {
@@ -67,14 +67,14 @@ const seoConfigs = {
     ogDescription:
       "Access free crypto trading resources, guides, and educational content to build your revenue stream.",
     ogImage:
-      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/og-image.png",
+      "https://myrobotictrader.com/api/og-image",
     twitterTitle: "Trading Resources & Guides",
     twitterDescription:
       "Free crypto trading resources and educational content for building sustainable revenue streams.",
     twitterImage:
-      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/twitter-image.png",
+      "https://myrobotictrader.com/api/og-image",
     canonicalUrl:
-      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/resources",
+      "https://myrobotictrader.com/resources",
     pageType: "resources" as const,
   },
   privacy: {
@@ -85,13 +85,13 @@ const seoConfigs = {
     ogTitle: "Privacy Policy | MyRoboticTrader",
     ogDescription: "Privacy policy and data handling practices.",
     ogImage:
-      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/og-image.png",
+      "https://myrobotictrader.com/api/og-image",
     twitterTitle: "Privacy Policy",
     twitterDescription: "Privacy policy and data handling practices.",
     twitterImage:
-      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/twitter-image.png",
+      "https://myrobotictrader.com/api/og-image",
     canonicalUrl:
-      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/privacy",
+      "https://myrobotictrader.com/privacy",
     pageType: "privacy" as const,
   },
   card: {
@@ -104,13 +104,13 @@ const seoConfigs = {
     ogDescription:
       "See live AI-enhanced robotic trading results. Real revenue streams being built automatically from Patrick's trading system!",
     ogImage:
-      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/og-image.png",
+      "https://myrobotictrader.com/api/og-image",
     twitterTitle: "Live Trading Results - Building Revenue Streams",
     twitterDescription:
       "See live AI-enhanced robotic trading results building sustainable revenue streams automatically!",
     twitterImage:
-      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/twitter-image.png",
-    canonicalUrl: "https://rd6xolh11t0gmjdo-default.preview.taskade.app/card",
+      "https://myrobotictrader.com/api/og-image",
+    canonicalUrl: "https://myrobotictrader.com/card",
     pageType: "card" as const,
   },
   blog: {
@@ -124,13 +124,13 @@ const seoConfigs = {
     ogDescription:
       "Learn from real trading results and transparent insights about autonomous crypto trading systems.",
     ogImage:
-      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/og-image.png",
+      "https://myrobotictrader.com/api/og-image",
     twitterTitle: "Trading Education Blog - MyRoboticTrader",
     twitterDescription:
       "Real insights from building transparent, systematic crypto trading systems.",
     twitterImage:
-      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/twitter-image.png",
-    canonicalUrl: "https://rd6xolh11t0gmjdo-default.preview.taskade.app/blog",
+      "https://myrobotictrader.com/api/og-image",
+    canonicalUrl: "https://myrobotictrader.com/blog",
     pageType: "blog" as const,
   },
   faq: {
@@ -143,13 +143,13 @@ const seoConfigs = {
     ogDescription:
       "Answers to 30+ questions about automated crypto trading, safety, profits, and getting started.",
     ogImage:
-      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/og-image.png",
+      "https://myrobotictrader.com/api/og-image",
     twitterTitle: "FAQ - MyRoboticTrader",
     twitterDescription:
       "Get answers to common questions about automated crypto trading and AI-enhanced systems.",
     twitterImage:
-      "https://rd6xolh11t0gmjdo-default.preview.taskade.app/twitter-image.png",
-    canonicalUrl: "https://rd6xolh11t0gmjdo-default.preview.taskade.app/faq",
+      "https://myrobotictrader.com/api/og-image",
+    canonicalUrl: "https://myrobotictrader.com/faq",
     pageType: "faq" as const,
   },
 };
