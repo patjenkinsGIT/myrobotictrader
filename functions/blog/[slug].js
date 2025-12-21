@@ -27,7 +27,9 @@ export async function onRequest(context) {
     }
 
     // Generate the full URLs
-    const ogImageUrl = 'https://myrobotictrader.com' + post.heroImage;
+    // Convert .webp to .png for OG images (better social media compatibility)
+    const heroImagePng = post.heroImage.replace('.webp', '.png');
+    const ogImageUrl = 'https://myrobotictrader.com' + heroImagePng;
     const canonicalUrl = 'https://myrobotictrader.com/blog/' + post.slug;
 
     // Escape HTML entities
