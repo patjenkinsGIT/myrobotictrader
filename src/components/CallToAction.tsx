@@ -20,9 +20,9 @@ export const CallToAction: React.FC = function () {
       </div>
 
       <div className="relative max-w-4xl mx-auto text-center">
-        <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-purple-400/40 mb-6 mt-4 shadow-lg shadow-purple-500/20">
-          <Rocket className="w-4 h-4 text-purple-300" />
-          <span className="text-purple-200 font-medium">Ready to Start?</span>
+        <div className="inline-flex items-center gap-2 bg-gradient-to-r from-red-500/30 to-green-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-red-400/40 mb-6 mt-4 shadow-lg shadow-red-500/20">
+          <Rocket className="w-4 h-4 text-red-300" />
+          <span className="text-red-200 font-medium">Ready to Start?</span>
         </div>
 
         {/* Updated headline */}
@@ -55,7 +55,7 @@ export const CallToAction: React.FC = function () {
         </div>
 
         {/* GoBabyTrade Benefits Box */}
-        <div className="bg-gray-900/50 rounded-2xl border border-white/10 p-8 mb-8 max-w-3xl mx-auto shadow-lg shadow-purple-500/10 relative">
+        <div className="bg-gray-900/50 rounded-2xl border border-white/10 p-8 mb-8 max-w-3xl mx-auto shadow-lg shadow-red-500/10 relative">
           {/* Small robot accent inside the box */}
           <div className="absolute bottom-4 right-4 opacity-10 pointer-events-none hidden md:block">
             <img src="/robot-trading.png" alt="" className="w-12 h-12" />
@@ -70,31 +70,31 @@ export const CallToAction: React.FC = function () {
 
           <ul className="text-left space-y-4 mb-6">
             <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
-              <ArrowRight className="w-5 h-5 text-purple-300 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-300 transition-colors" />
+              <ArrowRight className="w-5 h-5 text-red-300 mr-3 mt-1 flex-shrink-0 group-hover:text-green-300 transition-colors" />
               <span className="text-lg">
                 AI-enhanced autonomous trading that works 24/7
               </span>
             </li>
             <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
-              <ArrowRight className="w-5 h-5 text-purple-300 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-300 transition-colors" />
+              <ArrowRight className="w-5 h-5 text-red-300 mr-3 mt-1 flex-shrink-0 group-hover:text-green-300 transition-colors" />
               <span className="text-lg">
                 Never sells at a loss – waits for profitable opportunities
               </span>
             </li>
             <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
-              <ArrowRight className="w-5 h-5 text-purple-300 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-300 transition-colors" />
+              <ArrowRight className="w-5 h-5 text-red-300 mr-3 mt-1 flex-shrink-0 group-hover:text-green-300 transition-colors" />
               <span className="text-lg">
                 Your funds stay in your own Coinbase or Kraken account
               </span>
             </li>
             <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
-              <ArrowRight className="w-5 h-5 text-purple-300 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-300 transition-colors" />
+              <ArrowRight className="w-5 h-5 text-red-300 mr-3 mt-1 flex-shrink-0 group-hover:text-green-300 transition-colors" />
               <span className="text-lg">
                 Start with paper trading – zero risk to test the system
               </span>
             </li>
             <li className="flex items-start text-gray-200 group hover:text-white transition-all duration-300 hover:translate-x-2">
-              <ArrowRight className="w-5 h-5 text-purple-300 mr-3 mt-1 flex-shrink-0 group-hover:text-pink-300 transition-colors" />
+              <ArrowRight className="w-5 h-5 text-red-300 mr-3 mt-1 flex-shrink-0 group-hover:text-green-300 transition-colors" />
               <span className="text-lg">
                 Same system I use – see my live results above
               </span>
@@ -113,7 +113,7 @@ export const CallToAction: React.FC = function () {
             onClick={handleStartTrading}
             target="_blank"
             rel="noopener noreferrer"
-            className="group bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2"
+            className="group bg-gradient-to-r from-red-500 to-green-500 hover:from-red-600 hover:to-green-600 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-red-500/30 flex items-center justify-center gap-2"
           >
             Start Trading – Save $1,000
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

@@ -35,9 +35,9 @@ export const Hero: React.FC = () => {
       <div className="relative max-w-6xl mx-auto text-center z-10 mt-32">
         <div className="mb-8">
           {/* Updated badge to AI-Enhanced Autonomous Trading */}
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-purple-400/40 mb-2 mt-4 shadow-lg shadow-purple-500/20">
-            <Bot className="w-4 h-4 text-purple-300" />
-            <span className="text-purple-200 font-medium">
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-red-500/30 to-green-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-red-400/40 mb-2 mt-4 shadow-lg shadow-red-500/20">
+            <Bot className="w-4 h-4 text-red-300" />
+            <span className="text-red-200 font-medium">
               AI-Enhanced Autonomous Trading
             </span>
           </div>
@@ -109,7 +109,7 @@ export const Hero: React.FC = () => {
             onClick={handleStartTrading}
             target="_blank"
             rel="noopener noreferrer"
-            className="group bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2"
+            className="group bg-gradient-to-r from-red-500 to-green-500 hover:from-red-600 hover:to-green-600 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-red-500/30 flex items-center justify-center gap-2"
           >
             Start Trading – Save $1,000
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -188,21 +188,21 @@ export const Hero: React.FC = () => {
           </div>
 
           {/* Zero Losses */}
-          <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/15">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
-            <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-purple-500/40">
+          <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-amber-500/15">
+            <div className="absolute inset-0 bg-gradient-to-br from-amber-500 to-yellow-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
+            <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-yellow-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-amber-500/40">
               <Users className="w-full h-full text-white" />
             </div>
 
             <div className="relative text-center">
-              <div className="text-4xl font-bold text-purple-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-300 group-hover:to-pink-300 group-hover:bg-clip-text transition-all duration-300">
+              <div className="text-4xl font-bold text-amber-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-amber-300 group-hover:to-yellow-300 group-hover:bg-clip-text transition-all duration-300">
                 Zero
               </div>
               <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
                 Losing Months
               </div>
             </div>
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-amber-500 to-yellow-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
         </div>
 
