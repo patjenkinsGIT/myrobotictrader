@@ -24,10 +24,10 @@ body,
   height: 100%;
 }
 
-/* Ensure dark background for the app - Christmas edition */
+/* Ensure dark background for the app */
 .App {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f172a 0%, #1a1520 25%, #1e1b4b 50%, #15201a 75%, #0f172a 100%);
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
 }
 
 /* Minimal animations for floating icons only */

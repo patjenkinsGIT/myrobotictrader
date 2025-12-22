@@ -47,7 +47,7 @@ export const FullNav: React.FC = () => {
         <div className="flex items-center gap-4 h-16">
           {/* Logo - Left Aligned */}
           <Link to="/" className="flex items-center gap-3 group flex-shrink-0">
-            <div className="w-8 h-8 rounded-lg overflow-hidden shadow-md shadow-red-500/30 bg-gradient-to-br from-red-500 to-green-500 p-0.5 group-hover:shadow-lg group-hover:shadow-red-500/40 transition-all duration-300">
+            <div className="w-8 h-8 rounded-lg overflow-hidden shadow-md shadow-purple-500/30 bg-gradient-to-br from-purple-500 to-pink-500 p-0.5 group-hover:shadow-lg group-hover:shadow-purple-500/40 transition-all duration-300">
               <div className="w-full h-full rounded-md overflow-hidden bg-white/10 backdrop-blur-sm">
                 <img
                   src="/robot-logo.png"
@@ -58,7 +58,7 @@ export const FullNav: React.FC = () => {
             </div>
             <div className="text-lg font-bold">
               <span className="text-white">My</span>
-              <span className="text-transparent bg-gradient-to-r from-red-300 to-green-300 bg-clip-text">
+              <span className="text-transparent bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text">
                 Robotic
               </span>
               <span className="text-white">Trader</span>
@@ -116,15 +116,15 @@ export const FullNav: React.FC = () => {
 
                 {/* Daily Average */}
                 <div className="flex items-center gap-3 bg-white/10 rounded-lg px-4 py-2 border border-white/20 shadow-sm hover:shadow-md hover:bg-white/[0.12] transition-all duration-200 cursor-default">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-yellow-500 p-1.5 flex-shrink-0 shadow-md">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-400 to-pink-500 p-1.5 flex-shrink-0 shadow-md">
                     <TrendingUp className="w-full h-full text-white" strokeWidth={2.5} />
                   </div>
                   <div className="min-w-0">
                     {isLoading ? (
-                      <div className="text-sm font-bold text-amber-300 animate-pulse">Loading...</div>
+                      <div className="text-sm font-bold text-purple-300 animate-pulse">Loading...</div>
                     ) : (
                       <>
-                        <div className="text-sm font-bold text-amber-300 truncate">
+                        <div className="text-sm font-bold text-purple-300 truncate">
                           ${dailyAvg.toLocaleString("en-US", {
                             minimumFractionDigits: 0,
                             maximumFractionDigits: 0,
@@ -152,11 +152,11 @@ export const FullNav: React.FC = () => {
                     {item.label}
                     {/* Active indicator */}
                     {isActive(item.path) && (
-                      <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-red-400 to-green-400 rounded-full" />
+                      <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full" />
                     )}
                     {/* Hover indicator */}
                     {!isActive(item.path) && (
-                      <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-red-400 to-green-400 rounded-full opacity-0 group-hover:opacity-50 transition-opacity duration-200" />
+                      <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full opacity-0 group-hover:opacity-50 transition-opacity duration-200" />
                     )}
                   </Link>
                 ))}
@@ -167,7 +167,7 @@ export const FullNav: React.FC = () => {
                   onClick={handleStartTrading}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-gradient-to-r from-red-500 via-red-600 to-green-500 hover:from-red-600 hover:via-green-500 hover:to-green-600 text-white px-5 py-2.5 rounded-full font-bold text-sm transition-all duration-200 hover:scale-[1.02] hover:shadow-xl shadow-lg shadow-red-500/40 hover:shadow-red-500/60 flex-shrink-0"
+                  className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 via-purple-600 to-pink-500 hover:from-purple-600 hover:via-pink-500 hover:to-pink-600 text-white px-5 py-2.5 rounded-full font-bold text-sm transition-all duration-200 hover:scale-[1.02] hover:shadow-xl shadow-lg shadow-purple-500/40 hover:shadow-purple-500/60 flex-shrink-0"
                 >
                   Start Trading – Save $1,000
                   <ArrowRight className="w-4 h-4" />
@@ -180,7 +180,7 @@ export const FullNav: React.FC = () => {
           {!isDesktop && (
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="ml-auto text-white hover:text-red-300 transition-colors p-2"
+              className="ml-auto text-white hover:text-purple-300 transition-colors p-2"
               aria-label="Toggle menu"
             >
               {mobileMenuOpen ? (
@@ -203,7 +203,7 @@ export const FullNav: React.FC = () => {
                   onClick={() => setMobileMenuOpen(false)}
                   className={`text-sm font-medium transition-colors duration-300 ${
                     isActive(item.path)
-                      ? "text-red-300"
+                      ? "text-purple-300"
                       : "text-gray-200 hover:text-white"
                   }`}
                 >
@@ -218,7 +218,7 @@ export const FullNav: React.FC = () => {
                 }}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-red-500 to-green-500 hover:from-red-600 hover:to-green-600 text-white px-4 py-2 rounded-full font-semibold text-sm transition-all duration-300 shadow-lg shadow-red-500/30"
+                className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-4 py-2 rounded-full font-semibold text-sm transition-all duration-300 shadow-lg shadow-purple-500/30"
               >
                 Start Trading – Save $1,000
                 <ArrowRight className="w-4 h-4" />
