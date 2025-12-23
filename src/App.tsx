@@ -221,19 +221,6 @@ const HomePage = () => {
         }
       />
 
-      {/* 🔇 REMOVED FOR SIMPLICITY: Complex sections
-
-          These components added friction and complexity to the landing page.
-          The goal is simple: Get visitors to try GoBabyTrade.
-          Detailed explanations of profit management and market comparisons
-          are available on the full site and in GoBabyTrade's training.
-
-          To restore either component, uncomment the appropriate line below:
-      */}
-
-      {/* <ProfitManagement tradingStats={tradingStats} /> */}
-      {/* <DynamicSmartMoneyComparison /> */}
-
       <Features />
       <CallToAction />
       <FAQPreview />
