@@ -5,17 +5,7 @@ import postsData from "./data/posts.json";
 import { FullNav } from "./components/FullNav";
 import { RecentPosts } from "./components/RecentPosts";
 import { GoldBlogSlide } from "./components/GoldBlogSlides";
-
-interface BlogPost {
-  title: string;
-  slug: string;
-  date: string;
-  content: string;
-  category: string;
-  metaDescription: string;
-  heroImage: string;
-  imageAlt: string;
-}
+import { BlogPost, isPostPublished, isPreviewMode } from "./utils/blogUtils";
 
 export const BlogPostPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -23,8 +13,14 @@ export const BlogPostPage: React.FC = () => {
   const [post, setPost] = useState<BlogPost | null>(null);
 
   useEffect(() => {
-    const foundPost = postsData.find((p: BlogPost) => p.slug === slug);
+    const foundPost = postsData.find((p: BlogPost) => p.slug === slug) as BlogPost | undefined;
     if (foundPost) {
+      // Check if post is published (or preview mode is enabled)
+      if (!isPostPublished(foundPost) && !isPreviewMode()) {
+        // Post exists but is scheduled for future - redirect to blog list
+        navigate("/blog");
+        return;
+      }
       setPost(foundPost);
       // Scroll to top when post loads
       window.scrollTo(0, 0);

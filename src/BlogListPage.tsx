@@ -2,21 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import postsData from "./data/posts.json";
 import { FullNav } from "./components/FullNav";
-
-interface BlogPost {
-  title: string;
-  slug: string;
-  date: string;
-  content: string;
-  category: string;
-  metaDescription: string;
-  heroImage: string;
-  imageAlt: string;
-  excerpt?: string;
-}
+import { BlogPost, getPublishedPosts, getPostSortDate } from "./utils/blogUtils";
 
 export const BlogListPage: React.FC = () => {
-  const posts: BlogPost[] = postsData;
+  // Filter to only show published posts
+  const posts: BlogPost[] = getPublishedPosts(postsData as BlogPost[]);
   const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
 
   // Group posts by category
@@ -27,9 +17,9 @@ export const BlogListPage: React.FC = () => {
     ? posts.filter((post) => post.category === selectedCategory)
     : posts;
 
-  // Sort posts by date (newest first)
+  // Sort posts by date (newest first), using publishDate if available
   const sortedPosts = [...filteredPosts].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    (a, b) => getPostSortDate(b).getTime() - getPostSortDate(a).getTime()
   );
 
   const formatDate = (dateString: string) => {

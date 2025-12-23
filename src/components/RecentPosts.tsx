@@ -1,29 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import postsData from "../data/posts.json";
-
-interface BlogPost {
-  title: string;
-  slug: string;
-  date: string;
-  content: string;
-  category: string;
-  metaDescription: string;
-  heroImage: string;
-  imageAlt: string;
-}
+import { BlogPost, getPublishedPosts, getPostSortDate } from "../utils/blogUtils";
 
 interface RecentPostsProps {
   currentSlug: string;
 }
 
 export const RecentPosts: React.FC<RecentPostsProps> = ({ currentSlug }) => {
-  const posts: BlogPost[] = postsData;
-
-  // Filter out current post and get 5 most recent
-  const recentPosts = posts
+  // Filter to only show published posts, exclude current post, get 5 most recent
+  const recentPosts = getPublishedPosts(postsData as BlogPost[])
     .filter((post) => post.slug !== currentSlug)
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .sort((a, b) => getPostSortDate(b).getTime() - getPostSortDate(a).getTime())
     .slice(0, 5);
 
   return (
