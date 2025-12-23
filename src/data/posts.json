@@ -1,17 +1,5 @@
 [
   {
-    "title": "TEST: Scheduled Post for January 2026",
-    "slug": "test-scheduled-post-january-2026",
-    "date": "2026-01-15T12:00:00Z",
-    "publishDate": "2026-01-15",
-    "heroImage": "/blog-images/powerball-christmas-47-hero.webp",
-    "imageAlt": "Test scheduled post",
-    "excerpt": "This is a test post scheduled for January 15, 2026. If you can see this before that date, something is wrong with the scheduling system.",
-    "content": "# TEST: Scheduled Post for January 2026\n\nThis is a test post to verify the blog scheduling feature.\n\n**Scheduled publish date:** January 15, 2026\n\n---\n\n## What This Tests\n\n- Posts with a `publishDate` in the future should NOT appear in the blog listing\n- Direct URL access should redirect to /blog\n- Preview mode (`?preview=true`) should allow viewing\n\n## If You're Reading This...\n\nEither:\n1. It's January 15, 2026 or later (Happy New Year!)\n2. You're using preview mode\n3. Something broke\n\n---\n\n*This test post can be deleted after confirming the scheduling feature works.*",
-    "category": "Test",
-    "metaDescription": "Test post scheduled for January 2026 to verify the blog scheduling feature."
-  },
-  {
     "title": "Drawing #47: A Powerball Christmas Story",
     "slug": "powerball-christmas-47",
     "date": "2025-12-23T08:00:00Z",
