@@ -156,7 +156,7 @@ export const Footer: React.FC = function () {
               </div>
             </div>
             <span className="text-gray-400 text-sm group-hover:text-purple-400 transition-colors">
-              © 2025{" "}
+              © {new Date().getFullYear()}{" "}
               <span className="text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text font-semibold">
                 MyRoboticTrader
               </span>
