@@ -237,6 +237,38 @@ const HomePage = () => {
       <Features />
       <CallToAction />
       <FAQPreview />
+
+      {/* SEO Content Section - Static text for Google indexing */}
+      <section className="bg-slate-900/50 py-16 px-4 border-t border-white/5">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-2xl font-bold text-white mb-6 text-center">
+            About MyRoboticTrader
+          </h2>
+          <div className="text-slate-400 text-base leading-relaxed space-y-4">
+            <p>
+              MyRoboticTrader showcases real, verified results from an AI-enhanced autonomous
+              cryptocurrency trading system. Unlike manual trading or gambling on price predictions,
+              this system executes trades 24/7 based on market volatility, taking small consistent
+              profits without emotional decision-making. The approach is simple: buy low, sell for
+              profit, repeat—all managed by intelligent automation.
+            </p>
+            <p>
+              Every trade is published transparently with complete transaction history available
+              for verification. With nearly 1,000 trades executed and a 100% success rate on
+              closed positions, the results speak for themselves. The system never sells at a loss,
+              holding positions until market conditions become favorable. This patience-based
+              approach eliminates the fear and greed that destroy most traders.
+            </p>
+            <p>
+              This isn't get-rich-quick speculation or crypto gambling. It's systematic wealth
+              building through AI-enhanced technology that works while you sleep. Powered by
+              GoBabyTrade, the system connects securely to exchanges like Coinbase and Kraken,
+              keeping your funds in your own account at all times. Check out the live results
+              dashboard above to see every trade, every profit, updated in real-time.
+            </p>
+          </div>
+        </div>
+      </section>
     </>
   );
 };

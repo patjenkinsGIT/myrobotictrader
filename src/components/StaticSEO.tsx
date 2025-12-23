@@ -17,8 +17,7 @@ export const StaticSEO: React.FC = () => {
         // Primary Meta Tags
         {
           name: "title",
-          content:
-            "MyRoboticTrader - Set It and Forget It Crypto Trading | Build New Revenue Streams",
+          content: "MyRoboticTrader | AI Crypto Trading with Verified Results",
         },
         {
           name: "description",
@@ -42,8 +41,7 @@ export const StaticSEO: React.FC = () => {
         },
         {
           property: "og:title",
-          content:
-            "MyRoboticTrader - Set It and Forget It Crypto Trading | Build New Revenue Streams",
+          content: "MyRoboticTrader | AI Crypto Trading with Verified Results",
         },
         {
           property: "og:description",
@@ -71,8 +69,7 @@ export const StaticSEO: React.FC = () => {
         },
         {
           property: "twitter:title",
-          content:
-            "MyRoboticTrader - Set It and Forget It Crypto Trading | Build New Revenue Streams",
+          content: "MyRoboticTrader | AI Crypto Trading with Verified Results",
         },
         {
           property: "twitter:description",
@@ -113,8 +110,7 @@ export const StaticSEO: React.FC = () => {
       });
 
       // Set document title immediately
-      document.title =
-        "MyRoboticTrader - Set It and Forget It Crypto Trading | Build New Revenue Streams";
+      document.title = "MyRoboticTrader | AI Crypto Trading with Verified Results";
 
       // Add canonical link
       let canonical = head.querySelector(
