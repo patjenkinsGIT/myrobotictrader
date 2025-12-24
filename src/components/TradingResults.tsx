@@ -531,7 +531,7 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
                         if (active && payload && payload.length) {
                           const data = payload[0].payload;
                           return (
-                            <div style={{ backgroundColor: '#1e1b4b' }} className="rounded-lg p-4 shadow-2xl">
+                            <div style={{ backgroundColor: '#1e1b4b', border: '2px solid #7c3aed' }} className="rounded-lg p-4 shadow-2xl">
                               <p className="text-white font-bold text-base">{getFullMonthName(data.name)}</p>
                               <p className="text-green-400 font-mono font-bold text-xl">${data.profit.toLocaleString()}</p>
                               <p className="text-white text-sm">{data.trades} trades</p>
