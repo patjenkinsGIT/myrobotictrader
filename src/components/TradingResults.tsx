@@ -476,9 +476,7 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
                 return (
                   <div
                     key={year}
-                    className={`bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border-2 p-4 md:p-8 mb-6 relative ${
-                      yearHasBestMonth ? 'border-cyan-400/60' : 'border-white/10'
-                    }`}
+                    className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl p-4 md:p-8 mb-6 relative"
                   >
                     {/* Robot Trading Image - only on most recent year */}
                     {year === sortedYears[0] && (
