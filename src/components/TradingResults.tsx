@@ -533,12 +533,12 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
                         if (active && payload && payload.length) {
                           const data = payload[0].payload;
                           return (
-                            <div className="bg-gray-900/95 backdrop-blur-sm border border-white/20 rounded-lg p-3 shadow-xl">
-                              <p className="text-white font-bold">{getFullMonthName(data.name)}</p>
-                              <p className="text-emerald-400 font-mono">${data.profit.toLocaleString()}</p>
-                              <p className="text-gray-400 text-sm">{data.trades} trades</p>
+                            <div style={{ backgroundColor: '#1e1b4b', border: '2px solid #7c3aed' }} className="rounded-lg p-4 shadow-2xl">
+                              <p className="text-white font-bold text-base">{getFullMonthName(data.name)}</p>
+                              <p className="text-green-400 font-mono font-bold text-xl">${data.profit.toLocaleString()}</p>
+                              <p className="text-white text-sm">{data.trades} trades</p>
                               {data.isBest && (
-                                <p className="text-cyan-400 text-sm font-semibold mt-1">🏆 Best Month Ever!</p>
+                                <p className="text-yellow-300 text-sm font-bold mt-1">🏆 Best Month Ever!</p>
                               )}
                             </div>
                           );
