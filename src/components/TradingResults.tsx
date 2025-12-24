@@ -12,6 +12,16 @@ import {
   Wifi,
   Percent,
 } from "lucide-react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  Cell,
+  LabelList,
+} from "recharts";
 import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
 import { calculateTimeSinceStart } from "../utils/tradingTime";
 import { LiveTransactionLog } from "./LiveTransactionLog";
@@ -143,17 +153,20 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
   // Use the dailyAvg from the data structure
   const dailyAvg = currentData.dailyAvg?.toFixed(2) || "0.00";
 
-  // DYNAMIC: Handle any number of months - always show last 6 in chart, rest in table
-  const allMonthlyData = currentData.monthlyData || [];
-  const totalMonths = allMonthlyData.length;
+  // ============================================
+  // LOCAL TESTING MODE - Set to true to test with mock 2026 data
+  // ============================================
+  const USE_MOCK_2026_DATA = false; // Mock data disabled for production
 
-  // Chart: Always show last 6 months (or all months if less than 6)
-  const recentMonths =
-    totalMonths > 6 ? allMonthlyData.slice(-6) : allMonthlyData;
+  const mock2026Months: TradingDataPoint[] = USE_MOCK_2026_DATA ? [
+    { month: "Jan", year: 2026, profit: 312.45, trades: 48 },
+    { month: "Feb", year: 2026, profit: 287.32, trades: 41 },
+    { month: "Mar", year: 2026, profit: 198.76, trades: 29 },
+  ] : [];
 
-  // Previous months table: Everything before the recent 6 months, in descending order
-  const olderMonths =
-    totalMonths > 6 ? allMonthlyData.slice(0, -6).reverse() : [];
+  // Combine real data with mock 2026 data (for testing)
+  const realMonthlyData = currentData.monthlyData || [];
+  const allMonthlyData = [...realMonthlyData, ...mock2026Months];
 
   // Find best month using the bestMonthProfit value
   const bestMonthData =
@@ -178,11 +191,6 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
       Dec: "December",
     };
     return monthMap[shortMonth] || shortMonth;
-  };
-
-  // Get short month name for mobile (3 letters)
-  const getShortMonthName = (shortMonth: string) => {
-    return shortMonth.substring(0, 3);
   };
 
   // CTA tracking handler
@@ -435,191 +443,292 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
           </p>
         </div>
 
-        {/* Recent Months Chart - DYNAMIC: Shows last 6 months */}
-        {recentMonths.length > 0 && (
-          <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8 mb-8 relative">
-            {/* Robot Trading Image from public folder - NO IMPORT NEEDED */}
-            <div className="absolute top-4 right-4 opacity-20 pointer-events-none hidden md:block">
-              <div className="w-16 h-16 rounded-full overflow-hidden bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-purple-400/30 flex items-center justify-center animate-pulse shadow-lg shadow-purple-500/20">
-                <img
-                  src="/robot-trading.png"
-                  alt="Robot Trading"
-                  className="w-12 h-12 object-contain filter brightness-110"
-                />
-              </div>
-            </div>
-
-            <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6 text-center">
-              Recent Performance (Last {recentMonths.length} Months)
-            </h3>
-
-            <div className="w-full overflow-x-auto overflow-y-visible">
-              <div
-                className="flex items-end justify-center gap-2 md:gap-6 mb-4 md:mb-6 min-w-max mx-auto px-2 pt-6"
-                style={{ minHeight: "220px" }}
-              >
-                {recentMonths.map((month: TradingDataPoint) => {
-                  const maxBarHeight = 140;
-                  const maxProfit = Math.max(
-                    ...recentMonths.map((m: TradingDataPoint) => m.profit)
-                  );
-                  const height = Math.max(
-                    (month.profit / maxProfit) * maxBarHeight,
-                    12
-                  );
-                  const isHighest = month.profit === maxProfit;
-
-                  return (
-                    <div
-                      key={`${month.month}-${month.year}`}
-                      className="flex flex-col items-center min-w-0"
-                    >
-                      <div
-                        className={`text-xs md:text-sm mb-1 md:mb-2 font-semibold ${
-                          isHighest ? "text-yellow-300" : "text-gray-200"
-                        }`}
-                      >
-                        ${Math.round(month.profit)}
-                      </div>
-
-                      <div
-                        className={`w-8 md:w-16 rounded-t-lg transition-all duration-1000 ease-out ${
-                          isHighest
-                            ? "bg-gradient-to-t from-yellow-500 to-yellow-300 shadow-lg shadow-yellow-400/40"
-                            : "bg-gradient-to-t from-emerald-500 to-green-400 shadow-lg shadow-emerald-400/30"
-                        }`}
-                        style={{
-                          height: `${height}px`,
-                          minHeight: "12px",
-                        }}
-                      ></div>
-
-                      <div className="text-xs md:text-sm text-gray-200 mt-2 md:mt-3 font-medium text-center">
-                        <span className="md:hidden">
-                          {getShortMonthName(month.month)}
-                        </span>
-                        <span className="hidden md:inline">
-                          {getFullMonthName(month.month)} '{String(month.year).slice(-2)}
-                        </span>
-                      </div>
-                      <div className={`text-xs mt-1 ${isHighest ? "text-yellow-400" : "text-gray-400"}`}>
-                        {month.trades} trades
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="text-center">
-              <p className="text-emerald-300 font-semibold text-sm md:text-lg">
-                📈 {currentData.totalTrades || 0} trades • $
-                {currentData.avgProfitPerTrade?.toFixed(2) || "0.00"} avg
-                profit/trade • Best month:{" "}
-                {bestMonthData ? `${getFullMonthName(bestMonthData.month)} '${String(bestMonthData.year).slice(-2)}` : "N/A"}{" "}
-                with ${currentData.bestMonthProfit?.toFixed(2) || "0.00"}
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* Previous Months - Grouped by Year */}
-        {olderMonths.length > 0 && (() => {
-          // Group months by year
-          const monthsByYear = olderMonths.reduce((acc: Record<number, TradingDataPoint[]>, month: TradingDataPoint) => {
+        {/* Year-Based Performance Charts - All months grouped by year with vertical bars */}
+        {allMonthlyData.length > 0 && (() => {
+          // Group ALL months by year
+          const monthsByYear = allMonthlyData.reduce((acc: Record<number, TradingDataPoint[]>, month: TradingDataPoint) => {
             const year = month.year;
             if (!acc[year]) acc[year] = [];
             acc[year].push(month);
             return acc;
           }, {} as Record<number, TradingDataPoint[]>);
 
-          // Sort years descending (newest first)
+          // Sort years descending (newest first - 2026 at top, 2025 below)
           const sortedYears = Object.keys(monthsByYear).map(Number).sort((a, b) => b - a);
 
-          // Get global max profit across all older months for consistent bar scaling
-          const globalMaxProfit = Math.max(...olderMonths.map((m: TradingDataPoint) => m.profit));
+          // Find the actual best month object (the one with highest profit)
+          const bestMonth = allMonthlyData.reduce((best: TradingDataPoint, current: TradingDataPoint) =>
+            current.profit > best.profit ? current : best
+          , allMonthlyData[0]);
+
+          // Compare by month name AND year - foolproof identification
+          const isBestMonthEver = (month: TradingDataPoint) =>
+            month.month === bestMonth.month && month.year === bestMonth.year;
 
           return (
-            <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-8 mb-8">
-              <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6 text-center">
-                Previous Months Performance
-              </h3>
-
+            <>
               {sortedYears.map((year) => {
                 const yearMonths = monthsByYear[year];
                 const yearTotalProfit = yearMonths.reduce((sum: number, m: TradingDataPoint) => sum + m.profit, 0);
                 const yearTotalTrades = yearMonths.reduce((sum: number, m: TradingDataPoint) => sum + m.trades, 0);
+                const yearHasBestMonth = yearMonths.some(isBestMonthEver);
 
                 return (
-                  <div key={year} className="mb-6 last:mb-0">
-                    {/* Year Header */}
-                    <div className="flex items-center justify-between mb-3 pb-2 border-b border-white/10">
-                      <h4 className="text-lg font-bold flex items-center gap-2 text-white">
-                        <span>{year}</span>
+                  <div
+                    key={year}
+                    className={`bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border-2 p-4 md:p-8 mb-6 relative ${
+                      yearHasBestMonth ? 'border-cyan-400/60' : 'border-white/10'
+                    }`}
+                  >
+                    {/* Robot Trading Image - only on most recent year */}
+                    {year === sortedYears[0] && (
+                      <div className="absolute top-4 right-4 opacity-20 pointer-events-none hidden md:block">
+                        <div className="w-16 h-16 rounded-full overflow-hidden bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-purple-400/30 flex items-center justify-center animate-pulse shadow-lg shadow-purple-500/20">
+                          <img
+                            src="/robot-trading.png"
+                            alt="Robot Trading"
+                            className="w-12 h-12 object-contain filter brightness-110"
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Year Header with totals */}
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 md:mb-6 gap-2">
+                      <h3 className="text-xl md:text-2xl font-bold text-white flex items-center gap-3">
+                        <span>{year} Performance</span>
                         <span className="text-sm text-gray-400 font-normal">
                           ({yearMonths.length} {yearMonths.length === 1 ? 'month' : 'months'})
                         </span>
-                      </h4>
-                      <span className="text-sm font-semibold text-emerald-300">
+                      </h3>
+                      <div className="text-sm font-semibold text-emerald-300">
                         ${yearTotalProfit.toFixed(2)} • {yearTotalTrades} trades
-                      </span>
+                      </div>
                     </div>
 
-                    {/* Months for this year */}
-                    <div className="space-y-3">
-                      {yearMonths.map((month: TradingDataPoint) => {
-                        const barWidth = Math.max((month.profit / globalMaxProfit) * 100, 10);
+                    {/* Recharts Bar Chart - Responsive and Professional */}
+                    {(() => {
+                      const yearHighestProfit = Math.max(...yearMonths.map((m: TradingDataPoint) => m.profit));
 
-                        return (
-                          <div
-                            key={`${month.month}-${month.year}`}
-                            className="bg-white/5 rounded-xl p-3 md:p-4 border border-white/10 hover:border-white/20 transition-all"
-                          >
-                            {/* Month name and stats row */}
-                            <div className="flex items-center justify-between mb-2">
-                              <span className="font-semibold text-sm md:text-base text-gray-200">
-                                {getFullMonthName(month.month)}
-                              </span>
-                              <div className="flex items-center gap-3 md:gap-4">
-                                <span className="text-xs md:text-sm text-gray-400">
-                                  {month.trades} trades
-                                </span>
-                                <span className="font-bold font-mono text-sm md:text-base text-emerald-300">
-                                  ${month.profit.toFixed(2)}
-                                </span>
-                              </div>
+                      // Prepare data for Recharts with color info
+                      const chartData = yearMonths.map((month: TradingDataPoint) => {
+                        const isBest = isBestMonthEver(month);
+                        const isYearHighest = month.profit === yearHighestProfit;
+                        return {
+                          name: month.month,
+                          profit: Math.round(month.profit),
+                          trades: month.trades,
+                          isBest,
+                          isYearHighest,
+                          fill: isBest
+                            ? "#f43f5e" // rose-500
+                            : isYearHighest
+                              ? "#eab308" // yellow-500
+                              : "#10b981", // emerald-500
+                        };
+                      });
+
+                      // Custom tooltip
+                      const CustomTooltip = ({ active, payload }: any) => {
+                        if (active && payload && payload.length) {
+                          const data = payload[0].payload;
+                          return (
+                            <div className="bg-gray-900/95 backdrop-blur-sm border border-white/20 rounded-lg p-3 shadow-xl">
+                              <p className="text-white font-bold">{getFullMonthName(data.name)}</p>
+                              <p className="text-emerald-400 font-mono">${data.profit.toLocaleString()}</p>
+                              <p className="text-gray-400 text-sm">{data.trades} trades</p>
+                              {data.isBest && (
+                                <p className="text-cyan-400 text-sm font-semibold mt-1">🏆 Best Month Ever!</p>
+                              )}
                             </div>
-                            {/* Progress bar - solid green */}
-                            <div className="h-3 md:h-4 bg-gray-700/50 rounded-full overflow-hidden">
+                          );
+                        }
+                        return null;
+                      };
+
+                      // Custom label for best month
+                      const renderCustomLabel = (props: any) => {
+                        const { x, y, width, index } = props;
+                        const data = chartData[index];
+                        if (data && data.isBest) {
+                          return (
+                            <text
+                              x={x + width / 2}
+                              y={y - 25}
+                              fill="#22d3ee"
+                              textAnchor="middle"
+                              fontSize={12}
+                              fontWeight="bold"
+                            >
+                              🏆 BEST
+                            </text>
+                          );
+                        }
+                        return null;
+                      };
+
+                      // Calculate responsive width - fewer months = narrower chart
+                      const chartWidthPercent = yearMonths.length <= 3
+                        ? "50%"
+                        : yearMonths.length <= 6
+                          ? "75%"
+                          : "100%";
+
+                      // Custom tick to show trades below month name
+                      const CustomXAxisTick = (props: any) => {
+                        const { x, y, payload } = props;
+                        const monthData = chartData.find((d: { name: string; trades: number }) => d.name === payload.value);
+                        return (
+                          <g transform={`translate(${x},${y})`}>
+                            <text
+                              x={0}
+                              y={0}
+                              dy={16}
+                              textAnchor="middle"
+                              fill="#9ca3af"
+                              fontSize={12}
+                            >
+                              {payload.value}
+                            </text>
+                            <text
+                              x={0}
+                              y={0}
+                              dy={32}
+                              textAnchor="middle"
+                              fill="#6b7280"
+                              fontSize={10}
+                            >
+                              {monthData?.trades || 0}
+                            </text>
+                          </g>
+                        );
+                      };
+
+                      return (
+                        <div className="w-full">
+                          {/* Color Legend - Using inline styles for reliable rendering */}
+                          <div className="flex justify-center gap-4 md:gap-6 mb-4 text-xs md:text-sm">
+                            <div className="flex items-center gap-2">
                               <div
-                                className="h-full rounded-full bg-emerald-500"
-                                style={{ width: `${barWidth}%` }}
+                                className="w-4 h-4 rounded"
+                                style={{ background: "linear-gradient(to top, #059669, #34d399)" }}
                               ></div>
+                              <span className="text-gray-300">Monthly</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <div
+                                className="w-4 h-4 rounded"
+                                style={{ background: "linear-gradient(to top, #ea580c, #fb923c)" }}
+                              ></div>
+                              <span className="text-gray-300">Year's Best</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <div
+                                className="w-4 h-4 rounded"
+                                style={{ background: "linear-gradient(to top, #0e7490, #06b6d4)" }}
+                              ></div>
+                              <span className="text-gray-300">All-Time Best</span>
                             </div>
                           </div>
-                        );
-                      })}
-                    </div>
+
+                          <div className="flex justify-center" style={{ height: yearMonths.length > 6 ? 300 : 270 }}>
+                            <div style={{ width: chartWidthPercent, height: "100%" }}>
+                              <ResponsiveContainer width="100%" height="100%">
+                                <BarChart
+                                  data={chartData}
+                                  margin={{ top: 40, right: 20, left: 20, bottom: 25 }}
+                                  barCategoryGap="20%"
+                                >
+                                  {/* Gradient Definitions */}
+                                  <defs>
+                                    <linearGradient id={`gradient-green-${year}`} x1="0" y1="1" x2="0" y2="0">
+                                      <stop offset="0%" stopColor="#059669" />
+                                      <stop offset="100%" stopColor="#34d399" />
+                                    </linearGradient>
+                                    <linearGradient id={`gradient-orange-${year}`} x1="0" y1="1" x2="0" y2="0">
+                                      <stop offset="0%" stopColor="#ea580c" />
+                                      <stop offset="100%" stopColor="#fb923c" />
+                                    </linearGradient>
+                                    <linearGradient id={`gradient-cyan-${year}`} x1="0" y1="1" x2="0" y2="0">
+                                      <stop offset="0%" stopColor="#0e7490" />
+                                      <stop offset="100%" stopColor="#06b6d4" />
+                                    </linearGradient>
+                                  </defs>
+                                  <XAxis
+                                    dataKey="name"
+                                    tick={<CustomXAxisTick />}
+                                    axisLine={{ stroke: "#374151" }}
+                                    tickLine={false}
+                                    interval={0}
+                                  />
+                                  <YAxis hide />
+                                  <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(255,255,255,0.05)" }} />
+                                  <Bar
+                                    dataKey="profit"
+                                    radius={[4, 4, 0, 0]}
+                                    maxBarSize={45}
+                                    minPointSize={3}
+                                  >
+                                    {chartData.map((entry: { fill: string; isBest: boolean; isYearHighest: boolean }, index: number) => (
+                                      <Cell
+                                        key={`cell-${index}`}
+                                        fill={
+                                          entry.isBest
+                                            ? `url(#gradient-cyan-${year})`
+                                            : entry.isYearHighest
+                                              ? `url(#gradient-orange-${year})`
+                                              : `url(#gradient-green-${year})`
+                                        }
+                                        style={{
+                                          filter: entry.isBest
+                                            ? "drop-shadow(0 0 12px rgba(34, 211, 238, 0.8))"
+                                            : entry.isYearHighest
+                                              ? "drop-shadow(0 0 8px rgba(251, 146, 60, 0.7))"
+                                              : "none",
+                                        }}
+                                      />
+                                    ))}
+                                    <LabelList
+                                      dataKey="profit"
+                                      position="top"
+                                      formatter={(value) => `$${value}`}
+                                      style={{ fill: "#e5e7eb", fontSize: 11, fontWeight: 600 }}
+                                    />
+                                    <LabelList content={renderCustomLabel} />
+                                  </Bar>
+                                </BarChart>
+                              </ResponsiveContainer>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })()}
+
+                    {/* Year Summary */}
+                    {yearHasBestMonth && (
+                      <div className="text-center">
+                        <p className="text-cyan-400 font-semibold text-sm md:text-base">
+                          🏆 Best month ever: {bestMonth ? `${getFullMonthName(bestMonth.month)}` : "N/A"}{" "}
+                          with ${bestMonth?.profit.toFixed(2) || "0.00"}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 );
               })}
 
-              <div className="text-center mt-4 pt-4 border-t border-white/10">
-                <p className="text-gray-400 text-sm">
-                  Showing {olderMonths.length} previous months • Total: $
-                  {olderMonths
-                    .reduce(
-                      (sum: number, month: TradingDataPoint) =>
-                        sum + month.profit,
-                      0
-                    )
-                    .toFixed(2)}
-                  {" "}• {olderMonths.reduce((sum: number, month: TradingDataPoint) => sum + month.trades, 0)} trades
+              {/* Overall Summary */}
+              <div className="text-center mb-6">
+                <p className="text-emerald-300 font-semibold text-sm md:text-lg">
+                  📈 {currentData.totalTrades || 0} total trades • $
+                  {currentData.avgProfitPerTrade?.toFixed(2) || "0.00"} avg profit/trade •
+                  Best month ever: {bestMonth ? `${getFullMonthName(bestMonth.month)} '${String(bestMonth.year).slice(-2)}` : "N/A"}{" "}
+                  with ${bestMonth?.profit.toFixed(2) || "0.00"}
                 </p>
               </div>
 
               {/* CTA BUTTON */}
-              <div className="text-center mt-8">
+              <div className="text-center mb-8">
                 <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-2xl p-6 border border-purple-400/30 shadow-lg shadow-purple-500/20">
                   <h4 className="text-xl font-bold text-white mb-3">
                     Ready to Experience Autonomous Trading?
@@ -639,7 +748,7 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
                   </a>
                 </div>
               </div>
-            </div>
+            </>
           );
         })()}
 
