@@ -101,12 +101,12 @@ const faqData = [
       {
         question: "Why do you publicly show every single trade?",
         answer:
-          "Because I'm tired of fake affiliate sites with cherry-picked results and photoshopped screenshots. If I'm going to recommend this system, I need to prove it works with real, verifiable data. Every trade you see is real—pulled directly from my live Google Sheets that I update almost daily.",
+          "Because I'm tired of fake affiliate sites with cherry-picked results and photoshopped screenshots. If I'm going to recommend this system, I need to prove it works with real, verifiable data. Every trade you see is real—all my results are public and I update them almost daily.",
       },
       {
         question: "How do I know your trade log is real and not faked?",
         answer:
-          "The data comes directly from my live Google Sheets, which I manually update from my robotic trader's transaction log—and everything traces back to my actual Coinbase transaction history. Plus, I show the flat weeks and quiet periods too, not just the wins. If I were faking it, why would I show the boring weeks?",
+          "The data comes directly from my robotic trader's transaction log—and everything traces back to my actual Coinbase transaction history. Plus, I show the flat weeks and quiet periods too, not just the wins. If I were faking it, why would I show the boring weeks?",
       },
       {
         question: "What do all the numbers in the trade log mean?",

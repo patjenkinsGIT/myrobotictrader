@@ -48,7 +48,7 @@ export const TransparencyPage: React.FC = () => {
               </h3>
               <p className="text-gray-300 mb-4">
                 All my trading results are automatically updated from my actual
-                trading account via Google Sheets API integration. This
+                trading account. Everything you see here is real. This
                 includes:
               </p>
 

@@ -755,7 +755,7 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
             * These are my actual trading results from my personal robotic
             trader account. Started January 8, 2025.
             {currentData.isLiveData
-              ? " Live data from Google Sheets."
+              ? " Results updated automatically."
               : " Results updated regularly."}
             Past performance does not guarantee future results.
           </p>
