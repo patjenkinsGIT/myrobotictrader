@@ -1,16 +1,18 @@
 /**
  * Blog Post Scheduling Utilities
  *
- * Allows posts to be scheduled for future publication using the `publishDate` field.
- * - No publishDate = immediately published
- * - publishDate in the past or today = published
- * - publishDate in the future = not yet published (hidden from listings)
+ * Allows posts to be scheduled using the `published` boolean and/or `publishDate` field.
+ * - published: false = always hidden (can be toggled via schedule manager)
+ * - published: true (or undefined) + no publishDate = immediately published
+ * - published: true (or undefined) + publishDate in the past or today = published
+ * - published: true (or undefined) + publishDate in the future = not yet published
  */
 
 export interface BlogPost {
   title: string;
   slug: string;
   date: string;
+  published?: boolean; // Optional: if false, post is hidden regardless of date. Default: true
   publishDate?: string; // Optional: if not set, post is immediately published
   content: string;
   category: string;
@@ -21,12 +23,15 @@ export interface BlogPost {
 }
 
 /**
- * Check if a post should be visible based on its publishDate
+ * Check if a post should be visible based on its published flag and publishDate
  * @param post - The blog post to check
  * @returns true if the post should be published (visible), false otherwise
  */
 export function isPostPublished(post: BlogPost): boolean {
-  // No publishDate = immediately published
+  // If published is explicitly set to false, post is hidden
+  if (post.published === false) return false;
+
+  // No publishDate = immediately published (if published is true or undefined)
   if (!post.publishDate) return true;
 
   // Compare publishDate to today (date-only comparison)
