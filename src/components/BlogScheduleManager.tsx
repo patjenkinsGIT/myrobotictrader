@@ -16,6 +16,7 @@ const BlogScheduleManager: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [calendarDate, setCalendarDate] = useState(new Date());
+  const [editingDateSlug, setEditingDateSlug] = useState<string | null>(null);
 
   // Load posts from JSON
   useEffect(() => {
@@ -65,6 +66,44 @@ const BlogScheduleManager: React.FC = () => {
       setMessage(`Save failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
     setSaving(false);
+  };
+
+  const updatePublishDate = async (slug: string, newDate: string) => {
+    const updatedPosts = posts.map((post) =>
+      post.slug === slug
+        ? { ...post, publishDate: newDate, date: `${newDate}T12:00:00Z` }
+        : post
+    );
+    setPosts(updatedPosts);
+    setHasChanges(true);
+    setEditingDateSlug(null);
+    setMessage('');
+
+    // Save to file via API
+    setSaving(true);
+    try {
+      const response = await fetch('/api/save-posts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedPosts, null, 2),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setMessage('Date updated');
+        setTimeout(() => setMessage(''), 2000);
+      } else {
+        setMessage(`Save failed: ${data.message}`);
+      }
+    } catch (error) {
+      setMessage(`Save failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+    setSaving(false);
+  };
+
+  const getDateInputValue = (post: ExtendedBlogPost) => {
+    const dateStr = post.publishDate || post.date;
+    const date = new Date(dateStr);
+    return date.toISOString().split('T')[0];
   };
 
   const pushToProduction = async () => {
@@ -305,9 +344,27 @@ const BlogScheduleManager: React.FC = () => {
                           >
                             {post.published !== false ? 'Live' : 'Scheduled'}
                           </span>
-                          <span className="text-slate-500 text-sm">
-                            {formatDate(post.publishDate || post.date)}
-                          </span>
+                          {editingDateSlug === post.slug ? (
+                            <input
+                              type="date"
+                              defaultValue={getDateInputValue(post)}
+                              onChange={(e) => updatePublishDate(post.slug, e.target.value)}
+                              onBlur={() => setEditingDateSlug(null)}
+                              autoFocus
+                              className="bg-slate-700 text-white text-sm px-2 py-0.5 rounded border border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                            />
+                          ) : (
+                            <button
+                              onClick={() => setEditingDateSlug(post.slug)}
+                              className="text-slate-500 text-sm hover:text-purple-400 transition-colors flex items-center gap-1"
+                              title="Click to change date"
+                            >
+                              {formatDate(post.publishDate || post.date)}
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                              </svg>
+                            </button>
+                          )}
                           <span className="text-slate-600">•</span>
                           <span className="text-purple-400 text-sm">{post.category}</span>
                         </div>
@@ -464,9 +521,9 @@ const BlogScheduleManager: React.FC = () => {
         <div className="mt-8 p-4 bg-slate-800/50 rounded-lg border border-slate-700 text-slate-400 text-sm">
           <p>
             <strong className="text-slate-300">How to use:</strong> Filter by category using the
-            buttons above. Switch between List and Calendar views. Click posts to toggle between
-            &quot;Live&quot; and &quot;Scheduled&quot;. Changes save automatically. Click &quot;Push
-            to Production&quot; to deploy to Cloudflare.
+            buttons above. Switch between List and Calendar views. Click the date to reschedule a
+            post. Toggle between &quot;Live&quot; and &quot;Scheduled&quot;. Changes save
+            automatically. Click &quot;Push to Production&quot; to deploy to Cloudflare.
           </p>
         </div>
       </div>
