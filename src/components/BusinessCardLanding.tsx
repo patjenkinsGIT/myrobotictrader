@@ -32,6 +32,10 @@ export const BusinessCardLanding: React.FC = () => {
 
   const dailyAvg = tradingStats.dailyAvg.toFixed(2);
 
+  // Calculate winning months from actual data
+  const totalMonths = tradingStats.monthlyData?.length || 0;
+  const winningMonths = tradingStats.monthlyData?.filter(m => m.profit > 0).length || 0;
+
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden pb-10 pt-10">
       {/* Background effects - matching your Hero */}
@@ -162,7 +166,7 @@ export const BusinessCardLanding: React.FC = () => {
             <div className="flex items-center justify-center gap-3 mb-2">
               <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
               <span className="text-green-300 font-bold text-lg">
-                10 Months. 10 Winning Months.
+                {totalMonths} Months. {winningMonths} Winning Months.
               </span>
               <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
             </div>
