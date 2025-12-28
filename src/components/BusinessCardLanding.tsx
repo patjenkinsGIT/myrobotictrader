@@ -201,7 +201,7 @@ export const BusinessCardLanding: React.FC = () => {
         {/* Secondary info */}
         <div className="text-center">
           <p className="text-sm text-yellow-300 font-medium mb-4">
-            🎯 GoBabyTrade is the AI-enhanced system I use – save $1,000 with my link!
+            🎯 GoBabyTrade™ is the AI-enhanced system I use – save $1,000 with my link!
           </p>
           <p className="text-xs text-gray-500 max-w-sm mx-auto leading-relaxed">
             * Actual trading results from my personal account. Started January
