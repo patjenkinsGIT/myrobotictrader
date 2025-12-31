@@ -21,6 +21,7 @@ import { TradingResults } from "./components/TradingResults";
 import { Features } from "./components/Features";
 import { CallToAction } from "./components/CallToAction";
 import { FAQPreview } from "./components/FAQPreview";
+import { LatestPosts } from "./components/LatestPosts";
 import FAQPage from "./pages/FAQPage";
 import { Footer } from "./components/Footer";
 
@@ -225,6 +226,7 @@ const HomePage = () => {
       <Features />
       <CallToAction />
       <FAQPreview />
+      <LatestPosts maxPosts={4} />
 
       {/* SEO Content Section - Static text for Google indexing */}
       <section className="bg-slate-900/50 py-16 px-4 border-t border-white/5">

@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet-async";
 import postsData from "./data/posts.json";
 import { FullNav } from "./components/FullNav";
 import { RecentPosts } from "./components/RecentPosts";
+import { RelatedPosts } from "./components/RelatedPosts";
 import { GoldBlogSlide } from "./components/GoldBlogSlides";
 import { BlogPost, isPostPublished, isPreviewMode } from "./utils/blogUtils";
 
@@ -532,6 +533,12 @@ export const BlogPostPage: React.FC = () => {
               </a>
             </div>
           </div>
+
+          {/* Related Posts - SEO Internal Linking */}
+          <RelatedPosts
+            currentSlug={post.slug}
+            currentCategory={post.category}
+          />
 
           {/* Recent Posts */}
           <div className="mt-12">
