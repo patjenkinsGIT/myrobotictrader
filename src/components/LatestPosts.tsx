@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Newspaper, TrendingUp } from 'lucide-react';
+import { ArrowRight, TrendingUp, BookOpen } from 'lucide-react';
 import postsData from '../data/posts.json';
 import { BlogPost, getPublishedPosts, getPostSortDate } from '../utils/blogUtils';
 
@@ -33,34 +33,26 @@ export const LatestPosts: React.FC<{ maxPosts?: number }> = ({ maxPosts = 4 }) =
 
   return (
     <section className="py-20 px-4 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-purple-900/20 to-slate-900 -z-10"></div>
+      {/* Background Effects - matching other sections */}
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-purple-900/30 to-slate-900 -z-10"></div>
+      <div className="absolute top-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl -z-10"></div>
+      <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl -z-10"></div>
 
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-12">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 rounded-lg bg-gradient-to-br from-purple-500 to-blue-500 shadow-lg">
-                <Newspaper className="w-6 h-6 text-white" />
-              </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-white">Latest Insights</h2>
-            </div>
-            <p className="text-gray-400 text-lg">
-              Real talk about trading, building wealth, and avoiding the gambling trap
-            </p>
-          </div>
-          <Link
-            to="/blog"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-500 text-white font-semibold rounded-lg transition-all hover:shadow-lg hover:shadow-purple-500/25"
-          >
-            View All Posts <ArrowRight className="w-5 h-5" />
-          </Link>
+      <div className="max-w-6xl mx-auto relative z-10">
+        {/* Header - centered like other sections */}
+        <div className="text-center mb-12">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            Latest Insights
+          </h2>
+          <p className="text-gray-300 text-lg max-w-2xl mx-auto">
+            Real talk about trading, building wealth, and avoiding the gambling trap
+          </p>
         </div>
 
         {/* Featured Post */}
         <Link
           to={`/blog/${featuredPost.slug}`}
-          className="group block mb-8 bg-gradient-to-r from-white/5 to-white/10 rounded-2xl overflow-hidden border border-white/10 hover:border-purple-500/50 transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/10"
+          className="group block mb-8 bg-gray-900/50 rounded-2xl overflow-hidden border border-purple-400/30 hover:border-purple-400/60 transition-all duration-300 shadow-lg shadow-purple-500/10 hover:shadow-xl hover:shadow-purple-500/20"
         >
           <div className="grid md:grid-cols-2 gap-0">
             <div className="aspect-video md:aspect-auto overflow-hidden">
@@ -100,7 +92,7 @@ export const LatestPosts: React.FC<{ maxPosts?: number }> = ({ maxPosts = 4 }) =
               <Link
                 key={post.slug}
                 to={`/blog/${post.slug}`}
-                className="group block bg-white/5 rounded-xl overflow-hidden border border-white/10 hover:border-purple-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10"
+                className="group block bg-gray-900/50 rounded-xl overflow-hidden border border-purple-400/30 hover:border-purple-400/60 transition-all duration-300 shadow-lg shadow-purple-500/10 hover:shadow-xl hover:shadow-purple-500/20"
               >
                 <div className="aspect-video overflow-hidden">
                   <img
@@ -129,6 +121,18 @@ export const LatestPosts: React.FC<{ maxPosts?: number }> = ({ maxPosts = 4 }) =
             ))}
           </div>
         )}
+
+        {/* View All Link - matching FAQ section style */}
+        <div className="text-center mt-10">
+          <Link
+            to="/blog"
+            className="inline-flex items-center gap-2 text-purple-300 hover:text-purple-200 transition-colors group"
+          >
+            <BookOpen className="w-5 h-5" />
+            <span>View all articles</span>
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </div>
       </div>
     </section>
   );

@@ -229,33 +229,43 @@ const HomePage = () => {
       <LatestPosts maxPosts={4} />
 
       {/* SEO Content Section - Static text for Google indexing */}
-      <section className="bg-slate-900/50 py-16 px-4 border-t border-white/5">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold text-white mb-6 text-center">
-            About MyRoboticTrader
-          </h2>
-          <div className="text-slate-400 text-base leading-relaxed space-y-4">
-            <p>
-              MyRoboticTrader showcases real, verified results from an AI-enhanced autonomous
-              cryptocurrency trading system. Unlike manual trading or gambling on price predictions,
-              this system executes trades 24/7 based on market volatility, taking small consistent
-              profits without emotional decision-making. The approach is simple: buy low, sell for
-              profit, repeat—all managed by intelligent automation.
-            </p>
-            <p>
-              Every trade is published transparently with complete transaction history available
-              for verification. With nearly 1,000 trades executed and a 100% success rate on
-              closed positions, the results speak for themselves. The system never sells at a loss,
-              holding positions until market conditions become favorable. This patience-based
-              approach eliminates the fear and greed that destroy most traders.
-            </p>
-            <p>
-              This isn't get-rich-quick speculation or crypto gambling. It's systematic wealth
-              building through AI-enhanced technology that works while you sleep. Powered by
-              GoBabyTrade, the system connects securely to exchanges like Coinbase and Kraken,
-              keeping your funds in your own account at all times. Check out the live results
-              dashboard above to see every trade, every profit, updated in real-time.
-            </p>
+      <section className="py-20 px-4 relative overflow-hidden">
+        {/* Background Effects - matching other sections */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-purple-900/30 to-slate-900 -z-10"></div>
+        <div className="absolute top-0 left-1/3 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl -z-10"></div>
+        <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl -z-10"></div>
+
+        <div className="max-w-4xl mx-auto relative z-10">
+          <div className="text-center mb-8">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+              About MyRoboticTrader
+            </h2>
+          </div>
+
+          <div className="bg-gray-900/50 rounded-2xl p-8 md:p-10 border border-purple-400/30 shadow-lg shadow-purple-500/10">
+            <div className="text-gray-300 text-base leading-relaxed space-y-4">
+              <p>
+                MyRoboticTrader showcases real, verified results from an AI-enhanced autonomous
+                cryptocurrency trading system. Unlike manual trading or gambling on price predictions,
+                this system executes trades 24/7 based on market volatility, taking small consistent
+                profits without emotional decision-making. The approach is simple: buy low, sell for
+                profit, repeat—all managed by intelligent automation.
+              </p>
+              <p>
+                Every trade is published transparently with complete transaction history available
+                for verification. With nearly 1,000 trades executed and a 100% success rate on
+                closed positions, the results speak for themselves. The system never sells at a loss,
+                holding positions until market conditions become favorable. This patience-based
+                approach eliminates the fear and greed that destroy most traders.
+              </p>
+              <p>
+                This isn't get-rich-quick speculation or crypto gambling. It's systematic wealth
+                building through AI-enhanced technology that works while you sleep. Powered by
+                GoBabyTrade™, the system connects securely to exchanges like Coinbase and Kraken,
+                keeping your funds in your own account at all times. Check out the live results
+                dashboard above to see every trade, every profit, updated in real-time.
+              </p>
+            </div>
           </div>
         </div>
       </section>
