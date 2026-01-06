@@ -22,6 +22,7 @@ import { Features } from "./components/Features";
 import { CallToAction } from "./components/CallToAction";
 import { FAQPreview } from "./components/FAQPreview";
 import { LatestPosts } from "./components/LatestPosts";
+import { Milestones } from "./components/Milestones";
 import FAQPage from "./pages/FAQPage";
 import { Footer } from "./components/Footer";
 
@@ -223,6 +224,7 @@ const HomePage = () => {
         }
       />
 
+      <Milestones />
       <Features />
       <CallToAction />
       <FAQPreview />
