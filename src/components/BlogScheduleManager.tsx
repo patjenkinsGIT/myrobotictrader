@@ -34,9 +34,10 @@ const BlogScheduleManager: React.FC = () => {
     : posts;
 
   const sortedPosts = [...filteredPosts].sort((a, b) => {
-    const dateA = new Date(a.publishDate || a.date).getTime();
-    const dateB = new Date(b.publishDate || b.date).getTime();
-    return dateB - dateA;
+    // Parse dates directly to avoid timezone issues
+    const dateStrA = (a.publishDate || a.date).split('T')[0];
+    const dateStrB = (b.publishDate || b.date).split('T')[0];
+    return dateStrB.localeCompare(dateStrA); // Descending order (newest first)
   });
 
   const togglePublished = async (slug: string) => {
@@ -102,8 +103,8 @@ const BlogScheduleManager: React.FC = () => {
 
   const getDateInputValue = (post: ExtendedBlogPost) => {
     const dateStr = post.publishDate || post.date;
-    const date = new Date(dateStr);
-    return date.toISOString().split('T')[0];
+    // Extract YYYY-MM-DD directly without timezone conversion
+    return dateStr.split('T')[0];
   };
 
   const pushToProduction = async () => {
@@ -128,15 +129,56 @@ const BlogScheduleManager: React.FC = () => {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    // Parse as local time to avoid timezone shifts
+    const [datePart] = dateString.split('T');
+    const [year, month, day] = datePart.split('-').map(Number);
+    const date = new Date(year, month - 1, day); // month is 0-indexed
+    return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
     });
   };
 
-  const publishedCount = filteredPosts.filter((p) => p.published !== false).length;
-  const scheduledCount = filteredPosts.filter((p) => p.published === false).length;
+  // Determine post status based on published flag AND publishDate
+  const getPostStatus = (post: ExtendedBlogPost): 'live' | 'scheduled' | 'hidden' => {
+    // If explicitly hidden
+    if (post.published === false) return 'hidden';
+
+    // Check if publishDate is in the future
+    const dateStr = post.publishDate || post.date;
+    const [datePart] = dateStr.split('T');
+    const [year, month, day] = datePart.split('-').map(Number);
+    const publishDate = new Date(year, month - 1, day);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (publishDate > today) return 'scheduled';
+    return 'live';
+  };
+
+  const getStatusStyle = (status: 'live' | 'scheduled' | 'hidden') => {
+    switch (status) {
+      case 'live':
+        return 'bg-green-500/20 text-green-400 border border-green-500/30';
+      case 'scheduled':
+        return 'bg-blue-500/20 text-blue-400 border border-blue-500/30';
+      case 'hidden':
+        return 'bg-red-500/20 text-red-400 border border-red-500/30';
+    }
+  };
+
+  const getStatusLabel = (status: 'live' | 'scheduled' | 'hidden') => {
+    switch (status) {
+      case 'live': return 'Live';
+      case 'scheduled': return 'Scheduled';
+      case 'hidden': return 'Hidden';
+    }
+  };
+
+  const liveCount = filteredPosts.filter((p) => getPostStatus(p) === 'live').length;
+  const scheduledCount = filteredPosts.filter((p) => getPostStatus(p) === 'scheduled').length;
+  const hiddenCount = filteredPosts.filter((p) => getPostStatus(p) === 'hidden').length;
 
   // Calendar helpers
   const getCalendarDays = () => {
@@ -167,11 +209,14 @@ const BlogScheduleManager: React.FC = () => {
     const month = calendarDate.getMonth();
 
     return filteredPosts.filter((post) => {
-      const postDate = new Date(post.publishDate || post.date);
+      // Parse date string directly to avoid timezone shifts
+      const dateStr = post.publishDate || post.date;
+      const [datePart] = dateStr.split('T');
+      const [postYear, postMonth, postDay] = datePart.split('-').map(Number);
       return (
-        postDate.getFullYear() === year &&
-        postDate.getMonth() === month &&
-        postDate.getDate() === day
+        postYear === year &&
+        postMonth - 1 === month && // JS months are 0-indexed
+        postDay === day
       );
     });
   };
@@ -336,13 +381,9 @@ const BlogScheduleManager: React.FC = () => {
                         {/* Meta row: Status, Date, Category */}
                         <div className="flex items-center gap-3 mt-1 mb-2">
                           <span
-                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                              post.published !== false
-                                ? 'bg-green-500/20 text-green-400 border border-green-500/30'
-                                : 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
-                            }`}
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusStyle(getPostStatus(post))}`}
                           >
-                            {post.published !== false ? 'Live' : 'Scheduled'}
+                            {getStatusLabel(getPostStatus(post))}
                           </span>
                           {editingDateSlug === post.slug ? (
                             <input
@@ -380,12 +421,12 @@ const BlogScheduleManager: React.FC = () => {
                         onClick={() => togglePublished(post.slug)}
                         disabled={saving}
                         className={`flex-shrink-0 px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 ${
-                          post.published !== false
-                            ? 'bg-yellow-600 hover:bg-yellow-700 text-white'
-                            : 'bg-green-600 hover:bg-green-700 text-white'
+                          getPostStatus(post) === 'hidden'
+                            ? 'bg-green-600 hover:bg-green-700 text-white'
+                            : 'bg-red-600 hover:bg-red-700 text-white'
                         }`}
                       >
-                        {post.published !== false ? 'Unpublish' : 'Publish'}
+                        {getPostStatus(post) === 'hidden' ? 'Unhide' : 'Hide'}
                       </button>
                     </div>
                   </div>
@@ -449,22 +490,21 @@ const BlogScheduleManager: React.FC = () => {
                           {day}
                         </div>
                         <div className="space-y-1">
-                          {dayPosts.map((post) => (
+                          {dayPosts.map((post) => {
+                            const status = getPostStatus(post);
+                            const statusColors = {
+                              live: 'bg-green-500/20 hover:bg-green-500/30 border border-green-500/30 text-green-300',
+                              scheduled: 'bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 text-blue-300',
+                              hidden: 'bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 text-red-300',
+                            };
+                            return (
                             <div
                               key={post.slug}
-                              className={`group relative p-1.5 rounded text-xs cursor-pointer transition-colors ${
-                                post.published !== false
-                                  ? 'bg-green-500/20 hover:bg-green-500/30 border border-green-500/30'
-                                  : 'bg-yellow-500/20 hover:bg-yellow-500/30 border border-yellow-500/30'
-                              }`}
+                              className={`group relative p-1.5 rounded text-xs cursor-pointer transition-colors ${statusColors[status]}`}
                               onClick={() => togglePublished(post.slug)}
-                              title={`Click to ${post.published !== false ? 'unpublish' : 'publish'}`}
+                              title={`Click to ${status === 'hidden' ? 'unhide' : 'hide'}`}
                             >
-                              <div
-                                className={`font-medium truncate ${
-                                  post.published !== false ? 'text-green-300' : 'text-yellow-300'
-                                }`}
-                              >
+                              <div className="font-medium truncate">
                                 {post.title}
                               </div>
                               {/* Hover tooltip */}
@@ -478,14 +518,8 @@ const BlogScheduleManager: React.FC = () => {
                                   {post.title}
                                 </div>
                                 <div className="flex items-center gap-2 mb-1">
-                                  <span
-                                    className={`text-xs px-1.5 py-0.5 rounded ${
-                                      post.published !== false
-                                        ? 'bg-green-500/20 text-green-400'
-                                        : 'bg-yellow-500/20 text-yellow-400'
-                                    }`}
-                                  >
-                                    {post.published !== false ? 'Live' : 'Scheduled'}
+                                  <span className={`text-xs px-1.5 py-0.5 rounded ${getStatusStyle(status)}`}>
+                                    {getStatusLabel(status)}
                                   </span>
                                   <span className="text-purple-400 text-xs">{post.category}</span>
                                 </div>
@@ -494,7 +528,8 @@ const BlogScheduleManager: React.FC = () => {
                                 </p>
                               </div>
                             </div>
-                          ))}
+                          );
+                          })}
                         </div>
                       </>
                     )}
@@ -506,24 +541,34 @@ const BlogScheduleManager: React.FC = () => {
         )}
 
         {/* Stats */}
-        <div className="mt-8 flex gap-6 text-slate-400">
+        <div className="mt-8 flex flex-wrap gap-6 text-slate-400">
           <div className="flex items-center gap-2">
             <span className="w-3 h-3 rounded-full bg-green-500"></span>
-            <span>Live: {publishedCount} posts</span>
+            <span>Live: {liveCount} posts</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-yellow-500"></span>
+            <span className="w-3 h-3 rounded-full bg-blue-500"></span>
             <span>Scheduled: {scheduledCount} posts</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-3 rounded-full bg-red-500"></span>
+            <span>Hidden: {hiddenCount} posts</span>
           </div>
         </div>
 
         {/* Help text */}
-        <div className="mt-8 p-4 bg-slate-800/50 rounded-lg border border-slate-700 text-slate-400 text-sm">
+        <div className="mt-8 p-4 bg-slate-800/50 rounded-lg border border-slate-700 text-slate-400 text-sm space-y-2">
           <p>
             <strong className="text-slate-300">How to use:</strong> Filter by category using the
             buttons above. Switch between List and Calendar views. Click the date to reschedule a
-            post. Toggle between &quot;Live&quot; and &quot;Scheduled&quot;. Changes save
-            automatically. Click &quot;Push to Production&quot; to deploy to Cloudflare.
+            post. Click Hide/Unhide to manually control visibility. Changes save automatically.
+            Click &quot;Push to Production&quot; to deploy to Cloudflare.
+          </p>
+          <p>
+            <strong className="text-slate-300">Status meanings:</strong>{' '}
+            <span className="text-green-400">Live</span> = visible on site (date has passed).{' '}
+            <span className="text-blue-400">Scheduled</span> = will go live when date arrives.{' '}
+            <span className="text-red-400">Hidden</span> = manually blocked, won&apos;t show regardless of date.
           </p>
         </div>
       </div>

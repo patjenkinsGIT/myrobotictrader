@@ -679,12 +679,7 @@ export const LiveTransactionLog: React.FC = () => {
 
       {/* Summary Stats - 6 Cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 mb-6">
-        {/* Total Profit Card - WITH MILESTONE BADGE */}
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-yellow-400/50 transition-all text-center">
-          {/* Milestone Badge - TEMPORARY: Remove after mid-January 2026 */}
-          <div className="absolute -top-2 -right-2 bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 text-[8px] lg:text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-lg animate-pulse z-10">
-            🎉 1 YEAR!
-          </div>
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
           <div className="text-sm lg:text-base font-bold text-green-300 truncate">
             {monthSummary.totalProfit}
           </div>
