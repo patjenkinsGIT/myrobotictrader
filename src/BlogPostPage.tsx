@@ -214,23 +214,44 @@ export const BlogPostPage: React.FC = () => {
             // Check for float syntax: ![float-left: Alt] or ![float-right: Alt]
             const floatLeftMatch = match[1].match(/^float-left:\s*(.+)$/i);
             const floatRightMatch = match[1].match(/^float-right:\s*(.+)$/i);
-            if (floatLeftMatch) {
+            if (floatLeftMatch || floatRightMatch) {
+              const isLeft = !!floatLeftMatch;
+              const altText = isLeft ? floatLeftMatch[1] : floatRightMatch![1];
+              // Collect following paragraphs until next heading or end
+              const floatContent: string[] = [];
+              let nextIdx = index + 1;
+              while (nextIdx < lines.length) {
+                const nextLine = lines[nextIdx];
+                // Stop at headings, images, lists, tables, or empty lines followed by heading
+                if (nextLine.startsWith('#') || nextLine.match(/^!\[/) || nextLine.startsWith('|') || nextLine.trim().startsWith('- ')) {
+                  break;
+                }
+                if (nextLine.trim() === '') {
+                  // Check if next non-empty line is a heading
+                  const afterEmpty = lines[nextIdx + 1];
+                  if (afterEmpty && afterEmpty.startsWith('#')) {
+                    break;
+                  }
+                }
+                if (nextLine.trim()) {
+                  floatContent.push(nextLine);
+                  lines[nextIdx] = ''; // Mark as consumed
+                }
+                nextIdx++;
+              }
               elements.push(
-                <img
-                  key={`img-float-${index}`}
-                  src={match[2]}
-                  alt={floatLeftMatch[1]}
-                  className="float-left mr-6 mb-4 w-28 md:w-36 rounded-lg border border-purple-400/30"
-                />
-              );
-            } else if (floatRightMatch) {
-              elements.push(
-                <img
-                  key={`img-float-${index}`}
-                  src={match[2]}
-                  alt={floatRightMatch[1]}
-                  className="float-right ml-6 mb-4 w-28 md:w-36 rounded-lg border border-purple-400/30"
-                />
+                <div key={`float-wrap-${index}`} className="overflow-hidden mb-6">
+                  <img
+                    src={match[2]}
+                    alt={altText}
+                    className={`${isLeft ? 'float-left mr-4' : 'float-right ml-4'} mb-2 w-[75px] md:w-[100px] rounded-lg border border-purple-400/30`}
+                  />
+                  {floatContent.map((line, i) => (
+                    <p key={`float-p-${index}-${i}`} className="text-slate-300 leading-relaxed text-lg mb-4">
+                      {renderInlineMarkdown(line)}
+                    </p>
+                  ))}
+                </div>
               );
             }
             // Check if next line is a caption (starts and ends with *)
@@ -478,7 +499,7 @@ export const BlogPostPage: React.FC = () => {
 
           {/* Article Content */}
           <div className="prose prose-invert prose-lg max-w-none">
-            <div className="bg-slate-900/95 backdrop-blur-sm rounded-2xl p-8 md:p-12 mb-8 border border-purple-400/30">
+            <div className="bg-slate-900/95 backdrop-blur-sm rounded-2xl p-8 md:p-12 mb-8 border border-purple-400/30 overflow-hidden">
               {renderMarkdown(post.content)}
             </div>
           </div>
