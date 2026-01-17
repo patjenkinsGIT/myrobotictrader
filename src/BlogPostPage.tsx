@@ -212,17 +212,19 @@ export const BlogPostPage: React.FC = () => {
           const match = line.trim().match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
           if (match) {
             // Check for float syntax: ![float-left: Alt] or ![float-right: Alt]
-            const floatLeftMatch = match[1].match(/^float-left:\s*(.+)$/i);
-            const floatRightMatch = match[1].match(/^float-right:\s*(.+)$/i);
-            if (floatLeftMatch || floatRightMatch) {
-              const isLeft = !!floatLeftMatch;
-              const altText = isLeft ? floatLeftMatch[1] : floatRightMatch![1];
+            const altText = match[1];
+            const imgSrc = match[2];
+            const isFloatLeft = altText.toLowerCase().startsWith('float-left:');
+            const isFloatRight = altText.toLowerCase().startsWith('float-right:');
+
+            if (isFloatLeft || isFloatRight) {
+              const cleanAlt = altText.replace(/^float-(left|right):\s*/i, '');
               // Collect following paragraphs until next heading or end
               const floatContent: string[] = [];
               let nextIdx = index + 1;
               while (nextIdx < lines.length) {
                 const nextLine = lines[nextIdx];
-                // Stop at headings, images, lists, tables, or empty lines followed by heading
+                // Stop at headings, images, lists, tables
                 if (nextLine.startsWith('#') || nextLine.match(/^!\[/) || nextLine.startsWith('|') || nextLine.trim().startsWith('- ')) {
                   break;
                 }
@@ -242,13 +244,13 @@ export const BlogPostPage: React.FC = () => {
               elements.push(
                 <div key={`float-wrap-${index}`} className="overflow-hidden mb-6">
                   <img
-                    src={match[2]}
-                    alt={altText}
-                    className={`${isLeft ? 'float-left mr-4' : 'float-right ml-4'} mb-2 w-[75px] md:w-[100px] rounded-lg border border-purple-400/30`}
+                    src={imgSrc}
+                    alt={cleanAlt}
+                    className={`${isFloatLeft ? 'float-left mr-4' : 'float-right ml-4'} mb-2 w-[75px] md:w-[100px] rounded-lg border border-purple-400/30`}
                   />
-                  {floatContent.map((line, i) => (
+                  {floatContent.map((ln, i) => (
                     <p key={`float-p-${index}-${i}`} className="text-slate-300 leading-relaxed text-lg mb-4">
-                      {renderInlineMarkdown(line)}
+                      {renderInlineMarkdown(ln)}
                     </p>
                   ))}
                 </div>
