@@ -248,7 +248,7 @@ export const BlogPostPage: React.FC = () => {
                     alt={cleanAlt}
                     style={{
                       float: isFloatLeft ? 'left' : 'right',
-                      width: '110px',
+                      width: '120px',
                       marginRight: isFloatLeft ? '16px' : '0',
                       marginLeft: isFloatLeft ? '0' : '16px',
                       marginBottom: '8px',
