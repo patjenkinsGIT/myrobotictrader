@@ -211,15 +211,25 @@ export const BlogPostPage: React.FC = () => {
           // Regular image
           const match = line.trim().match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
           if (match) {
-            // Check for float-right syntax: ![float-right: Alt text](url)
-            const floatMatch = match[1].match(/^float-right:\s*(.+)$/i);
-            if (floatMatch) {
+            // Check for float syntax: ![float-left: Alt] or ![float-right: Alt]
+            const floatLeftMatch = match[1].match(/^float-left:\s*(.+)$/i);
+            const floatRightMatch = match[1].match(/^float-right:\s*(.+)$/i);
+            if (floatLeftMatch) {
               elements.push(
                 <img
                   key={`img-float-${index}`}
                   src={match[2]}
-                  alt={floatMatch[1]}
-                  className="float-right ml-6 mb-4 w-36 md:w-44 rounded-lg border border-purple-400/30"
+                  alt={floatLeftMatch[1]}
+                  className="float-left mr-6 mb-4 w-28 md:w-36 rounded-lg border border-purple-400/30"
+                />
+              );
+            } else if (floatRightMatch) {
+              elements.push(
+                <img
+                  key={`img-float-${index}`}
+                  src={match[2]}
+                  alt={floatRightMatch[1]}
+                  className="float-right ml-6 mb-4 w-28 md:w-36 rounded-lg border border-purple-400/30"
                 />
               );
             }
