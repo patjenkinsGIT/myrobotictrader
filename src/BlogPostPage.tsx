@@ -193,7 +193,7 @@ export const BlogPostPage: React.FC = () => {
         flushList();
         // Skip rendering the divider - just treat as whitespace
       }
-      // Image ![alt](url) or Slide component ![Slide: variant]
+      // Image ![alt](url) or Slide component ![Slide: variant] or Float image ![float-right: alt](url)
       else if (line.trim().match(/^!\[([^\]]*)\]\(([^)]+)\)$/) || line.trim().match(/^!\[Slide:\s*([^\]]+)\]$/)) {
         flushParagraph();
         flushList();
@@ -211,35 +211,49 @@ export const BlogPostPage: React.FC = () => {
           // Regular image
           const match = line.trim().match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
           if (match) {
-            // Check if next line is a caption (starts and ends with *)
-            const nextLine = lines[index + 1];
-            const isCaption = nextLine && nextLine.trim().match(/^\*(.+)\*$/);
-
-            if (isCaption) {
-              const captionMatch = nextLine.trim().match(/^\*(.+)\*$/);
-              elements.push(
-                <figure key={`fig-${index}`} className="my-8">
-                  <img
-                    src={match[2]}
-                    alt={match[1]}
-                    className="w-full rounded-xl border border-purple-400/30"
-                  />
-                  <figcaption className="text-center text-slate-400 text-sm italic mt-3">
-                    {captionMatch ? captionMatch[1] : ''}
-                  </figcaption>
-                </figure>
-              );
-              // Skip the next line since we've consumed the caption
-              lines[index + 1] = '';
-            } else {
+            // Check for float-right syntax: ![float-right: Alt text](url)
+            const floatMatch = match[1].match(/^float-right:\s*(.+)$/i);
+            if (floatMatch) {
               elements.push(
                 <img
-                  key={`img-${index}`}
+                  key={`img-float-${index}`}
                   src={match[2]}
-                  alt={match[1]}
-                  className="w-full rounded-xl my-6 border border-purple-400/30"
+                  alt={floatMatch[1]}
+                  className="float-right ml-6 mb-4 w-36 md:w-44 rounded-lg border border-purple-400/30"
                 />
               );
+            }
+            // Check if next line is a caption (starts and ends with *)
+            else {
+              const nextLine = lines[index + 1];
+              const isCaption = nextLine && nextLine.trim().match(/^\*(.+)\*$/);
+
+              if (isCaption) {
+                const captionMatch = nextLine.trim().match(/^\*(.+)\*$/);
+                elements.push(
+                  <figure key={`fig-${index}`} className="my-8">
+                    <img
+                      src={match[2]}
+                      alt={match[1]}
+                      className="w-full rounded-xl border border-purple-400/30"
+                    />
+                    <figcaption className="text-center text-slate-400 text-sm italic mt-3">
+                      {captionMatch ? captionMatch[1] : ''}
+                    </figcaption>
+                  </figure>
+                );
+                // Skip the next line since we've consumed the caption
+                lines[index + 1] = '';
+              } else {
+                elements.push(
+                  <img
+                    key={`img-${index}`}
+                    src={match[2]}
+                    alt={match[1]}
+                    className="w-full rounded-xl my-6 border border-purple-400/30"
+                  />
+                );
+              }
             }
           }
         }
