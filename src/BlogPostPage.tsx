@@ -252,7 +252,15 @@ export const BlogPostPage: React.FC = () => {
                   <img
                     src={imgSrc}
                     alt={cleanAlt}
-                    className={`${isFloatLeft ? 'float-left mr-4' : 'float-right ml-4'} mb-2 w-[75px] md:w-[100px] rounded-lg border border-purple-400/30`}
+                    style={{
+                      float: isFloatLeft ? 'left' : 'right',
+                      width: '100px',
+                      marginRight: isFloatLeft ? '16px' : '0',
+                      marginLeft: isFloatLeft ? '0' : '16px',
+                      marginBottom: '8px',
+                      borderRadius: '8px',
+                      border: '1px solid rgba(192, 132, 252, 0.3)'
+                    }}
                   />
                   {floatContent.map((ln, i) => (
                     <p key={`float-p-${index}-${i}`} className="text-slate-300 leading-relaxed text-lg mb-4">
