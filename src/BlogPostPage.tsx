@@ -217,9 +217,6 @@ export const BlogPostPage: React.FC = () => {
             const isFloatLeft = altText.toLowerCase().startsWith('float-left:');
             const isFloatRight = altText.toLowerCase().startsWith('float-right:');
 
-            // DEBUG: Log float detection
-            console.log('[FLOAT DEBUG] Alt:', altText, '| isFloatLeft:', isFloatLeft, '| isFloatRight:', isFloatRight);
-
             if (isFloatLeft || isFloatRight) {
               const cleanAlt = altText.replace(/^float-(left|right):\s*/i, '');
               // Collect following paragraphs until next heading or end
@@ -244,9 +241,6 @@ export const BlogPostPage: React.FC = () => {
                 }
                 nextIdx++;
               }
-              // DEBUG: Log float rendering
-              console.log('[FLOAT DEBUG] Rendering float with', floatContent.length, 'paragraphs:', floatContent.slice(0, 2));
-
               elements.push(
                 <div key={`float-wrap-${index}`} className="overflow-hidden mb-6">
                   <img
@@ -254,7 +248,7 @@ export const BlogPostPage: React.FC = () => {
                     alt={cleanAlt}
                     style={{
                       float: isFloatLeft ? 'left' : 'right',
-                      width: '100px',
+                      width: '110px',
                       marginRight: isFloatLeft ? '16px' : '0',
                       marginLeft: isFloatLeft ? '0' : '16px',
                       marginBottom: '8px',
