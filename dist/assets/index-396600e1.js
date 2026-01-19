@@ -106,7 +106,7 @@ That's not investing. That's not even gambling. It's a rigged carnival game.
 
 The college basketball indictment follows:
 
-- **[Terry Rozier](/blog/terry-rozier-nba-gambling-scandal)** (NBA) arrested for insider betting schemes as part of the same Operation Nothing But Bet
+- [Terry Rozier (NBA) arrested for insider betting schemes](/blog/terry-rozier-nba-gambling-scandal) — also part of Operation Nothing But Bet
 - **Cleveland Guardians pitchers** arrested for fixing individual pitches
 - **Jontay Porter** banned from the NBA for manipulating his own stats
 - **30+ illegal gambling arrests** tied to professional basketball
