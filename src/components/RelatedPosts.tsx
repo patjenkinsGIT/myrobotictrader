@@ -8,30 +8,46 @@ interface RelatedPostsProps {
   currentSlug: string;
   currentCategory: string;
   maxPosts?: number;
+  prioritySlugs?: string[];
 }
 
 export const RelatedPosts: React.FC<RelatedPostsProps> = ({
   currentSlug,
   currentCategory,
-  maxPosts = 3
+  maxPosts = 3,
+  prioritySlugs = []
 }) => {
   // Filter to only show published posts
   const posts = getPublishedPosts(postsData as BlogPost[]);
 
   const getRelatedPosts = (): BlogPost[] => {
+    // First, get priority posts if specified
+    const priorityPosts = prioritySlugs
+      .map(slug => posts.find(p => p.slug === slug))
+      .filter((p): p is BlogPost => p !== undefined && p.slug !== currentSlug);
+
+    // Get same category posts (excluding priority ones)
+    const prioritySet = new Set(prioritySlugs);
     const sameCategory = posts.filter(
-      post => post.slug !== currentSlug && post.category === currentCategory
+      post => post.slug !== currentSlug &&
+              post.category === currentCategory &&
+              !prioritySet.has(post.slug)
     );
 
-    if (sameCategory.length >= maxPosts) {
-      return sameCategory.slice(0, maxPosts);
+    // Combine priority posts first, then same category
+    const combined = [...priorityPosts, ...sameCategory];
+
+    if (combined.length >= maxPosts) {
+      return combined.slice(0, maxPosts);
     }
 
     const otherPosts = posts.filter(
-      post => post.slug !== currentSlug && post.category !== currentCategory
+      post => post.slug !== currentSlug &&
+              post.category !== currentCategory &&
+              !prioritySet.has(post.slug)
     );
 
-    return [...sameCategory, ...otherPosts].slice(0, maxPosts);
+    return [...combined, ...otherPosts].slice(0, maxPosts);
   };
 
   const relatedPosts = getRelatedPosts();

@@ -593,6 +593,7 @@ export const BlogPostPage: React.FC = () => {
           <RelatedPosts
             currentSlug={post.slug}
             currentCategory={post.category}
+            prioritySlugs={post.relatedPosts}
           />
 
           {/* Recent Posts */}

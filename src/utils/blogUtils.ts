@@ -20,6 +20,7 @@ export interface BlogPost {
   heroImage: string;
   imageAlt: string;
   excerpt?: string;
+  relatedPosts?: string[]; // Optional: array of slugs to prioritize in "Keep Reading" section
 }
 
 /**
