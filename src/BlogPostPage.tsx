@@ -356,63 +356,63 @@ export const BlogPostPage: React.FC = () => {
     let key = 0;
 
     while (currentText.length > 0) {
-      // Bold text **text**
+      // Find the earliest match of each type
       const boldMatch = currentText.match(/\*\*([^*]+)\*\*/);
-      if (boldMatch) {
-        const before = currentText.substring(0, boldMatch.index);
-        if (before) parts.push(<span key={key++}>{before}</span>);
+      const italicMatch = currentText.match(/(?<!\*)\*([^*]+)\*(?!\*)/);
+      const linkMatch = currentText.match(/\[([^\]]+)\]\(([^)]+)\)/);
+
+      // Determine which match comes first
+      const matches = [
+        { type: 'bold', match: boldMatch, index: boldMatch?.index ?? Infinity },
+        { type: 'italic', match: italicMatch, index: italicMatch?.index ?? Infinity },
+        { type: 'link', match: linkMatch, index: linkMatch?.index ?? Infinity },
+      ].filter(m => m.match !== null);
+
+      if (matches.length === 0) {
+        parts.push(<span key={key++}>{currentText}</span>);
+        break;
+      }
+
+      // Sort by index to find earliest match
+      matches.sort((a, b) => a.index - b.index);
+      const earliest = matches[0];
+
+      // Add text before the match
+      const before = currentText.substring(0, earliest.index);
+      if (before) parts.push(<span key={key++}>{before}</span>);
+
+      if (earliest.type === 'link' && linkMatch) {
+        // Process link - recursively render the link text for bold/italic inside
+        const linkText = linkMatch[1];
+        const linkUrl = linkMatch[2];
+        const isInternal = linkUrl.startsWith('/');
+        parts.push(
+          <a
+            key={key++}
+            href={linkUrl}
+            className="text-purple-400 hover:text-purple-300 underline"
+            target={isInternal ? undefined : "_blank"}
+            rel={isInternal ? undefined : "noopener noreferrer"}
+          >
+            {renderInlineMarkdown(linkText)}
+          </a>
+        );
+        currentText = currentText.substring(linkMatch.index! + linkMatch[0].length);
+      } else if (earliest.type === 'bold' && boldMatch) {
         parts.push(
           <strong key={key++} className="font-bold text-white">
             {boldMatch[1]}
           </strong>
         );
-        currentText = currentText.substring(
-          boldMatch.index! + boldMatch[0].length
-        );
-        continue;
-      }
-
-      // Italic text *text*
-      const italicMatch = currentText.match(/\*([^*]+)\*/);
-      if (italicMatch) {
-        const before = currentText.substring(0, italicMatch.index);
-        if (before) parts.push(<span key={key++}>{before}</span>);
+        currentText = currentText.substring(boldMatch.index! + boldMatch[0].length);
+      } else if (earliest.type === 'italic' && italicMatch) {
         parts.push(
           <em key={key++} className="italic">
             {italicMatch[1]}
           </em>
         );
-        currentText = currentText.substring(
-          italicMatch.index! + italicMatch[0].length
-        );
-        continue;
+        currentText = currentText.substring(italicMatch.index! + italicMatch[0].length);
       }
-
-      // Links [text](url)
-      const linkMatch = currentText.match(/\[([^\]]+)\]\(([^)]+)\)/);
-      if (linkMatch) {
-        const before = currentText.substring(0, linkMatch.index);
-        if (before) parts.push(<span key={key++}>{before}</span>);
-        parts.push(
-          <a
-            key={key++}
-            href={linkMatch[2]}
-            className="text-purple-400 hover:text-purple-300 underline"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {linkMatch[1]}
-          </a>
-        );
-        currentText = currentText.substring(
-          linkMatch.index! + linkMatch[0].length
-        );
-        continue;
-      }
-
-      // No more special formatting
-      parts.push(<span key={key++}>{currentText}</span>);
-      break;
     }
 
     return parts;
