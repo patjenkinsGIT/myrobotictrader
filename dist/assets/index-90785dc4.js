@@ -96,7 +96,7 @@ Here's my actual trading performance from January 2025 through January 2026:
 | **Trading Period** | 379 days |
 | **Annualized Return** | 24.6% |
 
-You can verify every single trade on my [live trading dashboard](/results). No screenshots. No cherry-picking. Just raw, transparent data.
+You can verify every single trade on my [live trading dashboard](/). No screenshots. No cherry-picking. Just raw, transparent data.
 
 ![My Trading Results vs Market](/blog-images/24-percent-return-down-market-02.webp)
 
@@ -158,12 +158,6 @@ None of that is true—if you have the right system.
 The AI-Enhanced Autonomous Trader I use, built on GoBabyTrade™ software created by Ed Barsano, removes emotion from the equation. It executes a proven strategy while I live my life, walk my dog, and sleep through the night.
 
 ![Autonomous Trading: Set It and Forget It](/blog-images/24-percent-return-down-market-04.webp)
-
-## See for Yourself
-
-I publish every trade publicly because I believe in radical transparency. In a space full of fake screenshots and unrealistic promises, I want to show what's actually possible with a systematic approach.
-
-[See my live trading results →](/) - Every closed trade, updated regularly.
 
 ## Ready to Stop Gambling and Start Building?
 
