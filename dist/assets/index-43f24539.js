@@ -163,10 +163,7 @@ The AI-Enhanced Autonomous Trader I use, built on GoBabyTrade™ software create
 
 I publish every trade publicly because I believe in radical transparency. In a space full of fake screenshots and unrealistic promises, I want to show what's actually possible with a systematic approach.
 
-**My results are always available:**
-- [Live Trading Dashboard](/) - Every closed trade, updated regularly
-- [How It Works](/) - The strategy explained
-- [About Me](/) - My journey from skeptic to believer
+[See my live trading results →](/) - Every closed trade, updated regularly.
 
 ## Ready to Stop Gambling and Start Building?
 
