@@ -1,0 +1,86 @@
+name: Update OG Image Daily
+
+on:
+  schedule:
+    # Run daily at 6:00 AM UTC (1:00 AM EST / 10:00 PM PST)
+    - cron: '0 6 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  update-og-image:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Puppeteer
+        run: npm install puppeteer
+
+      - name: Capture OG Image as PNG
+        run: |
+          node << 'EOF'
+          const puppeteer = require('puppeteer');
+          const fs = require('fs');
+          const path = require('path');
+
+          (async () => {
+            const browser = await puppeteer.launch({
+              headless: 'new',
+              args: ['--no-sandbox', '--disable-setuid-sandbox']
+            });
+
+            const page = await browser.newPage();
+
+            // Set viewport to OG image dimensions
+            await page.setViewport({ width: 1200, height: 630 });
+
+            // Fetch the SVG content
+            const response = await page.goto('https://myrobotictrader.com/api/og-image', {
+              waitUntil: 'networkidle0'
+            });
+
+            // Take screenshot as PNG
+            await page.screenshot({
+              path: 'public/og-image.png',
+              type: 'png',
+              clip: { x: 0, y: 0, width: 1200, height: 630 }
+            });
+
+            await browser.close();
+
+            console.log('OG image captured successfully!');
+
+            // Check file size
+            const stats = fs.statSync('public/og-image.png');
+            console.log(`File size: ${(stats.size / 1024).toFixed(2)} KB`);
+          })();
+          EOF
+
+      - name: Optimize PNG with pngquant
+        run: |
+          sudo apt-get update && sudo apt-get install -y pngquant
+          pngquant --quality=80-90 public/og-image.png --output public/og-image-optimized.png --force || true
+          if [ -f public/og-image-optimized.png ]; then
+            mv public/og-image-optimized.png public/og-image.png
+            echo "Image optimized successfully"
+          fi
+
+      - name: Check for changes
+        id: changes
+        run: |
+          git diff --quiet public/og-image.png || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push if changed
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add public/og-image.png
+          git commit -m "Update OG image with latest trading stats (automated)"
+          git push
