@@ -31,7 +31,7 @@ jobs:
         env:
           GOOGLE_SHEET_ID: ${{ secrets.VITE_GOOGLE_SHEET_ID }}
           GOOGLE_API_KEY: ${{ secrets.VITE_GOOGLE_API_KEY }}
-        run: node scripts/generate-og-image.js
+        run: node scripts/generate-og-image.cjs
 
       - name: Optimize PNG with pngquant
         run: |
