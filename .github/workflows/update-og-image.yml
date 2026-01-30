@@ -27,45 +27,11 @@ jobs:
       - name: Install Puppeteer
         run: npm install puppeteer
 
-      - name: Capture OG Image as PNG
-        run: |
-          node << 'EOF'
-          const puppeteer = require('puppeteer');
-          const fs = require('fs');
-          const path = require('path');
-
-          (async () => {
-            const browser = await puppeteer.launch({
-              headless: 'new',
-              args: ['--no-sandbox', '--disable-setuid-sandbox']
-            });
-
-            const page = await browser.newPage();
-
-            // Set viewport to OG image dimensions
-            await page.setViewport({ width: 1200, height: 630 });
-
-            // Fetch the SVG content
-            const response = await page.goto('https://myrobotictrader.com/api/og-image', {
-              waitUntil: 'networkidle0'
-            });
-
-            // Take screenshot as PNG
-            await page.screenshot({
-              path: 'public/og-image.png',
-              type: 'png',
-              clip: { x: 0, y: 0, width: 1200, height: 630 }
-            });
-
-            await browser.close();
-
-            console.log('OG image captured successfully!');
-
-            // Check file size
-            const stats = fs.statSync('public/og-image.png');
-            console.log(`File size: ${(stats.size / 1024).toFixed(2)} KB`);
-          })();
-          EOF
+      - name: Generate OG Image
+        env:
+          GOOGLE_SHEET_ID: ${{ secrets.VITE_GOOGLE_SHEET_ID }}
+          GOOGLE_API_KEY: ${{ secrets.VITE_GOOGLE_API_KEY }}
+        run: node scripts/generate-og-image.js
 
       - name: Optimize PNG with pngquant
         run: |
