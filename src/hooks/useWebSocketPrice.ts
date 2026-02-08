@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { logger } from "../utils/logger";
 
 interface PriceData {
   symbol: string;
@@ -75,7 +76,7 @@ export const useWebSocketPrice = (): WebSocketPriceHookReturn => {
       wsRef.current = new WebSocket(wsUrl);
 
       wsRef.current.onopen = () => {
-        console.log("🚀 WebSocket connected to Binance");
+        logger.info("WebSocket connected to Binance");
         setIsConnected(true);
         setConnectionStatus("connected");
         setError(null);
@@ -116,7 +117,7 @@ export const useWebSocketPrice = (): WebSocketPriceHookReturn => {
             }
           }
         } catch (err) {
-          console.error("Error parsing WebSocket message:", err);
+          logger.error("Error parsing WebSocket message", err);
         }
       };
 
@@ -140,7 +141,7 @@ export const useWebSocketPrice = (): WebSocketPriceHookReturn => {
     (symbols: string[]) => {
       const newSymbols = new Set([...subscribedSymbols, ...symbols]);
       setSubscribedSymbols(newSymbols);
-      console.log(`📈 Subscribed to live prices: ${symbols.join(", ")}`);
+      logger.debug(`Subscribed to live prices: ${symbols.join(", ")}`);
     },
     [subscribedSymbols]
   );

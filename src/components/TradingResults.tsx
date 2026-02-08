@@ -23,13 +23,14 @@ import {
   LabelList,
 } from "recharts";
 import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
+import { logger } from "../utils/logger";
 import { calculateTimeSinceStart } from "../utils/tradingTime";
 import { LiveTransactionLog } from "./LiveTransactionLog";
-import { TradingDataPoint } from "../hooks/useGoogleSheetsData";
+import { TradingDataPoint, EnhancedTradingStats } from "../hooks/useGoogleSheetsData";
 
 // Define the props interface for TradingResults - make all props optional to handle undefined cases
 interface TradingResultsProps {
-  tradingStats?: any;
+  tradingStats?: EnhancedTradingStats | null;
   isLoading?: boolean;
   error?: string | null;
   refreshStats?: () => void;
@@ -44,7 +45,7 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
   tradingStats,
   isLoading = false,
   error = null,
-  refreshStats = () => console.log("Refresh not implemented"),
+  refreshStats = () => logger.warn("Refresh not implemented"),
   cacheInfo = { isFresh: false, isRateLimited: false, timeUntilNextRefresh: 0 },
 }) => {
   const timeSinceStart = calculateTimeSinceStart();

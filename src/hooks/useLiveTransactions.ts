@@ -3,6 +3,7 @@ import {
   LiveTransaction,
   transactionService,
 } from "../services/transactionService";
+import { logger } from "../utils/logger";
 
 export const useLiveTransactions = () => {
   const [transactions, setTransactions] = useState<LiveTransaction[]>([]);
@@ -37,7 +38,7 @@ export const useLiveTransactions = () => {
         setLastUpdated(new Date());
       }
     } catch (err) {
-      console.error("Failed to fetch transactions:", err);
+      logger.error("Failed to fetch transactions", err);
       setError("Failed to load live transactions");
 
       // Use fallback data

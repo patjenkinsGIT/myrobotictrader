@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { tradingDataCache } from "../utils/smartCache";
+import { logger } from "../utils/logger";
 
 // Your existing interfaces
 export interface TradingDataPoint {
@@ -90,7 +91,7 @@ export const useGoogleSheetsData = () => {
           profitsSaved: parseValue(rows[22]?.[1]), // Row 23, Column B (NEW)
         };
       } catch (error) {
-        console.error("Error parsing Coinbase Balance:", error);
+        logger.error("Error parsing Coinbase Balance", error);
         return null;
       }
     },
@@ -128,7 +129,7 @@ export const useGoogleSheetsData = () => {
       const sum = percentGains.reduce((acc, val) => acc + val, 0);
       const avg = sum / percentGains.length;
 
-      console.log(`[parsePercentGainColumn] Parsed ${percentGains.length} % gains, average: ${avg.toFixed(2)}%`);
+      logger.debug(`Parsed ${percentGains.length} % gains, average: ${avg.toFixed(2)}%`);
       return avg;
     },
     []
@@ -137,13 +138,10 @@ export const useGoogleSheetsData = () => {
   // Parse Calculations data with dynamic Grand Total finding
   const parseCalculationsData = useCallback(
     (rows: string[][], fetchTimestamp: string): TradingStats => {
-      // DEBUG: Log raw data received
-      console.log('[parseCalculationsData] Rows received:', rows?.length, 'rows');
-      console.log('[parseCalculationsData] First row (headers):', rows?.[0]);
-      console.log('[parseCalculationsData] Last 3 rows:', rows?.slice(-3));
+      logger.verbose(`Rows received: ${rows?.length} rows`);
 
       if (!rows || rows.length < 3) {
-        console.warn('[parseCalculationsData] FALLBACK: Not enough rows (need 3, got', rows?.length, ')');
+        logger.warn(`FALLBACK: Not enough rows (need 3, got ${rows?.length})`);
         return getMockTradingStatsBase();
       }
 
@@ -155,19 +153,18 @@ export const useGoogleSheetsData = () => {
       for (let i = rows.length - 1; i >= 0; i--) {
         const row = rows[i];
         const firstCell = row?.[0]?.toString().toLowerCase() || '';
-        console.log(`[parseCalculationsData] Row ${i}: length=${row?.length}, firstCell="${row?.[0]}"`);
+        logger.verbose(`Row ${i}: length=${row?.length}, firstCell="${row?.[0]}"`);
 
         if (row && row.length >= 2 && firstCell.includes("grand total")) {
           grandTotalRow = row;
           grandTotalIndex = i;
-          console.log('[parseCalculationsData] FOUND Grand Total at row', i, ':', row);
+          logger.debug(`Found Grand Total at row ${i}`);
           break;
         }
       }
 
       if (!grandTotalRow || grandTotalRow.length < 2) {
-        console.warn('[parseCalculationsData] FALLBACK: Grand Total row not found or too short');
-        console.warn('[parseCalculationsData] grandTotalRow:', grandTotalRow);
+        logger.warn("FALLBACK: Grand Total row not found or too short");
         return getMockTradingStatsBase();
       }
 
@@ -177,7 +174,7 @@ export const useGoogleSheetsData = () => {
       const totalTrades =
         parseInt(grandTotalRow[2]?.toString().replace(/[,]/g, "")) || 0;
 
-      console.log('[parseCalculationsData] Grand Total: $' + totalProfit + ', ' + totalTrades + ' trades');
+      logger.debug(`Grand Total: $${totalProfit}, ${totalTrades} trades`);
 
       // Find calculated fields (D-G) in the most recent month row
       // These fields are ALWAYS in the current month's row, not Grand Total
@@ -201,26 +198,20 @@ export const useGoogleSheetsData = () => {
             monthlyAverage = colE;
             dailyAvg = colF;
             bestMonthProfit = colG;
-            console.log('[parseCalculationsData] Found calculated fields in row', i, ':', row[0]);
-            console.log('[parseCalculationsData] Calculated fields:', {
-              avgProfitPerTrade,
-              monthlyAverage,
-              dailyAvg,
-              bestMonthProfit
-            });
+            logger.debug(`Found calculated fields in row ${i}: ${row[0]}`);
             break;
           }
         }
       }
 
       if (avgProfitPerTrade === 0 && monthlyAverage === 0) {
-        console.warn('[parseCalculationsData] WARNING: Calculated fields not found in any month row');
+        logger.warn("Calculated fields not found in any month row");
       }
 
       // Parse monthly data (all rows before Grand Total)
       const monthlyData: TradingDataPoint[] = [];
       const currentYear = new Date().getFullYear();
-      console.log('[parseCalculationsData] Parsing monthly data, rows 1 to', grandTotalIndex - 1);
+      logger.verbose(`Parsing monthly data, rows 1 to ${grandTotalIndex - 1}`);
 
       for (let i = 1; i < grandTotalIndex; i++) {
         const row = rows[i];
@@ -274,13 +265,12 @@ export const useGoogleSheetsData = () => {
               profit,
               trades,
             });
-            console.log(`[parseCalculationsData] Added month: ${shortMonth} ${year}, profit: $${profit}, trades: ${trades}`);
+            logger.verbose(`Added month: ${shortMonth} ${year}, profit: $${profit}, trades: ${trades}`);
           }
         }
       }
 
-      console.log('[parseCalculationsData] SUCCESS: Parsed', monthlyData.length, 'months of data');
-      console.log('[parseCalculationsData] Final totals: $' + totalProfit.toFixed(2) + ', ' + totalTrades + ' trades');
+      logger.tradingDataParsed(monthlyData.length, "Calculations");
 
       return {
         totalProfit,
@@ -301,9 +291,7 @@ export const useGoogleSheetsData = () => {
   // Base mock trading stats - ONLY used as fallback when API fails
   const getMockTradingStatsBase = (): TradingStats => {
     // CRITICAL: This is mock data! If you see this in production, the API is failing
-    console.error('⚠️ [getMockTradingStatsBase] USING MOCK DATA - API parsing failed!');
-    console.error('⚠️ This means the site is showing FAKE data of $3,905.39 instead of real data.');
-    console.error('⚠️ Check the parsing logs above to see why.');
+    logger.error("USING MOCK DATA - API parsing failed! Site is showing fallback data instead of real data.");
 
     // TEST DATA: Includes 2024 months to demonstrate multi-year display
     // TODO: Remove 2024 data after testing multi-year feature
@@ -357,13 +345,30 @@ export const useGoogleSheetsData = () => {
 
         const SHEET_ID = import.meta.env.VITE_GOOGLE_SHEET_ID;
         const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
-
+        const CACHE_KEY = "enhanced_stats";
 
         if (!SHEET_ID || !API_KEY) {
           const mockStats = getEnhancedMockTradingStats();
           setTradingStats(mockStats);
           setError("Using demo data - configure Google Sheets for live data");
           return;
+        }
+
+        // Check cache first (unless force refresh)
+        if (!forceRefresh) {
+          const cached = tradingDataCache.get(CACHE_KEY);
+          if (cached) {
+            logger.cacheHit(CACHE_KEY, "tradingDataCache");
+            setTradingStats(cached);
+            setCacheInfo({
+              isFresh: true,
+              timeUntilNextRefresh: tradingDataCache.getTimeUntilExpiration(CACHE_KEY),
+              isRateLimited: false,
+            });
+            setIsLoading(false);
+            return;
+          }
+          logger.cacheMiss(CACHE_KEY, "tradingDataCache");
         }
 
         const fetchTimestamp = new Date().toISOString();
@@ -383,16 +388,16 @@ export const useGoogleSheetsData = () => {
           ]);
 
         // Parse calculations data
-        console.log('[fetchEnhancedTradingStats] Calculations API response status:', calculationsResponse.status);
+        logger.debug(`Calculations API response status: ${calculationsResponse.status}`);
         const calculationsData =
           calculationsResponse.status === "fulfilled"
             ? await calculationsResponse.value.json()
             : null;
 
         if (!calculationsData) {
-          console.error('[fetchEnhancedTradingStats] Calculations API call failed completely');
+          logger.error("Calculations API call failed completely");
         } else {
-          console.log('[fetchEnhancedTradingStats] Calculations data received:', calculationsData.values?.length, 'rows');
+          logger.tradingDataFetch("Google Sheets Calculations", calculationsData.values?.length);
         }
 
         const originalStats = calculationsData?.values
@@ -400,7 +405,7 @@ export const useGoogleSheetsData = () => {
           : getMockTradingStatsBase();
 
         // Log whether we got live or mock data
-        console.log('[fetchEnhancedTradingStats] Using', originalStats.isLiveData ? '✅ LIVE DATA' : '❌ MOCK DATA');
+        logger.info(`Using ${originalStats.isLiveData ? "LIVE DATA" : "MOCK DATA"}`);
 
         // Parse portfolio data
         const portfolioData =
@@ -426,14 +431,18 @@ export const useGoogleSheetsData = () => {
           portfolioSummary: portfolioSummary || undefined,
         };
 
+        // Cache the fresh data
+        tradingDataCache.set(CACHE_KEY, enhancedStats);
+        logger.cacheSet(CACHE_KEY);
+
         setTradingStats(enhancedStats);
         setCacheInfo({
-          isFresh: !forceRefresh,
-          timeUntilNextRefresh: 0,
+          isFresh: true,
+          timeUntilNextRefresh: tradingDataCache.getTimeUntilExpiration(CACHE_KEY),
           isRateLimited: false,
         });
       } catch (error) {
-        console.error("Error fetching enhanced trading stats:", error);
+        logger.error("Error fetching enhanced trading stats", error);
         setError(
           error instanceof Error ? error.message : "Failed to load trading data"
         );
@@ -448,7 +457,7 @@ export const useGoogleSheetsData = () => {
 
   // Enhanced mock data - ONLY used when API completely fails
   const getEnhancedMockTradingStats = (): EnhancedTradingStats => {
-    console.log('🧪 [getEnhancedMockTradingStats] Using mock data with 2024+2025 for multi-year test');
+    logger.debug("Using mock data with 2024+2025 for multi-year test");
 
     // TEST DATA: Includes 2024 months to demonstrate multi-year display
     // Recent Performance will show last 6 (Jul-Dec 2025)
