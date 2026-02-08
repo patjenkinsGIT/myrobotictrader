@@ -77,12 +77,6 @@ let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>${BASE_URL}/transparency</loc>
-    <lastmod>${today}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>${BASE_URL}/privacy</loc>
     <lastmod>${today}</lastmod>
     <changefreq>yearly</changefreq>
@@ -111,7 +105,7 @@ const outputPath = path.join(__dirname, '../public/sitemap.xml');
 fs.writeFileSync(outputPath, sitemap, 'utf8');
 
 console.log(`\n✅ Sitemap generated!`);
-console.log(`   📄 Static pages: 7`);
+console.log(`   📄 Static pages: 6`);
 console.log(`   📝 Published posts: ${publishedPosts.length}`);
 console.log(`   📅 Scheduled (excluded): ${scheduledPosts.length}`);
-console.log(`   📊 Total URLs: ${7 + publishedPosts.length}\n`);
+console.log(`   📊 Total URLs: ${6 + publishedPosts.length}\n`);
