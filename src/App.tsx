@@ -1,4 +1,4 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -14,7 +14,7 @@ import { SEOHead } from "./components/SEOHead";
 import { StaticSEO } from "./components/StaticSEO";
 import { OGImageGenerator } from "./components/OGImageGenerator";
 
-// Your existing components
+// Homepage components - eagerly loaded (critical path)
 import { Hero } from "./components/Hero";
 import MyStory from "./components/MyStory";
 import { TradingResults } from "./components/TradingResults";
@@ -23,17 +23,17 @@ import { CallToAction } from "./components/CallToAction";
 import { FAQPreview } from "./components/FAQPreview";
 import { LatestPosts } from "./components/LatestPosts";
 import { Milestones } from "./components/Milestones";
-import FAQPage from "./pages/FAQPage";
 import { Footer } from "./components/Footer";
-
-// Your page components
-import { ResourcesPage } from "./pages/ResourcesPage";
-import { PrivacyPage } from "./pages/PrivacyPage";
-import { BusinessCardLanding } from "./components/BusinessCardLanding";
-import { BlogListPage } from "./BlogListPage";
-import { BlogPostPage } from "./BlogPostPage";
-import BlogSchedulePage from "./pages/BlogSchedulePage";
 import { FullNav } from "./components/FullNav";
+
+// Lazy-loaded page components (code splitting for faster initial load)
+const FAQPage = lazy(() => import("./pages/FAQPage"));
+const ResourcesPage = lazy(() => import("./pages/ResourcesPage").then(m => ({ default: m.ResourcesPage })));
+const PrivacyPage = lazy(() => import("./pages/PrivacyPage").then(m => ({ default: m.PrivacyPage })));
+const BusinessCardLanding = lazy(() => import("./components/BusinessCardLanding").then(m => ({ default: m.BusinessCardLanding })));
+const BlogListPage = lazy(() => import("./BlogListPage").then(m => ({ default: m.BlogListPage })));
+const BlogPostPage = lazy(() => import("./BlogPostPage").then(m => ({ default: m.BlogPostPage })));
+const BlogSchedulePage = lazy(() => import("./pages/BlogSchedulePage"));
 
 // SEO configurations for different pages with structured data
 const seoConfigs = {
@@ -288,16 +288,18 @@ function App() {
 
       <Router>
         <SEOWrapper>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/faq" element={<FAQPage />} />
-            <Route path="/resources" element={<ResourcesPage />} />
-            <Route path="/privacy" element={<PrivacyPage />} />
-            <Route path="/card" element={<BusinessCardLanding />} />
-            <Route path="/blog" element={<BlogListPage />} />
-            <Route path="/blog/schedule" element={<BlogSchedulePage />} />
-            <Route path="/blog/:slug" element={<BlogPostPage />} />
-          </Routes>
+          <Suspense fallback={<div className="min-h-screen" />}>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/faq" element={<FAQPage />} />
+              <Route path="/resources" element={<ResourcesPage />} />
+              <Route path="/privacy" element={<PrivacyPage />} />
+              <Route path="/card" element={<BusinessCardLanding />} />
+              <Route path="/blog" element={<BlogListPage />} />
+              <Route path="/blog/schedule" element={<BlogSchedulePage />} />
+              <Route path="/blog/:slug" element={<BlogPostPage />} />
+            </Routes>
+          </Suspense>
           <Footer />
         </SEOWrapper>
       </Router>
