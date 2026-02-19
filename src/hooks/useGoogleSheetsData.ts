@@ -20,6 +20,7 @@ export interface TradingStats {
   dailyAvg: number;
   bestMonthProfit: number;
   avgPercentGain: number; // Average % gain per trade from Column T
+  openPositionCount: number; // Total individual OPEN lots from Transactions tab
   monthlyData: TradingDataPoint[];
   isLiveData: boolean;
   lastUpdated: string;
@@ -64,6 +65,7 @@ export const useGoogleSheetsData = () => {
   const PORTFOLIO_RANGE = "A:D";
   const TRANSACTIONS_TAB = "Transactions Raw Data";
   const TRANSACTIONS_RANGE = "T:T"; // Column T contains % Gain
+  const TRANSACTIONS_ACTION_RANGE = "A:F"; // Columns A-F for filtering (Coin, Action, Price, Qty, Status, Profit)
 
   // Parse Coinbase Balance tab
   const parseCoinbaseBalance = useCallback(
@@ -131,6 +133,39 @@ export const useGoogleSheetsData = () => {
 
       logger.debug(`Parsed ${percentGains.length} % gains, average: ${avg.toFixed(2)}%`);
       return avg;
+    },
+    []
+  );
+
+  // Count net OPEN positions from Columns A-F
+  // Applies same filter as LiveTransactionLog: skip rows without coin or profit
+  // Excludes old/retired coins no longer actively traded
+  // Net = filtered OPEN entries minus filtered CLOSE entries
+  const EXCLUDED_COINS = new Set(["BTC", "FX", "NCT", "XRP"]);
+  const countOpenPositions = useCallback(
+    (rows: string[][]): number => {
+      if (!rows || rows.length < 2) return 0;
+
+      let openCount = 0;
+      let closeCount = 0;
+      for (let i = 1; i < rows.length; i++) {
+        const coin = rows[i]?.[0]?.toString().trim().toUpperCase(); // Column A
+        const action = rows[i]?.[1]?.toString().trim().toUpperCase(); // Column B
+        const profit = rows[i]?.[5]?.toString().trim(); // Column F
+
+        // Skip rows without coin or profit, and exclude retired coins
+        if (!coin || !profit || EXCLUDED_COINS.has(coin)) continue;
+
+        if (action === "OPEN") {
+          openCount++;
+        } else if (action === "CLOSE") {
+          closeCount++;
+        }
+      }
+
+      const netOpen = Math.max(0, openCount - closeCount);
+      logger.debug(`Open positions: ${openCount} opened - ${closeCount} closed = ${netOpen} net open (excluded: ${[...EXCLUDED_COINS].join(", ")})`);
+      return netOpen;
     },
     []
   );
@@ -280,6 +315,7 @@ export const useGoogleSheetsData = () => {
         dailyAvg,
         bestMonthProfit,
         avgPercentGain: 0, // Will be populated from Transactions tab
+        openPositionCount: 0, // Will be populated from Transactions tab
         monthlyData,
         isLiveData: true,
         lastUpdated: fetchTimestamp,
@@ -330,6 +366,7 @@ export const useGoogleSheetsData = () => {
       dailyAvg: 15.5,
       bestMonthProfit: Math.max(...monthlyData.map((m) => m.profit)),
       avgPercentGain: 2.35, // Mock average % gain
+      openPositionCount: 42, // Mock open position count
       monthlyData,
       isLiveData: false,  // FALSE = mock data is being used
       lastUpdated: new Date().toISOString(),
@@ -357,7 +394,7 @@ export const useGoogleSheetsData = () => {
         // Check cache first (unless force refresh)
         if (!forceRefresh) {
           const cached = tradingDataCache.get(CACHE_KEY);
-          if (cached) {
+          if (cached && cached.openPositionCount !== undefined) {
             logger.cacheHit(CACHE_KEY, "tradingDataCache");
             setTradingStats(cached);
             setCacheInfo({
@@ -368,13 +405,17 @@ export const useGoogleSheetsData = () => {
             setIsLoading(false);
             return;
           }
-          logger.cacheMiss(CACHE_KEY, "tradingDataCache");
+          if (cached && cached.openPositionCount === undefined) {
+            logger.debug("Cache invalidated: missing openPositionCount field");
+          } else {
+            logger.cacheMiss(CACHE_KEY, "tradingDataCache");
+          }
         }
 
         const fetchTimestamp = new Date().toISOString();
 
-        // Fetch THREE tabs: Calculations, Coinbase Balance, and Transactions (for % Gain)
-        const [calculationsResponse, portfolioResponse, transactionsResponse] =
+        // Fetch FOUR tabs: Calculations, Coinbase Balance, Transactions % Gain, and Transactions Action
+        const [calculationsResponse, portfolioResponse, transactionsResponse, actionsResponse] =
           await Promise.allSettled([
             fetch(
               `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${CALCULATIONS_TAB}!${CALCULATIONS_RANGE}?key=${API_KEY}`
@@ -384,6 +425,9 @@ export const useGoogleSheetsData = () => {
             ),
             fetch(
               `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${TRANSACTIONS_TAB}!${TRANSACTIONS_RANGE}?key=${API_KEY}`
+            ),
+            fetch(
+              `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${TRANSACTIONS_TAB}!${TRANSACTIONS_ACTION_RANGE}?key=${API_KEY}`
             ),
           ]);
 
@@ -425,9 +469,19 @@ export const useGoogleSheetsData = () => {
           ? parsePercentGainColumn(transactionsData.values)
           : 0;
 
+        // Parse actions data for open position count
+        const actionsData =
+          actionsResponse.status === "fulfilled"
+            ? await actionsResponse.value.json()
+            : null;
+        const openPositionCount = actionsData?.values
+          ? countOpenPositions(actionsData.values)
+          : 0;
+
         const enhancedStats: EnhancedTradingStats = {
           ...originalStats,
           avgPercentGain, // Override with calculated value
+          openPositionCount, // Override with counted value
           portfolioSummary: portfolioSummary || undefined,
         };
 
@@ -452,7 +506,7 @@ export const useGoogleSheetsData = () => {
         setIsLoading(false);
       }
     },
-    [parseCalculationsData, parseCoinbaseBalance, parsePercentGainColumn]
+    [parseCalculationsData, parseCoinbaseBalance, parsePercentGainColumn, countOpenPositions]
   );
 
   // Enhanced mock data - ONLY used when API completely fails
@@ -501,6 +555,7 @@ export const useGoogleSheetsData = () => {
       dailyAvg: 15.5,
       bestMonthProfit: 686.71,
       avgPercentGain: 2.35, // Mock average % gain
+      openPositionCount: 42, // Mock open position count
       monthlyData,
       isLiveData: false,
       lastUpdated: new Date().toISOString(),

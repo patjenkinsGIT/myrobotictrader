@@ -19,6 +19,7 @@ export interface LiveTransaction {
   action: "CLOSE" | "OPEN";
   price: string;
   quantity: string;
+  amount: number; // price × quantity (total transaction value)
   profit: number;
   percentGain: number | null; // Column T - % Gain (only for CLOSE trades)
   timestamp: string;
@@ -170,12 +171,18 @@ export const LiveTransactionLog: React.FC = () => {
             }
           }
 
+          // Compute transaction amount (price × quantity)
+          const rawPrice = parseFloat((price?.toString() || "0").replace(/[$,]/g, ""));
+          const rawQuantity = parseFloat((quantity?.toString() || "0").replace(/[$,]/g, ""));
+          const amount = !isNaN(rawPrice) && !isNaN(rawQuantity) ? rawPrice * rawQuantity : 0;
+
           const transaction = {
             id: `tx_${Date.now()}_${index}`,
             coin: coin?.toString().trim() || "",
             action: (action?.toString().trim() as "CLOSE" | "OPEN") || "CLOSE",
             price: formatPrice(price?.toString() || ""),
             quantity: formatQuantity(quantity?.toString() || ""),
+            amount,
             profit: parsedProfit,
             percentGain: parsedPercentGain,
             timestamp: formatTimestamp(timestamp?.toString() || ""),
@@ -272,21 +279,51 @@ export const LiveTransactionLog: React.FC = () => {
     const profitGoalCount = closedTransactions.filter(
       (tx) => tx.status === "profit_goal_reached"
     ).length;
-    const successRate =
-      closedTransactions.length > 0
-        ? (
-            (closedTransactions.length / closedTransactions.length) *
-            100
-          ).toFixed(1)
-        : "100.0";
+    // Top coin by trade count
+    const coinCounts: Record<string, number> = {};
+    currentMonthTransactions.forEach((tx) => {
+      coinCounts[tx.coin] = (coinCounts[tx.coin] || 0) + 1;
+    });
+    const topCoinEntry = Object.entries(coinCounts).sort((a, b) => b[1] - a[1])[0];
+    const topCoin = topCoinEntry ? { coin: topCoinEntry[0], count: topCoinEntry[1] } : null;
+
+    // New metrics
+    const avgProfitPerTrade = closedTransactions.length > 0
+      ? totalProfit / closedTransactions.length
+      : 0;
+
+    const closedWithGain = closedTransactions.filter((tx) => tx.percentGain !== null);
+    const avgPercentGain = closedWithGain.length > 0
+      ? closedWithGain.reduce((sum, tx) => sum + (tx.percentGain || 0), 0) / closedWithGain.length
+      : 0;
+
+    const avgAmount = currentMonthTransactions.length > 0
+      ? currentMonthTransactions.reduce((sum, tx) => sum + tx.amount, 0) / currentMonthTransactions.length
+      : 0;
+
+    const totalVolume = currentMonthTransactions.reduce((sum, tx) => sum + tx.amount, 0);
+
+    const bestTrade = closedTransactions.length > 0
+      ? closedTransactions.reduce((best, tx) => tx.profit > best.profit ? tx : best, closedTransactions[0])
+      : null;
+
+    const profitGoalPct = closedTransactions.length > 0
+      ? (profitGoalCount / closedTransactions.length) * 100
+      : 0;
 
     return {
       totalProfit: `${totalProfit.toFixed(2)}`,
       closedTrades: closedTransactions.length,
       openTrades: openTransactions.length,
       totalTrades: currentMonthTransactions.length,
-      successRate: `${successRate}%`,
+      topCoin,
       profitGoals: profitGoalCount,
+      avgProfitPerTrade,
+      avgPercentGain,
+      avgAmount,
+      totalVolume,
+      bestTrade,
+      profitGoalPct,
     };
   }, [currentMonthTransactions]);
 
@@ -307,6 +344,7 @@ export const LiveTransactionLog: React.FC = () => {
       "Action",
       "Price",
       "Quantity",
+      "Amount",
       "Profit",
       "% Gain",
       "Status",
@@ -320,6 +358,7 @@ export const LiveTransactionLog: React.FC = () => {
         tx.action,
         tx.price.replace(/,/g, ""),
         tx.quantity.replace(/,/g, ""),
+        tx.amount.toFixed(2),
         tx.action === "CLOSE" ? tx.profit.toFixed(2) : "0.00",
         tx.action === "CLOSE" && tx.percentGain !== null ? tx.percentGain.toFixed(2) + "%" : "",
         tx.status === "profit_goal_reached"
@@ -677,8 +716,8 @@ export const LiveTransactionLog: React.FC = () => {
         </div>
       )}
 
-      {/* Summary Stats - 6 Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 mb-6">
+      {/* Summary Stats - Row 1 */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 mb-2">
         <div className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
           <div className="text-sm lg:text-base font-bold text-green-300 truncate">
             {monthSummary.totalProfit}
@@ -704,10 +743,10 @@ export const LiveTransactionLog: React.FC = () => {
           <div className="text-[10px] lg:text-xs text-gray-400">Total</div>
         </div>
         <div className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
-          <div className="text-sm lg:text-base font-bold text-orange-300">
-            {monthSummary.successRate}
+          <div className="text-sm lg:text-base font-bold text-orange-300 truncate">
+            {monthSummary.topCoin ? `${monthSummary.topCoin.coin} (${monthSummary.topCoin.count})` : '-'}
           </div>
-          <div className="text-[10px] lg:text-xs text-gray-400">Success</div>
+          <div className="text-[10px] lg:text-xs text-gray-400">Top Traded Coin</div>
         </div>
         {/* Profits Saved Card - Dynamic from Calculations!H14 */}
         <a
@@ -725,6 +764,49 @@ export const LiveTransactionLog: React.FC = () => {
             <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
           </div>
         </a>
+      </div>
+
+      {/* Summary Stats - Row 2 */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 mb-6">
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
+          <div className="text-sm lg:text-base font-bold text-cyan-300 truncate">
+            ${monthSummary.avgProfitPerTrade.toFixed(2)}
+          </div>
+          <div className="text-[10px] lg:text-xs text-gray-400">Avg Profit/Trade</div>
+        </div>
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
+          <div className="text-sm lg:text-base font-bold text-teal-300 truncate">
+            {monthSummary.avgPercentGain.toFixed(2)}%
+          </div>
+          <div className="text-[10px] lg:text-xs text-gray-400">Avg % Gain</div>
+        </div>
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
+          <div className="text-sm lg:text-base font-bold text-sky-300 truncate">
+            ${monthSummary.avgAmount >= 1000 ? monthSummary.avgAmount.toLocaleString(undefined, { maximumFractionDigits: 0 }) : monthSummary.avgAmount.toFixed(2)}
+          </div>
+          <div className="text-[10px] lg:text-xs text-gray-400">Avg Amount</div>
+        </div>
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
+          <div className="text-sm lg:text-base font-bold text-indigo-300 truncate">
+            ${monthSummary.totalVolume >= 1000 ? monthSummary.totalVolume.toLocaleString(undefined, { maximumFractionDigits: 0 }) : monthSummary.totalVolume.toFixed(2)}
+          </div>
+          <div className="text-[10px] lg:text-xs text-gray-400">Total Volume</div>
+        </div>
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
+          <div className="text-sm lg:text-base font-bold text-yellow-300 truncate">
+            {monthSummary.bestTrade ? `$${monthSummary.bestTrade.profit.toFixed(2)}` : '-'}
+          </div>
+          <div className="text-[10px] lg:text-xs text-gray-400">
+            Best Trade{monthSummary.bestTrade ? ` (${monthSummary.bestTrade.coin})` : ''}
+          </div>
+        </div>
+        <div className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
+          <div className="text-sm lg:text-base font-bold text-amber-300 truncate">
+            <Target className="w-3 h-3 inline-block mr-1 text-amber-400" />
+            {monthSummary.profitGoalPct.toFixed(0)}%
+          </div>
+          <div className="text-[10px] lg:text-xs text-gray-400">Goal Hit Rate</div>
+        </div>
       </div>
 
       {/* Last Updated */}
@@ -791,9 +873,13 @@ export const LiveTransactionLog: React.FC = () => {
                       <span className="text-gray-500">Price:</span>{" "}
                       <span className="font-mono">{tx.price}</span>
                     </div>
-                    <div className="text-xs text-gray-300 truncate flex-1 min-w-0 text-right">
+                    <div className="text-xs text-gray-300 truncate flex-1 min-w-0 text-center">
                       <span className="text-gray-500">Qty:</span>{" "}
                       <span className="font-mono">{tx.quantity}</span>
+                    </div>
+                    <div className="text-xs text-gray-300 truncate flex-1 min-w-0 text-right">
+                      <span className="text-gray-500">Amt:</span>{" "}
+                      <span className="font-mono">${tx.amount >= 1000 ? tx.amount.toLocaleString(undefined, { maximumFractionDigits: 0 }) : tx.amount.toFixed(2)}</span>
                     </div>
                   </div>
                   <div className="flex items-center justify-between gap-2">
@@ -843,9 +929,10 @@ export const LiveTransactionLog: React.FC = () => {
           <div className="bg-white/5 px-4 py-3 border-b border-white/5">
             <div className="grid grid-cols-12 gap-2 text-xs font-semibold text-gray-300 uppercase tracking-wider">
               <div className="col-span-1">Coin</div>
-              <div className="col-span-2">Action</div>
+              <div className="col-span-1">Action</div>
               <div className="col-span-2">Price</div>
-              <div className="col-span-2">Quantity</div>
+              <div className="col-span-1">Qty</div>
+              <div className="col-span-2">Amount</div>
               <div className="col-span-2">Profit</div>
               <div className="col-span-1">% Gain</div>
               <div className="col-span-2">Time</div>
@@ -875,7 +962,7 @@ export const LiveTransactionLog: React.FC = () => {
                         {tx.coin}
                       </div>
                     </div>
-                    <div className="col-span-2">
+                    <div className="col-span-1">
                       <span
                         className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getActionColor(
                           tx.action
@@ -889,9 +976,14 @@ export const LiveTransactionLog: React.FC = () => {
                         {tx.price}
                       </div>
                     </div>
-                    <div className="col-span-2">
+                    <div className="col-span-1">
                       <div className="text-gray-300 font-mono text-xs">
                         {tx.quantity}
+                      </div>
+                    </div>
+                    <div className="col-span-2">
+                      <div className="text-gray-200 font-mono text-xs">
+                        ${tx.amount >= 1000 ? tx.amount.toLocaleString(undefined, { maximumFractionDigits: 0 }) : tx.amount.toFixed(2)}
                       </div>
                     </div>
                     <div className="col-span-2">

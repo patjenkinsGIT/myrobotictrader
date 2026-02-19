@@ -11,6 +11,7 @@ import {
   Database,
   Wifi,
   Percent,
+  Layers,
 } from "lucide-react";
 import {
   BarChart,
@@ -298,7 +299,7 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
         </div>
 
         {/* First row - BRIGHTENED CARDS like Hero style */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-yellow-400/50 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-green-500/15">
             <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
             <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-green-500/40">
@@ -354,6 +355,24 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
               <div className="text-purple-300 text-sm mt-1">Steady Gains</div>
             </div>
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
+          </div>
+
+          <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-blue-500/15">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
+            <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-blue-500/40">
+              <Layers className="w-full h-full text-white" />
+            </div>
+
+            <div className="relative text-center">
+              <div className="text-3xl font-bold text-blue-300 mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-300 group-hover:to-cyan-300 group-hover:bg-clip-text transition-all duration-300 font-mono">
+                {currentData.openPositionCount?.toLocaleString() || "0"}
+              </div>
+              <div className="text-gray-200 font-medium group-hover:text-white transition-colors duration-300">
+                Open Positions
+              </div>
+              <div className="text-blue-300 text-sm mt-1">Inventory Ready to Sell</div>
+            </div>
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-25 transition-opacity duration-300 -z-10 blur-xl"></div>
           </div>
         </div>
 

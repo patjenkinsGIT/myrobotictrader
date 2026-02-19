@@ -5,6 +5,7 @@ export interface LiveTransaction {
   action: "CLOSE" | "OPEN";
   price: string;
   quantity: string;
+  amount: number;
   profit: number;
   timestamp: string;
   status: "completed" | "profit_goal_reached";
@@ -111,12 +112,17 @@ export class TransactionService {
       .map((row, index) => {
         const [coin, action, price, quantity, status, profit, timestamp] = row;
 
+        const rawPrice = parseFloat((price || "0").replace(/[$,]/g, ""));
+        const rawQuantity = parseFloat((quantity || "0").replace(/[,]/g, ""));
+        const amount = !isNaN(rawPrice) && !isNaN(rawQuantity) ? rawPrice * rawQuantity : 0;
+
         return {
           id: `tx_${Date.now()}_${index}`,
           coin: coin?.trim() || "",
           action: (action?.trim() as "CLOSE" | "OPEN") || "CLOSE",
           price: this.formatPrice(price),
           quantity: this.formatQuantity(quantity),
+          amount,
           profit: this.parseProfit(profit),
           timestamp: timestamp?.trim() || "",
           status: this.parseStatus(status),
@@ -427,6 +433,7 @@ export class TransactionService {
         action: "CLOSE",
         price: "$3.60",
         quantity: "50.9",
+        amount: 183.24,
         profit: 7.34,
         timestamp: "Today 2:48 AM",
         status: "profit_goal_reached",

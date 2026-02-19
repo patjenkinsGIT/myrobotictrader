@@ -10,6 +10,7 @@ interface LiveTransaction {
   action: "CLOSE" | "OPEN";
   price: string;
   quantity: string;
+  amount: number;
   profit: number;
   timestamp: string;
   status: "completed" | "profit_goal_reached";
@@ -164,12 +165,16 @@ export const PriceChartWithPurchases: React.FC<
           if (!coin || !profit) return null;
           const parsedProfit =
             parseFloat(profit.toString().replace(/[$,]/g, "")) || 0;
+          const rawPrice = parseFloat((price?.toString() || "0").replace(/[$,]/g, ""));
+          const rawQuantity = parseFloat((quantity?.toString() || "0").replace(/[,]/g, ""));
+          const amount = !isNaN(rawPrice) && !isNaN(rawQuantity) ? rawPrice * rawQuantity : 0;
           return {
             id: `tx_${Date.now()}_${index}`,
             coin: coin?.toString().trim() || "",
             action: (action?.toString().trim() as "CLOSE" | "OPEN") || "CLOSE",
             price: formatPrice(price?.toString() || ""),
             quantity: formatQuantity(quantity?.toString() || ""),
+            amount,
             profit: parsedProfit,
             timestamp: formatTimestamp(timestamp?.toString() || ""),
             status: parseStatus(status?.toString() || ""),
