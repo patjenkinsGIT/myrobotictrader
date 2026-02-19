@@ -35,7 +35,7 @@ export const Hero: React.FC = () => {
       <div className="relative max-w-6xl mx-auto text-center z-10 mt-32">
         <div className="mb-8">
           {/* Updated badge to AI-Enhanced Autonomous Trading */}
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-purple-400/40 mb-2 mt-4 shadow-lg shadow-purple-500/20">
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 rounded-full px-4 py-2 border border-purple-400/40 mb-2 mt-4 shadow-lg shadow-purple-500/20">
             <Bot className="w-4 h-4 text-purple-300" />
             <span className="text-purple-200 font-medium">
               AI-Enhanced Autonomous Trading
@@ -119,7 +119,7 @@ export const Hero: React.FC = () => {
         {/* Real Performance Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-10">
           {/* Total Profit - LIVE */}
-          <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-green-500/15">
+          <div className="group relative bg-slate-800/80 rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-green-500/15">
             <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
             <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-green-500/40">
               <Shield className="w-full h-full text-white" />
@@ -159,7 +159,7 @@ export const Hero: React.FC = () => {
           </div>
 
           {/* Time Period - LIVE */}
-          <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-blue-500/15">
+          <div className="group relative bg-slate-800/80 rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-blue-500/15">
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
             <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-blue-500/40">
               <Clock className="w-full h-full text-white" />
@@ -188,7 +188,7 @@ export const Hero: React.FC = () => {
           </div>
 
           {/* Zero Losses */}
-          <div className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/15">
+          <div className="group relative bg-slate-800/80 rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/15">
             <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-500 opacity-0 group-hover:opacity-15 rounded-2xl transition-opacity duration-300"></div>
             <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 p-3 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-purple-500/40">
               <Users className="w-full h-full text-white" />

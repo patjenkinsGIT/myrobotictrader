@@ -571,7 +571,7 @@ export const LiveTransactionLog: React.FC = () => {
 
   if (isLoading && transactions.length === 0) {
     return (
-      <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-6 mb-8">
+      <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 rounded-2xl border border-white/10 p-6 mb-8">
         <div className="flex items-center justify-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-400"></div>
           <span className="ml-3 text-gray-300">Loading...</span>
@@ -583,7 +583,7 @@ export const LiveTransactionLog: React.FC = () => {
   const cacheStatus = getCacheStatus();
 
   return (
-    <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 backdrop-blur-sm rounded-2xl border border-white/10 p-4 md:p-6 mb-8 overflow-hidden">
+    <div className="bg-gradient-to-r from-gray-900/50 to-gray-800/50 rounded-2xl border border-white/10 p-4 md:p-6 mb-8 overflow-hidden">
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
         <div className="flex items-center gap-3 min-w-0">
@@ -607,7 +607,7 @@ export const LiveTransactionLog: React.FC = () => {
         <div className="flex items-center gap-3 flex-shrink-0">
           <button
             onClick={() => setShowOnMobile(!showOnMobile)}
-            className="md:hidden flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full px-3 py-2 border border-white/20 transition-all"
+            className="md:hidden flex items-center gap-2 bg-white/10 hover:bg-white/20 rounded-full px-3 py-2 border border-white/20 transition-all"
           >
             {showOnMobile ? (
               <>
@@ -622,7 +622,7 @@ export const LiveTransactionLog: React.FC = () => {
             )}
           </button>
 
-          <div className="flex items-center gap-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-full px-4 py-2 border border-green-400/30">
+          <div className="flex items-center gap-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-full px-4 py-2 border border-green-400/30">
             <div
               className={`w-2.5 h-2.5 rounded-full ${
                 isCacheHit ? "bg-blue-400" : "bg-green-400"
@@ -637,7 +637,7 @@ export const LiveTransactionLog: React.FC = () => {
 
           <button
             onClick={downloadCSV}
-            className="flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 hover:from-blue-500/30 hover:to-purple-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-blue-400/30 hover:border-blue-400/50 transition-all shadow-lg"
+            className="flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 hover:from-blue-500/30 hover:to-purple-500/30 rounded-full px-4 py-2 border border-blue-400/30 hover:border-blue-400/50 transition-all shadow-lg"
             title={`Download ${currentMonthName} CSV`}
           >
             <Download className="w-4 h-4 text-blue-300" />
@@ -718,31 +718,31 @@ export const LiveTransactionLog: React.FC = () => {
 
       {/* Summary Stats - Row 1 */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 mb-2">
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
+        <div className="group relative bg-white/8 rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
           <div className="text-sm lg:text-base font-bold text-green-300 truncate">
             {monthSummary.totalProfit}
           </div>
           <div className="text-[10px] lg:text-xs text-gray-400">Total Profit</div>
         </div>
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
+        <div className="group relative bg-white/8 rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
           <div className="text-sm lg:text-base font-bold text-green-400">
             {monthSummary.closedTrades}
           </div>
           <div className="text-[10px] lg:text-xs text-gray-400">Closed</div>
         </div>
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
+        <div className="group relative bg-white/8 rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
           <div className="text-sm lg:text-base font-bold text-blue-300">
             {monthSummary.openTrades}
           </div>
           <div className="text-[10px] lg:text-xs text-gray-400">Open</div>
         </div>
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
+        <div className="group relative bg-white/8 rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
           <div className="text-sm lg:text-base font-bold text-purple-300">
             {monthSummary.totalTrades}
           </div>
           <div className="text-[10px] lg:text-xs text-gray-400">Total</div>
         </div>
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
+        <div className="group relative bg-white/8 rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
           <div className="text-sm lg:text-base font-bold text-orange-300 truncate">
             {monthSummary.topCoin ? `${monthSummary.topCoin.coin} (${monthSummary.topCoin.count})` : '-'}
           </div>
@@ -751,7 +751,7 @@ export const LiveTransactionLog: React.FC = () => {
         {/* Profits Saved Card - Dynamic from Calculations!H14 */}
         <a
           href="/blog/the-50-50-strategy"
-          className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-emerald-400/50 transition-all text-center cursor-pointer"
+          className="group relative bg-white/8 rounded-lg p-2 border border-white/20 hover:border-emerald-400/50 transition-all text-center cursor-pointer"
         >
           <div className="text-sm lg:text-base font-bold text-emerald-300 truncate flex items-center justify-center gap-1">
             <Shield className="w-3 h-3 text-emerald-400 flex-shrink-0" />
@@ -768,31 +768,31 @@ export const LiveTransactionLog: React.FC = () => {
 
       {/* Summary Stats - Row 2 */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 mb-6">
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
+        <div className="group relative bg-white/8 rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
           <div className="text-sm lg:text-base font-bold text-cyan-300 truncate">
             ${monthSummary.avgProfitPerTrade.toFixed(2)}
           </div>
           <div className="text-[10px] lg:text-xs text-gray-400">Avg Profit/Trade</div>
         </div>
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
+        <div className="group relative bg-white/8 rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
           <div className="text-sm lg:text-base font-bold text-teal-300 truncate">
             {monthSummary.avgPercentGain.toFixed(2)}%
           </div>
           <div className="text-[10px] lg:text-xs text-gray-400">Avg % Gain</div>
         </div>
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
+        <div className="group relative bg-white/8 rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
           <div className="text-sm lg:text-base font-bold text-sky-300 truncate">
             ${monthSummary.avgAmount >= 1000 ? monthSummary.avgAmount.toLocaleString(undefined, { maximumFractionDigits: 0 }) : monthSummary.avgAmount.toFixed(2)}
           </div>
           <div className="text-[10px] lg:text-xs text-gray-400">Avg Amount</div>
         </div>
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
+        <div className="group relative bg-white/8 rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
           <div className="text-sm lg:text-base font-bold text-indigo-300 truncate">
             ${monthSummary.totalVolume >= 1000 ? monthSummary.totalVolume.toLocaleString(undefined, { maximumFractionDigits: 0 }) : monthSummary.totalVolume.toFixed(2)}
           </div>
           <div className="text-[10px] lg:text-xs text-gray-400">Total Volume</div>
         </div>
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
+        <div className="group relative bg-white/8 rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
           <div className="text-sm lg:text-base font-bold text-yellow-300 truncate">
             {monthSummary.bestTrade ? `$${monthSummary.bestTrade.profit.toFixed(2)}` : '-'}
           </div>
@@ -800,7 +800,7 @@ export const LiveTransactionLog: React.FC = () => {
             Best Trade{monthSummary.bestTrade ? ` (${monthSummary.bestTrade.coin})` : ''}
           </div>
         </div>
-        <div className="group relative bg-white/8 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
+        <div className="group relative bg-white/8 rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
           <div className="text-sm lg:text-base font-bold text-amber-300 truncate">
             <Target className="w-3 h-3 inline-block mr-1 text-amber-400" />
             {monthSummary.profitGoalPct.toFixed(0)}%

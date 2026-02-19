@@ -35,8 +35,8 @@ export const LatestPosts: React.FC<{ maxPosts?: number }> = ({ maxPosts = 4 }) =
     <section className="py-20 px-4 relative overflow-hidden">
       {/* Background Effects - matching other sections */}
       <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-purple-900/30 to-slate-900 -z-10"></div>
-      <div className="absolute top-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl -z-10"></div>
-      <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl -z-10"></div>
+      <div className="absolute top-0 right-1/4 w-96 h-96 bg-gradient-radial from-purple-500/10 to-transparent rounded-full -z-10 opacity-60"></div>
+      <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-gradient-radial from-blue-500/10 to-transparent rounded-full -z-10 opacity-60"></div>
 
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Header - centered like other sections */}

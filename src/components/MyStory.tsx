@@ -35,7 +35,7 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
       <div className="relative max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/30 to-purple-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-blue-400/40 mb-6 shadow-lg shadow-blue-500/20">
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/30 to-purple-500/30 rounded-full px-4 py-2 border border-blue-400/40 mb-6 shadow-lg shadow-blue-500/20">
             <User className="w-4 h-4 text-blue-300" />
             <span className="text-blue-200 font-medium">My Story</span>
           </div>
@@ -48,7 +48,7 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
         </div>
 
         {/* ONE BIG CONTAINER - Everything flows together */}
-        <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm rounded-2xl border border-blue-400/20 p-8 shadow-lg shadow-blue-500/10 mb-8">
+        <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-2xl border border-blue-400/20 p-8 shadow-lg shadow-blue-500/10 mb-8">
           {/* PATRICK PHOTO - Float RIGHT - Desktop only */}
           <img
             src="/patrick-and-moses.jpeg"
@@ -243,7 +243,7 @@ export const MyStory: React.FC<MyStoryProps> = ({ tradingStats }) => {
         </div>
 
         {/* Closing Note */}
-        <div className="text-center bg-gradient-to-r from-purple-500/10 to-blue-500/10 backdrop-blur-sm rounded-2xl border border-purple-400/20 p-8">
+        <div className="text-center bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-2xl border border-purple-400/20 p-8">
           <p className="text-gray-200 max-w-3xl mx-auto text-lg leading-relaxed">
             <span className="text-white font-semibold">Here's the truth:</span>{" "}
             I'm not a financial advisor, and I can't promise you'll get the same

@@ -70,7 +70,7 @@ export const Milestones: React.FC = () => {
             return (
               <div
                 key={milestone.id}
-                className="group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-white/20 hover:border-green-400/40 transition-all duration-300 shadow-lg"
+                className="group relative bg-white/8  rounded-2xl p-6 md:p-8 border border-white/20 hover:border-green-400/40 transition-all duration-300 shadow-lg"
               >
                 {/* Title Row - Icon + Title + Date + Badge */}
                 <div className="flex items-center gap-4 mb-4">
@@ -110,7 +110,7 @@ export const Milestones: React.FC = () => {
                     return (
                       <div
                         key={statIndex}
-                        className="bg-white/5 backdrop-blur-sm rounded-xl p-4 text-center border border-white/10"
+                        className="bg-white/5  rounded-xl p-4 text-center border border-white/10"
                       >
                         <div className={`text-xl md:text-2xl font-bold ${colorClass}`}>
                           {stat.value}

@@ -119,7 +119,7 @@ export const Features: React.FC = function () {
     <section className="py-10 px-4 relative">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-purple-400/40 mb-6 mt-4 shadow-lg shadow-purple-500/20">
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30  rounded-full px-4 py-2 border border-purple-400/40 mb-6 mt-4 shadow-lg shadow-purple-500/20">
             <Zap className="w-4 h-4 text-purple-300" />
             <span className="text-purple-200 font-medium">
               Powerful Features
@@ -161,7 +161,7 @@ export const Features: React.FC = function () {
                 key={index}
                 data-card-index={index}
                 onClick={() => handleFeatureClick(feature.title, index)}
-                className={`group relative bg-white/8 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-500 transform hover:scale-105 hover:shadow-2xl shadow-lg cursor-pointer ${
+                className={`group relative bg-white/8  rounded-2xl p-6 border border-white/20 hover:border-white/30 transition-all duration-500 transform hover:scale-105 hover:shadow-2xl shadow-lg cursor-pointer ${
                   visibleCards[index]
                     ? "opacity-100 translate-y-0"
                     : "opacity-0 translate-y-10"

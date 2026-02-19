@@ -20,7 +20,7 @@ export const DataAccuracyDisclaimer = ({
   return (
     <div className="max-w-4xl mx-auto mt-8 mb-4 relative z-10">
       {/* Main Disclaimer Badge */}
-      <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-xl overflow-hidden">
+      <div className="bg-gray-800/50 border border-gray-700/50 rounded-xl overflow-hidden">
         {/* Header - Always Visible */}
         <button
           onClick={() => setIsExpanded(!isExpanded)}

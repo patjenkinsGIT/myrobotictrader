@@ -42,13 +42,13 @@ export const FullNav: React.FC = () => {
   const dailyAvg = calculateDailyAvg();
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/8 backdrop-blur-md border-b border-white/10">
+    <nav className="sticky top-0 z-50 bg-slate-900/95 border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-4 h-16">
           {/* Logo - Left Aligned */}
           <Link to="/" className="flex items-center gap-3 group flex-shrink-0">
             <div className="w-8 h-8 rounded-lg overflow-hidden shadow-md shadow-purple-500/30 bg-gradient-to-br from-purple-500 to-pink-500 p-0.5 group-hover:shadow-lg group-hover:shadow-purple-500/40 transition-all duration-300">
-              <div className="w-full h-full rounded-md overflow-hidden bg-white/10 backdrop-blur-sm">
+              <div className="w-full h-full rounded-md overflow-hidden bg-white/10">
                 <img
                   src="/robot-logo.png"
                   alt="MyRoboticTrader Robot"

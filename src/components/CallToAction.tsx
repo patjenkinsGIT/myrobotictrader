@@ -20,7 +20,7 @@ export const CallToAction: React.FC = function () {
       </div>
 
       <div className="relative max-w-4xl mx-auto text-center">
-        <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-purple-400/40 mb-6 mt-4 shadow-lg shadow-purple-500/20">
+        <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30  rounded-full px-4 py-2 border border-purple-400/40 mb-6 mt-4 shadow-lg shadow-purple-500/20">
           <Rocket className="w-4 h-4 text-purple-300" />
           <span className="text-purple-200 font-medium">Ready to Start?</span>
         </div>

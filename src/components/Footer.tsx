@@ -19,7 +19,7 @@ export const Footer: React.FC = function () {
             className="inline-flex items-center justify-center gap-3 mb-6 group"
           >
             <div className="w-8 h-8 rounded-lg overflow-hidden shadow-lg shadow-purple-500/40 bg-gradient-to-br from-purple-500 to-pink-500 p-0.5 group-hover:scale-105 transition-transform">
-              <div className="w-full h-full rounded overflow-hidden bg-white/10 backdrop-blur-sm">
+              <div className="w-full h-full rounded overflow-hidden bg-white/10 ">
                 <img
                   src="/robot-logo.png"
                   alt="MyRoboticTrader Robot"
@@ -147,7 +147,7 @@ export const Footer: React.FC = function () {
             className="inline-flex items-center justify-center gap-2 mb-3 group"
           >
             <div className="w-5 h-5 rounded overflow-hidden bg-gradient-to-br from-purple-500 to-pink-500 p-0.5 group-hover:scale-105 transition-transform">
-              <div className="w-full h-full rounded overflow-hidden bg-white/10 backdrop-blur-sm">
+              <div className="w-full h-full rounded overflow-hidden bg-white/10 ">
                 <img
                   src="/robot-logo.png"
                   alt=""

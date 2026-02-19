@@ -82,3 +82,8 @@ p {
 .opacity-8 {
   opacity: 0.08;
 }
+
+/* Performance: Limit paint/layout scope for major page sections */
+section {
+  contain: layout style paint;
+}

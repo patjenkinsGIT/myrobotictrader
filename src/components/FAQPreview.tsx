@@ -72,8 +72,8 @@ export const FAQPreview: React.FC = () => {
     <section className="py-20 px-4 relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-purple-900/30 to-slate-900 -z-10"></div>
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl -z-10"></div>
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl -z-10"></div>
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-radial from-purple-500/10 to-transparent rounded-full -z-10 opacity-60"></div>
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-radial from-blue-500/10 to-transparent rounded-full -z-10 opacity-60"></div>
 
       <div className="max-w-4xl mx-auto relative z-10">
         <div className="text-center mb-12">
