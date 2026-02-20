@@ -10,6 +10,7 @@ export interface TradingDataPoint {
   year: number;    // 2025, 2026, etc.
   profit: number;
   trades: number;
+  fearGreed?: number; // Monthly avg Fear & Greed Index (0-100), from column J
 }
 
 export interface TradingStats {
@@ -60,7 +61,7 @@ export const useGoogleSheetsData = () => {
 
   // Constants
   const CALCULATIONS_TAB = "Calculations";
-  const CALCULATIONS_RANGE = "A:G";
+  const CALCULATIONS_RANGE = "A:J";
   const PORTFOLIO_TAB = "Coinbase Balance";
   const PORTFOLIO_RANGE = "A:D";
   const TRANSACTIONS_TAB = "Transactions Raw Data";
@@ -294,13 +295,21 @@ export const useGoogleSheetsData = () => {
               shortMonth = monthRaw.substring(0, 3);
             }
 
+            // Parse Fear & Greed index from column H (optional)
+            const fearGreedRaw = row[9]?.toString().trim(); // Column J (AVG FG)
+            const fearGreedVal = fearGreedRaw ? parseFloat(fearGreedRaw) : NaN;
+            const fearGreed = !isNaN(fearGreedVal) && fearGreedVal >= 0 && fearGreedVal <= 100
+              ? Math.round(fearGreedVal)
+              : undefined;
+
             monthlyData.push({
               month: shortMonth,
               year,
               profit,
               trades,
+              fearGreed,
             });
-            logger.verbose(`Added month: ${shortMonth} ${year}, profit: $${profit}, trades: ${trades}`);
+            logger.verbose(`Added month: ${shortMonth} ${year}, profit: $${profit}, trades: ${trades}${fearGreed !== undefined ? `, F&G: ${fearGreed}` : ''}`);
           }
         }
       }
@@ -333,19 +342,19 @@ export const useGoogleSheetsData = () => {
     // TODO: Remove 2024 data after testing multi-year feature
     const monthlyData: TradingDataPoint[] = [
       // 2024 months (for testing multi-year display)
-      { month: "Sep", year: 2024, profit: 312.45, trades: 68 },
-      { month: "Oct", year: 2024, profit: 445.89, trades: 92 },
-      { month: "Nov", year: 2024, profit: 523.12, trades: 105 },
-      { month: "Dec", year: 2024, profit: 398.67, trades: 84 },
+      { month: "Sep", year: 2024, profit: 312.45, trades: 68, fearGreed: 39 },
+      { month: "Oct", year: 2024, profit: 445.89, trades: 92, fearGreed: 56 },
+      { month: "Nov", year: 2024, profit: 523.12, trades: 105, fearGreed: 78 },
+      { month: "Dec", year: 2024, profit: 398.67, trades: 84, fearGreed: 73 },
       // 2025 months
-      { month: "Jan", year: 2025, profit: 477.23, trades: 89 },
-      { month: "Feb", year: 2025, profit: 686.71, trades: 124 },
-      { month: "Mar", year: 2025, profit: 261.97, trades: 67 },
-      { month: "Apr", year: 2025, profit: 552.58, trades: 98 },
-      { month: "May", year: 2025, profit: 376.3, trades: 82 },
-      { month: "Jun", year: 2025, profit: 382.97, trades: 91 },
-      { month: "Jul", year: 2025, profit: 817.31, trades: 156 },
-      { month: "Aug", year: 2025, profit: 350.32, trades: 78 },
+      { month: "Jan", year: 2025, profit: 477.23, trades: 89, fearGreed: 65 },
+      { month: "Feb", year: 2025, profit: 686.71, trades: 124, fearGreed: 49 },
+      { month: "Mar", year: 2025, profit: 261.97, trades: 67, fearGreed: 34 },
+      { month: "Apr", year: 2025, profit: 552.58, trades: 98, fearGreed: 28 },
+      { month: "May", year: 2025, profit: 376.3, trades: 82, fearGreed: 42 },
+      { month: "Jun", year: 2025, profit: 382.97, trades: 91, fearGreed: 55 },
+      { month: "Jul", year: 2025, profit: 817.31, trades: 156, fearGreed: 72 },
+      { month: "Aug", year: 2025, profit: 350.32, trades: 78, fearGreed: 58 },
     ];
 
     const totalProfit = monthlyData.reduce(
@@ -518,23 +527,23 @@ export const useGoogleSheetsData = () => {
     // Previous Months will show 2024 (4 months) + early 2025 (6 months)
     const monthlyData: TradingDataPoint[] = [
       // 2024 months (will appear in Previous Months)
-      { month: "Sep", year: 2024, profit: 312.45, trades: 68 },
-      { month: "Oct", year: 2024, profit: 445.89, trades: 92 },
-      { month: "Nov", year: 2024, profit: 523.12, trades: 105 },
-      { month: "Dec", year: 2024, profit: 398.67, trades: 84 },
+      { month: "Sep", year: 2024, profit: 312.45, trades: 68, fearGreed: 39 },
+      { month: "Oct", year: 2024, profit: 445.89, trades: 92, fearGreed: 56 },
+      { month: "Nov", year: 2024, profit: 523.12, trades: 105, fearGreed: 78 },
+      { month: "Dec", year: 2024, profit: 398.67, trades: 84, fearGreed: 73 },
       // 2025 months - Jan-Jun will be in Previous Months, Jul-Dec in Recent Performance
-      { month: "Jan", year: 2025, profit: 477.23, trades: 89 },
-      { month: "Feb", year: 2025, profit: 686.71, trades: 124 },
-      { month: "Mar", year: 2025, profit: 261.97, trades: 67 },
-      { month: "Apr", year: 2025, profit: 552.58, trades: 98 },
-      { month: "May", year: 2025, profit: 376.30, trades: 82 },
-      { month: "Jun", year: 2025, profit: 382.97, trades: 91 },
-      { month: "Jul", year: 2025, profit: 817.31, trades: 156 },
-      { month: "Aug", year: 2025, profit: 350.32, trades: 78 },
-      { month: "Sep", year: 2025, profit: 425.60, trades: 88 },
-      { month: "Oct", year: 2025, profit: 512.45, trades: 102 },
-      { month: "Nov", year: 2025, profit: 389.20, trades: 76 },
-      { month: "Dec", year: 2025, profit: 298.50, trades: 62 },
+      { month: "Jan", year: 2025, profit: 477.23, trades: 89, fearGreed: 65 },
+      { month: "Feb", year: 2025, profit: 686.71, trades: 124, fearGreed: 49 },
+      { month: "Mar", year: 2025, profit: 261.97, trades: 67, fearGreed: 34 },
+      { month: "Apr", year: 2025, profit: 552.58, trades: 98, fearGreed: 28 },
+      { month: "May", year: 2025, profit: 376.30, trades: 82, fearGreed: 42 },
+      { month: "Jun", year: 2025, profit: 382.97, trades: 91, fearGreed: 55 },
+      { month: "Jul", year: 2025, profit: 817.31, trades: 156, fearGreed: 72 },
+      { month: "Aug", year: 2025, profit: 350.32, trades: 78, fearGreed: 58 },
+      { month: "Sep", year: 2025, profit: 425.60, trades: 88, fearGreed: 44 },
+      { month: "Oct", year: 2025, profit: 512.45, trades: 102, fearGreed: 61 },
+      { month: "Nov", year: 2025, profit: 389.20, trades: 76, fearGreed: 52 },
+      { month: "Dec", year: 2025, profit: 298.50, trades: 62, fearGreed: 35 },
     ];
 
     const totalProfit = monthlyData.reduce(

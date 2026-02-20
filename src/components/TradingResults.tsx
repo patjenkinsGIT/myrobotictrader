@@ -14,8 +14,9 @@ import {
   Layers,
 } from "lucide-react";
 import {
-  BarChart,
+  ComposedChart,
   Bar,
+  Line,
   XAxis,
   YAxis,
   Tooltip,
@@ -128,7 +129,7 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
                   : "❌ Missing"}
               </p>
               <p>• Expected Tab: "Calculations"</p>
-              <p>• Expected Range: A:G</p>
+              <p>• Expected Range: A:J</p>
               <p>• Error: {error || "No specific error message"}</p>
               <p>• Cache Status: {cacheInfo?.isFresh ? "Fresh" : "Stale"}</p>
               <p>• Rate Limited: {cacheInfo?.isRateLimited ? "Yes" : "No"}</p>
@@ -213,6 +214,14 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
       return "0.00";
     }
     return numValue.toFixed(2);
+  };
+
+  // Fear & Greed zone mapping
+  const getFearGreedZone = (value: number): { label: string; color: string } => {
+    if (value <= 25) return { label: "Extreme Fear", color: "#ef4444" };  // red-500
+    if (value <= 50) return { label: "Fear", color: "#f97316" };          // orange-500
+    if (value <= 75) return { label: "Greed", color: "#22c55e" };         // green-500
+    return { label: "Extreme Greed", color: "#4ade80" };                  // green-400
   };
 
   return (
@@ -528,6 +537,11 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
                     {(() => {
                       const yearHighestProfit = Math.max(...yearMonths.map((m: TradingDataPoint) => m.profit));
 
+                      // Check if any month this year has F&G data
+                      const yearHasFearGreedData = yearMonths.some(
+                        (m: TradingDataPoint) => m.fearGreed !== undefined
+                      );
+
                       // Prepare data for Recharts with color info
                       const chartData = yearMonths.map((month: TradingDataPoint) => {
                         const isBest = isBestMonthEver(month);
@@ -536,6 +550,7 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
                           name: month.month,
                           profit: Math.round(month.profit),
                           trades: month.trades,
+                          fearGreed: month.fearGreed ?? null,
                           isBest,
                           isYearHighest,
                           fill: isBest
@@ -550,11 +565,18 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
                       const CustomTooltip = ({ active, payload }: any) => {
                         if (active && payload && payload.length) {
                           const data = payload[0].payload;
+                          const fgValue = data.fearGreed;
+                          const fgZone = fgValue !== null ? getFearGreedZone(fgValue) : null;
                           return (
                             <div style={{ backgroundColor: '#1e1b4b', border: '2px solid #7c3aed' }} className="rounded-lg p-4 shadow-2xl">
                               <p className="text-white font-bold text-base">{getFullMonthName(data.name)}</p>
                               <p className="text-green-400 font-mono font-bold text-xl">${data.profit.toLocaleString()}</p>
                               <p className="text-white text-sm">{data.trades} trades</p>
+                              {fgZone && (
+                                <p className="text-sm mt-1" style={{ color: fgZone.color }}>
+                                  F&G: {fgValue} - {fgZone.label}
+                                </p>
+                              )}
                               {data.isBest && (
                                 <p className="text-yellow-300 text-sm font-bold mt-1">🏆 Best Month Ever!</p>
                               )}
@@ -648,13 +670,34 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
                               <span className="text-gray-300">All-Time Best</span>
                             </div>
                           </div>
+                          {yearHasFearGreedData && (
+                            <div className="flex justify-center gap-3 md:gap-5 mb-4 text-xs">
+                              <span className="text-gray-400">F&G Index:</span>
+                              <div className="flex items-center gap-1.5">
+                                <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "#ef4444" }}></div>
+                                <span className="text-gray-400">Extreme Fear</span>
+                              </div>
+                              <div className="flex items-center gap-1.5">
+                                <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "#f97316" }}></div>
+                                <span className="text-gray-400">Fear</span>
+                              </div>
+                              <div className="flex items-center gap-1.5">
+                                <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "#22c55e" }}></div>
+                                <span className="text-gray-400">Greed</span>
+                              </div>
+                              <div className="flex items-center gap-1.5">
+                                <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "#4ade80" }}></div>
+                                <span className="text-gray-400">Extreme Greed</span>
+                              </div>
+                            </div>
+                          )}
 
                           <div className="flex justify-center" style={{ height: yearMonths.length > 6 ? 300 : 270 }}>
                             <div style={{ width: chartWidthPercent, height: "100%" }}>
                               <ResponsiveContainer width="100%" height="100%">
-                                <BarChart
+                                <ComposedChart
                                   data={chartData}
-                                  margin={{ top: 40, right: 20, left: 20, bottom: 25 }}
+                                  margin={{ top: 40, right: yearHasFearGreedData ? 45 : 20, left: 20, bottom: 25 }}
                                   barCategoryGap="20%"
                                 >
                                   {/* Gradient Definitions */}
@@ -679,9 +722,28 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
                                     tickLine={false}
                                     interval={0}
                                   />
-                                  <YAxis hide />
+                                  <YAxis yAxisId="left" hide />
+                                  {yearHasFearGreedData && (
+                                    <YAxis
+                                      yAxisId="right"
+                                      orientation="right"
+                                      domain={[0, 100]}
+                                      tick={{ fill: "#9ca3af", fontSize: 10 }}
+                                      axisLine={{ stroke: "#374151" }}
+                                      tickLine={false}
+                                      width={35}
+                                      label={{
+                                        value: "F&G",
+                                        angle: -90,
+                                        position: "insideRight",
+                                        offset: 10,
+                                        style: { fill: "#9ca3af", fontSize: 10 },
+                                      }}
+                                    />
+                                  )}
                                   <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(255,255,255,0.05)" }} />
                                   <Bar
+                                    yAxisId="left"
                                     dataKey="profit"
                                     radius={[4, 4, 0, 0]}
                                     maxBarSize={45}
@@ -714,7 +776,34 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
                                     />
                                     <LabelList content={renderCustomLabel} />
                                   </Bar>
-                                </BarChart>
+                                  {yearHasFearGreedData && (
+                                    <Line
+                                      yAxisId="right"
+                                      type="monotone"
+                                      dataKey="fearGreed"
+                                      stroke="#9ca3af"
+                                      strokeWidth={2}
+                                      connectNulls={false}
+                                      dot={(props: any) => {
+                                        const { cx, cy, payload } = props;
+                                        if (payload.fearGreed === null) return <g key={`dot-${cx}`} />;
+                                        const zone = getFearGreedZone(payload.fearGreed);
+                                        return (
+                                          <circle
+                                            key={`dot-${cx}`}
+                                            cx={cx}
+                                            cy={cy}
+                                            r={5}
+                                            fill={zone.color}
+                                            stroke="#1e1b4b"
+                                            strokeWidth={2}
+                                          />
+                                        );
+                                      }}
+                                      activeDot={false}
+                                    />
+                                  )}
+                                </ComposedChart>
                               </ResponsiveContainer>
                             </div>
                           </div>
