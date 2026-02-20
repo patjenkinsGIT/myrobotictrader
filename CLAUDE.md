@@ -917,6 +917,21 @@ npm run preview
 
 ## Troubleshooting
 
+### CTB - Check The Basics
+
+**Before deep-diving into complex debugging, always check the basics first.** Most production issues come from simple things hiding in plain sight.
+
+**Quick checklist (run through this FIRST):**
+
+1. **CSS imports** - Is `main.tsx` importing the right CSS file? (Must be `index.css`, not a stale pre-compiled file)
+2. **Build output** - Does `npm run build` succeed? Check the output file sizes for anything unexpected
+3. **Stale files** - Are there pre-compiled or cached files that haven't been regenerated? (e.g., old Tailwind output, stale dist/ assets)
+4. **Environment variables** - Are all `VITE_*` vars set locally AND in Cloudflare?
+5. **Browser cache** - Hard refresh (Cmd+Shift+R) or incognito window to rule out caching
+6. **Console errors** - Open browser dev tools and check for JS runtime errors
+
+> **Real example (Feb 2026):** Production showed a blank dark screen. Spent time checking JS errors, Cloudflare headers, deployment configs, asset hashes... turned out `main.tsx` imported `output.css` (a stale pre-compiled Tailwind file) instead of `index.css`. One word, one line. CTB would have caught it in minutes.
+
 ### Build Errors
 
 **Problem**: TypeScript compilation fails
