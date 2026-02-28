@@ -87,7 +87,7 @@ export const LatestPosts: React.FC<{ maxPosts?: number }> = ({ maxPosts = 4 }) =
 
         {/* Regular Posts Grid */}
         {regularPosts.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {regularPosts.map((post) => (
               <Link
                 key={post.slug}

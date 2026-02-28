@@ -102,7 +102,7 @@ export const BlogListPage: React.FC = () => {
 
       {/* Blog Posts Grid - Enhanced with Features-style cards */}
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 mb-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {sortedPosts.map((post) => (
             <Link
               key={post.slug}
@@ -111,7 +111,7 @@ export const BlogListPage: React.FC = () => {
             >
               <article className="h-full rounded-2xl overflow-hidden border border-white/10 hover:border-purple-400/40 transition-all duration-500 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/10 cursor-pointer relative bg-gray-900/50">
                 {/* Hero Image Preview */}
-                <div className="h-40 overflow-hidden">
+                <div className="h-52 overflow-hidden">
                   <img
                     src={post.heroImage}
                     alt={post.imageAlt}
