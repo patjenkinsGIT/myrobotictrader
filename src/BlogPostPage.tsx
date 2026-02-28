@@ -498,11 +498,11 @@ export const BlogPostPage: React.FC = () => {
           </header>
 
           {/* Hero Image Banner */}
-          <div className="mb-8 rounded-2xl overflow-hidden h-48 md:h-56">
+          <div className="mb-8 rounded-2xl overflow-hidden">
             <img
               src={post.heroImage}
               alt={post.imageAlt}
-              className="w-full h-full object-cover"
+              className="w-full h-auto"
               style={{ filter: 'brightness(0.85)' }}
             />
           </div>

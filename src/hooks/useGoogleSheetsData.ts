@@ -295,7 +295,7 @@ export const useGoogleSheetsData = () => {
               shortMonth = monthRaw.substring(0, 3);
             }
 
-            // Parse Fear & Greed index from column H (optional)
+            // Parse Fear & Greed index from column J (optional)
             const fearGreedRaw = row[9]?.toString().trim(); // Column J (AVG FG)
             const fearGreedVal = fearGreedRaw ? parseFloat(fearGreedRaw) : NaN;
             const fearGreed = !isNaN(fearGreedVal) && fearGreedVal >= 0 && fearGreedVal <= 100
