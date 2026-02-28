@@ -111,7 +111,7 @@ export const BlogListPage: React.FC = () => {
             >
               <article className="h-full rounded-2xl overflow-hidden border border-white/10 hover:border-purple-400/40 transition-all duration-500 transform hover:scale-105 hover:shadow-2xl shadow-lg shadow-purple-500/10 cursor-pointer relative bg-gray-900/50">
                 {/* Hero Image Preview */}
-                <div className="h-52 overflow-hidden">
+                <div className="aspect-video overflow-hidden">
                   <img
                     src={post.heroImage}
                     alt={post.imageAlt}
