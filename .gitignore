@@ -7,8 +7,10 @@
 ehthumbs.db
 Thumbs.db
 
-# Claude Code
-.claude/
+# Claude Code (ignore internal state, keep rules and skills)
+.claude/*
+!.claude/rules/
+!.claude/skills/
 .mcp.json
 
 # ENV
