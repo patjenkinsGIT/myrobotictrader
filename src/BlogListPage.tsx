@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import postsData from "./data/posts.json";
 import { FullNav } from "./components/FullNav";
 import { BlogPost, getPublishedPosts, getPostSortDate } from "./utils/blogUtils";
@@ -45,6 +46,10 @@ export const BlogListPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
+      <Helmet>
+        <title>Crypto Trading Blog | AI Trading Education & Results | MyRoboticTrader</title>
+        <meta name="description" content="Real trades, real results. Learn how an AI-enhanced autonomous trading system generates consistent crypto profits. No hype, just transparency." />
+      </Helmet>
       <FullNav />
       {/* Hero Section */}
       <section className="py-12 px-4 relative overflow-hidden">
