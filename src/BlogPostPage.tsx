@@ -401,7 +401,7 @@ export const BlogPostPage: React.FC = () => {
       } else if (earliest.type === 'bold' && boldMatch) {
         parts.push(
           <strong key={key++} className="font-bold text-white">
-            {boldMatch[1]}
+            {renderInlineMarkdown(boldMatch[1])}
           </strong>
         );
         currentText = currentText.substring(boldMatch.index! + boldMatch[0].length);
