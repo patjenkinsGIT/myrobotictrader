@@ -63,10 +63,11 @@ export async function onRequest(context) {
       '  <meta name="twitter:description" content="' + description + '">\n' +
       '  <meta name="twitter:image" content="' + ogImageUrl + '">\n' +
       '  <meta name="twitter:image:alt" content="' + imageAlt + '">\n' +
-      '  <meta http-equiv="refresh" content="0; url=' + canonicalUrl + '">\n' +
       '</head>\n' +
       '<body>\n' +
-      '  <p>Redirecting to <a href="' + canonicalUrl + '">' + title + '</a>...</p>\n' +
+      '  <h1>' + title + '</h1>\n' +
+      '  <p>' + description + '</p>\n' +
+      '  <a href="' + canonicalUrl + '">Read full article</a>\n' +
       '</body>\n' +
       '</html>';
 
