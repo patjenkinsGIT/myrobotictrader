@@ -9,6 +9,7 @@ MyRoboticTrader.com is an affiliate marketing site promoting autonomous AI-enhan
 ## Revenue Model
 
 - **Primary:** Affiliate commissions from GoBabyTrade — **$1K+ per commission**, direct relationship with the developer/owner
+- **Signup link:** `https://crypto.gobabytrade.com/signup.aspx?RID=432706BE` (direct signup — NOT the old webinar link)
 - **Secondary:** Driving traffic to webinar signups at `dailyprofits.link/class`
 - **Content strategy:** Blog posts positioning systematic crypto trading as a smarter alternative to gambling, day trading, side hustles, and lottery tickets
 - **Target audience:** Crypto-curious individuals aged 25-45 seeking passive income — Uber drivers, service techs, people with side hustle mentality

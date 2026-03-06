@@ -81,7 +81,7 @@ const faqData = [
           <>
             The system I use is called GoBabyTrade. You can start with paper trading to test it risk-free before going live. Use my referral link to save $1,000:{" "}
             <a
-              href="https://gobabytrade.com/432706BE"
+              href="https://crypto.gobabytrade.com/signup.aspx?RID=432706BE"
               target="_blank"
               rel="noopener noreferrer"
               className="text-purple-300 hover:text-purple-200 underline transition-colors duration-200"
@@ -470,7 +470,7 @@ const FAQPage: React.FC = () => {
               system I use. Try paper trading first, risk-free.
             </p>
             <a
-              href="https://gobabytrade.com/432706BE"
+              href="https://crypto.gobabytrade.com/signup.aspx?RID=432706BE"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-4 px-8 rounded-xl hover:from-purple-600 hover:to-pink-600 transform hover:scale-105 transition-all duration-200 shadow-lg shadow-purple-500/50"

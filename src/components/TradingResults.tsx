@@ -200,7 +200,7 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
   const handleStartTrading = () => {
     trackCTAClick("start_trading_save_1000", "trading_results_section");
     trackOutboundLink(
-      "https://gobabytrade.com/432706BE",
+      "https://crypto.gobabytrade.com/signup.aspx?RID=432706BE",
       "Start Trading Save $1000 Trading Results"
     );
   };
@@ -844,7 +844,7 @@ export const TradingResults: React.FC<TradingResultsProps> = ({
                     GoBabyTrade is the same AI-enhanced system I use. Use my link to save $1,000!
                   </p>
                   <a
-                    href="https://gobabytrade.com/432706BE"
+                    href="https://crypto.gobabytrade.com/signup.aspx?RID=432706BE"
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={handleStartTrading}
