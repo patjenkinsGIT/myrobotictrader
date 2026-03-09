@@ -157,7 +157,7 @@ export const ResourcesPage: React.FC = function () {
                 </div>
 
                 <a
-                  href="https://dailyprofits.link/cba"
+                  href="/go/coinbase"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-500/30"
@@ -247,7 +247,7 @@ export const ResourcesPage: React.FC = function () {
                 </div>
 
                 <a
-                  href="https://dailyprofits.link/krak"
+                  href="/go/kraken"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-indigo-500/30"
@@ -366,7 +366,7 @@ export const ResourcesPage: React.FC = function () {
                 </div>
 
                 <a
-                  href="https://dailyprofits.link/cointracker"
+                  href="/go/cointracker"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-orange-500/30"

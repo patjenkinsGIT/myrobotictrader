@@ -198,7 +198,7 @@ const faqData = [
           <>
             Absolutely! Coinbase One saves me hundreds monthly with $0 trading fees. When you're making multiple trades daily, those fees add up fast.{" "}
             <a
-              href="https://dailyprofits.link/cba"
+              href="/go/coinbase"
               target="_blank"
               rel="noopener noreferrer"
               className="text-purple-300 hover:text-purple-200 underline transition-colors duration-200"
@@ -312,7 +312,7 @@ const faqData = [
           <>
             Crypto taxes can be complex with hundreds of trades. I personally use CoinTracker to automatically track all my trades and generate tax reports.{" "}
             <a
-              href="https://dailyprofits.link/cointracker"
+              href="/go/cointracker"
               target="_blank"
               rel="noopener noreferrer"
               className="text-purple-300 hover:text-purple-200 underline transition-colors duration-200"
