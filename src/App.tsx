@@ -34,6 +34,8 @@ const BusinessCardLanding = lazy(() => import("./components/BusinessCardLanding"
 const BlogListPage = lazy(() => import("./BlogListPage").then(m => ({ default: m.BlogListPage })));
 const BlogPostPage = lazy(() => import("./BlogPostPage").then(m => ({ default: m.BlogPostPage })));
 const BlogSchedulePage = lazy(() => import("./pages/BlogSchedulePage"));
+const InvestmentSimulatorPage = lazy(() => import("./pages/InvestmentSimulatorPage").then(m => ({ default: m.InvestmentSimulatorPage })));
+const HowToPurchase = lazy(() => import("./pages/HowToPurchase"));
 
 // SEO configurations for different pages with structured data
 const seoConfigs = {
@@ -155,6 +157,40 @@ const seoConfigs = {
     canonicalUrl: "https://myrobotictrader.com/faq",
     pageType: "faq" as const,
   },
+  simulator: {
+    title: "Trading Simulator | See What Your Money Could Do | MyRoboticTrader",
+    description:
+      "Use real trading data to simulate what your investment could have earned. Based on 1,000+ real closed trades with a 100% profit goal hit rate.",
+    keywords:
+      "crypto trading simulator, trading calculator, investment simulator, automated trading results, passive income calculator",
+    ogTitle: "Trading Simulator - See What Your Money Could Do",
+    ogDescription:
+      "Simulate returns using real month-by-month trading data. 100% profit goal hit rate across 1,000+ closed trades.",
+    ogImage: "https://myrobotictrader.com/api/og-image",
+    twitterTitle: "Trading Simulator | MyRoboticTrader",
+    twitterDescription:
+      "Use real trading data to simulate what your investment could have earned with autonomous crypto trading.",
+    twitterImage: "https://myrobotictrader.com/api/og-image",
+    canonicalUrl: "https://myrobotictrader.com/simulator",
+    pageType: "simulator" as const,
+  },
+  howToPurchase: {
+    title: "How to Buy GoBabyTrade™ — Payment Options & Step-by-Step Guide",
+    description:
+      "Three ways to pay for your GoBabyTrade™ license: credit/debit card, crypto, or Affirm financing. See the full signup flow before you buy.",
+    keywords:
+      "GoBabyTrade purchase, buy GoBabyTrade, GoBabyTrade payment options, Affirm financing crypto trading, automated trading license",
+    ogTitle: "How to Buy GoBabyTrade™ — Payment Options & Step-by-Step Guide",
+    ogDescription:
+      "Three ways to pay for your GoBabyTrade™ license: credit/debit card, crypto, or Affirm financing.",
+    ogImage: "https://myrobotictrader.com/api/og-image",
+    twitterTitle: "How to Buy GoBabyTrade™ | MyRoboticTrader",
+    twitterDescription:
+      "Three ways to pay for your GoBabyTrade™ license. See the full signup flow before you buy.",
+    twitterImage: "https://myrobotictrader.com/api/og-image",
+    canonicalUrl: "https://myrobotictrader.com/how-to-purchase",
+    pageType: "howToPurchase" as const,
+  },
 };
 
 // SEO Wrapper Component
@@ -176,6 +212,10 @@ const SEOWrapper = ({ children }: { children: React.ReactNode }) => {
         return seoConfigs.privacy;
       case "/card":
         return seoConfigs.card;
+      case "/simulator":
+        return seoConfigs.simulator;
+      case "/how-to-purchase":
+        return seoConfigs.howToPurchase;
       default:
         return seoConfigs.home;
     }
@@ -295,6 +335,8 @@ function App() {
               <Route path="/resources" element={<ResourcesPage />} />
               <Route path="/privacy" element={<PrivacyPage />} />
               <Route path="/card" element={<BusinessCardLanding />} />
+              <Route path="/simulator" element={<InvestmentSimulatorPage />} />
+              <Route path="/how-to-purchase" element={<HowToPurchase />} />
               <Route path="/blog" element={<BlogListPage />} />
               <Route path="/blog/schedule" element={<BlogSchedulePage />} />
               <Route path="/blog/:slug" element={<BlogPostPage />} />

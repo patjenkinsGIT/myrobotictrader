@@ -1,0 +1,2 @@
+# Redirect www to non-www (301 permanent)
+https://www.myrobotictrader.com/* https://myrobotictrader.com/:splat 301

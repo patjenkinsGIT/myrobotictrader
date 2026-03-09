@@ -77,6 +77,12 @@ let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>${BASE_URL}/how-to-purchase</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>${BASE_URL}/privacy</loc>
     <lastmod>${today}</lastmod>
     <changefreq>yearly</changefreq>
