@@ -10,6 +10,7 @@ import {
   ChevronRight,
   Download,
   Shield,
+  Calendar,
 } from "lucide-react";
 import { tradingDataCache } from "../utils/smartCache";
 
@@ -715,6 +716,12 @@ export const LiveTransactionLog: React.FC = () => {
           </button>
         </div>
       )}
+
+      {/* Monthly Performance Header */}
+      <div className="flex items-center gap-2 mb-2">
+        <Calendar className="w-4 h-4 text-gray-400" />
+        <span className="text-xs text-gray-400 font-medium uppercase tracking-wide">Monthly Performance — {currentMonthName}</span>
+      </div>
 
       {/* Summary Stats - Row 1: Monthly Indicators */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 mb-2">
