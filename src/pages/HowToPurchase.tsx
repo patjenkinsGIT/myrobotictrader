@@ -67,7 +67,7 @@ const HowToPurchase: React.FC = () => {
 
           <div className="text-center mb-6">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Ready to Get Started? Here's Exactly What to Expect
+              GoBabyTrade™ Account Setup Guide
             </h1>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto">
               No surprises at checkout. Here's the complete purchase walkthrough

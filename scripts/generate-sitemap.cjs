@@ -77,7 +77,7 @@ let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>${BASE_URL}/how-to-purchase</loc>
+    <loc>${BASE_URL}/gobabytrade-setup-guide</loc>
     <lastmod>${today}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

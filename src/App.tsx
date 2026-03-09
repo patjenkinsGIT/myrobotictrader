@@ -3,6 +3,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
+  Navigate,
   useLocation,
 } from "react-router-dom";
 import { useEffect } from "react";
@@ -175,20 +176,20 @@ const seoConfigs = {
     pageType: "simulator" as const,
   },
   howToPurchase: {
-    title: "How to Buy GoBabyTrade™ — Payment Options & Step-by-Step Guide",
+    title: "GoBabyTrade™ Setup Guide: How to Get Started | MyRoboticTrader",
     description:
-      "Three ways to pay for your GoBabyTrade™ license: credit/debit card, crypto, or Affirm financing. See the full signup flow before you buy.",
+      "Step-by-step setup guide for your GoBabyTrade™ account. Everything you need to get your AI-enhanced autonomous trader running — from purchase to first trade.",
     keywords:
-      "GoBabyTrade purchase, buy GoBabyTrade, GoBabyTrade payment options, Affirm financing crypto trading, automated trading license",
-    ogTitle: "How to Buy GoBabyTrade™ — Payment Options & Step-by-Step Guide",
+      "GoBabyTrade setup guide, buy GoBabyTrade, GoBabyTrade payment options, Affirm financing crypto trading, automated trading license",
+    ogTitle: "GoBabyTrade™ Setup Guide: How to Get Started | MyRoboticTrader",
     ogDescription:
-      "Three ways to pay for your GoBabyTrade™ license: credit/debit card, crypto, or Affirm financing.",
+      "Step-by-step setup guide for your GoBabyTrade™ account. From purchase to first trade.",
     ogImage: "https://myrobotictrader.com/api/og-image",
-    twitterTitle: "How to Buy GoBabyTrade™ | MyRoboticTrader",
+    twitterTitle: "GoBabyTrade™ Setup Guide | MyRoboticTrader",
     twitterDescription:
-      "Three ways to pay for your GoBabyTrade™ license. See the full signup flow before you buy.",
+      "Step-by-step setup guide for your GoBabyTrade™ account. From purchase to first trade.",
     twitterImage: "https://myrobotictrader.com/api/og-image",
-    canonicalUrl: "https://myrobotictrader.com/how-to-purchase",
+    canonicalUrl: "https://myrobotictrader.com/gobabytrade-setup-guide",
     pageType: "howToPurchase" as const,
   },
 };
@@ -214,7 +215,7 @@ const SEOWrapper = ({ children }: { children: React.ReactNode }) => {
         return seoConfigs.card;
       case "/simulator":
         return seoConfigs.simulator;
-      case "/how-to-purchase":
+      case "/gobabytrade-setup-guide":
         return seoConfigs.howToPurchase;
       default:
         return seoConfigs.home;
@@ -336,7 +337,8 @@ function App() {
               <Route path="/privacy" element={<PrivacyPage />} />
               <Route path="/card" element={<BusinessCardLanding />} />
               <Route path="/simulator" element={<InvestmentSimulatorPage />} />
-              <Route path="/how-to-purchase" element={<HowToPurchase />} />
+              <Route path="/gobabytrade-setup-guide" element={<HowToPurchase />} />
+              <Route path="/how-to-purchase" element={<Navigate to="/gobabytrade-setup-guide" replace />} />
               <Route path="/blog" element={<BlogListPage />} />
               <Route path="/blog/schedule" element={<BlogSchedulePage />} />
               <Route path="/blog/:slug" element={<BlogPostPage />} />
