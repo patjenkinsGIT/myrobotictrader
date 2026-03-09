@@ -38,6 +38,14 @@ const BlogSchedulePage = lazy(() => import("./pages/BlogSchedulePage"));
 const InvestmentSimulatorPage = lazy(() => import("./pages/InvestmentSimulatorPage").then(m => ({ default: m.InvestmentSimulatorPage })));
 const HowToPurchase = lazy(() => import("./pages/HowToPurchase"));
 
+// External redirect helper for affiliate vanity URLs
+const ExternalRedirect = ({ to }: { to: string }) => {
+  useEffect(() => {
+    window.location.replace(to);
+  }, [to]);
+  return null;
+};
+
 // SEO configurations for different pages with structured data
 const seoConfigs = {
   home: {
@@ -339,6 +347,10 @@ function App() {
               <Route path="/simulator" element={<InvestmentSimulatorPage />} />
               <Route path="/gobabytrade-setup-guide" element={<HowToPurchase />} />
               <Route path="/how-to-purchase" element={<Navigate to="/gobabytrade-setup-guide" replace />} />
+              {/* Affiliate vanity redirects */}
+              <Route path="/go/coinbase" element={<ExternalRedirect to="https://www.coinbase.com/join/MEK5UVP?utm_source=site?origin=advanced" />} />
+              <Route path="/go/kraken" element={<ExternalRedirect to="https://invite.kraken.com/JDNW/npntkd32" />} />
+              <Route path="/go/cointracker" element={<ExternalRedirect to="https://cointracker.cello.so/UCvkiCU21IO" />} />
               <Route path="/blog" element={<BlogListPage />} />
               <Route path="/blog/schedule" element={<BlogSchedulePage />} />
               <Route path="/blog/:slug" element={<BlogPostPage />} />
