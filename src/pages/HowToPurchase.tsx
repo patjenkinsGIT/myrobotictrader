@@ -11,6 +11,10 @@ import {
   Award,
   Eye,
   Heart,
+  Lock,
+  Key,
+  Mail,
+  TestTube2,
 } from "lucide-react";
 import { FullNav } from "../components/FullNav";
 import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
@@ -554,7 +558,193 @@ const HowToPurchase: React.FC = () => {
         </div>
       </section>
 
-      {/* Section 6: Questions */}
+      {/* Section 6: Post-Sign-Up Tips */}
+      <section className="py-16 px-4">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="p-2 rounded-lg bg-gradient-to-br from-green-500 to-emerald-500 shadow-lg">
+              <Lock className="w-5 h-5 text-white" />
+            </div>
+            <h2 className="text-3xl font-bold text-white">
+              You're In — Now Let's Set You Up Safely
+            </h2>
+          </div>
+          <p className="text-gray-300 mb-8 text-lg">
+            Before you connect anything, take 30 minutes to lock down your
+            accounts properly. This is the step most people skip — don't be most
+            people.
+          </p>
+
+          <div className="space-y-6">
+            {/* Step 1: Secure Exchange */}
+            <div className="bg-gray-900/50 rounded-2xl border border-white/10 p-6 shadow-lg shadow-purple-500/10">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+                  1
+                </div>
+                <h3 className="text-xl font-bold text-white">
+                  Secure Your Exchange Account (Coinbase or Kraken)
+                </h3>
+              </div>
+              <p className="text-gray-300 mb-4 ml-14">
+                Make sure your Coinbase or Kraken account has the strongest
+                security settings enabled:
+              </p>
+              <div className="space-y-4 ml-14">
+                <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                  <div className="flex items-start gap-3">
+                    <ShieldCheck className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-white font-semibold">
+                        Two-Factor Authentication (2FA)
+                      </p>
+                      <p className="text-gray-400 text-sm">
+                        Enable it if you haven't already
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-white/5 rounded-xl p-4 border border-green-400/30">
+                  <div className="flex items-start gap-3">
+                    <Key className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-white font-semibold">
+                        YubiKey{" "}
+                        <span className="text-green-400 text-sm font-medium">
+                          (Strongly Recommended)
+                        </span>
+                      </p>
+                      <p className="text-gray-400 text-sm">
+                        A physical security key is the gold standard for
+                        protecting a crypto account. If you don't have one, get
+                        one. A $50 YubiKey protects a potentially six-figure
+                        account — it's the best investment you'll make before
+                        your first trade
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                  <div className="flex items-start gap-3">
+                    <Lock className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-white font-semibold">
+                        Withdrawal Whitelisting
+                      </p>
+                      <p className="text-gray-400 text-sm">
+                        Enable address whitelisting on your exchange. This means
+                        funds can only be sent to pre-approved wallet addresses
+                        — even if someone gets into your account, they can't
+                        move your money anywhere new without your approval
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Step 2: API Setup */}
+            <div className="bg-gray-900/50 rounded-2xl border border-white/10 p-6 shadow-lg shadow-purple-500/10">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+                  2
+                </div>
+                <h3 className="text-xl font-bold text-white">
+                  Set Up Your API — Read This Carefully
+                </h3>
+              </div>
+              <p className="text-gray-300 mb-4 ml-14">
+                When you create the API connection between GoBabyTrade™ and your
+                exchange, you'll be setting permissions. This is critical:
+              </p>
+              <div className="space-y-3 ml-14">
+                <div className="flex items-center gap-3 bg-green-500/10 rounded-lg px-4 py-3 border border-green-400/30">
+                  <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0" />
+                  <span className="text-gray-200">
+                    <span className="text-green-400 font-semibold">
+                      Enable:
+                    </span>{" "}
+                    Trade permissions (buy/sell)
+                  </span>
+                </div>
+                <div className="flex items-center gap-3 bg-red-500/10 rounded-lg px-4 py-3 border border-red-400/30">
+                  <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0" />
+                  <span className="text-gray-200">
+                    <span className="text-red-400 font-semibold">
+                      Never Enable:
+                    </span>{" "}
+                    Transfer or withdrawal permissions
+                  </span>
+                </div>
+              </div>
+              <div className="bg-white/5 rounded-xl p-5 border border-white/10 mt-4 ml-14">
+                <p className="text-gray-300 text-sm leading-relaxed">
+                  The system only needs permission to trade — not to move funds.
+                  Disabling transfers means the AI-Enhanced Autonomous Trader
+                  can execute trades on your behalf, but no one (not the system,
+                  not a bad actor) can transfer funds out of your account through
+                  the API. This is a non-negotiable safety setting.
+                </p>
+              </div>
+            </div>
+
+            {/* Step 3: Paper Trading */}
+            <div className="bg-gray-900/50 rounded-2xl border border-white/10 p-6 shadow-lg shadow-purple-500/10">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+                  3
+                </div>
+                <h3 className="text-xl font-bold text-white">
+                  Test Before You Go All In
+                </h3>
+              </div>
+              <div className="ml-14">
+                <div className="flex items-start gap-3">
+                  <TestTube2 className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
+                  <p className="text-gray-300">
+                    If you want to get comfortable before trading with real
+                    money, GoBabyTrade™ includes{" "}
+                    <span className="text-white font-semibold">
+                      Paper Trading
+                    </span>{" "}
+                    on the Three-Year plan. Use it. Run the system in paper mode
+                    for a week or two to see how it behaves before committing
+                    your full trading capital.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Support callout */}
+            <div className="bg-gradient-to-r from-gray-900/30 to-purple-900/20 rounded-2xl p-6 border border-white/10 shadow-lg shadow-purple-500/10">
+              <div className="flex items-center gap-3 mb-3">
+                <Mail className="w-5 h-5 text-purple-300" />
+                <h3 className="text-xl font-bold text-white">
+                  Need Help Getting Set Up?
+                </h3>
+              </div>
+              <p className="text-gray-300 mb-4">
+                The GoBabyTrade™ support team is responsive and genuinely
+                helpful. If you run into anything during setup — API issues,
+                exchange connectivity, strategy settings — reach out directly:
+              </p>
+              <a
+                href="mailto:support@gobabytrade.com"
+                className="inline-flex items-center gap-2 text-purple-300 hover:text-purple-200 font-semibold transition-colors"
+              >
+                <Mail className="w-4 h-4" />
+                support@gobabytrade.com
+              </a>
+              <p className="text-gray-400 text-sm mt-3">
+                Don't struggle through setup alone. The support team has seen
+                every configuration scenario — they'll get you sorted fast.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 7: Questions */}
       <section className="py-16 px-4 pb-24">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-8">
