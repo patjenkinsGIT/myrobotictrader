@@ -312,7 +312,7 @@ export const LiveTransactionLog: React.FC = () => {
       : 0;
 
     return {
-      totalProfit: `${totalProfit.toFixed(2)}`,
+      totalProfit: `$${totalProfit.toFixed(2)}`,
       closedTrades: closedTransactions.length,
       openTrades: openTransactions.length,
       totalTrades: currentMonthTransactions.length,
@@ -716,13 +716,13 @@ export const LiveTransactionLog: React.FC = () => {
         </div>
       )}
 
-      {/* Summary Stats - Row 1 */}
+      {/* Summary Stats - Row 1: Monthly Indicators */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 mb-2">
         <div className="group relative bg-white/8 rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
           <div className="text-sm lg:text-base font-bold text-green-300 truncate">
             {monthSummary.totalProfit}
           </div>
-          <div className="text-[10px] lg:text-xs text-gray-400">Total Profit</div>
+          <div className="text-[10px] lg:text-xs text-gray-400">Monthly Profit</div>
         </div>
         <div className="group relative bg-white/8 rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
           <div className="text-sm lg:text-base font-bold text-green-400">
@@ -766,7 +766,7 @@ export const LiveTransactionLog: React.FC = () => {
         </a>
       </div>
 
-      {/* Summary Stats - Row 2 */}
+      {/* Summary Stats - Row 2: Monthly Indicators */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 mb-6">
         <div className="group relative bg-white/8 rounded-lg p-2 border border-white/20 hover:border-white/30 transition-all text-center">
           <div className="text-sm lg:text-base font-bold text-cyan-300 truncate">
