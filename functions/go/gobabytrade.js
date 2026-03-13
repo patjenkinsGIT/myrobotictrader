@@ -2,7 +2,7 @@
 // Affiliate redirect with UTM tracking
 // Usage: /go/gobabytrade?from=hero → redirects to GoBabyTrade signup with UTM params
 
-const DESTINATION = 'https://gobabytrade.com/432706BE';
+const DESTINATION = 'https://crypto.gobabytrade.com/signup.aspx?RID=432706BE';
 
 export async function onRequest(context) {
   const { request } = context;
