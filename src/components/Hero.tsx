@@ -20,7 +20,7 @@ export const Hero: React.FC = () => {
   const monthsTrading = getMonthsSinceStart();
   const handleStartTrading = () => {
     trackCTAClick("start_trading_save_1000", "hero");
-    trackOutboundLink("https://crypto.gobabytrade.com/signup.aspx?RID=432706BE", "Start Trading Save $1000");
+    trackOutboundLink("/go/gobabytrade?from=hero", "Start Trading Save $1000");
   };
 
   return (
@@ -45,7 +45,7 @@ export const Hero: React.FC = () => {
           <p className="text-sm text-gray-400 mb-4">
             Powered by{" "}
             <a
-              href="https://crypto.gobabytrade.com/signup.aspx?RID=432706BE"
+              href="/go/gobabytrade?from=hero-badge"
               target="_blank"
               rel="noopener noreferrer"
               className="text-purple-300 hover:text-purple-200 transition-colors"
@@ -105,7 +105,7 @@ export const Hero: React.FC = () => {
         {/* CTA Button */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
           <a
-            href="https://crypto.gobabytrade.com/signup.aspx?RID=432706BE"
+            href="/go/gobabytrade?from=hero"
             onClick={handleStartTrading}
             target="_blank"
             rel="noopener noreferrer"

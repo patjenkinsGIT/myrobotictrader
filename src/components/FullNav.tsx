@@ -13,7 +13,7 @@ export const FullNav: React.FC = () => {
 
   const handleStartTrading = () => {
     trackCTAClick("start_trading_save_1000", "full_nav");
-    trackOutboundLink("https://crypto.gobabytrade.com/signup.aspx?RID=432706BE", "Start Trading Save $1000 Nav");
+    trackOutboundLink("/go/gobabytrade?from=nav", "Start Trading Save $1000 Nav");
   };
 
   const navItems = [
@@ -164,7 +164,7 @@ export const FullNav: React.FC = () => {
 
                 {/* CTA Button */}
                 <a
-                  href="https://crypto.gobabytrade.com/signup.aspx?RID=432706BE"
+                  href="/go/gobabytrade?from=nav"
                   onClick={handleStartTrading}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -212,7 +212,7 @@ export const FullNav: React.FC = () => {
                 </Link>
               ))}
               <a
-                href="https://crypto.gobabytrade.com/signup.aspx?RID=432706BE"
+                href="/go/gobabytrade?from=nav"
                 onClick={() => {
                   handleStartTrading();
                   setMobileMenuOpen(false);

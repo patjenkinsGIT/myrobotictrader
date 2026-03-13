@@ -4,6 +4,6 @@ export const ANALYTICS_CONFIG = {
   SITE_NAME: "MyRoboticTrader.com",
   SITE_DESCRIPTION: "AI-Powered Crypto Trading Automation",
   SITE_URL: "https://myrobotictrader.com",
-  AFFILIATE_LINK: "https://crypto.gobabytrade.com/signup.aspx?RID=432706BE",
+  AFFILIATE_LINK: "/go/gobabytrade",
   COMPANY_LINK: "https://gobabytrade.com",
 };
