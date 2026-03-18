@@ -37,6 +37,7 @@ const BlogPostPage = lazy(() => import("./BlogPostPage").then(m => ({ default: m
 const BlogSchedulePage = lazy(() => import("./pages/BlogSchedulePage"));
 const InvestmentSimulatorPage = lazy(() => import("./pages/InvestmentSimulatorPage").then(m => ({ default: m.InvestmentSimulatorPage })));
 const HowToPurchase = lazy(() => import("./pages/HowToPurchase"));
+const ArticleArchive = lazy(() => import("./pages/ArticleArchive").then(m => ({ default: m.ArticleArchive })));
 
 // External redirect helper for affiliate vanity URLs
 const ExternalRedirect = ({ to }: { to: string }) => {
@@ -354,6 +355,7 @@ function App() {
               <Route path="/blog" element={<BlogListPage />} />
               <Route path="/blog/schedule" element={<BlogSchedulePage />} />
               <Route path="/blog/:slug" element={<BlogPostPage />} />
+              <Route path="/archive" element={<ArticleArchive />} />
             </Routes>
           </Suspense>
           <Footer />

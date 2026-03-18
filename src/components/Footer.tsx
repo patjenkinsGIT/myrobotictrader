@@ -63,6 +63,13 @@ export const Footer: React.FC = function () {
               <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
             </a>
             <a
+              href="/archive"
+              className="text-gray-400 hover:text-purple-400 transition-colors flex items-center gap-2 group"
+            >
+              Article Archive
+              <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </a>
+            <a
               href="/privacy"
               className="text-gray-400 hover:text-purple-400 transition-colors flex items-center gap-2 group"
             >
