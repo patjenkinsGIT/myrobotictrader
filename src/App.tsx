@@ -231,6 +231,19 @@ const SEOWrapper = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  // Scroll to hash anchor after navigation (e.g. /#trading-results from blog posts)
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace('#', '');
+      // Small delay to let the target page render before scrolling
+      const timer = setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [location]);
+
   return (
     <>
       <SEOHead {...getSEOConfig()} />
