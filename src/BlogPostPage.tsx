@@ -408,7 +408,7 @@ export const BlogPostPage: React.FC = () => {
       } else if (earliest.type === 'italic' && italicMatch) {
         parts.push(
           <em key={key++} className="italic">
-            {italicMatch[1]}
+            {renderInlineMarkdown(italicMatch[1])}
           </em>
         );
         currentText = currentText.substring(italicMatch.index! + italicMatch[0].length);
