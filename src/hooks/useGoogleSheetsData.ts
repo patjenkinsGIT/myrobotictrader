@@ -21,6 +21,7 @@ export interface TradingStats {
   dailyAvg: number;
   bestMonthProfit: number;
   avgPercentGain: number; // Average % gain per trade from Column T
+  avgDaysHeld: number; // Average days held per trade from Column U
   openPositionCount: number; // Total individual OPEN lots from Transactions tab
   monthlyData: TradingDataPoint[];
   isLiveData: boolean;
@@ -65,7 +66,7 @@ export const useGoogleSheetsData = () => {
   const PORTFOLIO_TAB = "Coinbase Balance";
   const PORTFOLIO_RANGE = "A:D";
   const TRANSACTIONS_TAB = "Transactions Raw Data";
-  const TRANSACTIONS_RANGE = "T:T"; // Column T contains % Gain
+  const TRANSACTIONS_RANGE = "T:U"; // Column T = % Gain, Column U = Days Held
   const TRANSACTIONS_ACTION_RANGE = "A:F"; // Columns A-F for filtering (Coin, Action, Price, Qty, Status, Profit)
 
   // Parse Coinbase Balance tab
@@ -101,39 +102,48 @@ export const useGoogleSheetsData = () => {
     []
   );
 
-  // Parse % Gain column (Column T) and calculate average
-  const parsePercentGainColumn = useCallback(
-    (rows: string[][]): number => {
-      if (!rows || rows.length < 2) return 0;
+  // Parse % Gain (Column T) and Days Held (Column U) and calculate averages
+  const parseTransactionColumns = useCallback(
+    (rows: string[][]): { avgPercentGain: number; avgDaysHeld: number } => {
+      if (!rows || rows.length < 2) return { avgPercentGain: 0, avgDaysHeld: 0 };
 
       const percentGains: number[] = [];
+      const daysHeldValues: number[] = [];
 
       // Skip header row (index 0), process all data rows
       for (let i = 1; i < rows.length; i++) {
         const row = rows[i];
-        const cellValue = row?.[0]; // Column T is the only column fetched
 
-        if (cellValue && cellValue.toString().trim() !== "") {
-          // Parse value - could be "2.17%", "0.0217", or "2.17"
-          let cleanValue = cellValue.toString().replace(/[%]/g, "").trim();
+        // Column T (index 0 in T:U range) - % Gain
+        const percentCell = row?.[0];
+        if (percentCell && percentCell.toString().trim() !== "") {
+          let cleanValue = percentCell.toString().replace(/[%]/g, "").trim();
           const numValue = parseFloat(cleanValue);
-
           if (!isNaN(numValue) && numValue !== 0) {
-            // If value is less than 1, it's likely a decimal (0.0217 = 2.17%)
-            // If value is >= 1, it's already a percentage (2.17 = 2.17%)
             const percentValue = numValue < 1 ? numValue * 100 : numValue;
             percentGains.push(percentValue);
           }
         }
+
+        // Column U (index 1 in T:U range) - Days Held
+        const daysCell = row?.[1];
+        if (daysCell && daysCell.toString().trim() !== "") {
+          const numValue = parseFloat(daysCell.toString().trim());
+          if (!isNaN(numValue) && numValue >= 0) {
+            daysHeldValues.push(numValue);
+          }
+        }
       }
 
-      // Calculate average
-      if (percentGains.length === 0) return 0;
-      const sum = percentGains.reduce((acc, val) => acc + val, 0);
-      const avg = sum / percentGains.length;
+      const avgPercentGain = percentGains.length > 0
+        ? percentGains.reduce((acc, val) => acc + val, 0) / percentGains.length
+        : 0;
+      const avgDaysHeld = daysHeldValues.length > 0
+        ? daysHeldValues.reduce((acc, val) => acc + val, 0) / daysHeldValues.length
+        : 0;
 
-      logger.debug(`Parsed ${percentGains.length} % gains, average: ${avg.toFixed(2)}%`);
-      return avg;
+      logger.debug(`Parsed ${percentGains.length} % gains (avg: ${avgPercentGain.toFixed(2)}%), ${daysHeldValues.length} days held (avg: ${avgDaysHeld.toFixed(1)}d)`);
+      return { avgPercentGain, avgDaysHeld };
     },
     []
   );
@@ -324,6 +334,7 @@ export const useGoogleSheetsData = () => {
         dailyAvg,
         bestMonthProfit,
         avgPercentGain: 0, // Will be populated from Transactions tab
+        avgDaysHeld: 0, // Will be populated from Transactions tab
         openPositionCount: 0, // Will be populated from Transactions tab
         monthlyData,
         isLiveData: true,
@@ -368,6 +379,7 @@ export const useGoogleSheetsData = () => {
       dailyAvg: 15.5,
       bestMonthProfit: Math.max(...monthlyData.map((m) => m.profit)),
       avgPercentGain: 4.93,
+      avgDaysHeld: 5.2,
       openPositionCount: 216,
       monthlyData,
       isLiveData: false,
@@ -462,14 +474,14 @@ export const useGoogleSheetsData = () => {
           ? parseCoinbaseBalance(portfolioData.values || [])
           : null;
 
-        // Parse transactions data for average % gain
+        // Parse transactions data for average % gain and days held
         const transactionsData =
           transactionsResponse.status === "fulfilled"
             ? await transactionsResponse.value.json()
             : null;
-        const avgPercentGain = transactionsData?.values
-          ? parsePercentGainColumn(transactionsData.values)
-          : 0;
+        const { avgPercentGain, avgDaysHeld } = transactionsData?.values
+          ? parseTransactionColumns(transactionsData.values)
+          : { avgPercentGain: 0, avgDaysHeld: 0 };
 
         // Parse actions data for open position count
         const actionsData =
@@ -482,8 +494,9 @@ export const useGoogleSheetsData = () => {
 
         const enhancedStats: EnhancedTradingStats = {
           ...originalStats,
-          avgPercentGain, // Override with calculated value
-          openPositionCount, // Override with counted value
+          avgPercentGain,
+          avgDaysHeld,
+          openPositionCount,
           portfolioSummary: portfolioSummary || undefined,
         };
 
@@ -508,7 +521,7 @@ export const useGoogleSheetsData = () => {
         setIsLoading(false);
       }
     },
-    [parseCalculationsData, parseCoinbaseBalance, parsePercentGainColumn, countOpenPositions]
+    [parseCalculationsData, parseCoinbaseBalance, parseTransactionColumns, countOpenPositions]
   );
 
   // Enhanced mock data - ONLY used when API completely fails
@@ -545,6 +558,7 @@ export const useGoogleSheetsData = () => {
       dailyAvg: 15.5,
       bestMonthProfit: 817.31,
       avgPercentGain: 4.93,
+      avgDaysHeld: 5.2,
       openPositionCount: 216,
       monthlyData,
       isLiveData: false,

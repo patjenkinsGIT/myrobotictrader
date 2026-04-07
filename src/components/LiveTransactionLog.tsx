@@ -23,6 +23,7 @@ export interface LiveTransaction {
   amount: number; // price × quantity (total transaction value)
   profit: number;
   percentGain: number | null; // Column T - % Gain (only for CLOSE trades)
+  daysHeld: number | null; // Column U - Days Held (only for CLOSE trades)
   timestamp: string;
   status: "completed" | "profit_goal_reached";
 }
@@ -39,7 +40,7 @@ export const LiveTransactionLog: React.FC = () => {
 
   // Constants
   const SHEET_TAB = "Transactions Raw Data";
-  const SHEET_RANGE = "A:T"; // Extended to include Column T (% Gain)
+  const SHEET_RANGE = "A:U"; // Extended to include Column T (% Gain) and Column U (Days Held)
   const CALCULATIONS_TAB = "Calculations";
   const PROFITS_PROTECTED_CELL = "H14";
 
@@ -135,7 +136,7 @@ export const LiveTransactionLog: React.FC = () => {
     []
   );
 
-  // Parse Google Sheets data from A:T columns
+  // Parse Google Sheets data from A:U columns
   const parseGoogleSheetsData = useCallback(
     (rows: string[][]): LiveTransaction[] => {
       if (!rows || rows.length === 0) return [];
@@ -150,8 +151,9 @@ export const LiveTransactionLog: React.FC = () => {
           const [coin, action, price, quantity, status, profit, timestamp] =
             row;
 
-          // Column T is index 19 (% Gain)
+          // Column T is index 19 (% Gain), Column U is index 20 (Days Held)
           const percentGainRaw = row[19];
+          const daysHeldRaw = row[20];
 
           // Skip empty rows
           if (!coin || !profit) {
@@ -172,6 +174,15 @@ export const LiveTransactionLog: React.FC = () => {
             }
           }
 
+          // Parse days held from string like "5.2"
+          let parsedDaysHeld: number | null = null;
+          if (daysHeldRaw) {
+            const numValue = parseFloat(daysHeldRaw.toString().trim());
+            if (!isNaN(numValue) && numValue >= 0) {
+              parsedDaysHeld = numValue;
+            }
+          }
+
           // Compute transaction amount (price × quantity)
           const rawPrice = parseFloat((price?.toString() || "0").replace(/[$,]/g, ""));
           const rawQuantity = parseFloat((quantity?.toString() || "0").replace(/[$,]/g, ""));
@@ -186,6 +197,7 @@ export const LiveTransactionLog: React.FC = () => {
             amount,
             profit: parsedProfit,
             percentGain: parsedPercentGain,
+            daysHeld: parsedDaysHeld,
             timestamp: formatTimestamp(timestamp?.toString() || ""),
             status: parseStatus(status?.toString() || ""),
           };
@@ -348,6 +360,7 @@ export const LiveTransactionLog: React.FC = () => {
       "Amount",
       "Profit",
       "% Gain",
+      "Days Held",
       "Status",
       "Timestamp",
     ];
@@ -362,6 +375,7 @@ export const LiveTransactionLog: React.FC = () => {
         tx.amount.toFixed(2),
         tx.action === "CLOSE" ? tx.profit.toFixed(2) : "0.00",
         tx.action === "CLOSE" && tx.percentGain !== null ? tx.percentGain.toFixed(2) + "%" : "",
+        tx.action === "CLOSE" && tx.daysHeld !== null ? tx.daysHeld.toFixed(1) : "",
         tx.status === "profit_goal_reached"
           ? "Profit Goal Reached"
           : "Completed",
@@ -387,20 +401,20 @@ export const LiveTransactionLog: React.FC = () => {
 
   // Fallback data
   const getFallbackData = useCallback((): LiveTransaction[] => {
-    // Column T (% Gain) is at index 19, so we pad columns 7-18 with empty strings
+    // Columns T (% Gain) and U (Days Held) are at index 19-20, pad columns 7-18
     const pad = ["", "", "", "", "", "", "", "", "", "", "", ""];
     const mockRows: string[][] = [
-      ["Coin", "Action", "Price", "Quantity", "Status", "Profit", "Timestamp", ...pad, "% Gain"],
-      ["SUI", "CLOSE", "$3.60", "50.9", "Profit Goal Reached", "$7.34", "Today 2:48 AM", ...pad, "4.01%"],
-      ["BONK", "CLOSE", "$0.00002", "10.2M", "Profit Goal Reached", "$9.03", "9/8 12:26 PM", ...pad, "4.43%"],
-      ["DOGE", "CLOSE", "$0.24", "710", "Completed", "$5.16", "9/8 9:19 AM", ...pad, "3.03%"],
-      ["BTC", "CLOSE", "$43,250.00", "0.025", "Profit Goal Reached", "$12.45", "9/7 11:45 PM", ...pad, "1.15%"],
-      ["ETH", "CLOSE", "$2,650.75", "1.8", "Completed", "$8.92", "9/7 6:33 PM", ...pad, "0.19%"],
-      ["ADA", "OPEN", "$0.45", "2,450", "Active Position", "$0.00", "9/7 2:15 PM", ...pad, ""],
-      ["SOL", "OPEN", "$145.32", "12.5", "Active Position", "$0.00", "9/7 8:22 AM", ...pad, ""],
-      ["MATIC", "OPEN", "$0.89", "1,200", "Active Position", "$0.00", "9/6 11:58 PM", ...pad, ""],
-      ["LINK", "CLOSE", "$11.45", "85.3", "Completed", "$9.87", "9/6 7:41 PM", ...pad, "1.01%"],
-      ["DOT", "CLOSE", "$5.67", "180.5", "Completed", "$7.12", "9/6 3:29 PM", ...pad, "0.70%"],
+      ["Coin", "Action", "Price", "Quantity", "Status", "Profit", "Timestamp", ...pad, "% Gain", "Days Held"],
+      ["SUI", "CLOSE", "$3.60", "50.9", "Profit Goal Reached", "$7.34", "Today 2:48 AM", ...pad, "4.01%", "1.2"],
+      ["BONK", "CLOSE", "$0.00002", "10.2M", "Profit Goal Reached", "$9.03", "9/8 12:26 PM", ...pad, "4.43%", "3.5"],
+      ["DOGE", "CLOSE", "$0.24", "710", "Completed", "$5.16", "9/8 9:19 AM", ...pad, "3.03%", "7.1"],
+      ["BTC", "CLOSE", "$43,250.00", "0.025", "Profit Goal Reached", "$12.45", "9/7 11:45 PM", ...pad, "1.15%", "2.8"],
+      ["ETH", "CLOSE", "$2,650.75", "1.8", "Completed", "$8.92", "9/7 6:33 PM", ...pad, "0.19%", "12.4"],
+      ["ADA", "OPEN", "$0.45", "2,450", "Active Position", "$0.00", "9/7 2:15 PM", ...pad, "", ""],
+      ["SOL", "OPEN", "$145.32", "12.5", "Active Position", "$0.00", "9/7 8:22 AM", ...pad, "", ""],
+      ["MATIC", "OPEN", "$0.89", "1,200", "Active Position", "$0.00", "9/6 11:58 PM", ...pad, "", ""],
+      ["LINK", "CLOSE", "$11.45", "85.3", "Completed", "$9.87", "9/6 7:41 PM", ...pad, "1.01%", "5.3"],
+      ["DOT", "CLOSE", "$5.67", "180.5", "Completed", "$7.12", "9/6 3:29 PM", ...pad, "0.70%", "8.9"],
     ];
 
     return parseGoogleSheetsData(mockRows);
@@ -905,6 +919,11 @@ export const LiveTransactionLog: React.FC = () => {
                               ({tx.percentGain.toFixed(2)}%)
                             </div>
                           )}
+                          {tx.daysHeld !== null && (
+                            <div className="text-xs font-mono text-gray-400">
+                              {tx.daysHeld.toFixed(1)}d
+                            </div>
+                          )}
                         </>
                       ) : (
                         <div className="text-gray-500 text-sm">Active</div>
@@ -940,8 +959,9 @@ export const LiveTransactionLog: React.FC = () => {
               <div className="col-span-2">Price</div>
               <div className="col-span-1">Qty</div>
               <div className="col-span-2">Amount</div>
-              <div className="col-span-2">Profit</div>
+              <div className="col-span-1">Profit</div>
               <div className="col-span-1">% Gain</div>
+              <div className="col-span-1">Days</div>
               <div className="col-span-2">Time</div>
             </div>
           </div>
@@ -993,10 +1013,10 @@ export const LiveTransactionLog: React.FC = () => {
                         ${tx.amount >= 1000 ? tx.amount.toLocaleString(undefined, { maximumFractionDigits: 0 }) : tx.amount.toFixed(2)}
                       </div>
                     </div>
-                    <div className="col-span-2">
+                    <div className="col-span-1">
                       {tx.action === "CLOSE" ? (
                         <div
-                          className={`font-bold font-mono ${getProfitColor(
+                          className={`font-bold font-mono text-xs ${getProfitColor(
                             tx.profit
                           )}`}
                         >
@@ -1022,6 +1042,15 @@ export const LiveTransactionLog: React.FC = () => {
                       {tx.action === "CLOSE" && tx.percentGain !== null ? (
                         <div className="font-bold font-mono text-green-400 text-xs">
                           {tx.percentGain.toFixed(2)}%
+                        </div>
+                      ) : (
+                        <div className="text-gray-500 font-mono text-xs">-</div>
+                      )}
+                    </div>
+                    <div className="col-span-1">
+                      {tx.action === "CLOSE" && tx.daysHeld !== null ? (
+                        <div className="font-mono text-gray-300 text-xs">
+                          {tx.daysHeld.toFixed(1)}d
                         </div>
                       ) : (
                         <div className="text-gray-500 font-mono text-xs">-</div>
