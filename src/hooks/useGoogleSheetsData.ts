@@ -338,20 +338,13 @@ export const useGoogleSheetsData = () => {
     // CRITICAL: This is mock data! If you see this in production, the API is failing
     logger.error("USING MOCK DATA - API parsing failed! Site is showing fallback data instead of real data.");
 
-    // TEST DATA: Includes 2024 months to demonstrate multi-year display
-    // TODO: Remove 2024 data after testing multi-year feature
+    // Fallback data based on actual 2025 trading results
     const monthlyData: TradingDataPoint[] = [
-      // 2024 months (for testing multi-year display)
-      { month: "Sep", year: 2024, profit: 312.45, trades: 68, fearGreed: 39 },
-      { month: "Oct", year: 2024, profit: 445.89, trades: 92, fearGreed: 56 },
-      { month: "Nov", year: 2024, profit: 523.12, trades: 105, fearGreed: 78 },
-      { month: "Dec", year: 2024, profit: 398.67, trades: 84, fearGreed: 73 },
-      // 2025 months
       { month: "Jan", year: 2025, profit: 477.23, trades: 89, fearGreed: 65 },
       { month: "Feb", year: 2025, profit: 686.71, trades: 124, fearGreed: 49 },
       { month: "Mar", year: 2025, profit: 261.97, trades: 67, fearGreed: 34 },
       { month: "Apr", year: 2025, profit: 552.58, trades: 98, fearGreed: 28 },
-      { month: "May", year: 2025, profit: 376.3, trades: 82, fearGreed: 42 },
+      { month: "May", year: 2025, profit: 376.30, trades: 82, fearGreed: 42 },
       { month: "Jun", year: 2025, profit: 382.97, trades: 91, fearGreed: 55 },
       { month: "Jul", year: 2025, profit: 817.31, trades: 156, fearGreed: 72 },
       { month: "Aug", year: 2025, profit: 350.32, trades: 78, fearGreed: 58 },
@@ -367,17 +360,17 @@ export const useGoogleSheetsData = () => {
     );
 
     return {
-      totalProfit,  // $3,905.39 - THIS IS FAKE DATA
-      totalTrades,  // 785 - THIS IS FAKE DATA
+      totalProfit,
+      totalTrades,
       avgProfitPerTrade: totalTrades > 0 ? totalProfit / totalTrades : 0,
       monthlyAverage:
         monthlyData.length > 0 ? totalProfit / monthlyData.length : 0,
       dailyAvg: 15.5,
       bestMonthProfit: Math.max(...monthlyData.map((m) => m.profit)),
-      avgPercentGain: 2.35, // Mock average % gain
-      openPositionCount: 42, // Mock open position count
+      avgPercentGain: 4.93,
+      openPositionCount: 216,
       monthlyData,
-      isLiveData: false,  // FALSE = mock data is being used
+      isLiveData: false,
       lastUpdated: new Date().toISOString(),
     };
   };
@@ -520,18 +513,10 @@ export const useGoogleSheetsData = () => {
 
   // Enhanced mock data - ONLY used when API completely fails
   const getEnhancedMockTradingStats = (): EnhancedTradingStats => {
-    logger.debug("Using mock data with 2024+2025 for multi-year test");
+    logger.debug("Using fallback mock data (API completely failed)");
 
-    // TEST DATA: Includes 2024 months to demonstrate multi-year display
-    // Recent Performance will show last 6 (Jul-Dec 2025)
-    // Previous Months will show 2024 (4 months) + early 2025 (6 months)
+    // Fallback data based on actual 2025 trading results
     const monthlyData: TradingDataPoint[] = [
-      // 2024 months (will appear in Previous Months)
-      { month: "Sep", year: 2024, profit: 312.45, trades: 68, fearGreed: 39 },
-      { month: "Oct", year: 2024, profit: 445.89, trades: 92, fearGreed: 56 },
-      { month: "Nov", year: 2024, profit: 523.12, trades: 105, fearGreed: 78 },
-      { month: "Dec", year: 2024, profit: 398.67, trades: 84, fearGreed: 73 },
-      // 2025 months - Jan-Jun will be in Previous Months, Jul-Dec in Recent Performance
       { month: "Jan", year: 2025, profit: 477.23, trades: 89, fearGreed: 65 },
       { month: "Feb", year: 2025, profit: 686.71, trades: 124, fearGreed: 49 },
       { month: "Mar", year: 2025, profit: 261.97, trades: 67, fearGreed: 34 },
@@ -540,10 +525,6 @@ export const useGoogleSheetsData = () => {
       { month: "Jun", year: 2025, profit: 382.97, trades: 91, fearGreed: 55 },
       { month: "Jul", year: 2025, profit: 817.31, trades: 156, fearGreed: 72 },
       { month: "Aug", year: 2025, profit: 350.32, trades: 78, fearGreed: 58 },
-      { month: "Sep", year: 2025, profit: 425.60, trades: 88, fearGreed: 44 },
-      { month: "Oct", year: 2025, profit: 512.45, trades: 102, fearGreed: 61 },
-      { month: "Nov", year: 2025, profit: 389.20, trades: 76, fearGreed: 52 },
-      { month: "Dec", year: 2025, profit: 298.50, trades: 62, fearGreed: 35 },
     ];
 
     const totalProfit = monthlyData.reduce(
@@ -562,9 +543,9 @@ export const useGoogleSheetsData = () => {
       monthlyAverage:
         monthlyData.length > 0 ? totalProfit / monthlyData.length : 0,
       dailyAvg: 15.5,
-      bestMonthProfit: 686.71,
-      avgPercentGain: 2.35, // Mock average % gain
-      openPositionCount: 42, // Mock open position count
+      bestMonthProfit: 817.31,
+      avgPercentGain: 4.93,
+      openPositionCount: 216,
       monthlyData,
       isLiveData: false,
       lastUpdated: new Date().toISOString(),
