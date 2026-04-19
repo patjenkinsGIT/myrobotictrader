@@ -21,8 +21,7 @@ export const LatestPosts: React.FC<{ maxPosts?: number }> = ({ maxPosts = 4 }) =
       'Education': 'from-blue-500 to-cyan-500',
       'Anti-Gambling': 'from-red-500 to-orange-500',
       'Market Intelligence': 'from-green-500 to-emerald-500',
-      'Lifestyle': 'from-purple-500 to-pink-500',
-      'Market Psychology': 'from-amber-500 to-yellow-500'
+      'Lifestyle': 'from-purple-500 to-pink-500'
     };
     return colors[category] || 'from-purple-500 to-blue-500';
   };

@@ -554,8 +554,8 @@ export const BlogPostPage: React.FC = () => {
                   Found this helpful? Let's connect!
                 </p>
                 <p className="text-slate-400 text-sm">
-                  I share daily insights about systematic trading and building
-                  transparent systems.
+                  I share daily insights about autonomous trading and radical
+                  transparency.
                 </p>
               </div>
               <a

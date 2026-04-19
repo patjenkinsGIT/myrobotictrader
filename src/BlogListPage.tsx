@@ -58,7 +58,7 @@ export const BlogListPage: React.FC = () => {
             {/* Badge matching Hero style */}
             <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/30 to-pink-500/30 backdrop-blur-sm rounded-full px-4 py-2 border border-purple-400/40 mb-6 shadow-lg shadow-purple-500/20">
               <span className="text-purple-200 font-medium">
-                Trading Education
+                Autonomous Trading Insights
               </span>
             </div>
 
@@ -69,8 +69,8 @@ export const BlogListPage: React.FC = () => {
               </span>
             </h1>
             <p className="text-xl text-gray-200 max-w-3xl mx-auto">
-              Real insights from building transparent, systematic crypto trading
-              systems. No hype, just facts and lessons learned.
+              Real insights on autonomous trading — systematic, transparent,
+              data-backed. No hype, just facts and lessons learned.
             </p>
           </div>
         </div>
