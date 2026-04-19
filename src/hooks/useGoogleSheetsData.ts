@@ -66,7 +66,7 @@ export const useGoogleSheetsData = () => {
   const PORTFOLIO_TAB = "Coinbase Balance";
   const PORTFOLIO_RANGE = "A:D";
   const TRANSACTIONS_TAB = "Transactions Raw Data";
-  const TRANSACTIONS_RANGE = "T:U"; // Column T = % Gain, Column U = Days Held
+  const TRANSACTIONS_RANGE = "A:U"; // Need A (coin) + B (action) to filter CLOSE rows; T (% Gain) and U (Days Held) are the metrics
   const TRANSACTIONS_ACTION_RANGE = "A:F"; // Columns A-F for filtering (Coin, Action, Price, Qty, Status, Profit)
 
   // Parse Coinbase Balance tab
@@ -114,8 +114,14 @@ export const useGoogleSheetsData = () => {
       for (let i = 1; i < rows.length; i++) {
         const row = rows[i];
 
-        // Column T (index 0 in T:U range) - % Gain
-        const percentCell = row?.[0];
+        // Column B (index 1) - Action. Only include CLOSE rows for per-trade metrics.
+        // Column U is now populated on OPEN rows too (paired mirror + aged-to-now for
+        // currently-open); averaging all of them would inflate the number.
+        const action = String(row?.[1] || "").trim().toUpperCase();
+        if (action !== "CLOSE") continue;
+
+        // Column T (index 19 in A:U range) - % Gain
+        const percentCell = row?.[19];
         if (percentCell && percentCell.toString().trim() !== "") {
           const cleanValue = percentCell.toString().replace(/[%]/g, "").trim();
           const numValue = parseFloat(cleanValue);
@@ -125,8 +131,8 @@ export const useGoogleSheetsData = () => {
           }
         }
 
-        // Column U (index 1 in T:U range) - Days Held
-        const daysCell = row?.[1];
+        // Column U (index 20 in A:U range) - Days Held
+        const daysCell = row?.[20];
         if (daysCell && daysCell.toString().trim() !== "") {
           const numValue = parseFloat(daysCell.toString().trim());
           if (!isNaN(numValue) && numValue >= 0) {
