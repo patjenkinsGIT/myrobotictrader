@@ -467,7 +467,7 @@ export const LiveTransactionLog: React.FC = () => {
 
         if (SHEET_ID && API_KEY) {
           const cacheKey = `${SHEET_ID}_${SHEET_TAB}_${SHEET_RANGE}`;
-          let cachedData = tradingDataCache.get(cacheKey);
+          const cachedData = tradingDataCache.get(cacheKey);
 
           if (cachedData) {
             setTransactions(cachedData as LiveTransaction[]);

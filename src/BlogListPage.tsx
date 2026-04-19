@@ -37,7 +37,7 @@ export const BlogListPage: React.FC = () => {
       .replace(/^#+\s/gm, "")
       .replace(/\*\*/g, "")
       .replace(/\*/g, "")
-      .replace(/\[([^\]]+)\]\([^\)]+\)/g, "$1")
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
       .replace(/\n/g, " ");
 
     if (plainText.length <= maxLength) return plainText;

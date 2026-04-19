@@ -206,7 +206,7 @@ export const PriceChartWithPurchases: React.FC<
       const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
       if (SHEET_ID && API_KEY) {
         const cacheKey = `${SHEET_ID}_${SHEET_TAB}_${SHEET_RANGE}`;
-        let cachedData = tradingDataCache.get(cacheKey);
+        const cachedData = tradingDataCache.get(cacheKey);
         if (cachedData) {
           setTransactions(cachedData as LiveTransaction[]);
           setIsCacheHit(true);

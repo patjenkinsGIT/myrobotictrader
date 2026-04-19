@@ -117,7 +117,7 @@ export const useGoogleSheetsData = () => {
         // Column T (index 0 in T:U range) - % Gain
         const percentCell = row?.[0];
         if (percentCell && percentCell.toString().trim() !== "") {
-          let cleanValue = percentCell.toString().replace(/[%]/g, "").trim();
+          const cleanValue = percentCell.toString().replace(/[%]/g, "").trim();
           const numValue = parseFloat(cleanValue);
           if (!isNaN(numValue) && numValue !== 0) {
             const percentValue = numValue < 1 ? numValue * 100 : numValue;
