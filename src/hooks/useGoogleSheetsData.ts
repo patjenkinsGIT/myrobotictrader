@@ -26,6 +26,10 @@ export interface TradingStats {
   monthlyData: TradingDataPoint[];
   isLiveData: boolean;
   lastUpdated: string;
+  // Calculator metadata from Calculations!L1:M2 — header/value pairs.
+  // Optional so old cached payloads (without these fields) don't break consumers.
+  timeWeightedAvgCapital?: number;
+  lastReconciledDate?: string;
 }
 
 // Portfolio Summary Interface - FIXED with all new properties
@@ -62,7 +66,9 @@ export const useGoogleSheetsData = () => {
 
   // Constants
   const CALCULATIONS_TAB = "Calculations";
-  const CALCULATIONS_RANGE = "A:J";
+  // Range extended from A:J to A:M to capture calculator metadata in L/M.
+  // Column K (Fear & Greed Zone label) is still ignored by the parser.
+  const CALCULATIONS_RANGE = "A:M";
   const PORTFOLIO_TAB = "Coinbase Balance";
   const PORTFOLIO_RANGE = "A:D";
   const TRANSACTIONS_TAB = "Transactions Raw Data";
@@ -332,6 +338,26 @@ export const useGoogleSheetsData = () => {
 
       logger.tradingDataParsed(monthlyData.length, "Calculations");
 
+      // Calculator metadata: cells L1/M1 and L2/M2 are header/value pairs.
+      // L1 == "time_weighted_avg_capital"  -> M1 (numeric, dollars)
+      // L2 == "last_reconciled_date"       -> M2 (ISO date string)
+      // If headers don't match or values are absent, leave undefined.
+      let timeWeightedAvgCapital: number | undefined;
+      let lastReconciledDate: string | undefined;
+
+      const l1 = rows[0]?.[11]?.toString().trim().toLowerCase();
+      if (l1 === "time_weighted_avg_capital") {
+        const raw = rows[0]?.[12]?.toString().replace(/[$,]/g, "").trim();
+        const num = raw ? parseFloat(raw) : NaN;
+        if (!isNaN(num) && num > 0) timeWeightedAvgCapital = num;
+      }
+
+      const l2 = rows[1]?.[11]?.toString().trim().toLowerCase();
+      if (l2 === "last_reconciled_date") {
+        const raw = rows[1]?.[12]?.toString().trim();
+        if (raw) lastReconciledDate = raw;
+      }
+
       return {
         totalProfit,
         totalTrades,
@@ -345,6 +371,8 @@ export const useGoogleSheetsData = () => {
         monthlyData,
         isLiveData: true,
         lastUpdated: fetchTimestamp,
+        timeWeightedAvgCapital,
+        lastReconciledDate,
       };
     },
     []
@@ -390,6 +418,8 @@ export const useGoogleSheetsData = () => {
       monthlyData,
       isLiveData: false,
       lastUpdated: new Date().toISOString(),
+      timeWeightedAvgCapital: 29666,
+      lastReconciledDate: "2026-04-25",
     };
   };
 
@@ -569,6 +599,8 @@ export const useGoogleSheetsData = () => {
       monthlyData,
       isLiveData: false,
       lastUpdated: new Date().toISOString(),
+      timeWeightedAvgCapital: 29666,
+      lastReconciledDate: "2026-04-25",
       portfolioSummary: undefined,
     };
   };

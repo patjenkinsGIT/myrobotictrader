@@ -36,6 +36,7 @@ const BlogListPage = lazy(() => import("./BlogListPage").then(m => ({ default: m
 const BlogPostPage = lazy(() => import("./BlogPostPage").then(m => ({ default: m.BlogPostPage })));
 const BlogSchedulePage = lazy(() => import("./pages/BlogSchedulePage"));
 const InvestmentSimulatorPage = lazy(() => import("./pages/InvestmentSimulatorPage").then(m => ({ default: m.InvestmentSimulatorPage })));
+const CalculatorPage = lazy(() => import("./pages/CalculatorPage").then(m => ({ default: m.CalculatorPage })));
 const HowToPurchase = lazy(() => import("./pages/HowToPurchase"));
 const ArticleArchive = lazy(() => import("./pages/ArticleArchive").then(m => ({ default: m.ArticleArchive })));
 
@@ -184,6 +185,25 @@ const seoConfigs = {
     canonicalUrl: "https://myrobotictrader.com/simulator",
     pageType: "simulator" as const,
   },
+  calculator: {
+    title: "Calculator — What Could Autonomous Trading Do For You? | MyRoboticTrader",
+    description:
+      "A conversion-focused investment-projection calculator anchored on my real published track record — reconciled against my Coinbase statements. Compare against the S&P 500, high-yield savings, and cash.",
+    keywords:
+      "crypto trading calculator, investment projection calculator, autonomous trading calculator, compound interest calculator, passive income calculator",
+    ogTitle: "Calculator — What Could Autonomous Trading Do For You?",
+    ogDescription:
+      "A conversion-focused investment-projection calculator anchored on my real published track record — reconciled against my Coinbase statements. Compare against the S&P 500, high-yield savings, and cash.",
+    ogImage: "https://myrobotictrader.com/api/og-image",
+    twitterTitle: "Calculator | MyRoboticTrader",
+    twitterDescription:
+      "A conversion-focused investment-projection calculator anchored on my real published track record — reconciled against my Coinbase statements.",
+    twitterImage: "https://myrobotictrader.com/api/og-image",
+    canonicalUrl: "https://myrobotictrader.com/calculator",
+    // Reuses "simulator" pageType — SEOHead only branches schema for "home"/"resources";
+    // every other value yields identical baseline SEO. Avoids a 3rd-file edit to widen the union.
+    pageType: "simulator" as const,
+  },
   howToPurchase: {
     title: "GoBabyTrade™ Setup Guide: How to Get Started | MyRoboticTrader",
     description:
@@ -224,6 +244,8 @@ const SEOWrapper = ({ children }: { children: React.ReactNode }) => {
         return seoConfigs.card;
       case "/simulator":
         return seoConfigs.simulator;
+      case "/calculator":
+        return seoConfigs.calculator;
       case "/gobabytrade-setup-guide":
         return seoConfigs.howToPurchase;
       default:
@@ -359,6 +381,7 @@ function App() {
               <Route path="/privacy" element={<PrivacyPage />} />
               <Route path="/card" element={<BusinessCardLanding />} />
               <Route path="/simulator" element={<InvestmentSimulatorPage />} />
+              <Route path="/calculator" element={<CalculatorPage />} />
               <Route path="/gobabytrade-setup-guide" element={<HowToPurchase />} />
               <Route path="/how-to-purchase" element={<Navigate to="/gobabytrade-setup-guide" replace />} />
               {/* Affiliate vanity redirects */}
