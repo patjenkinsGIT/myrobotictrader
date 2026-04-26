@@ -21,6 +21,7 @@ export const FullNav: React.FC = () => {
     { label: "Blog", path: "/blog" },
     { label: "FAQ", path: "/faq" },
     { label: "Resources", path: "/resources" },
+    { label: "Calculator", path: "/calculator" },
     { label: "How to Buy", path: "/gobabytrade-setup-guide" },
   ];
 

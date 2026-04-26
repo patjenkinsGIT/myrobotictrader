@@ -246,7 +246,7 @@ export const InvestmentSimulatorPage: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900">
       <Helmet>
         <title>Trading Simulator | See What Your Money Could Do | MyRoboticTrader</title>
         <meta

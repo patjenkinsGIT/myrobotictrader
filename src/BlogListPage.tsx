@@ -45,7 +45,7 @@ export const BlogListPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white">
       <Helmet>
         <title>Crypto Trading Blog | AI Trading Education & Results | MyRoboticTrader</title>
         <meta name="description" content="Real trades, real results. Learn how an AI-enhanced autonomous trading system generates consistent crypto profits. No hype, just transparency." />

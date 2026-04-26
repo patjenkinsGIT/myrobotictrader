@@ -24,7 +24,7 @@ export const BusinessCardLanding: React.FC = () => {
   if (isLoading || !tradingStats) {
     return (
       <section className="relative min-h-screen flex items-center justify-center px-4">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900"></div>
         <div className="relative text-white text-xl">Loading live data...</div>
       </section>
     );
@@ -39,7 +39,7 @@ export const BusinessCardLanding: React.FC = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden pb-10 pt-10">
       {/* Background effects - matching your Hero */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900"></div>
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-transparent via-purple-500/15 to-transparent"></div>
 
       {/* Logo at top - Same as your Hero */}

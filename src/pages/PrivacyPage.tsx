@@ -4,7 +4,7 @@ import { FullNav } from "../components/FullNav";
 
 export const PrivacyPage: React.FC = function () {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900">
       <FullNav />
       {/* Header */}
       <section className="py-12 px-4 border-b border-white/10 relative overflow-hidden">
