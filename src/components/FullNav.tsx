@@ -71,7 +71,7 @@ export const FullNav: React.FC = () => {
           {isDesktop && (
             <>
               {/* Trading Stats - Center Aligned */}
-              <div className="flex items-center gap-4 flex-1 justify-center max-w-4xl">
+              <div className="hidden xl:flex items-center gap-4 flex-1 justify-center max-w-4xl">
                 {/* Total Profit */}
                 <div className="flex items-center gap-3 bg-white/10 rounded-lg px-4 py-2 border border-white/20 shadow-sm hover:shadow-md hover:bg-white/[0.12] transition-all duration-200 cursor-default">
                   <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-green-400 to-emerald-500 p-1.5 flex-shrink-0 shadow-md">
