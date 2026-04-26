@@ -1,14 +1,12 @@
 import * as React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ArrowRight, Menu, X, DollarSign, TrendingUp, Calendar } from "lucide-react";
+import { ArrowRight, Menu, X } from "lucide-react";
 import { trackCTAClick, trackOutboundLink } from "../utils/analytics";
-import { useGoogleSheetsData } from "../hooks/useGoogleSheetsData";
 import { useMediaQuery } from "../hooks/useMediaQuery";
 
 export const FullNav: React.FC = () => {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
-  const { tradingStats, isLoading } = useGoogleSheetsData();
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   const handleStartTrading = () => {
@@ -32,21 +30,10 @@ export const FullNav: React.FC = () => {
     return location.pathname.startsWith(path);
   };
 
-  // Calculate daily average
-  const calculateDailyAvg = () => {
-    if (!tradingStats?.totalProfit) return 0;
-    const startDate = new Date("2025-01-08");
-    const today = new Date();
-    const daysSince = Math.floor((today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-    return daysSince > 0 ? tradingStats.totalProfit / daysSince : 0;
-  };
-
-  const dailyAvg = calculateDailyAvg();
-
   return (
     <nav className="sticky top-0 z-50 bg-slate-900/95 border-b border-white/10">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-4 h-16">
+        <div className="flex items-center justify-between gap-4 h-16">
           {/* Logo - Left Aligned */}
           <Link to="/" className="flex items-center gap-3 group flex-shrink-0">
             <div className="w-8 h-8 rounded-lg overflow-hidden shadow-md shadow-purple-500/30 bg-gradient-to-br from-purple-500 to-pink-500 p-0.5 group-hover:shadow-lg group-hover:shadow-purple-500/40 transition-all duration-300">
@@ -67,78 +54,9 @@ export const FullNav: React.FC = () => {
             </div>
           </Link>
 
-          {/* Desktop Trading Stats & Navigation - DESKTOP ONLY */}
+          {/* Desktop Navigation - DESKTOP ONLY */}
           {isDesktop && (
             <>
-              {/* Trading Stats - Center Aligned */}
-              <div className="hidden xl:flex items-center gap-4 flex-1 justify-center max-w-4xl">
-                {/* Total Profit */}
-                <div className="flex items-center gap-3 bg-white/10 rounded-lg px-4 py-2 border border-white/20 shadow-sm hover:shadow-md hover:bg-white/[0.12] transition-all duration-200 cursor-default">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-green-400 to-emerald-500 p-1.5 flex-shrink-0 shadow-md">
-                    <DollarSign className="w-full h-full text-white" strokeWidth={2.5} />
-                  </div>
-                  <div className="min-w-0">
-                    {isLoading ? (
-                      <div className="text-sm font-bold text-green-300 animate-pulse">Loading...</div>
-                    ) : (
-                      <>
-                        <div className="text-sm font-bold text-green-300 truncate">
-                          ${tradingStats?.totalProfit.toLocaleString("en-US", {
-                            minimumFractionDigits: 0,
-                            maximumFractionDigits: 0,
-                          })}+
-                        </div>
-                        <div className="text-xs text-gray-400 font-medium">Total</div>
-                      </>
-                    )}
-                  </div>
-                </div>
-
-                {/* Monthly Average */}
-                <div className="flex items-center gap-3 bg-white/10 rounded-lg px-4 py-2 border border-white/20 shadow-sm hover:shadow-md hover:bg-white/[0.12] transition-all duration-200 cursor-default">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400 to-cyan-500 p-1.5 flex-shrink-0 shadow-md">
-                    <Calendar className="w-full h-full text-white" strokeWidth={2.5} />
-                  </div>
-                  <div className="min-w-0">
-                    {isLoading ? (
-                      <div className="text-sm font-bold text-blue-300 animate-pulse">Loading...</div>
-                    ) : (
-                      <>
-                        <div className="text-sm font-bold text-blue-300 truncate">
-                          ${tradingStats?.monthlyAverage?.toLocaleString("en-US", {
-                            minimumFractionDigits: 0,
-                            maximumFractionDigits: 0,
-                          }) || "0"}
-                        </div>
-                        <div className="text-xs text-gray-400 font-medium">Monthly</div>
-                      </>
-                    )}
-                  </div>
-                </div>
-
-                {/* Daily Average */}
-                <div className="flex items-center gap-3 bg-white/10 rounded-lg px-4 py-2 border border-white/20 shadow-sm hover:shadow-md hover:bg-white/[0.12] transition-all duration-200 cursor-default">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-400 to-pink-500 p-1.5 flex-shrink-0 shadow-md">
-                    <TrendingUp className="w-full h-full text-white" strokeWidth={2.5} />
-                  </div>
-                  <div className="min-w-0">
-                    {isLoading ? (
-                      <div className="text-sm font-bold text-purple-300 animate-pulse">Loading...</div>
-                    ) : (
-                      <>
-                        <div className="text-sm font-bold text-purple-300 truncate">
-                          ${dailyAvg.toLocaleString("en-US", {
-                            minimumFractionDigits: 0,
-                            maximumFractionDigits: 0,
-                          })}
-                        </div>
-                        <div className="text-xs text-gray-400 font-medium">Daily</div>
-                      </>
-                    )}
-                  </div>
-                </div>
-              </div>
-
               {/* Navigation Links - Right Aligned */}
               <div className="flex items-center gap-6">
                 {navItems.map((item) => (
