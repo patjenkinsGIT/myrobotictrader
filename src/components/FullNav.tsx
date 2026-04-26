@@ -145,7 +145,7 @@ export const FullNav: React.FC = () => {
                   <Link
                     key={item.path}
                     to={item.path}
-                    className={`text-sm font-semibold transition-all duration-200 relative group ${
+                    className={`text-sm font-semibold transition-all duration-200 relative group whitespace-nowrap ${
                       isActive(item.path)
                         ? "text-white"
                         : "text-gray-300 hover:text-white"
