@@ -318,7 +318,7 @@ const HomePage = () => {
       {/* SEO Content Section - Static text for Google indexing */}
       <section className="py-20 px-4 relative overflow-hidden">
         {/* Background Effects - matching other sections */}
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-purple-900/30 to-slate-900 -z-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-indigo-950/30 to-slate-900 -z-10"></div>
         <div className="absolute top-0 left-1/3 w-96 h-96 bg-gradient-radial from-blue-500/10 to-transparent rounded-full -z-10 opacity-60"></div>
         <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-gradient-radial from-purple-500/10 to-transparent rounded-full -z-10 opacity-60"></div>
 
@@ -367,7 +367,7 @@ function App() {
   }, []);
 
   return (
-    <div className="App min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="App min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900">
       <StaticSEO />
       <OGImageGenerator />
 

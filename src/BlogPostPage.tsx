@@ -33,7 +33,7 @@ export const BlogPostPage: React.FC = () => {
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 flex items-center justify-center">
         <div className="text-white text-xl">Loading...</div>
       </div>
     );
@@ -423,7 +423,7 @@ export const BlogPostPage: React.FC = () => {
   const canonicalUrl = `https://myrobotictrader.com/blog/${post.slug}`;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900">
       {/* Dynamic SEO Meta Tags for this blog post */}
       <Helmet>
         <title>{post.title} | MyRoboticTrader</title>
