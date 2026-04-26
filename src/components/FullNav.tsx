@@ -45,7 +45,7 @@ export const FullNav: React.FC = () => {
 
   return (
     <nav className="sticky top-0 z-50 bg-slate-900/95 border-b border-white/10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-4 h-16">
           {/* Logo - Left Aligned */}
           <Link to="/" className="flex items-center gap-3 group flex-shrink-0">
